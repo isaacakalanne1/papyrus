@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		11F5860F2E87130600084AEC /* Reader in Frameworks */ = {isa = PBXBuildFile; productRef = 11F5860E2E87130600084AEC /* Reader */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		11F585EF2E870F5F00084AEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -29,9 +33,22 @@
 		11F585F82E870F5F00084AEC /* papyrusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = papyrusUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		11F5860C2E87127A00084AEC /* Exceptions for "papyrus" folder in "papyrus" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Packages/TextGeneration,
+			);
+			target = 11F585DC2E870F5C00084AEC /* papyrus */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		11F585DF2E870F5D00084AEC /* papyrus */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				11F5860C2E87127A00084AEC /* Exceptions for "papyrus" folder in "papyrus" target */,
+			);
 			path = papyrus;
 			sourceTree = "<group>";
 		};
@@ -52,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11F5860F2E87130600084AEC /* Reader in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +96,7 @@
 				11F585DF2E870F5D00084AEC /* papyrus */,
 				11F585F12E870F5F00084AEC /* papyrusTests */,
 				11F585FB2E870F5F00084AEC /* papyrusUITests */,
+				11F5860D2E87130500084AEC /* Frameworks */,
 				11F585DE2E870F5D00084AEC /* Products */,
 			);
 			sourceTree = "<group>";
@@ -90,6 +109,13 @@
 				11F585F82E870F5F00084AEC /* papyrusUITests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		11F5860D2E87130500084AEC /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -112,6 +138,7 @@
 			);
 			name = papyrus;
 			packageProductDependencies = (
+				11F5860E2E87130600084AEC /* Reader */,
 			);
 			productName = papyrus;
 			productReference = 11F585DD2E870F5D00084AEC /* papyrus.app */;
@@ -593,6 +620,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		11F5860E2E87130600084AEC /* Reader */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = Reader;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 11F585D52E870F5C00084AEC /* Project object */;
 }

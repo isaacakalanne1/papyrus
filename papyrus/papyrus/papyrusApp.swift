@@ -6,12 +6,13 @@
 //
 
 import SwiftUI
+import Reader
 
 @main
 struct papyrusApp: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ReaderView()
         }
     }
 }
