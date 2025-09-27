@@ -10,6 +10,7 @@ import SwiftUI
 struct NewStoryForm: View {
     @FocusState.Binding var focusedField: ReaderView.Field?
     @EnvironmentObject var store: ReaderStore
+    @Binding var showStoryForm: Bool
     
     var body: some View {
         let mainCharacter: Binding<String> = .init {
@@ -26,17 +27,37 @@ struct NewStoryForm: View {
 
         VStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 24) {
-                // Form header
-                VStack(alignment: .leading, spacing: 6) {
-                    Text("New Tale")
-                        .font(.custom("Georgia", size: 20))
-                        .fontWeight(.medium)
-                        .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                // Form header with close button
+                HStack {
+                    VStack(alignment: .leading, spacing: 6) {
+                        Text("New Tale")
+                            .font(.custom("Georgia", size: 20))
+                            .fontWeight(.medium)
+                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                        
+                        Rectangle()
+                            .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3))
+                            .frame(height: 1)
+                            .frame(maxWidth: 120)
+                    }
                     
-                    Rectangle()
-                        .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3))
-                        .frame(height: 1)
-                        .frame(maxWidth: 120)
+                    Spacer()
+                    
+                    Button(action: {
+                        withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                            showStoryForm = false
+                            focusedField = nil
+                        }
+                    }) {
+                        Image(systemName: "xmark")
+                            .font(.system(size: 14, weight: .medium))
+                            .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                            .padding(8)
+                            .background(
+                                Circle()
+                                    .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.15))
+                            )
+                    }
                 }
                 .padding(.bottom, 8)
                 
