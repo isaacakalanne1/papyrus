@@ -72,6 +72,18 @@ struct ReaderView: View {
                     } else {
                         // Welcome state
                         ZStack {
+                            // Tap background to dismiss form
+                            if showStoryForm {
+                                Color.clear
+                                    .contentShape(Rectangle())
+                                    .onTapGesture {
+                                        withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                                            showStoryForm = false
+                                            focusedField = nil
+                                        }
+                                    }
+                            }
+                            
                             // Centered content (scroll icon and welcome text)
                             if focusedField == nil && !showStoryForm {
                                 WelcomeView()
@@ -94,19 +106,19 @@ struct ReaderView: View {
                                 } else {
                                     // Story form
                                     NewStoryForm(
-                                        focusedField: $focusedField
+                                        focusedField: $focusedField,
+                                        showStoryForm: $showStoryForm
                                     )
                                     .transition(.asymmetric(
                                         insertion: .move(edge: .bottom).combined(with: .opacity),
                                         removal: .move(edge: .bottom).combined(with: .opacity)
                                     ))
+                                    .onTapGesture {
+                                        // Prevent dismissal when tapping on the form itself
+                                    }
                                 }
                             }
                             .padding(.horizontal, 20)
-                            .background(Color.white.opacity(0.001)) // Invisible background for tap detection
-                            .onTapGesture {
-                                focusedField = nil
-                            }
                         }
                         .animation(.easeInOut(duration: 0.3), value: focusedField)
                         .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showStoryForm)
