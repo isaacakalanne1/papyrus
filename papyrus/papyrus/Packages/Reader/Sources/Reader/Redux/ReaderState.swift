@@ -5,12 +5,14 @@
 //  Created by Isaac Akalanne on 27/09/2025.
 //
 
+import TextGeneration
+
 public struct ReaderState: Equatable {
-    var chapter: String?
+    var story: Story?
 
     public init(
-        chapter: String? = nil
+        story: Story? = nil
     ) {
-        self.chapter = chapter
+        self.story = story
     }
 }

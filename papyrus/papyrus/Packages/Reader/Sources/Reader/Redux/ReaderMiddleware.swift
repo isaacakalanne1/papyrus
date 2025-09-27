@@ -10,10 +10,10 @@ import ReduxKit
 @MainActor
 let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentProtocol> = { state, action, environment in
     switch action {
-    case .createChapter:
+    case .createChapter(var story):
         do {
-            let chapter = try await environment.createChapter()
-            return .onCreatedChapter(chapter)
+            story = try await environment.createChapter(story: story)
+            return .onCreatedChapter(story)
         } catch {
             return .failedToCreateChapter
         }

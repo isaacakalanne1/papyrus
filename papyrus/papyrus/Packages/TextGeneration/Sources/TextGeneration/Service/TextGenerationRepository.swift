@@ -8,7 +8,7 @@
 import Foundation
 
 protocol TextGenerationRepositoryProtocol {
-    func createChapter() async throws -> String
+    func createChapter(story: Story) async throws -> Story
 }
 
 public class TextGenerationRepository: TextGenerationRepositoryProtocol {
@@ -18,7 +18,7 @@ public class TextGenerationRepository: TextGenerationRepositoryProtocol {
 
     }
     
-    public func createChapter() async throws -> String {
+    public func createChapter(story: Story) async throws -> Story {
         let url = URL(string: apiURL)!
         let apiKey = "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"
         
@@ -36,11 +36,14 @@ public class TextGenerationRepository: TextGenerationRepositoryProtocol {
                 ],
                 [
                     "role": "user",
-                    "content": "Write the first chapter of a captivating story. Include vivid descriptions, interesting characters, and an intriguing premise that will hook readers. The chapter should be around 500 words."
+                    "content": """
+Write the \(story.chapters.isEmpty ? "first" : "next") chapter of a captivating story. Include vivid descriptions, interesting characters, and an intriguing premise that will hook readers. The chapter should be around 500 words.
+\(story.mainCharacter.isEmpty ? "" : "Main character: \(story.mainCharacter)")
+\(story.setting.isEmpty ? "" : "Setting: \(story.setting)")
+\(story.chapters.isEmpty ? "" : "Previous chapters: \(story.chapters.reduce("", { $0 + "\n\n" + $1.content }))")
+"""
                 ]
-            ],
-            "temperature": 0.8,
-            "max_tokens": 1000
+            ]
         ]
         
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
