@@ -11,8 +11,17 @@ import ReduxKit
 let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     var newState = state
     switch action {
-    case .onCreatedChapter(let chapter):
-        newState.chapter = chapter
+    case .createStory:
+        newState.story = .init(
+            mainCharacter: newState.mainCharacter,
+            setting: newState.setting
+        )
+    case .onCreatedChapter(let story):
+        newState.story = story
+    case .updateMainCharacter(let mainCharacter):
+        newState.mainCharacter = mainCharacter
+    case .updateSetting(let setting):
+        newState.setting = setting
     case .createChapter,
             .failedToCreateChapter:
         break

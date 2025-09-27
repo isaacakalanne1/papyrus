@@ -7,8 +7,12 @@
 
 import TextGeneration
 
-enum ReaderAction {
+enum ReaderAction: Sendable {
+    case createStory
     case createChapter(Story)
     case onCreatedChapter(Story)
     case failedToCreateChapter
+    
+    case updateMainCharacter(String)
+    case updateSetting(String)
 }

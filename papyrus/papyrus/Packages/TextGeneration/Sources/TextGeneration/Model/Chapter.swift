@@ -5,8 +5,8 @@
 //  Created by Isaac Akalanne on 27/09/2025.
 //
 
-public struct Chapter: Codable, Equatable {
-    var content: String
+public struct Chapter: Codable, Equatable, Sendable {
+    public var content: String
     
     public init(
         content: String = ""
