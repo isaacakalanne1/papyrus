@@ -8,7 +8,7 @@
 import TextGeneration
 
 public protocol ReaderEnvironmentProtocol {
-    func createChapter() async throws -> String
+    func createChapter(story: Story) async throws -> Story
 }
 
 public struct ReaderEnvironment: ReaderEnvironmentProtocol {
@@ -20,7 +20,7 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
         self.textGenerationEnvironment = textGenerationEnvironment
     }
     
-    public func createChapter() async throws -> String {
-        try await textGenerationEnvironment.createChapter()
+    public func createChapter(story: Story) async throws -> Story {
+        try await textGenerationEnvironment.createChapter(story: story)
     }
 }

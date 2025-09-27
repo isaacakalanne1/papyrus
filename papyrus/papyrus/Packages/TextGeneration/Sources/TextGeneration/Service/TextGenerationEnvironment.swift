@@ -6,7 +6,7 @@
 //
 
 public protocol TextGenerationEnvironmentProtocol {
-    func createChapter() async throws -> String
+    func createChapter(story: Story) async throws -> Story
 }
 
 public struct TextGenerationEnvironment: TextGenerationEnvironmentProtocol {
@@ -16,7 +16,7 @@ public struct TextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         self.repository = TextGenerationRepository()
     }
     
-    public func createChapter() async throws -> String {
-        try await repository.createChapter()
+    public func createChapter(story: Story) async throws -> Story {
+        try await repository.createChapter(story: story)
     }
 }
