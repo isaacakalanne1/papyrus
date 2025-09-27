@@ -72,24 +72,30 @@ struct ReaderView: View {
                         // Welcome state
                         ZStack {
                             // Centered content (scroll icon and welcome text)
-                            VStack(spacing: 16) {
-                                Image(systemName: "scroll.fill")
-                                    .font(.system(size: 64))
-                                    .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
-                                    .opacity(0.5)
-                                
+                            if focusedField == nil {
                                 VStack(spacing: 16) {
-                                    Text("Welcome to Papyrus")
-                                        .font(.custom("Georgia", size: 28))
-                                        .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                                    Image(systemName: "scroll.fill")
+                                        .font(.system(size: 64))
+                                        .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                                        .opacity(0.5)
+                                        .padding(.top, 50)
                                     
-                                    Text("Begin your tale...")
-                                        .font(.custom("Georgia", size: 16))
-                                        .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
-                                        .italic()
+                                    VStack(spacing: 16) {
+                                        Text("Welcome to Papyrus")
+                                            .font(.custom("Georgia", size: 28))
+                                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                                        
+                                        Text("Begin your tale...")
+                                            .font(.custom("Georgia", size: 16))
+                                            .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                                            .italic()
+                                    }
+
+                                    Spacer()
                                 }
+                                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                                .transition(.opacity)
                             }
-                            .frame(maxWidth: .infinity, maxHeight: .infinity)
                             
                             // Bottom content (input fields and button)
                             VStack {
@@ -107,10 +113,10 @@ struct ReaderView: View {
                                         .padding(12)
                                         .background(
                                             RoundedRectangle(cornerRadius: 6)
-                                                .fill(Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.5))
+                                                .fill(Color(red: 0.94, green: 0.90, blue: 0.82))
                                                 .overlay(
                                                     RoundedRectangle(cornerRadius: 6)
-                                                        .stroke(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3), lineWidth: 1)
+                                                        .stroke(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.2), lineWidth: 1)
                                                 )
                                         )
                                         .focused($focusedField, equals: .mainCharacter)
@@ -131,10 +137,10 @@ struct ReaderView: View {
                                         .padding(12)
                                         .background(
                                             RoundedRectangle(cornerRadius: 6)
-                                                .fill(Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.5))
+                                                .fill(Color(red: 0.94, green: 0.90, blue: 0.82))
                                                 .overlay(
                                                     RoundedRectangle(cornerRadius: 6)
-                                                        .stroke(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3), lineWidth: 1)
+                                                        .stroke(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.2), lineWidth: 1)
                                                 )
                                         )
                                         .focused($focusedField, equals: .settingDetails)
@@ -177,6 +183,7 @@ struct ReaderView: View {
                                 focusedField = nil
                             }
                         }
+                        .animation(.easeInOut(duration: 0.3), value: focusedField)
                         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
                             keyboardHeight = 0
                         }
