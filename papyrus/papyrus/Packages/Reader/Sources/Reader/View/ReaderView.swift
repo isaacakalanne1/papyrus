@@ -9,20 +9,44 @@ import SwiftUI
 
 struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
+    @State private var loadingOpacity: Double = 0.3
     
     init() {
         
     }
     
     public var body: some View {
+        
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                Text(store.state.chapter)
-                    .font(.custom("Georgia", size: 18))
-                    .lineSpacing(8)
-                    .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
-                    .padding(.horizontal, 32)
-                    .padding(.vertical, 40)
+                if let chapter = store.state.chapter {
+                    Text(chapter)
+                        .font(.custom("Georgia", size: 18))
+                        .lineSpacing(8)
+                        .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
+                        .padding(.horizontal, 32)
+                        .padding(.vertical, 40)
+                } else {
+                    // Loading state
+                    VStack(spacing: 20) {
+                        // Ancient scroll icon
+                        Image(systemName: "scroll.fill")
+                            .font(.system(size: 48))
+                            .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                            .opacity(loadingOpacity)
+                            .animation(.easeInOut(duration: 1.5).repeatForever(autoreverses: true), value: loadingOpacity)
+                        
+                        Text("Unrolling the scroll...")
+                            .font(.custom("Georgia", size: 16))
+                            .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                            .italic()
+                    }
+                    .frame(maxWidth: .infinity, maxHeight: .infinity)
+                    .padding(.vertical, 100)
+                    .onAppear {
+                        loadingOpacity = 1.0
+                    }
+                }
             }
         }
         .background(
