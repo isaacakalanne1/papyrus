@@ -6,10 +6,10 @@
 //
 
 public struct ReaderState: Equatable {
-    var chapter: String
+    var chapter: String?
 
     public init(
-        chapter: String = ""
+        chapter: String? = nil
     ) {
         self.chapter = chapter
     }
