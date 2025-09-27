@@ -5,26 +5,66 @@
 //  Created by Isaac Akalanne on 26/09/2025.
 //
 
+import Foundation
+
 protocol TextGenerationRepositoryProtocol {
-    func createChapter() -> String
+    func createChapter() async throws -> String
 }
 
 public class TextGenerationRepository: TextGenerationRepositoryProtocol {
-    public func createChapter() -> String {
-        """
-        Chapter 1: The Forgotten Library
-        
-        The ancient door creaked open with a sound like autumn leaves rustling in the wind. Maya stepped into the dimly lit chamber, her footsteps echoing against the stone walls that had stood for centuries. Dust motes danced in the shafts of golden light that filtered through the tall, arched windows.
-        
-        Before her stretched rows upon rows of towering bookshelves, their wooden frames darkened with age and mystery. Each shelf was packed with volumes bound in leather of every conceivable color—deep burgundy, forest green, midnight blue, and rich amber. Some books were so old their titles had faded to whispers of gold leaf on weathered spines.
-        
-        The air itself seemed to hum with stories untold. Maya could almost hear the voices of a thousand characters calling out from their printed pages, begging to be remembered once more. She ran her fingers along the nearest shelf, feeling the raised letters and worn edges of books that had been loved and treasured by generations of readers.
-        
-        As she ventured deeper into the library, she noticed something peculiar. While most of the books were clearly ancient, there were newer volumes scattered throughout—their bindings crisp and bright, as if they had appeared overnight. Their pages seemed to shimmer with an otherworldly light, and when Maya leaned closer, she could swear she heard the faint sound of typing, as if invisible hands were still writing their stories.
-        
-        "Welcome," came a gentle voice from somewhere among the stacks. "I've been waiting for someone who truly loves stories to find this place."
-        
-        Maya turned, her heart racing with anticipation. This was only the beginning of an adventure she could never have imagined, in a library where every book held the power to change not just her world, but worlds beyond counting.
-        """
+    private let apiURL = "https://openrouter.ai/api/v1/chat/completions"
+    
+    public init() {
+
     }
+    
+    public func createChapter() async throws -> String {
+        let url = URL(string: apiURL)!
+        let apiKey = "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"
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "model": "x-ai/grok-4-fast:free",
+            "messages": [
+                [
+                    "role": "system",
+                    "content": "You are a creative story writer. Write the first chapter of an engaging story."
+                ],
+                [
+                    "role": "user",
+                    "content": "Write the first chapter of a captivating story. Include vivid descriptions, interesting characters, and an intriguing premise that will hook readers. The chapter should be around 500 words."
+                ]
+            ],
+            "temperature": 0.8,
+            "max_tokens": 1000
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            throw TextGenerationError.invalidResponse
+        }
+        
+        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+        guard let choices = json?["choices"] as? [[String: Any]],
+              let firstChoice = choices.first,
+              let message = firstChoice["message"] as? [String: Any],
+              let content = message["content"] as? String else {
+            throw TextGenerationError.parsingError
+        }
+        
+        return content
+    }
+}
+
+public enum TextGenerationError: Error {
+    case invalidResponse
+    case parsingError
 }
