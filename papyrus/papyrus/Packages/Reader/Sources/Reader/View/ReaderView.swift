@@ -6,11 +6,21 @@
 //
 
 import SwiftUI
+import UIKit
 
 struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
     @State private var isMenuOpen: Bool = false
     @State private var dragOffset: CGFloat = 0
+    @State private var mainCharacter: String = ""
+    @State private var settingDetails: String = ""
+    @FocusState private var focusedField: Field?
+    @State private var keyboardHeight: CGFloat = 0
+    
+    enum Field {
+        case mainCharacter
+        case settingDetails
+    }
     
     // Example story titles
     let storyTitles = [
@@ -60,49 +70,116 @@ struct ReaderView: View {
                         }
                     } else {
                         // Welcome state
-                        VStack(spacing: 30) {
-                            Spacer()
-                            // Ancient scroll icon
-                            Image(systemName: "scroll.fill")
-                                .font(.system(size: 64))
-                                .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
-                                .opacity(0.5)
-                            
+                        ZStack {
+                            // Centered content (scroll icon and welcome text)
                             VStack(spacing: 16) {
-                                Text("Welcome to Papyrus")
-                                    .font(.custom("Georgia", size: 28))
-                                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                                Image(systemName: "scroll.fill")
+                                    .font(.system(size: 64))
+                                    .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                                    .opacity(0.5)
                                 
-                                Text("Your stories await. Begin your journey\nby crafting a new chapter or exploring\nyour existing tales from the menu.")
-                                    .font(.custom("Georgia", size: 16))
-                                    .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
-                                    .multilineTextAlignment(.center)
-                                    .lineSpacing(4)
-                            }
-                            
-                            Spacer()
-                            
-                            // Write chapter button
-                            Button(action: {
-                                store.dispatch(.createChapter)
-                            }) {
-                                HStack {
-                                    Image(systemName: "pencil")
-                                    Text("Write chapter")
+                                VStack(spacing: 16) {
+                                    Text("Welcome to Papyrus")
+                                        .font(.custom("Georgia", size: 28))
+                                        .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                                    
+                                    Text("Begin your tale...")
+                                        .font(.custom("Georgia", size: 16))
+                                        .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                                        .italic()
                                 }
-                                .font(.custom("Georgia", size: 18))
-                                .foregroundColor(Color(red: 0.98, green: 0.95, blue: 0.89))
-                                .padding(.horizontal, 32)
-                                .padding(.vertical, 16)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(Color(red: 0.4, green: 0.35, blue: 0.3))
-                                )
                             }
-                            .padding(.bottom, 40)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            
+                            // Bottom content (input fields and button)
+                            VStack {
+                                Spacer()
+                                
+                                VStack(alignment: .leading, spacing: 20) {
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Main Character")
+                                        .font(.custom("Georgia", size: 14))
+                                        .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                                    
+                                    TextField("Enter a name...", text: $mainCharacter)
+                                        .font(.custom("Georgia", size: 16))
+                                        .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
+                                        .padding(12)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 6)
+                                                .fill(Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.5))
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 6)
+                                                        .stroke(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3), lineWidth: 1)
+                                                )
+                                        )
+                                        .focused($focusedField, equals: .mainCharacter)
+                                        .submitLabel(.next)
+                                        .onSubmit {
+                                            focusedField = .settingDetails
+                                        }
+                                }
+                                
+                                VStack(alignment: .leading, spacing: 8) {
+                                    Text("Setting")
+                                        .font(.custom("Georgia", size: 14))
+                                        .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                                    
+                                    TextField("Describe the world...", text: $settingDetails)
+                                        .font(.custom("Georgia", size: 16))
+                                        .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
+                                        .padding(12)
+                                        .background(
+                                            RoundedRectangle(cornerRadius: 6)
+                                                .fill(Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.5))
+                                                .overlay(
+                                                    RoundedRectangle(cornerRadius: 6)
+                                                        .stroke(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3), lineWidth: 1)
+                                                )
+                                        )
+                                        .focused($focusedField, equals: .settingDetails)
+                                        .submitLabel(.return)
+                                        .onSubmit {
+                                            focusedField = nil
+                                        }
+                                }
+                                
+                                    Text("Tip: Write a story about your favourite character")
+                                        .font(.custom("Georgia", size: 14))
+                                        .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                                }
+                                .padding(.top, 20)
+                                
+                                // Write chapter button
+                                Button(action: {
+                                    store.dispatch(.createChapter)
+                                }) {
+                                    HStack {
+                                        Image(systemName: "pencil")
+                                        Text("Write chapter")
+                                    }
+                                    .font(.custom("Georgia", size: 18))
+                                    .foregroundColor(Color(red: 0.98, green: 0.95, blue: 0.89))
+                                    .padding(.horizontal, 32)
+                                    .padding(.vertical, 16)
+                                    .background(
+                                        RoundedRectangle(cornerRadius: 8)
+                                            .fill(Color(red: 0.4, green: 0.35, blue: 0.3))
+                                            .opacity(mainCharacter.isEmpty ? 0.5 : 1.0)
+                                    )
+                                }
+                                .disabled(mainCharacter.isEmpty)
+                                .padding(.bottom, 20)
+                            }
+                            .padding(.horizontal, 32)
+                            .background(Color.white.opacity(0.001)) // Invisible background for tap detection
+                            .onTapGesture {
+                                focusedField = nil
+                            }
                         }
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .padding(.horizontal, 32)
+                        .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                            keyboardHeight = 0
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -215,7 +292,7 @@ struct ReaderView: View {
                 Spacer()
             }
         }
-        .ignoresSafeArea(.all, edges: .bottom)
+//        .ignoresSafeArea(.all, edges: .bottom)
     }
 }
 
