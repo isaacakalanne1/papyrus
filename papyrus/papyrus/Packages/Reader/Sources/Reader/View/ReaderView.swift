@@ -10,6 +10,7 @@ import SwiftUI
 struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
     @State private var isMenuOpen: Bool = false
+    @State private var dragOffset: CGFloat = 0
     
     // Example story titles
     let storyTitles = [
@@ -117,6 +118,22 @@ struct ReaderView: View {
                 )
                 .scrollBounceBehavior(.basedOnSize)
             }
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        if value.startLocation.x < 20 && value.translation.width > 0 {
+                            dragOffset = min(value.translation.width, 280)
+                        }
+                    }
+                    .onEnded { value in
+                        if dragOffset > 100 {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                isMenuOpen = true
+                            }
+                        }
+                        dragOffset = 0
+                    }
+            )
             
             // Side menu overlay
             if isMenuOpen {
@@ -193,7 +210,7 @@ struct ReaderView: View {
                         endPoint: .bottomTrailing
                     )
                 )
-                .offset(x: isMenuOpen ? 0 : -280)
+                .offset(x: isMenuOpen ? 0 : -280 + dragOffset)
                 
                 Spacer()
             }
