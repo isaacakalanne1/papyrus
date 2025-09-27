@@ -7,12 +7,23 @@
 
 import SwiftUI
 import Reader
+import TextGeneration
 
 @main
 struct papyrusApp: App {
+    let environment: ReaderEnvironmentProtocol
+    
+    init() {
+        let textGenerationEnvironment = TextGenerationEnvironment()
+
+        self.environment = ReaderEnvironment(
+            textGenerationEnvironment: textGenerationEnvironment
+        )
+    }
+
     var body: some Scene {
         WindowGroup {
-            ReaderView()
+            ReaderRootView(environment: environment)
         }
     }
 }
