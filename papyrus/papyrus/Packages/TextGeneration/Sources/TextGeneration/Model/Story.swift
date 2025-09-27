@@ -5,11 +5,11 @@
 //  Created by Isaac Akalanne on 27/09/2025.
 //
 
-public struct Story: Codable, Equatable {
+public struct Story: Codable, Equatable, Sendable {
     var mainCharacter: String
     var setting: String
     var chapterIndex: Int
-    var chapters: [Chapter]
+    public var chapters: [Chapter]
     
     public init(
         mainCharacter: String = "",

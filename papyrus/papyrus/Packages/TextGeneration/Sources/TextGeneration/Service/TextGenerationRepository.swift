@@ -8,7 +8,7 @@
 import Foundation
 
 protocol TextGenerationRepositoryProtocol {
-    func createChapter(story: Story) async throws -> Story
+    func createChapter(story originalStory: Story) async throws -> Story
 }
 
 public class TextGenerationRepository: TextGenerationRepositoryProtocol {
@@ -18,7 +18,8 @@ public class TextGenerationRepository: TextGenerationRepositoryProtocol {
 
     }
     
-    public func createChapter(story: Story) async throws -> Story {
+    public func createChapter(story originalStory: Story) async throws -> Story {
+        var story = originalStory
         let url = URL(string: apiURL)!
         let apiKey = "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"
         
@@ -63,7 +64,9 @@ Write the \(story.chapters.isEmpty ? "first" : "next") chapter of a captivating 
             throw TextGenerationError.parsingError
         }
         
-        return content
+        story.chapters.append(.init(content: content))
+        
+        return story
     }
 }
 
