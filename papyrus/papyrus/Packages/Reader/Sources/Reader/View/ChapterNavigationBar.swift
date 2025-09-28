@@ -47,7 +47,7 @@ struct ChapterNavigationBar: View {
                     .disabled(story.chapterIndex <= 0)
                     
                     // Chapter Indicator
-                    Text("Chapter \(story.chapterIndex + 1) of \(story.chapters.count)")
+                    Text("Chapter \(story.chapterIndex + 1) of \(story.maxNumberOfChapters > 0 ? story.maxNumberOfChapters : story.chapters.count)")
                         .font(.custom("Georgia", size: 14))
                         .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
                     

@@ -14,6 +14,7 @@ public struct Story: Codable, Equatable, Sendable {
     var plotOutline: String
     var chaptersBreakdown: String
     public var chapterIndex: Int
+    public var maxNumberOfChapters: Int
     
     public var title: String
     public var chapters: [Chapter]
@@ -25,6 +26,7 @@ public struct Story: Codable, Equatable, Sendable {
         plotOutline: String = "",
         chaptersBreakdown: String = "",
         chapterIndex: Int = 0,
+        maxNumberOfChapters: Int = 0,
         title: String = "",
         chapters: [Chapter] = []
     ) {
@@ -34,6 +36,7 @@ public struct Story: Codable, Equatable, Sendable {
         self.plotOutline = plotOutline
         self.chaptersBreakdown = chaptersBreakdown
         self.chapterIndex = chapterIndex
+        self.maxNumberOfChapters = maxNumberOfChapters
         self.title = title
         self.chapters = chapters
     }
@@ -48,6 +51,7 @@ public struct Story: Codable, Equatable, Sendable {
         self.plotOutline = try container.decode(String.self, forKey: .plotOutline)
         self.chaptersBreakdown = try container.decode(String.self, forKey: .chaptersBreakdown)
         self.chapterIndex = try container.decode(Int.self, forKey: .chapterIndex)
+        self.maxNumberOfChapters = try container.decodeIfPresent(Int.self, forKey: .maxNumberOfChapters) ?? 0
         self.title = try container.decode(String.self, forKey: .title)
         self.chapters = try container.decode([Chapter].self, forKey: .chapters)
     }
