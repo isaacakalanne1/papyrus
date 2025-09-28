@@ -10,6 +10,7 @@ import Foundation
 protocol TextGenerationRepositoryProtocol {
     func createPlotOutline(story originalStory: Story) async throws -> Story
     func createChapterBreakdown(story originalStory: Story) async throws -> Story
+    func getStoryDetails(story originalStory: Story) async throws -> Story
     func createChapter(story originalStory: Story) async throws -> Story
 }
 
@@ -182,6 +183,66 @@ Generate the chapter breakdown now, ensuring it's polished, immersive, and optim
         }
         
         story.chaptersBreakdown = content
+        
+        return story
+    }
+    
+    public func getStoryDetails(story originalStory: Story) async throws -> Story {
+        var story = originalStory
+        let url = URL(string: apiURL)!
+        let apiKey = "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"
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "model": "x-ai/grok-4-fast:free",
+            "messages": [
+                [
+                    "role": "system",
+                    "content": "You are a story analysis expert. Count the total number of chapters in a chapter breakdown and return only the integer number."
+                ],
+                [
+                    "role": "user",
+                    "content": """
+Analyze the following chapter breakdown and return ONLY the total number of chapters as an integer (e.g., just "12" or "15"):
+
+Chapter Breakdown:
+\(story.chaptersBreakdown)
+"""
+                ]
+            ]
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        request.timeoutInterval = 1200
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            throw TextGenerationError.invalidResponse
+        }
+        
+        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+        guard let choices = json?["choices"] as? [[String: Any]],
+              let firstChoice = choices.first,
+              let message = firstChoice["message"] as? [String: Any],
+              let content = message["content"] as? String else {
+            throw TextGenerationError.parsingError
+        }
+        
+        // Extract the integer from the response
+        let trimmedContent = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        if let numberOfChapters = Int(trimmedContent) {
+            story.maxNumberOfChapters = numberOfChapters
+        } else {
+            // Fallback: try to extract first number from the response
+            let numbers = trimmedContent.components(separatedBy: CharacterSet.decimalDigits.inverted).compactMap { Int($0) }
+            story.maxNumberOfChapters = numbers.first ?? 0
+        }
         
         return story
     }

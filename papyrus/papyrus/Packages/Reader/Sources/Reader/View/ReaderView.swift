@@ -65,15 +65,17 @@ struct ReaderView: View {
                                         .padding(.horizontal, 32)
                                         .padding(.vertical, 40)
                                     
-                                    // Next Chapter Button
-                                    PrimaryButton(
-                                        title: "Next Chapter",
-                                        icon: "book.pages"
-                                    ) {
-                                        store.dispatch(.createChapter(story))
+                                    // Next Chapter Button (only show if more chapters can be created)
+                                    if story.chapterIndex < story.maxNumberOfChapters - 1 {
+                                        PrimaryButton(
+                                            title: "Next Chapter",
+                                            icon: "book.pages"
+                                        ) {
+                                            store.dispatch(.createChapter(story))
+                                        }
+                                        .padding(.bottom, 40)
+                                        .padding(.bottom, 80) // Additional space for navigation bar
                                     }
-                                    .padding(.bottom, 40)
-                                    .padding(.bottom, 80) // Additional space for navigation bar
                                 }
                             }
                             

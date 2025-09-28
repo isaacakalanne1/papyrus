@@ -27,6 +27,11 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .onCreatedChapterBreakdown(let story):
         newState.story = story
         newState.isLoading = true // Keep loading for next step
+    case .getStoryDetails:
+        newState.isLoading = true
+    case .onGetStoryDetails(let story):
+        newState.story = story
+        newState.isLoading = true // Keep loading for next step
     case .onCreatedChapter(let story):
         newState.story = story
         newState.isLoading = false

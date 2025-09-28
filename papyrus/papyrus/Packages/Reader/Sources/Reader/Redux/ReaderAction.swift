@@ -13,6 +13,8 @@ enum ReaderAction: Sendable {
     case onCreatedPlotOutline(Story)
     case createChapterBreakdown(Story)
     case onCreatedChapterBreakdown(Story)
+    case getStoryDetails(Story)
+    case onGetStoryDetails(Story)
     case createChapter(Story)
     case onCreatedChapter(Story)
     case failedToCreateChapter

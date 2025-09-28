@@ -32,6 +32,19 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToCreateChapter
         }
     case .onCreatedChapterBreakdown(let story):
+        if story.maxNumberOfChapters > 0 {
+            return .createChapter(story)
+        } else {
+            return .getStoryDetails(story)
+        }
+    case .getStoryDetails(var story):
+        do {
+            story = try await environment.getStoryDetails(story: story)
+            return .onGetStoryDetails(story)
+        } catch {
+            return .failedToCreateChapter
+        }
+    case .onGetStoryDetails(let story):
         return .createChapter(story)
     case .createChapter(var story):
         do {
