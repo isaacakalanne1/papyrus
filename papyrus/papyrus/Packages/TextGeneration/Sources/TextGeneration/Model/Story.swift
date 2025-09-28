@@ -13,7 +13,7 @@ public struct Story: Codable, Equatable, Sendable {
     var setting: String
     public var chapterIndex: Int
     
-    var title: String
+    public var title: String
     public var chapters: [Chapter]
     
     public init(
