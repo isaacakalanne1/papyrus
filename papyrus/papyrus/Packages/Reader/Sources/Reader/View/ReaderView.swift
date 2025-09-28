@@ -59,8 +59,11 @@ struct ReaderView: View {
                 }
                 .background(Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.8))
                 
-                VStack(alignment: .leading, spacing: 0) {
-                    if let chapter = store.state.story?.chapters.last {
+                ZStack {
+                    if store.state.isLoading {
+                        LoadingView()
+                            .transition(.opacity)
+                    } else if let chapter = store.state.story?.chapters.last {
                         ScrollView {
                             Text(chapter.content)
                                 .font(.custom("Georgia", size: 18))
@@ -125,6 +128,12 @@ struct ReaderView: View {
                         .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
                             keyboardHeight = 0
                         }
+                        .onChange(of: store.state.isLoading) { isLoading in
+                            if isLoading {
+                                showStoryForm = false
+                                focusedField = nil
+                            }
+                        }
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -139,6 +148,7 @@ struct ReaderView: View {
                     )
                 )
                 .scrollBounceBehavior(.basedOnSize)
+                .animation(.easeInOut(duration: 0.4), value: store.state.isLoading)
             }
             .gesture(
                 DragGesture()

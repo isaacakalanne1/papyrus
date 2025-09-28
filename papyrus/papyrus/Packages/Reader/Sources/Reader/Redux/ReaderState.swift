@@ -11,14 +11,17 @@ public struct ReaderState: Equatable {
     var mainCharacter: String
     var setting: String
     var story: Story?
+    var isLoading: Bool
 
     public init(
         mainCharacter: String = "",
         setting: String = "",
-        story: Story? = nil
+        story: Story? = nil,
+        isLoading: Bool = false
     ) {
         self.story = story
         self.mainCharacter = mainCharacter
         self.setting = setting
+        self.isLoading = isLoading
     }
 }
