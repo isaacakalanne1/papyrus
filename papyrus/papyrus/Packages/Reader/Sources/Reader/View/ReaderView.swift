@@ -57,13 +57,24 @@ struct ReaderView: View {
                               story.chapterIndex < story.chapters.count {
                         VStack(spacing: 0) {
                             ScrollView {
-                                Text(story.chapters[story.chapterIndex].content)
-                                    .font(.custom("Georgia", size: 18))
-                                    .lineSpacing(8)
-                                    .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
-                                    .padding(.horizontal, 32)
-                                    .padding(.vertical, 40)
-                                    .padding(.bottom, 80) // Space for navigation bar
+                                VStack(spacing: 0) {
+                                    Text(story.chapters[story.chapterIndex].content)
+                                        .font(.custom("Georgia", size: 18))
+                                        .lineSpacing(8)
+                                        .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
+                                        .padding(.horizontal, 32)
+                                        .padding(.vertical, 40)
+                                    
+                                    // Next Chapter Button
+                                    PrimaryButton(
+                                        title: "Next Chapter",
+                                        icon: "book.pages"
+                                    ) {
+                                        store.dispatch(.createChapter(story))
+                                    }
+                                    .padding(.bottom, 40)
+                                    .padding(.bottom, 80) // Additional space for navigation bar
+                                }
                             }
                             
                             // Chapter Navigation Bar
