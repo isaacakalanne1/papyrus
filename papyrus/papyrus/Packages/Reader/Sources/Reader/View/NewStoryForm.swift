@@ -170,38 +170,14 @@ struct NewStoryForm: View {
             )
             
             // Write chapter button
-            Button(action: {
+            DisablablePrimaryButton(
+                title: "Create Story",
+                icon: "pencil.and.ruler",
+                size: .medium,
+                isDisabled: mainCharacter.wrappedValue.isEmpty
+            ) {
                 store.dispatch(.createStory)
-            }) {
-                HStack(spacing: 12) {
-                    Image(systemName: "pencil.and.ruler")
-                        .font(.system(size: 18))
-                    Text("Create Story")
-                        .font(.custom("Georgia", size: 18))
-                        .fontWeight(.medium)
-                }
-                .foregroundColor(Color(red: 0.98, green: 0.95, blue: 0.89))
-                .padding(.horizontal, 36)
-                .padding(.vertical, 18)
-                .background(
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(
-                            LinearGradient(
-                                gradient: Gradient(colors: [
-                                    Color(red: 0.45, green: 0.40, blue: 0.35),
-                                    Color(red: 0.35, green: 0.30, blue: 0.25)
-                                ]),
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .opacity(mainCharacter.wrappedValue.isEmpty ? 0.6 : 1.0)
-                        .shadow(color: Color.black.opacity(0.2), radius: 4, x: 0, y: 2)
-                )
             }
-            .disabled(mainCharacter.wrappedValue.isEmpty)
-            .scaleEffect(mainCharacter.wrappedValue.isEmpty ? 0.98 : 1.0)
-            .animation(.easeInOut(duration: 0.15), value: mainCharacter.wrappedValue.isEmpty)
             .padding(.top, 24)
             .padding(.bottom, 32)
         }
