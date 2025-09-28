@@ -9,6 +9,10 @@ import TextGeneration
 
 enum ReaderAction: Sendable {
     case createStory
+    case createPlotOutline(Story)
+    case onCreatedPlotOutline(Story)
+    case createChapterBreakdown(Story)
+    case onCreatedChapterBreakdown(Story)
     case createChapter(Story)
     case onCreatedChapter(Story)
     case failedToCreateChapter
