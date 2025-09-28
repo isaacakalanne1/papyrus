@@ -83,6 +83,7 @@ Generate the plot outline now, ensuring it's polished, professional, and ready t
         ]
         
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        request.timeoutInterval = 1200
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
@@ -133,7 +134,7 @@ You are an expert narrative architect and editor with extensive experience in br
 Expand the plot outline into a chapter-by-chapter breakdown for a complete story. Aim for 10-15 chapters to fit a novella or novel-length narrative (20,000-80,000 words), distributing chapters logically across the three acts (e.g., 3-4 in Act 1, 5-7 in Act 2, 2-4 in Act 3). Each chapter must stand alone in the breakdown with its own dedicated outline—no grouping chapters into ranges (e.g., avoid "Chapters 5-7"; treat each as "Chapter 5," "Chapter 6," etc.). Ensure the breakdown faithfully adapts the plot outline while adding granular details like key scenes, character arcs, dialogue hooks, and sensory elements to make it vivid and actionable.
 
 **Structure the Chapter Breakdown:**
-- **Overall Story Arc:** Briefly restate how chapters map to the three-act structure (e.g., Chapters 1-12: Act 1; Chapters 13-38: Act 2; Chapters 39-50: Act 3). Include estimated word count per chapter (e.g., 2,000-5,000 words) to guide pacing.
+- **Overall Story Arc:** Briefly restate how chapters map to the three-act structure (e.g., Chapters 1-15: Act 1; Chapters 16-35: Act 2; Chapters 36-50: Act 3). Include estimated word count per chapter (e.g., 2,000-5,000 words) to guide pacing.
 - **Chapter-by-Chapter Outlines:** For *each individual chapter*, provide:
   1. **Chapter Title:** A evocative, thematic title that hints at the content without spoiling.
   2. **Act and Position:** Specify the act and its role in the overall plot (e.g., "Act 1: Builds the ordinary world and inciting incident").
@@ -163,6 +164,7 @@ Generate the chapter breakdown now, ensuring it's polished, immersive, and optim
         ]
         
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        request.timeoutInterval = 1200
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
@@ -247,6 +249,7 @@ Generate the full chapter text now, ensuring it's a standalone masterpiece that 
         ]
         
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        request.timeoutInterval = 1200
         
         let (data, response) = try await URLSession.shared.data(for: request)
         
