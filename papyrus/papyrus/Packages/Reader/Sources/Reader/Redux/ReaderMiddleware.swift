@@ -11,16 +11,28 @@ import ReduxKit
 let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentProtocol> = { state, action, environment in
     switch action {
     case .createStory:
-        guard var story = state.story else {
+        guard let story = state.story else {
             return .failedToCreateChapter
         }
-        
+        return .createPlotOutline(story)
+    case .createPlotOutline(var story):
         do {
-            story = try await environment.createChapter(story: story)
-            return .onCreatedChapter(story)
+            story = try await environment.createPlotOutline(story: story)
+            return .onCreatedPlotOutline(story)
         } catch {
             return .failedToCreateChapter
         }
+    case .onCreatedPlotOutline(let story):
+        return .createChapterBreakdown(story)
+    case .createChapterBreakdown(var story):
+        do {
+            story = try await environment.createChapterBreakdown(story: story)
+            return .onCreatedChapterBreakdown(story)
+        } catch {
+            return .failedToCreateChapter
+        }
+    case .onCreatedChapterBreakdown(let story):
+        return .createChapter(story)
     case .createChapter(var story):
         do {
             story = try await environment.createChapter(story: story)

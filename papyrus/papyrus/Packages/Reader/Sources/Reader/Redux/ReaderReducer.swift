@@ -17,6 +17,16 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             mainCharacter: newState.mainCharacter,
             setting: newState.setting
         )
+    case .createPlotOutline:
+        newState.isLoading = true
+    case .onCreatedPlotOutline(let story):
+        newState.story = story
+        newState.isLoading = true // Keep loading for next step
+    case .createChapterBreakdown:
+        newState.isLoading = true
+    case .onCreatedChapterBreakdown(let story):
+        newState.story = story
+        newState.isLoading = true // Keep loading for next step
     case .onCreatedChapter(let story):
         newState.story = story
         newState.isLoading = false

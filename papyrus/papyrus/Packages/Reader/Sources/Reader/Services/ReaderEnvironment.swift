@@ -9,6 +9,8 @@ import Foundation
 import TextGeneration
 
 public protocol ReaderEnvironmentProtocol {
+    func createPlotOutline(story: Story) async throws -> Story
+    func createChapterBreakdown(story: Story) async throws -> Story
     func createChapter(story: Story) async throws -> Story
     func saveStory(_ story: Story) async throws
     func loadStory(withId id: UUID) async throws -> Story?
@@ -26,6 +28,14 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
     ) {
         self.textGenerationEnvironment = textGenerationEnvironment
         self.dataStore = ReaderDataStore()
+    }
+    
+    public func createPlotOutline(story: Story) async throws -> Story {
+        try await textGenerationEnvironment.createPlotOutline(story: story)
+    }
+    
+    public func createChapterBreakdown(story: Story) async throws -> Story {
+        try await textGenerationEnvironment.createChapterBreakdown(story: story)
     }
     
     public func createChapter(story: Story) async throws -> Story {
