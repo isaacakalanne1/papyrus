@@ -47,8 +47,14 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         } catch {
             return .failedToLoadStories
         }
-    case .onCreatedChapter,
-            .failedToCreateChapter,
+    case .onCreatedChapter(let story):
+        do {
+            try await environment.saveStory(story)
+            return nil
+        } catch {
+            return .failedToCreateChapter
+        }
+    case .failedToCreateChapter,
             .updateSetting,
             .updateMainCharacter,
             .onLoadedStories,
