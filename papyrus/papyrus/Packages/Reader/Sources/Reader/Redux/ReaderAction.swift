@@ -13,6 +13,12 @@ enum ReaderAction: Sendable {
     case onCreatedChapter(Story)
     case failedToCreateChapter
     
+    case loadAllStories
+    case onLoadedStories([Story])
+    case failedToLoadStories
+    case setStory(Story)
+    
     case updateMainCharacter(String)
     case updateSetting(String)
+    case updateChapterIndex(Int)
 }

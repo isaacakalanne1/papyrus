@@ -23,17 +23,6 @@ struct ReaderView: View {
         case settingDetails
     }
     
-    // Example story titles
-    let storyTitles = [
-        "The Forgotten Kingdom",
-        "Whispers in the Sand",
-        "The Last Pharaoh's Secret",
-        "Echoes of Alexandria",
-        "The Scribe's Tale",
-        "Beneath the Pyramid",
-        "The Desert Rose Mystery"
-    ]
-    
     init() {
         
     }
@@ -63,14 +52,83 @@ struct ReaderView: View {
                     if store.state.isLoading {
                         LoadingView()
                             .transition(.opacity)
-                    } else if let chapter = store.state.story?.chapters.last {
-                        ScrollView {
-                            Text(chapter.content)
-                                .font(.custom("Georgia", size: 18))
-                                .lineSpacing(8)
-                                .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
-                                .padding(.horizontal, 32)
-                                .padding(.vertical, 40)
+                    } else if let story = store.state.story,
+                              !story.chapters.isEmpty,
+                              story.chapterIndex < story.chapters.count {
+                        VStack(spacing: 0) {
+                            ScrollView {
+                                Text(story.chapters[story.chapterIndex].content)
+                                    .font(.custom("Georgia", size: 18))
+                                    .lineSpacing(8)
+                                    .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
+                                    .padding(.horizontal, 32)
+                                    .padding(.vertical, 40)
+                                    .padding(.bottom, 80) // Space for navigation bar
+                            }
+                            
+                            // Chapter Navigation Bar
+                            VStack(spacing: 0) {
+                                Divider()
+                                    .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3))
+                                
+                                VStack(spacing: 4) {
+                                    // Chapter Title
+                                    if !story.chapters[story.chapterIndex].title.isEmpty {
+                                        Text(story.chapters[story.chapterIndex].title)
+                                            .font(.custom("Georgia", size: 16))
+                                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                                            .lineLimit(1)
+                                            .truncationMode(.tail)
+                                            .padding(.horizontal, 60) // Space for nav buttons
+                                    }
+                                    
+                                    HStack(spacing: 40) {
+                                        // Previous Chapter Button
+                                        Button(action: {
+                                            if story.chapterIndex > 0 {
+                                                store.dispatch(.updateChapterIndex(story.chapterIndex - 1))
+                                            }
+                                        }) {
+                                            Image(systemName: "chevron.left")
+                                                .font(.system(size: 18, weight: .medium))
+                                                .foregroundColor(
+                                                    story.chapterIndex > 0 
+                                                    ? Color(red: 0.4, green: 0.35, blue: 0.3)
+                                                    : Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3)
+                                                )
+                                                .frame(width: 44, height: 44)
+                                        }
+                                        .disabled(story.chapterIndex <= 0)
+                                        
+                                        // Chapter Indicator
+                                        Text("Chapter \(story.chapterIndex + 1) of \(story.chapters.count)")
+                                            .font(.custom("Georgia", size: 14))
+                                            .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                                        
+                                        // Next Chapter Button
+                                        Button(action: {
+                                            if story.chapterIndex < story.chapters.count - 1 {
+                                                store.dispatch(.updateChapterIndex(story.chapterIndex + 1))
+                                            }
+                                        }) {
+                                            Image(systemName: "chevron.right")
+                                                .font(.system(size: 18, weight: .medium))
+                                                .foregroundColor(
+                                                    story.chapterIndex < story.chapters.count - 1
+                                                    ? Color(red: 0.4, green: 0.35, blue: 0.3)
+                                                    : Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3)
+                                                )
+                                                .frame(width: 44, height: 44)
+                                        }
+                                        .disabled(story.chapterIndex >= story.chapters.count - 1)
+                                    }
+                                }
+                                .padding(.vertical, 8)
+                                .frame(maxWidth: .infinity)
+                                .background(
+                                    Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.95)
+                                )
+                            }
                         }
                     } else {
                         // Welcome state
@@ -196,35 +254,42 @@ struct ReaderView: View {
                     // Story list
                     ScrollView {
                         VStack(alignment: .leading, spacing: 0) {
-                            ForEach(storyTitles, id: \.self) { title in
-                                Button(action: {
-                                    // TODO: Load selected story
-                                    withAnimation(.easeInOut(duration: 0.3)) {
-                                        isMenuOpen = false
+                            if let stories = store.state.loadedStories, !stories.isEmpty {
+                                ForEach(stories, id: \.id) { story in
+                                    Button(action: {
+                                        store.dispatch(.setStory(story))
+                                        withAnimation(.easeInOut(duration: 0.3)) {
+                                            isMenuOpen = false
+                                        }
+                                    }) {
+                                        HStack {
+                                            Image(systemName: "book.closed")
+                                                .font(.system(size: 16))
+                                                .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                                            
+                                            Text(story.title.isEmpty ? "Untitled Story" : story.title)
+                                                .font(.custom("Georgia", size: 16))
+                                                .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                                            
+                                            Spacer()
+                                        }
+                                        .padding(.horizontal)
+                                        .padding(.vertical, 12)
                                     }
-                                }) {
-                                    HStack {
-                                        Image(systemName: "book.closed")
-                                            .font(.system(size: 16))
-                                            .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
-                                        
-                                        Text(title)
-                                            .font(.custom("Georgia", size: 16))
-                                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
-                                        
-                                        Spacer()
-                                    }
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 12)
+                                    .background(
+                                        Color(red: 0.6, green: 0.5, blue: 0.4)
+                                            .opacity(0.1)
+                                            .opacity(story.id == stories.first?.id ? 1 : 0)
+                                    )
+                                    
+                                    Divider()
+                                        .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.2))
                                 }
-                                .background(
-                                    Color(red: 0.6, green: 0.5, blue: 0.4)
-                                        .opacity(0.1)
-                                        .opacity(title == storyTitles.first ? 1 : 0)
-                                )
-                                
-                                Divider()
-                                    .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.2))
+                            } else {
+                                Text("No saved stories yet")
+                                    .font(.custom("Georgia", size: 16))
+                                    .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                                    .padding()
                             }
                         }
                     }
@@ -246,6 +311,9 @@ struct ReaderView: View {
                 
                 Spacer()
             }
+        }
+        .onAppear {
+            store.dispatch(.loadAllStories)
         }
 //        .ignoresSafeArea(.all, edges: .bottom)
     }

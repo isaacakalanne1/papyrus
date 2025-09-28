@@ -8,10 +8,10 @@
 import Foundation
 
 public struct Story: Codable, Equatable, Sendable {
-    var id: UUID
+    public var id: UUID
     var mainCharacter: String
     var setting: String
-    var chapterIndex: Int
+    public var chapterIndex: Int
     
     var title: String
     public var chapters: [Chapter]

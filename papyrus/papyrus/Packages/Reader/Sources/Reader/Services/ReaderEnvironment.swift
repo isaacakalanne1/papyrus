@@ -14,6 +14,7 @@ public protocol ReaderEnvironmentProtocol {
     func loadStory(withId id: UUID) async throws -> Story?
     func getAllSavedStoryIds() async throws -> [UUID]
     func deleteStory(withId id: UUID) async throws
+    func loadAllStories() async throws -> [Story]
 }
 
 public struct ReaderEnvironment: ReaderEnvironmentProtocol {
@@ -45,5 +46,18 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
     
     public func deleteStory(withId id: UUID) async throws {
         try await dataStore.deleteStory(withId: id)
+    }
+    
+    public func loadAllStories() async throws -> [Story] {
+        let storyIds = try await dataStore.getAllSavedStoryIds()
+        var stories: [Story] = []
+        
+        for id in storyIds {
+            if let story = try await dataStore.loadStory(withId: id) {
+                stories.append(story)
+            }
+        }
+        
+        return stories
     }
 }

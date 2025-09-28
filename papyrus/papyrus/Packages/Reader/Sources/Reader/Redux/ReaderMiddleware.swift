@@ -28,10 +28,21 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         } catch {
             return .failedToCreateChapter
         }
+    case .loadAllStories:
+        do {
+            let stories = try await environment.loadAllStories()
+            return .onLoadedStories(stories)
+        } catch {
+            return .failedToLoadStories
+        }
     case .onCreatedChapter,
             .failedToCreateChapter,
             .updateSetting,
-            .updateMainCharacter:
+            .updateMainCharacter,
+            .onLoadedStories,
+            .failedToLoadStories,
+            .setStory,
+            .updateChapterIndex:
         return nil
     }
 }
