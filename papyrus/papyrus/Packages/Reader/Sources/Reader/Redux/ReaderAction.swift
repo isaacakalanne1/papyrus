@@ -5,6 +5,7 @@
 //  Created by Isaac Akalanne on 27/09/2025.
 //
 
+import Foundation
 import TextGeneration
 
 enum ReaderAction: Sendable {
@@ -25,6 +26,8 @@ enum ReaderAction: Sendable {
     case onLoadedStories([Story])
     case failedToLoadStories
     case setStory(Story)
+    case deleteStory(UUID)
+    case onDeletedStory(UUID)
     
     case updateMainCharacter(String)
     case updateSetting(String)

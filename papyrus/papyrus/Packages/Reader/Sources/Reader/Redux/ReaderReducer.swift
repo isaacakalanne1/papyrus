@@ -13,33 +13,38 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     switch action {
     case .createStory:
         newState.isLoading = true
+        newState.loadingStep = .buildingStory
         newState.story = .init(
             mainCharacter: newState.mainCharacter,
             setting: newState.setting
         )
     case .createPlotOutline:
         newState.isLoading = true
-    case .onCreatedPlotOutline(let story):
-        newState.story = story
+        newState.loadingStep = .buildingStory
+    case .onCreatedPlotOutline:
         newState.isLoading = true // Keep loading for next step
     case .createChapterBreakdown:
         newState.isLoading = true
-    case .onCreatedChapterBreakdown(let story):
-        newState.story = story
+        newState.loadingStep = .refiningDetails
+    case .onCreatedChapterBreakdown:
         newState.isLoading = true // Keep loading for next step
     case .getStoryDetails:
         newState.isLoading = true
-    case .onGetStoryDetails(let story):
-        newState.story = story
+        newState.loadingStep = .expandingNarrative
+    case .onGetStoryDetails:
         newState.isLoading = true // Keep loading for next step
     case .getChapterTitle:
         newState.isLoading = true
-    case .onGetChapterTitle(let story):
-        newState.story = story
+        newState.loadingStep = .addingDepth
+    case .onGetChapterTitle:
         newState.isLoading = true // Keep loading for next step
     case .onCreatedChapter(let story):
-        newState.story = story
+        // Only update the story if current story is nil
+        if newState.story == nil {
+            newState.story = story
+        }
         newState.isLoading = false
+        newState.loadingStep = .idle
         // Update the story in loadedStories if it exists, or add it if not present
         if var loadedStories = newState.loadedStories {
             if let existingIndex = loadedStories.firstIndex(where: { $0.id == story.id }) {
@@ -60,17 +65,33 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.setting = setting
     case .createChapter:
         newState.isLoading = true
+        newState.loadingStep = .finalizingStory
     case .failedToCreateChapter:
         newState.isLoading = false
+        newState.loadingStep = .idle
     case .loadAllStories:
         newState.isLoading = true
     case .onLoadedStories(let stories):
         newState.loadedStories = stories
         newState.isLoading = false
+        newState.loadingStep = .idle
     case .failedToLoadStories:
         newState.isLoading = false
+        newState.loadingStep = .idle
     case .setStory(let story):
         newState.story = story
+    case .deleteStory:
+        break // Handled by middleware
+    case .onDeletedStory(let deletedStoryId):
+        // Remove the deleted story from loadedStories
+        if var loadedStories = newState.loadedStories {
+            loadedStories.removeAll { $0.id == deletedStoryId }
+            newState.loadedStories = loadedStories
+        }
+        // If the currently viewed story was deleted, clear it
+        if newState.story?.id == deletedStoryId {
+            newState.story = nil
+        }
     case .updateChapterIndex(let index):
         if var story = newState.story {
             story.chapterIndex = max(0, min(index, story.chapters.count - 1))

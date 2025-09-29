@@ -48,11 +48,14 @@ struct ReaderView: View {
                 }
                 .background(Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.8))
                 
+                // Loading bar (appears below top bar when loading)
+                if store.state.isLoading {
+                    LoadingView(loadingStep: store.state.loadingStep, hasExistingStory: store.state.story != nil)
+                        .transition(.move(edge: .top).combined(with: .opacity))
+                }
+                
                 ZStack {
-                    if store.state.isLoading {
-                        LoadingView()
-                            .transition(.opacity)
-                    } else if let story = store.state.story,
+                    if let story = store.state.story,
                               !story.chapters.isEmpty,
                               story.chapterIndex < story.chapters.count {
                         VStack(spacing: 0) {
@@ -75,6 +78,7 @@ struct ReaderView: View {
                                         }
                                         .padding(.bottom, 40)
                                         .padding(.bottom, 80) // Additional space for navigation bar
+                                        .disabled(store.state.isLoading)
                                     }
                                 }
                             }
@@ -82,8 +86,8 @@ struct ReaderView: View {
                             // Chapter Navigation Bar
                             ChapterNavigationBar(story: story)
                         }
-                    } else {
-                        // Welcome state
+                    } else if !store.state.isLoading {
+                        // Welcome state (only show when not loading)
                         ZStack {
                             // Tap background to dismiss form
                             if showStoryForm {
