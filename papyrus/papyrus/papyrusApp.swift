@@ -8,6 +8,7 @@
 import SwiftUI
 import Reader
 import TextGeneration
+import UIKit
 
 @main
 struct papyrusApp: App {
@@ -24,6 +25,9 @@ struct papyrusApp: App {
     var body: some Scene {
         WindowGroup {
             ReaderRootView(environment: environment)
+                .onAppear {
+                    UIApplication.shared.isIdleTimerDisabled = true
+                }
         }
     }
 }

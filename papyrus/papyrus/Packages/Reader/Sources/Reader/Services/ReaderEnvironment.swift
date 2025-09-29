@@ -12,6 +12,7 @@ public protocol ReaderEnvironmentProtocol {
     func createPlotOutline(story: Story) async throws -> Story
     func createChapterBreakdown(story: Story) async throws -> Story
     func getStoryDetails(story: Story) async throws -> Story
+    func getChapterTitle(story: Story) async throws -> Story
     func createChapter(story: Story) async throws -> Story
     func saveStory(_ story: Story) async throws
     func loadStory(withId id: UUID) async throws -> Story?
@@ -41,6 +42,10 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
     
     public func getStoryDetails(story: Story) async throws -> Story {
         try await textGenerationEnvironment.getStoryDetails(story: story)
+    }
+    
+    public func getChapterTitle(story: Story) async throws -> Story {
+        try await textGenerationEnvironment.getChapterTitle(story: story)
     }
     
     public func createChapter(story: Story) async throws -> Story {

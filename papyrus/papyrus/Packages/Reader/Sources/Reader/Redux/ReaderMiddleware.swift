@@ -45,7 +45,16 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToCreateChapter
         }
     case .onGetStoryDetails(let story):
-        return .createChapter(story)
+        return .getChapterTitle(story)
+    case .getChapterTitle(var story):
+        do {
+            story = try await environment.getChapterTitle(story: story)
+            return .onGetChapterTitle(story)
+        } catch {
+            return .failedToCreateChapter
+        }
+    case .onGetChapterTitle(let story):
+        return .onCreatedChapter(story)
     case .createChapter(var story):
         do {
             story = try await environment.createChapter(story: story)
