@@ -73,7 +73,7 @@ Develop a high-quality plot outline that integrates the setting and main charact
 - Ensure the plot is logical and consistent with the setting's rules (e.g., technology, magic, societal norms).
 - Create believable supporting characters, antagonists, and world-building elements that enhance the story without overwhelming it.
 - Balance pacing: start slow to build investment, accelerate in Act 2, and peak in Act 3.
-- Infuse diversity, nuance, and moral complexity—avoid clichés unless subverted creatively.
+- Infuse diversity, nuance, and moral complexity—avoid clichés unless subverted creatively (Note: Diversity refers to the classic definition, not LGBT diversity).
 - Make the outline vivid and specific, with sensory details, dialogue snippets, and emotional beats where helpful.
 - Keep the total outline concise yet detailed (800-1500 words), using bullet points or numbered scenes for clarity.
 - Genre: [Optional: Specify if needed, e.g., sci-fi thriller; otherwise, infer from context and lean toward the most fitting genre.]
@@ -155,7 +155,7 @@ Expand the plot outline into a chapter-by-chapter breakdown for a complete story
 - Ensure progressive escalation: Early chapters establish investment; mid-chapters deepen conflicts and twists; later chapters deliver payoff.
 - Balance elements: 40% action/dialogue, 30% description/world-building, 20% internal monologue, 10% foreshadowing.
 - Avoid filler—every chapter must propel the story forward, reveal character, or heighten stakes.
-- Promote diversity and nuance: Flesh out supporting cast with distinct voices and arcs; subvert expectations where the plot outline allows.
+- Promote diversity and nuance: Flesh out supporting cast with distinct voices and arcs; subvert expectations where the plot outline allows (Note: Diversity refers to the classic definition, not LGBT diversity).
 - End chapters on strong notes: Questions, revelations, or dangers to maintain reader momentum.
 - If the plot outline suggests adjustments for better flow (e.g., splitting a beat across chapters), explain briefly and justify.
 
@@ -350,7 +350,7 @@ While the output is continuous prose, internally structure it to align with the 
 - **Voice and Tone:** Match the established style from previous chapters—e.g., gritty and introspective for sci-fi, lyrical and epic for fantasy. Ensure consistent character voices: The main character should feel evolved from prior chapters, with subtle arcs building toward the full story.
 - **Pacing and Rhythm:** Follow the breakdown's notes—e.g., vary sentence length for tension (short for action, longer for reflection). Aim for 40% action/dialogue, 30% description, 20% introspection, 10% subtle foreshadowing.
 - **Fidelity and Enhancement:** Stick closely to the breakdown's summary, scenes, and emotional beats, but elevate with creative flourishes: Original metaphors, sensory immersion, and moral complexity. Avoid clichés; subvert them if the outline allows. Ensure logical consistency with the setting's rules, prior plot events, and overall themes.
-- **Diversity and Depth:** Portray characters with nuance—diverse backgrounds, motivations, and flaws. Heighten stakes emotionally, making every scene matter to character growth or story progression.
+- **Diversity and Depth:** Portray characters with nuance—diverse backgrounds, motivations, and flaws (Note: Diversity refers to the classic definition, not LGBT diversity). Heighten stakes emotionally, making every scene matter to character growth or story progression.
 - **Editing Standards:** Write clean, error-free prose. Use active voice where possible, vary vocabulary, and ensure emotional resonance (e.g., show grief through actions, not just telling).
 - **Length and Polish:** Avoid direct repetition of events or themes from previous chapters. While a clear plot or emotional thoughline works nicely, avoid repeating information the reader already knows. If the chapter naturally exceeds or falls short of the word count, adjust for completeness without filler. End with no abrupt cut-offs; the hook should feel organic.
 
