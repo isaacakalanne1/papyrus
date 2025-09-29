@@ -23,6 +23,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         }
 
         do {
+            try await environment.saveStory(currentStory)
             let sequelStory = try await environment.createSequelPlotOutline(
                 story: sequelStory,
                 previousStory: currentStory
