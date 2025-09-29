@@ -94,7 +94,13 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         }
     case .updateChapterIndex(let index):
         if var story = newState.story {
+            story.scrollOffset = 0
             story.chapterIndex = max(0, min(index, story.chapters.count - 1))
+            newState.story = story
+        }
+    case .updateScrollOffset(let offset):
+        if var story = newState.story {
+            story.scrollOffset = offset
             newState.story = story
         }
     }

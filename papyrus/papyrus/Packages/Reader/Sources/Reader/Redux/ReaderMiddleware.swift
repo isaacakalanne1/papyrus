@@ -94,6 +94,17 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             }
         }
         return nil
+    case .updateScrollOffset:
+        // Save the story after scroll offset is updated
+        if let story = state.story {
+            do {
+                try await environment.saveStory(story)
+                return nil
+            } catch {
+                return .failedToCreateChapter
+            }
+        }
+        return nil
     case .failedToCreateChapter,
             .updateSetting,
             .updateMainCharacter,

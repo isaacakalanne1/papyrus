@@ -15,6 +15,7 @@ public struct Story: Codable, Equatable, Sendable {
     var chaptersBreakdown: String
     public var chapterIndex: Int
     public var maxNumberOfChapters: Int
+    public var scrollOffset: CGFloat
     
     public var title: String
     public var chapters: [Chapter]
@@ -27,6 +28,7 @@ public struct Story: Codable, Equatable, Sendable {
         chaptersBreakdown: String = "",
         chapterIndex: Int = 0,
         maxNumberOfChapters: Int = 0,
+        scrollOffset: CGFloat = 0,
         title: String = "",
         chapters: [Chapter] = []
     ) {
@@ -37,6 +39,7 @@ public struct Story: Codable, Equatable, Sendable {
         self.chaptersBreakdown = chaptersBreakdown
         self.chapterIndex = chapterIndex
         self.maxNumberOfChapters = maxNumberOfChapters
+        self.scrollOffset = scrollOffset
         self.title = title
         self.chapters = chapters
     }
@@ -52,6 +55,7 @@ public struct Story: Codable, Equatable, Sendable {
         self.chaptersBreakdown = try container.decode(String.self, forKey: .chaptersBreakdown)
         self.chapterIndex = try container.decode(Int.self, forKey: .chapterIndex)
         self.maxNumberOfChapters = try container.decodeIfPresent(Int.self, forKey: .maxNumberOfChapters) ?? 0
+        self.scrollOffset = try container.decodeIfPresent(CGFloat.self, forKey: .scrollOffset) ?? 0
         self.title = try container.decode(String.self, forKey: .title)
         self.chapters = try container.decode([Chapter].self, forKey: .chapters)
     }
