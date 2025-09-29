@@ -17,6 +17,9 @@ struct ReaderView: View {
     @FocusState private var focusedField: Field?
     @State private var keyboardHeight: CGFloat = 0
     @State private var showStoryForm: Bool = false
+    @State private var currentScrollOffset: CGFloat = 0
+    @State private var scrollOffsetTimer: Timer?
+    @State private var scrollViewHeight: CGFloat = 0
     
     enum Field {
         case mainCharacter
@@ -56,29 +59,68 @@ struct ReaderView: View {
                 
                 ZStack {
                     if let story = store.state.story,
-                              !story.chapters.isEmpty,
-                              story.chapterIndex < story.chapters.count {
+                       !story.chapters.isEmpty,
+                       story.chapterIndex < story.chapters.count {
                         VStack(spacing: 0) {
-                            ScrollView {
-                                VStack(spacing: 0) {
-                                    Text(story.chapters[story.chapterIndex].content)
-                                        .font(.custom("Georgia", size: 18))
-                                        .lineSpacing(8)
-                                        .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
-                                        .padding(.horizontal, 32)
-                                        .padding(.vertical, 40)
-                                    
-                                    // Next Chapter Button (only show if more chapters can be created)
-                                    if story.chapterIndex < story.maxNumberOfChapters - 1 {
-                                        PrimaryButton(
-                                            title: "Next Chapter",
-                                            icon: "book.pages"
-                                        ) {
-                                            store.dispatch(.createChapter(story))
+                            GeometryReader { scrollGeometry in
+                                ScrollViewReader { proxy in
+                                    ScrollView {
+                                        VStack(spacing: 0) {
+                                            // Geometry reader at the very top to track scroll offset
+                                            GeometryReader { geometry in
+                                                Color.clear
+                                                    .preference(key: ScrollOffsetPreferenceKey.self,
+                                                                value: -geometry.frame(in: .named("scroll")).minY)
+                                            }
+                                            .frame(height: 0)
+                                            .id("topAnchor")
+                                            
+                                            // Content
+                                            Text(story.chapters[story.chapterIndex].content)
+                                                .font(.custom("Georgia", size: 18))
+                                                .lineSpacing(8)
+                                                .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
+                                                .padding(.horizontal, 32)
+                                                .padding(.vertical, 40)
+                                                .id("content")
+                                            
+                                            // Next Chapter Button (only show if more chapters can be created)
+                                            if story.chapterIndex < story.maxNumberOfChapters - 1 {
+                                                PrimaryButton(
+                                                    title: "Next Chapter",
+                                                    icon: "book.pages"
+                                                ) {
+                                                    store.dispatch(.createChapter(story))
+                                                }
+                                                .padding(.bottom, 40)
+                                                .padding(.bottom, 80) // Additional space for navigation bar
+                                                .disabled(store.state.isLoading)
+                                            }
                                         }
-                                        .padding(.bottom, 40)
-                                        .padding(.bottom, 80) // Additional space for navigation bar
-                                        .disabled(store.state.isLoading)
+                                    }
+                                    .coordinateSpace(name: "scroll")
+                                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                                        DispatchQueue.main.async {
+                                            currentScrollOffset = value
+                                        }
+                                    }
+                                    .onChange(of: story.chapterIndex) { oldValue, newValue in
+                                        if oldValue != newValue {
+                                            proxy.scrollTo("content", anchor: .top)
+                                        }
+                                    }
+                                    .onAppear {
+                                        scrollViewHeight = scrollGeometry.size.height
+                                        startScrollOffsetTimer()
+                                        // Scroll to saved position
+                                        if story.scrollOffset > 0 {
+                                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                                                // To scroll down by X points, we position the top anchor at -X/scrollViewHeight
+                                                let actualScrollHeight = scrollViewHeight > 0 ? scrollViewHeight : UIScreen.main.bounds.height
+                                                let anchorY = -(story.scrollOffset / actualScrollHeight)
+                                                proxy.scrollTo("topAnchor", anchor: UnitPoint(x: 0, y: anchorY))
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -202,6 +244,25 @@ struct ReaderView: View {
             store.dispatch(.loadAllStories)
         }
 //        .ignoresSafeArea(.all, edges: .bottom)
+    }
+    
+    private func startScrollOffsetTimer() {
+        scrollOffsetTimer?.invalidate()
+        scrollOffsetTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
+            DispatchQueue.main.async {
+                if let story = store.state.story,
+                   abs(currentScrollOffset - story.scrollOffset) > 1 {
+                    store.dispatch(.updateScrollOffset(currentScrollOffset))
+                }
+            }
+        }
+    }
+}
+
+struct ScrollOffsetPreferenceKey: PreferenceKey {
+    static let defaultValue: CGFloat = 0
+    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
+        value = nextValue()
     }
 }
 

@@ -32,4 +32,5 @@ enum ReaderAction: Sendable {
     case updateMainCharacter(String)
     case updateSetting(String)
     case updateChapterIndex(Int)
+    case updateScrollOffset(CGFloat)
 }
