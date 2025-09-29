@@ -205,7 +205,6 @@ Generate the sequel plot outline now, ensuring it creates a worthy continuation 
         }
         
         story.plotOutline = content
-        story.prequelIds.append(story.id)
         story.id = UUID()
         
         return story

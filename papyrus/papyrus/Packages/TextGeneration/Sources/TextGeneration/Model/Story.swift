@@ -17,6 +17,7 @@ public struct Story: Codable, Equatable, Sendable {
     public var maxNumberOfChapters: Int
     public var scrollOffset: CGFloat
     public var prequelIds: [UUID]
+    public var sequelIds: [UUID]
     
     public var title: String
     public var chapters: [Chapter]
@@ -31,6 +32,7 @@ public struct Story: Codable, Equatable, Sendable {
         maxNumberOfChapters: Int = 0,
         scrollOffset: CGFloat = 0,
         prequelIds: [UUID] = [],
+        sequelIds: [UUID] = [],
         title: String = "",
         chapters: [Chapter] = []
     ) {
@@ -43,6 +45,7 @@ public struct Story: Codable, Equatable, Sendable {
         self.maxNumberOfChapters = maxNumberOfChapters
         self.scrollOffset = scrollOffset
         self.prequelIds = prequelIds
+        self.sequelIds = sequelIds
         self.title = title
         self.chapters = chapters
     }
@@ -60,6 +63,7 @@ public struct Story: Codable, Equatable, Sendable {
         self.maxNumberOfChapters = try container.decodeIfPresent(Int.self, forKey: .maxNumberOfChapters) ?? 0
         self.scrollOffset = try container.decodeIfPresent(CGFloat.self, forKey: .scrollOffset) ?? 0
         self.prequelIds = try container.decodeIfPresent([UUID].self, forKey: .prequelIds) ?? []
+        self.sequelIds = try container.decodeIfPresent([UUID].self, forKey: .prequelIds) ?? []
         self.title = try container.decode(String.self, forKey: .title)
         self.chapters = try container.decode([Chapter].self, forKey: .chapters)
     }
