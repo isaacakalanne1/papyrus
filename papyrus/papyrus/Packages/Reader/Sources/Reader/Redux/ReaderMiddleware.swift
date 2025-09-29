@@ -54,7 +54,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToCreateChapter
         }
     case .onGetChapterTitle(let story):
-        return .onCreatedChapter(story)
+        return .createChapter(story)
     case .createChapter(var story):
         do {
             story = try await environment.createChapter(story: story)
@@ -69,6 +69,13 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         } catch {
             return .failedToLoadStories
         }
+    case .deleteStory(let id):
+        do {
+            try await environment.deleteStory(withId: id)
+            return .onDeletedStory(id)
+        } catch {
+            return .failedToLoadStories
+        }
     case .onCreatedChapter(let story):
         do {
             try await environment.saveStory(story)
@@ -76,13 +83,24 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         } catch {
             return .failedToCreateChapter
         }
+    case .updateChapterIndex:
+        // Save the story after chapter index is updated
+        if let story = state.story {
+            do {
+                try await environment.saveStory(story)
+                return nil
+            } catch {
+                return .failedToCreateChapter
+            }
+        }
+        return nil
     case .failedToCreateChapter,
             .updateSetting,
             .updateMainCharacter,
             .onLoadedStories,
             .failedToLoadStories,
             .setStory,
-            .updateChapterIndex:
+            .onDeletedStory:
         return nil
     }
 }

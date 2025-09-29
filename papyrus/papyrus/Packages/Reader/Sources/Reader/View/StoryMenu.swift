@@ -29,45 +29,58 @@ struct StoryMenu: View {
                 .padding(.top, 20)
                 
                 // Story list
-                ScrollView {
-                    VStack(alignment: .leading, spacing: 0) {
-                        if let stories = store.state.loadedStories, !stories.isEmpty {
-                            ForEach(stories, id: \.id) { story in
-                                Button(action: {
-                                    store.dispatch(.setStory(story))
-                                    withAnimation(.easeInOut(duration: 0.3)) {
-                                        isMenuOpen = false
-                                    }
-                                }) {
-                                    HStack {
-                                        Image(systemName: "book.closed")
-                                            .font(.system(size: 16))
-                                            .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
-                                        
+                if let stories = store.state.loadedStories, !stories.isEmpty {
+                    List {
+                        ForEach(stories, id: \.id) { story in
+                            Button(action: {
+                                store.dispatch(.setStory(story))
+                                withAnimation(.easeInOut(duration: 0.3)) {
+                                    isMenuOpen = false
+                                }
+                            }) {
+                                HStack {
+                                    Image(systemName: "book.closed")
+                                        .font(.system(size: 16))
+                                        .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                                    
+                                    VStack(alignment: .leading, spacing: 2) {
                                         Text(story.title.isEmpty ? "Untitled Story" : story.title)
                                             .font(.custom("Georgia", size: 16))
                                             .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                                            .lineLimit(1)
                                         
-                                        Spacer()
+                                        if !story.chapters.isEmpty {
+                                            Text("\(story.chapters.count) chapter\(story.chapters.count == 1 ? "" : "s")")
+                                                .font(.custom("Georgia", size: 12))
+                                                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                                        }
                                     }
-                                    .padding(.horizontal)
-                                    .padding(.vertical, 12)
+                                    
+                                    Spacer()
                                 }
-                                .background(
-                                    Color(red: 0.6, green: 0.5, blue: 0.4)
-                                        .opacity(0.1)
-                                        .opacity(story.id == stories.first?.id ? 1 : 0)
-                                )
-                                
-                                Divider()
-                                    .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.2))
                             }
-                        } else {
-                            Text("No saved stories yet")
-                                .font(.custom("Georgia", size: 16))
-                                .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
-                                .padding()
+                            .listRowBackground(
+                                Color(red: 0.6, green: 0.5, blue: 0.4)
+                                    .opacity(story.id == store.state.story?.id ? 0.15 : 0)
+                            )
+                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
+                                Button(role: .destructive) {
+                                    store.dispatch(.deleteStory(story.id))
+                                } label: {
+                                    Label("Delete", systemImage: "trash")
+                                }
+                            }
                         }
+                    }
+                    .listStyle(PlainListStyle())
+                    .scrollContentBackground(.hidden)
+                } else {
+                    VStack {
+                        Spacer()
+                        Text("No saved stories yet")
+                            .font(.custom("Georgia", size: 16))
+                            .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                        Spacer()
                     }
                 }
                 
@@ -90,3 +103,4 @@ struct StoryMenu: View {
         }
     }
 }
+
