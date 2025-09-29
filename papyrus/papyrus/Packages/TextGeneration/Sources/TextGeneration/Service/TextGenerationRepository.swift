@@ -73,7 +73,7 @@ Develop a high-quality plot outline that integrates the setting and main charact
 - Ensure the plot is logical and consistent with the setting's rules (e.g., technology, magic, societal norms).
 - Create believable supporting characters, antagonists, and world-building elements that enhance the story without overwhelming it.
 - Balance pacing: start slow to build investment, accelerate in Act 2, and peak in Act 3.
-- Infuse diversity, nuance, and moral complexity—avoid clichés unless subverted creatively (Note: Diversity refers to the classic definition, not LGBT diversity).
+- Infuse variety, nuance, and moral complexity—avoid clichés unless subverted creatively.
 - Make the outline vivid and specific, with sensory details, dialogue snippets, and emotional beats where helpful.
 - Keep the total outline concise yet detailed (800-1500 words), using bullet points or numbered scenes for clarity.
 - Genre: [Optional: Specify if needed, e.g., sci-fi thriller; otherwise, infer from context and lean toward the most fitting genre.]
@@ -155,7 +155,7 @@ Expand the plot outline into a chapter-by-chapter breakdown for a complete story
 - Ensure progressive escalation: Early chapters establish investment; mid-chapters deepen conflicts and twists; later chapters deliver payoff.
 - Balance elements: 40% action/dialogue, 30% description/world-building, 20% internal monologue, 10% foreshadowing.
 - Avoid filler—every chapter must propel the story forward, reveal character, or heighten stakes.
-- Promote diversity and nuance: Flesh out supporting cast with distinct voices and arcs; subvert expectations where the plot outline allows (Note: Diversity refers to the classic definition, not LGBT diversity).
+- Promote variety and nuance: Flesh out supporting cast with distinct voices and arcs; subvert expectations where the plot outline allows.
 - End chapters on strong notes: Questions, revelations, or dangers to maintain reader momentum.
 - If the plot outline suggests adjustments for better flow (e.g., splitting a beat across chapters), explain briefly and justify.
 
@@ -331,30 +331,7 @@ You are an acclaimed novelist and creative writing expert, with a mastery of pro
 - **Previous Written Chapters:** \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
 
 **Task:**
-Write the complete text for the specified chapter, transforming the relevant section of the chapter breakdown into polished, flowing narrative. This chapter should fit seamlessly into the ongoing story, advancing the plot outline without deviations unless minor adjustments enhance flow (and note them briefly at the end if made). Aim for a word count of [Insert estimated word count from breakdown, e.g., 3,000-4,000 words], ensuring it's self-contained yet propels the reader forward. Use third-person limited perspective focused on the main character [unless specified otherwise in the outline], with occasional shifts for key supporting characters if the breakdown calls for it.
-
-**Structure the Chapter:**
-While the output is continuous prose, internally structure it to align with the breakdown:
-1. **Opening Hook (First 10-20%):** Dive in with an immediate connection to the previous chapter's ending. Use sensory details from the setting to immerse the reader, re-establish the main character's emotional state, and introduce the chapter's core conflict or goal.
-2. **Rising Action and Key Beats (Middle 60-70%):** Develop the 3-6 major scenes or moments outlined in the breakdown. Include:
-   - Vivid descriptions: Layer in world-building elements (e.g., the dystopian city's neon haze or fantasy world's ancient ruins) with sensory specifics (sights, sounds, smells, textures).
-   - Dialogue: Natural, character-driven exchanges that reveal motivations, advance subplots, and build tension. Use snippets from the breakdown where provided, expanding them authentically.
-   - Internal Monologue: Show the main character's thoughts, flaws, growth, and stakes—balance introspection with action to maintain pace.
-   - Conflicts: Escalate external (e.g., chases, confrontations) and internal (e.g., doubts) elements, tying back to themes like redemption or identity.
-   - Supporting Elements: Introduce or deepen interactions with side characters, antagonists, and environmental challenges, ensuring diversity in voices and nuanced portrayals.
-3. **Climax and Hook (Final 10-20%):** Build to the chapter's peak tension or revelation as per the breakdown, then end with a strong hook (e.g., cliffhanger, emotional twist, or unanswered question) to transition seamlessly to the next chapter.
-- **Chapter Title:** Include the evocative title from the breakdown at the top of the chapter.
-- **Formatting:** Use standard novel formatting—prose paragraphs, italicized internal thoughts (*like this*), dialogue in quotes, and minimal breaks (e.g., scene breaks with *** if needed for major shifts). No chapter summaries or outlines in the output; pure narrative.
-
-**Additional Guidelines for Quality:**
-- **Voice and Tone:** Match the established style from previous chapters—e.g., gritty and introspective for sci-fi, lyrical and epic for fantasy. Ensure consistent character voices: The main character should feel evolved from prior chapters, with subtle arcs building toward the full story.
-- **Pacing and Rhythm:** Follow the breakdown's notes—e.g., vary sentence length for tension (short for action, longer for reflection). Aim for 40% action/dialogue, 30% description, 20% introspection, 10% subtle foreshadowing.
-- **Fidelity and Enhancement:** Stick closely to the breakdown's summary, scenes, and emotional beats, but elevate with creative flourishes: Original metaphors, sensory immersion, and moral complexity. Avoid clichés; subvert them if the outline allows. Ensure logical consistency with the setting's rules, prior plot events, and overall themes.
-- **Diversity and Depth:** Portray characters with nuance—diverse backgrounds, motivations, and flaws (Note: Diversity refers to the classic definition, not LGBT diversity). Heighten stakes emotionally, making every scene matter to character growth or story progression.
-- **Editing Standards:** Write clean, error-free prose. Use active voice where possible, vary vocabulary, and ensure emotional resonance (e.g., show grief through actions, not just telling).
-- **Length and Polish:** Avoid direct repetition of events or themes from previous chapters. While a clear plot or emotional thoughline works nicely, avoid repeating information the reader already knows. If the chapter naturally exceeds or falls short of the word count, adjust for completeness without filler. End with no abrupt cut-offs; the hook should feel organic.
-
-Generate the full chapter text now, ensuring it's a standalone masterpiece that honors the story's vision and leaves readers eager for more.
+Write the full chapter text now, ensuring it's a standalone masterpiece that honors the story's vision and leaves readers eager for more.
 """
                 ]
             ]

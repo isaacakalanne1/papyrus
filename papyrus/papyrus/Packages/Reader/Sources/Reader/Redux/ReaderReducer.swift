@@ -40,7 +40,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.isLoading = true // Keep loading for next step
     case .onCreatedChapter(let story):
         // Only update the story if current story is nil
-        if newState.story == nil {
+        if newState.story?.id == story.id {
             newState.story = story
         }
         newState.isLoading = false
