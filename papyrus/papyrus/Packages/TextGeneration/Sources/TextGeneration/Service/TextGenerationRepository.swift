@@ -11,6 +11,7 @@ protocol TextGenerationRepositoryProtocol {
     func createPlotOutline(story originalStory: Story) async throws -> Story
     func createChapterBreakdown(story originalStory: Story) async throws -> Story
     func getStoryDetails(story originalStory: Story) async throws -> Story
+    func getChapterTitle(story originalStory: Story) async throws -> Story
     func createChapter(story originalStory: Story) async throws -> Story
 }
 
@@ -247,6 +248,57 @@ Chapter Breakdown:
         return story
     }
     
+    public func getChapterTitle(story originalStory: Story) async throws -> Story {
+        var story = originalStory
+        let url = URL(string: apiURL)!
+        let apiKey = "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"
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        let body: [String: Any] = [
+            "model": "x-ai/grok-4-fast:free",
+            "messages": [
+                [
+                    "role": "system",
+                    "content": "You are a creative story titling expert. Generate a compelling title for a story based on its details."
+                ],
+                [
+                    "role": "user",
+                    "content": """
+Based on the following story details, respond with the story title:
+
+**Plot Outline:** \(story.plotOutline)
+"""
+                ]
+            ]
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        request.timeoutInterval = 1200
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            throw TextGenerationError.invalidResponse
+        }
+        
+        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+        guard let choices = json?["choices"] as? [[String: Any]],
+              let firstChoice = choices.first,
+              let message = firstChoice["message"] as? [String: Any],
+              let content = message["content"] as? String else {
+            throw TextGenerationError.parsingError
+        }
+        
+        story.title = content.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        return story
+    }
+    
     public func createChapter(story originalStory: Story) async throws -> Story {
         var story = originalStory
         let url = URL(string: apiURL)!
@@ -300,8 +352,7 @@ While the output is continuous prose, internally structure it to align with the 
 - **Fidelity and Enhancement:** Stick closely to the breakdown's summary, scenes, and emotional beats, but elevate with creative flourishes: Original metaphors, sensory immersion, and moral complexity. Avoid clichés; subvert them if the outline allows. Ensure logical consistency with the setting's rules, prior plot events, and overall themes.
 - **Diversity and Depth:** Portray characters with nuance—diverse backgrounds, motivations, and flaws. Heighten stakes emotionally, making every scene matter to character growth or story progression.
 - **Editing Standards:** Write clean, error-free prose. Use active voice where possible, vary vocabulary, and ensure emotional resonance (e.g., show grief through actions, not just telling).
-- **Length and Polish:** If the chapter naturally exceeds or falls short of the word count, adjust for completeness without filler. End with no abrupt cut-offs; the hook should feel organic.
-- **Post-Writing Note (Optional, at the very end):** If you make any minor adjustments (e.g., for pacing), add a brief, italicized author's note explaining why—keep it under 100 words.
+- **Length and Polish:** Avoid direct repetition of events or themes from previous chapters. While a clear plot or emotional thoughline works nicely, avoid repeating information the reader already knows. If the chapter naturally exceeds or falls short of the word count, adjust for completeness without filler. End with no abrupt cut-offs; the hook should feel organic.
 
 Generate the full chapter text now, ensuring it's a standalone masterpiece that honors the story's vision and leaves readers eager for more.
 """

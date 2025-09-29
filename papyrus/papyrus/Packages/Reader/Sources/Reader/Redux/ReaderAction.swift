@@ -15,6 +15,8 @@ enum ReaderAction: Sendable {
     case onCreatedChapterBreakdown(Story)
     case getStoryDetails(Story)
     case onGetStoryDetails(Story)
+    case getChapterTitle(Story)
+    case onGetChapterTitle(Story)
     case createChapter(Story)
     case onCreatedChapter(Story)
     case failedToCreateChapter

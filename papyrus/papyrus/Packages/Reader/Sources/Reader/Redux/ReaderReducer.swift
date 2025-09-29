@@ -32,9 +32,28 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .onGetStoryDetails(let story):
         newState.story = story
         newState.isLoading = true // Keep loading for next step
+    case .getChapterTitle:
+        newState.isLoading = true
+    case .onGetChapterTitle(let story):
+        newState.story = story
+        newState.isLoading = true // Keep loading for next step
     case .onCreatedChapter(let story):
         newState.story = story
         newState.isLoading = false
+        // Update the story in loadedStories if it exists, or add it if not present
+        if var loadedStories = newState.loadedStories {
+            if let existingIndex = loadedStories.firstIndex(where: { $0.id == story.id }) {
+                // Update existing story
+                loadedStories[existingIndex] = story
+            } else {
+                // Add new story if not present
+                loadedStories.append(story)
+            }
+            newState.loadedStories = loadedStories
+        } else {
+            // Initialize loadedStories with the new story if it was nil
+            newState.loadedStories = [story]
+        }
     case .updateMainCharacter(let mainCharacter):
         newState.mainCharacter = mainCharacter
     case .updateSetting(let setting):
