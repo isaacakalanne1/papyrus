@@ -11,6 +11,7 @@ struct NewStoryForm: View {
     @FocusState.Binding var focusedField: ReaderView.Field?
     @EnvironmentObject var store: ReaderStore
     @Binding var showStoryForm: Bool
+    @Binding var isSequelMode: Bool
     
     var body: some View {
         let mainCharacter: Binding<String> = .init {
@@ -30,7 +31,7 @@ struct NewStoryForm: View {
                 // Form header with close button
                 HStack {
                     VStack(alignment: .leading, spacing: 6) {
-                        Text("New Tale")
+                        Text(isSequelMode ? "Create Sequel" : "New Tale")
                             .font(.custom("Georgia", size: 20))
                             .fontWeight(.medium)
                             .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
@@ -46,6 +47,7 @@ struct NewStoryForm: View {
                     Button(action: {
                         withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                             showStoryForm = false
+                            isSequelMode = false
                             focusedField = nil
                         }
                     }) {
@@ -171,12 +173,16 @@ struct NewStoryForm: View {
             
             // Write chapter button
             DisablablePrimaryButton(
-                title: "Create Story",
-                icon: "pencil.and.ruler",
+                title: isSequelMode ? "Create Sequel" : "Create Story",
+                icon: isSequelMode ? "book.closed" : "pencil.and.ruler",
                 size: .medium,
                 isDisabled: mainCharacter.wrappedValue.isEmpty
             ) {
-                store.dispatch(.createStory)
+                if isSequelMode {
+                    store.dispatch(.createSequel)
+                } else {
+                    store.dispatch(.createStory)
+                }
             }
             .padding(.top, 24)
             .padding(.bottom, 32)

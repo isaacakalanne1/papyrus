@@ -17,6 +17,7 @@ struct ReaderView: View {
     @FocusState private var focusedField: Field?
     @State private var keyboardHeight: CGFloat = 0
     @State private var showStoryForm: Bool = false
+    @State private var isSequelMode: Bool = false
     @State private var currentScrollOffset: CGFloat = 0
     @State private var scrollOffsetTimer: Timer?
     @State private var scrollViewHeight: CGFloat = 0
@@ -84,13 +85,27 @@ struct ReaderView: View {
                                                 .padding(.vertical, 40)
                                                 .id("content")
                                             
-                                            // Next Chapter Button (only show if more chapters can be created)
+                                            // Next Chapter or Create Sequel Button
                                             if story.chapterIndex < story.maxNumberOfChapters - 1 {
                                                 PrimaryButton(
                                                     title: "Next Chapter",
                                                     icon: "book.pages"
                                                 ) {
                                                     store.dispatch(.createChapter(story))
+                                                }
+                                                .padding(.bottom, 40)
+                                                .padding(.bottom, 80) // Additional space for navigation bar
+                                                .disabled(store.state.isLoading)
+                                            } else if story.chapterIndex == story.maxNumberOfChapters - 1 {
+                                                PrimaryButton(
+                                                    title: "Create Sequel",
+                                                    icon: "book.closed"
+                                                ) {
+                                                    isSequelMode = true
+                                                    store.dispatch(.updateMainCharacter(story.mainCharacter))
+                                                    store.dispatch(.updateSetting(story.setting))
+                                                    showStoryForm = true
+                                                    focusedField = .mainCharacter
                                                 }
                                                 .padding(.bottom, 40)
                                                 .padding(.bottom, 80) // Additional space for navigation bar
@@ -138,6 +153,7 @@ struct ReaderView: View {
                                     .onTapGesture {
                                         withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                                             showStoryForm = false
+                                            isSequelMode = false
                                             focusedField = nil
                                         }
                                     }
@@ -166,7 +182,8 @@ struct ReaderView: View {
                                     // Story form
                                     NewStoryForm(
                                         focusedField: $focusedField,
-                                        showStoryForm: $showStoryForm
+                                        showStoryForm: $showStoryForm,
+                                        isSequelMode: $isSequelMode
                                     )
                                     .transition(.asymmetric(
                                         insertion: .move(edge: .bottom).combined(with: .opacity),
@@ -187,6 +204,7 @@ struct ReaderView: View {
                         .onChange(of: store.state.isLoading) { _, isLoading in
                             if isLoading {
                                 showStoryForm = false
+                                isSequelMode = false
                                 focusedField = nil
                             }
                         }

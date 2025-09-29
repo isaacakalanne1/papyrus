@@ -12,6 +12,7 @@ public struct ReaderState: Equatable {
     var setting: String
     var loadedStories: [Story]?
     var story: Story?
+    var sequelStory: Story?
     var isLoading: Bool
     var loadingStep: LoadingStep
 
@@ -20,6 +21,7 @@ public struct ReaderState: Equatable {
         setting: String = "",
         loadedStories: [Story]? = nil,
         story: Story? = nil,
+        sequelStory: Story? = nil,
         isLoading: Bool = false,
         loadingStep: LoadingStep = .idle
     ) {
@@ -27,6 +29,7 @@ public struct ReaderState: Equatable {
         self.setting = setting
         self.loadedStories = loadedStories
         self.story = story
+        self.sequelStory = sequelStory
         self.isLoading = isLoading
         self.loadingStep = loadingStep
     }

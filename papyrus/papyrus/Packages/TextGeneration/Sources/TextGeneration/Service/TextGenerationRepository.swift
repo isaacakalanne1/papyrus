@@ -9,6 +9,7 @@ import Foundation
 
 protocol TextGenerationRepositoryProtocol {
     func createPlotOutline(story originalStory: Story) async throws -> Story
+    func createSequelPlotOutline(story originalStory: Story, previousStory: Story) async throws -> Story
     func createChapterBreakdown(story originalStory: Story) async throws -> Story
     func getStoryDetails(story originalStory: Story) async throws -> Story
     func getChapterTitle(story originalStory: Story) async throws -> Story
@@ -103,6 +104,109 @@ Generate the plot outline now, ensuring it's polished, professional, and ready t
         }
         
         story.plotOutline = content
+        
+        return story
+    }
+    
+    public func createSequelPlotOutline(story originalStory: Story, previousStory: Story) async throws -> Story {
+        var story = originalStory
+        let url = URL(string: apiURL)!
+        let apiKey = "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"
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        
+        // Get the previous story's chapters for context
+        let previousChaptersText = previousStory.chapters.enumerated().map { index, chapter in 
+            "Chapter \(index + 1):\n\(chapter.content)"
+        }.joined(separator: "\n\n")
+        
+        let body: [String: Any] = [
+            "model": "x-ai/grok-4-fast:free",
+            "messages": [
+                [
+                    "role": "system",
+                    "content": "You are a creative story planner specializing in creating sequels. Create a compelling sequel plot outline that builds upon the previous story while introducing fresh conflicts and character development."
+                ],
+                [
+                    "role": "user",
+                    "content": """
+You are an expert storyteller tasked with creating a sequel plot outline. You have access to the previous story and need to create a new, compelling narrative that continues the journey while standing on its own.
+
+**Previous Story Context:**
+- **Setting:** \(previousStory.setting)
+- **Main Character:** \(previousStory.mainCharacter)
+- **Previous Plot Outline:** \(previousStory.plotOutline)
+- **Previous Story Summary:** Based on the chapters, the previous story concluded with the main character's journey. Here are the key story beats from the previous narrative:
+\(previousChaptersText)
+
+**New Sequel Context:**
+- **Setting:** \(story.setting)
+- **Main Character:** \(story.mainCharacter)
+
+**Task:**
+Create a sequel plot outline that:
+1. **Honors the Previous Story:** Reference key events, character growth, and relationships from the first story
+2. **Introduces New Stakes:** Present fresh challenges that are natural consequences or evolutions of the previous story's resolution
+3. **Deepens Character Development:** Show how the main character has changed and what new growth is needed
+4. **Expands the World:** Build upon the established setting with new locations, characters, or revelations
+
+**Structure the Sequel Using the Three-Act Structure:**
+
+**Act 1: New Normal and Inciting Incident**
+- Show the main character in their new status quo after the events of the previous story
+- Introduce how the world/character has changed since the last story
+- Present a new inciting incident that creates fresh conflict while connecting to previous events
+- End with the character accepting this new challenge
+
+**Act 2: Escalating Complications and Midpoint**
+- Develop new conflicts that test the character in different ways than the previous story
+- Include callbacks and consequences from the previous story that create complications
+- Show the character applying lessons learned while facing unprecedented challenges
+- Feature a major midpoint revelation that recontextualizes both stories
+
+**Act 3: Climax and Resolution**
+- Build to a climax that requires growth beyond what was achieved in the first story
+- Resolve conflicts in a way that provides satisfying closure while leaving room for further growth
+- Show the character's evolution from both stories and hint at their future
+
+**Guidelines for Quality Sequel Writing:**
+- Avoid simply repeating the previous story's structure or conflicts
+- Create new supporting characters while potentially bringing back beloved ones
+- Raise the stakes emotionally and plot-wise without making them absurdly high
+- Ensure the sequel can be enjoyed by newcomers while rewarding returning readers
+- Balance nostalgia with innovation
+- Keep the outline detailed (800-1500 words) with specific plot points and character beats
+
+Generate the sequel plot outline now, ensuring it creates a worthy continuation of the story.
+"""
+                ]
+            ]
+        ]
+        
+        request.httpBody = try JSONSerialization.data(withJSONObject: body)
+        request.timeoutInterval = 1200
+        
+        let (data, response) = try await URLSession.shared.data(for: request)
+        
+        guard let httpResponse = response as? HTTPURLResponse,
+              httpResponse.statusCode == 200 else {
+            throw TextGenerationError.invalidResponse
+        }
+        
+        let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
+        guard let choices = json?["choices"] as? [[String: Any]],
+              let firstChoice = choices.first,
+              let message = firstChoice["message"] as? [String: Any],
+              let content = message["content"] as? String else {
+            throw TextGenerationError.parsingError
+        }
+        
+        story.plotOutline = content
+        story.prequelIds.append(story.id)
+        story.id = UUID()
         
         return story
     }
