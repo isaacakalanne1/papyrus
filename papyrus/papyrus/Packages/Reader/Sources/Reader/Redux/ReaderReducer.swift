@@ -18,6 +18,13 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             mainCharacter: newState.mainCharacter,
             setting: newState.setting
         )
+    case .createSequel:
+        newState.isLoading = true
+        newState.loadingStep = .buildingStory
+        newState.sequelStory = .init(
+            mainCharacter: newState.mainCharacter,
+            setting: newState.setting
+        )
     case .createPlotOutline:
         newState.isLoading = true
         newState.loadingStep = .buildingStory

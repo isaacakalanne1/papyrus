@@ -5,6 +5,7 @@
 //  Created by Isaac Akalanne on 27/09/2025.
 //
 
+import Foundation
 import ReduxKit
 
 @MainActor
@@ -15,6 +16,21 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToCreateChapter
         }
         return .createPlotOutline(story)
+    case .createSequel:
+        guard var currentStory = state.story,
+              var sequelStory = state.sequelStory else {
+            return .failedToCreateChapter
+        }
+
+        do {
+            let sequelStory = try await environment.createSequelPlotOutline(
+                story: sequelStory,
+                previousStory: currentStory
+            )
+            return .onCreatedPlotOutline(sequelStory)
+        } catch {
+            return .failedToCreateChapter
+        }
     case .createPlotOutline(var story):
         do {
             story = try await environment.createPlotOutline(story: story)

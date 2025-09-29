@@ -7,6 +7,7 @@
 
 public protocol TextGenerationEnvironmentProtocol {
     func createPlotOutline(story: Story) async throws -> Story
+    func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story
     func createChapterBreakdown(story: Story) async throws -> Story
     func getStoryDetails(story: Story) async throws -> Story
     func getChapterTitle(story: Story) async throws -> Story
@@ -22,6 +23,10 @@ public struct TextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     
     public func createPlotOutline(story: Story) async throws -> Story {
         try await repository.createPlotOutline(story: story)
+    }
+    
+    public func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story {
+        try await repository.createSequelPlotOutline(story: story, previousStory: previousStory)
     }
     
     public func createChapterBreakdown(story: Story) async throws -> Story {
