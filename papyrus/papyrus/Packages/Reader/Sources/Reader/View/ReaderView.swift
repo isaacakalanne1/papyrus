@@ -7,10 +7,13 @@
 
 import SwiftUI
 import UIKit
+import Settings
 
 struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
     @State private var isMenuOpen: Bool = false
+    @State private var isSettingsOpen: Bool = false
+    @State private var settingsDragOffset: CGFloat = 0
     @State private var dragOffset: CGFloat = 0
     @State private var mainCharacter: String = ""
     @State private var settingDetails: String = ""
@@ -49,6 +52,17 @@ struct ReaderView: View {
                     }
                     
                     Spacer()
+                    
+                    Button(action: {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            isSettingsOpen.toggle()
+                        }
+                    }) {
+                        Image(systemName: "gearshape")
+                            .font(.system(size: 20))
+                            .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                            .padding()
+                    }
                 }
                 .background(Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.8))
                 
@@ -78,13 +92,6 @@ struct ReaderView: View {
                             showStoryForm: $showStoryForm,
                             isSequelMode: $isSequelMode
                         )
-                        .onChange(of: store.state.isLoading) { _, isLoading in
-                            if isLoading {
-                                showStoryForm = false
-                                isSequelMode = false
-                                focusedField = nil
-                            }
-                        }
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -104,17 +111,30 @@ struct ReaderView: View {
             .gesture(
                 DragGesture()
                     .onChanged { value in
+                        // Handle left edge swipe for menu
                         if value.startLocation.x < 20 && value.translation.width > 0 {
                             dragOffset = min(value.translation.width, 280)
                         }
+                        // Handle right edge swipe for settings
+                        else if value.startLocation.x > UIScreen.main.bounds.width - 20 && value.translation.width < 0 {
+                            settingsDragOffset = max(value.translation.width, -320)
+                        }
                     }
                     .onEnded { value in
+                        // Open menu if dragged enough from left
                         if dragOffset > 100 {
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 isMenuOpen = true
                             }
                         }
+                        // Open settings if dragged enough from right
+                        else if settingsDragOffset < -100 {
+                            withAnimation(.easeInOut(duration: 0.3)) {
+                                isSettingsOpen = true
+                            }
+                        }
                         dragOffset = 0
+                        settingsDragOffset = 0
                     }
             )
             
@@ -134,6 +154,70 @@ struct ReaderView: View {
                 isMenuOpen: $isMenuOpen,
                 dragOffset: dragOffset
             )
+            
+            // Settings menu overlay
+            if isSettingsOpen {
+                Color.black.opacity(0.3)
+                    .ignoresSafeArea()
+                    .onTapGesture {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            isSettingsOpen = false
+                        }
+                    }
+            }
+            
+            // Settings menu (slides from right)
+            HStack {
+                Spacer()
+                SettingsRootView(environment: store.environment.settingsEnvironment)
+                    .offset(x: isSettingsOpen ? 0 : 320 + settingsDragOffset)
+                    .animation(.easeInOut(duration: 0.3), value: isSettingsOpen)
+            }
+            
+            // Story form overlay (appears above everything)
+            if showStoryForm {
+                ZStack {
+                    // Semi-transparent background
+                    Color.black.opacity(0.4)
+                        .ignoresSafeArea()
+                        .onTapGesture {
+                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                                showStoryForm = false
+                                isSequelMode = false
+                                focusedField = nil
+                            }
+                        }
+                    
+                    // Form content
+                    VStack {
+                        Spacer()
+                        
+                        NewStoryForm(
+                            focusedField: $focusedField,
+                            showStoryForm: $showStoryForm,
+                            isSequelMode: $isSequelMode
+                        )
+                        .onTapGesture {
+                            // Prevent dismissal when tapping on the form itself
+                        }
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal, 20)
+                }
+                .transition(.opacity)
+                .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showStoryForm)
+                .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
+                    // Handle keyboard hiding if needed
+                }
+                .onChange(of: store.state.isLoading) { _, isLoading in
+                    if isLoading {
+                        showStoryForm = false
+                        isSequelMode = false
+                        focusedField = nil
+                    }
+                }
+            }
         }
         .onAppear {
             store.dispatch(.loadAllStories)

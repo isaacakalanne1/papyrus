@@ -7,6 +7,7 @@
 
 import Foundation
 import ReduxKit
+import Settings
 
 @MainActor
 let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentProtocol> = { state, action, environment in
@@ -50,7 +51,8 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         }
     case .onCreatedChapterBreakdown(let story):
         if story.maxNumberOfChapters > 0 {
-            return .createChapter(story)
+            let writingStyle = environment.selectedWritingStyle
+            return .createChapter(story, writingStyle)
         } else {
             return .getStoryDetails(story)
         }
@@ -71,10 +73,11 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToCreateChapter
         }
     case .onGetChapterTitle(let story):
-        return .createChapter(story)
-    case .createChapter(var story):
+        let writingStyle = environment.selectedWritingStyle
+        return .createChapter(story, writingStyle)
+    case .createChapter(var story, let writingStyle):
         do {
-            story = try await environment.createChapter(story: story)
+            story = try await environment.createChapter(story: story, writingStyle: writingStyle)
             return .onCreatedChapter(story)
         } catch {
             return .failedToCreateChapter
@@ -140,7 +143,8 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             .onLoadedStories,
             .failedToLoadStories,
             .setStory,
-            .onDeletedStory:
+            .onDeletedStory,
+            .refreshSettings:
         return nil
     }
 }

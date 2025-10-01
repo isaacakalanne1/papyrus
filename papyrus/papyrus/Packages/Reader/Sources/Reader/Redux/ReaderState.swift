@@ -6,6 +6,7 @@
 //
 
 import TextGeneration
+import Settings
 
 public struct ReaderState: Equatable {
     var mainCharacter: String
@@ -15,6 +16,7 @@ public struct ReaderState: Equatable {
     var sequelStory: Story?
     var isLoading: Bool
     var loadingStep: LoadingStep
+    var settingsState: SettingsState?
 
     public init(
         mainCharacter: String = "",
@@ -23,7 +25,8 @@ public struct ReaderState: Equatable {
         story: Story? = nil,
         sequelStory: Story? = nil,
         isLoading: Bool = false,
-        loadingStep: LoadingStep = .idle
+        loadingStep: LoadingStep = .idle,
+        settingsState: SettingsState? = nil
     ) {
         self.mainCharacter = mainCharacter
         self.setting = setting
@@ -32,6 +35,7 @@ public struct ReaderState: Equatable {
         self.sequelStory = sequelStory
         self.isLoading = isLoading
         self.loadingStep = loadingStep
+        self.settingsState = settingsState
     }
 }
 

@@ -5,6 +5,7 @@
 //  Created by Isaac Akalanne on 27/09/2025.
 //
 
+import Foundation
 import ReduxKit
 
 @MainActor
@@ -21,9 +22,13 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .createSequel:
         newState.isLoading = true
         newState.loadingStep = .buildingStory
+
         newState.sequelStory = newState.story
+        newState.sequelStory?.id = UUID()
         newState.sequelStory?.mainCharacter = newState.mainCharacter
         newState.sequelStory?.setting = newState.setting
+        newState.sequelStory?.chapters = []
+        newState.sequelStory?.chapterIndex = 0
         if let prequelId = newState.story?.id {
             newState.sequelStory?.prequelIds.append(prequelId)
         }
@@ -112,6 +117,8 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             story.scrollOffset = offset
             newState.story = story
         }
+    case .refreshSettings(let settings):
+        newState.settingsState = settings
     }
     return newState
 }

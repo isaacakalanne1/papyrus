@@ -7,6 +7,7 @@
 
 import Foundation
 import TextGeneration
+import Settings
 
 public protocol ReaderEnvironmentProtocol {
     func createPlotOutline(story: Story) async throws -> Story
@@ -14,23 +15,28 @@ public protocol ReaderEnvironmentProtocol {
     func createChapterBreakdown(story: Story) async throws -> Story
     func getStoryDetails(story: Story) async throws -> Story
     func getChapterTitle(story: Story) async throws -> Story
-    func createChapter(story: Story) async throws -> Story
+    func createChapter(story: Story, writingStyle: WritingStyle) async throws -> Story
     func saveStory(_ story: Story) async throws
     func loadStory(withId id: UUID) async throws -> Story?
     func getAllSavedStoryIds() async throws -> [UUID]
     func deleteStory(withId id: UUID) async throws
     func loadAllStories() async throws -> [Story]
+    var selectedWritingStyle: WritingStyle { get }
+    var settingsEnvironment: SettingsEnvironmentProtocol { get }
 }
 
 public struct ReaderEnvironment: ReaderEnvironmentProtocol {
     private let textGenerationEnvironment: TextGenerationEnvironmentProtocol
     private let dataStore: ReaderDataStoreProtocol
+    public let settingsEnvironment: SettingsEnvironmentProtocol
     
     public init(
-        textGenerationEnvironment: TextGenerationEnvironmentProtocol
+        textGenerationEnvironment: TextGenerationEnvironmentProtocol,
+        settingsEnvironment: SettingsEnvironmentProtocol
     ) {
         self.textGenerationEnvironment = textGenerationEnvironment
         self.dataStore = ReaderDataStore()
+        self.settingsEnvironment = settingsEnvironment
     }
     
     public func createPlotOutline(story: Story) async throws -> Story {
@@ -53,8 +59,8 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
         try await textGenerationEnvironment.getChapterTitle(story: story)
     }
     
-    public func createChapter(story: Story) async throws -> Story {
-        try await textGenerationEnvironment.createChapter(story: story)
+    public func createChapter(story: Story, writingStyle: WritingStyle) async throws -> Story {
+        try await textGenerationEnvironment.createChapter(story: story, writingStyle: writingStyle)
     }
     
     public func saveStory(_ story: Story) async throws {
@@ -84,5 +90,9 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
         }
         
         return stories
+    }
+    
+    public var selectedWritingStyle: WritingStyle {
+        settingsEnvironment.settingsSubject.value?.selectedWritingStyle ?? .classic
     }
 }

@@ -5,13 +5,15 @@
 //  Created by Isaac Akalanne on 27/09/2025.
 //
 
+import Settings
+
 public protocol TextGenerationEnvironmentProtocol {
     func createPlotOutline(story: Story) async throws -> Story
     func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story
     func createChapterBreakdown(story: Story) async throws -> Story
     func getStoryDetails(story: Story) async throws -> Story
     func getChapterTitle(story: Story) async throws -> Story
-    func createChapter(story: Story) async throws -> Story
+    func createChapter(story: Story, writingStyle: WritingStyle) async throws -> Story
 }
 
 public struct TextGenerationEnvironment: TextGenerationEnvironmentProtocol {
@@ -41,7 +43,7 @@ public struct TextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         try await repository.getChapterTitle(story: story)
     }
     
-    public func createChapter(story: Story) async throws -> Story {
-        try await repository.createChapter(story: story)
+    public func createChapter(story: Story, writingStyle: WritingStyle) async throws -> Story {
+        try await repository.createChapter(story: story, writingStyle: writingStyle)
     }
 }

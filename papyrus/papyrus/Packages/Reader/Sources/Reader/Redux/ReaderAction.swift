@@ -7,6 +7,7 @@
 
 import Foundation
 import TextGeneration
+import Settings
 
 enum ReaderAction: Sendable {
     case createStory
@@ -19,7 +20,7 @@ enum ReaderAction: Sendable {
     case onGetStoryDetails(Story)
     case getChapterTitle(Story)
     case onGetChapterTitle(Story)
-    case createChapter(Story)
+    case createChapter(Story, WritingStyle)
     case onCreatedChapter(Story)
     case failedToCreateChapter
     
@@ -34,4 +35,5 @@ enum ReaderAction: Sendable {
     case updateSetting(String)
     case updateChapterIndex(Int)
     case updateScrollOffset(CGFloat)
+    case refreshSettings(SettingsState)
 }

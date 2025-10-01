@@ -14,11 +14,15 @@ let package = Package(
             name: "TextGeneration",
             targets: ["TextGeneration"]),
     ],
+    dependencies: [
+        .package(name: "Settings", path: "../Settings")
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "TextGeneration"),
+            name: "TextGeneration",
+            dependencies: ["Settings"]),
         .testTarget(
             name: "TextGenerationTests",
             dependencies: ["TextGeneration"]
