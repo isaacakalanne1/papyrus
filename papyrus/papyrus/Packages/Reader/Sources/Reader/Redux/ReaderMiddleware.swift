@@ -95,7 +95,19 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         }
     case .onCreatedChapter(let story):
         do {
+            // Save the current story first
             try await environment.saveStory(story)
+            
+            // Update prequel stories with sequel relationship
+            for prequelId in story.prequelIds {
+                if var prequelStory = try await environment.loadStory(withId: prequelId) {
+                    if !prequelStory.sequelIds.contains(story.id) {
+                        prequelStory.sequelIds.append(story.id)
+                        try await environment.saveStory(prequelStory)
+                    }
+                }
+            }
+            
             return nil
         } catch {
             return .failedToCreateChapter
