@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TextGeneration
+import Settings
 
 struct StoryContentView: View {
     let story: Story
@@ -49,7 +50,8 @@ struct StoryContentView: View {
                                     title: "Next Chapter",
                                     icon: "book.pages"
                                 ) {
-                                    store.dispatch(.createChapter(story))
+                                    let writingStyle = store.state.settingsState?.selectedWritingStyle ?? .classic
+                                    store.dispatch(.createChapter(story, writingStyle))
                                 }
                                 .padding(.bottom, 40)
                                 .padding(.bottom, 80) // Additional space for navigation bar
@@ -61,9 +63,9 @@ struct StoryContentView: View {
                                 ) {
                                     isSequelMode = true
                                     store.dispatch(.updateMainCharacter(story.mainCharacter))
-                                    store.dispatch(.updateSetting(story.setting))
+                                    store.dispatch(.updateSetting(""))
                                     showStoryForm = true
-                                    focusedField = .mainCharacter
+                                    focusedField = .settingDetails
                                 }
                                 .padding(.bottom, 40)
                                 .padding(.bottom, 80) // Additional space for navigation bar
