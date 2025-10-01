@@ -60,7 +60,8 @@ struct StoryContentView: View {
                                     icon: "book.closed"
                                 ) {
                                     isSequelMode = true
-                                    store.dispatch(.createSequel)
+                                    store.dispatch(.updateMainCharacter(story.mainCharacter))
+                                    store.dispatch(.updateSetting(story.setting))
                                     showStoryForm = true
                                     focusedField = .mainCharacter
                                 }

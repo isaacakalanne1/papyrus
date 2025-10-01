@@ -9,8 +9,8 @@ import Foundation
 
 public struct Story: Codable, Equatable, Sendable {
     public var id: UUID
-    var mainCharacter: String
-    var setting: String
+    public var mainCharacter: String
+    public var setting: String
     var plotOutline: String
     var chaptersBreakdown: String
     public var chapterIndex: Int
