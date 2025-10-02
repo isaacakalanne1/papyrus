@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct Story: Codable, Equatable, Sendable {
+public struct Story: Codable, Equatable, Sendable, Identifiable {
     public var id: UUID
     public var mainCharacter: String
     public var setting: String

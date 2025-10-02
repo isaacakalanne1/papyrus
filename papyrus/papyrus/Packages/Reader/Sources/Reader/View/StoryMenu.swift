@@ -12,6 +12,7 @@ struct StoryMenu: View {
     @EnvironmentObject var store: ReaderStore
     @Binding var isMenuOpen: Bool
     let dragOffset: CGFloat
+    @State private var selectedStoryForDetails: Story?
     
     var body: some View {
         HStack(spacing: 0) {
@@ -57,6 +58,15 @@ struct StoryMenu: View {
                                     }
                                     
                                     Spacer()
+                                    
+                                    Button(action: {
+                                        selectedStoryForDetails = story
+                                    }) {
+                                        Image(systemName: "info.circle")
+                                            .font(.system(size: 20))
+                                            .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                                    }
+                                    .buttonStyle(PlainButtonStyle())
                                 }
                             }
                             .listRowBackground(
@@ -100,6 +110,14 @@ struct StoryMenu: View {
             .offset(x: isMenuOpen ? 0 : -280 + dragOffset)
             
             Spacer()
+        }
+        .sheet(item: $selectedStoryForDetails) { story in
+            StoryDetailsPopup(story: story, isPresented: Binding(
+                get: { selectedStoryForDetails != nil },
+                set: { if !$0 { selectedStoryForDetails = nil } }
+            ))
+                .presentationBackground(.clear)
+                .presentationDragIndicator(.hidden)
         }
     }
 }

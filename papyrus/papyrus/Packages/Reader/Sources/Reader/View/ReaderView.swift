@@ -174,49 +174,23 @@ struct ReaderView: View {
                     .animation(.easeInOut(duration: 0.3), value: isSettingsOpen)
             }
             
-            // Story form overlay (appears above everything)
-            if showStoryForm {
-                ZStack {
-                    // Semi-transparent background
-                    Color.black.opacity(0.4)
-                        .ignoresSafeArea()
-                        .onTapGesture {
-                            withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                                showStoryForm = false
-                                isSequelMode = false
-                                focusedField = nil
-                            }
-                        }
-                    
-                    // Form content
-                    VStack {
-                        Spacer()
-                        
-                        NewStoryForm(
-                            focusedField: $focusedField,
-                            showStoryForm: $showStoryForm,
-                            isSequelMode: $isSequelMode
-                        )
-                        .onTapGesture {
-                            // Prevent dismissal when tapping on the form itself
-                        }
-                        
-                        Spacer()
-                    }
-                    .padding(.horizontal, 20)
-                }
-                .transition(.opacity)
-                .animation(.spring(response: 0.6, dampingFraction: 0.8), value: showStoryForm)
-                .onReceive(NotificationCenter.default.publisher(for: UIResponder.keyboardWillHideNotification)) { _ in
-                    // Handle keyboard hiding if needed
-                }
-                .onChange(of: store.state.isLoading) { _, isLoading in
-                    if isLoading {
-                        showStoryForm = false
-                        isSequelMode = false
-                        focusedField = nil
-                    }
-                }
+            // No longer need overlay here since we're using sheet
+        }
+        .sheet(isPresented: $showStoryForm) {
+            NewStoryFormSheet(
+                focusedField: $focusedField,
+                showStoryForm: $showStoryForm,
+                isSequelMode: $isSequelMode
+            )
+            .environmentObject(store)
+            .presentationBackground(.clear)
+            .presentationDragIndicator(.hidden)
+        }
+        .onChange(of: store.state.isLoading) { _, isLoading in
+            if isLoading {
+                showStoryForm = false
+                isSequelMode = false
+                focusedField = nil
             }
         }
         .onAppear {
