@@ -13,6 +13,9 @@ struct StoryMenu: View {
     @Binding var isMenuOpen: Bool
     let dragOffset: CGFloat
     @State private var selectedStoryForDetails: Story?
+    @State private var showCreateStoryForm = false
+    @State private var isSequelMode = false
+    @FocusState private var focusedField: ReaderView.Field?
     
     var body: some View {
         HStack(spacing: 0) {
@@ -94,7 +97,10 @@ struct StoryMenu: View {
                     }
                 }
                 
-                Spacer()
+                // Create Story button at the bottom
+                NewStoryButton(showStoryForm: $showCreateStoryForm)
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 20)
             }
             .frame(width: 280)
             .background(
@@ -118,6 +124,16 @@ struct StoryMenu: View {
             ))
                 .presentationBackground(.clear)
                 .presentationDragIndicator(.hidden)
+        }
+        .sheet(isPresented: $showCreateStoryForm) {
+            NewStoryFormSheet(
+                focusedField: $focusedField,
+                showStoryForm: $showCreateStoryForm,
+                isSequelMode: $isSequelMode
+            )
+            .environmentObject(store)
+            .presentationBackground(.clear)
+            .presentationDragIndicator(.hidden)
         }
     }
 }

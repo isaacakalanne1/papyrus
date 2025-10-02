@@ -69,15 +69,22 @@ struct StoryDetailsPopup: View {
                     }
                 }
                 
-                Text(story.mainCharacter.isEmpty ? "Not specified" : story.mainCharacter)
-                    .font(.custom("Georgia", size: 16))
-                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                    .padding(12)
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        Text(story.mainCharacter.isEmpty ? "Not specified" : story.mainCharacter)
+                            .font(.custom("Georgia", size: 16))
+                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(12)
+                            .id("mainCharacterText")
+                    }
+                    .frame(height: 60)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
                             .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
                     )
+                    .scrollBounceBehavior(.basedOnSize)
+                }
             }
             
             // Setting details section with scrollview
