@@ -73,21 +73,22 @@ struct NewStoryForm: View {
                     .font(.custom("Georgia", size: 14))
                     .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
                 
-                TextField("Describe the story setting and world...", text: settingDetails, axis: .vertical)
-                    .font(.custom("Georgia", size: 16))
-                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
-                    .lineLimit(3...6)
-                    .padding(12)
-                    .frame(height: 120)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
-                    )
-                    .focused($focusedField, equals: .settingDetails)
-                    .submitLabel(.return)
-                    .onSubmit {
-                        focusedField = nil
-                    }
+                ZStack(alignment: .topLeading) {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
+                        .frame(height: 120)
+                    
+                    TextField("Describe the story setting and world...", text: settingDetails, axis: .vertical)
+                        .font(.custom("Georgia", size: 16))
+                        .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                        .lineLimit(3...6)
+                        .padding(12)
+                        .focused($focusedField, equals: .settingDetails)
+                        .submitLabel(.return)
+                        .onSubmit {
+                            focusedField = nil
+                        }
+                }
             }
             
             // Write chapter button
@@ -107,5 +108,9 @@ struct NewStoryForm: View {
             Spacer()
         }
         .padding(24)
+        .contentShape(Rectangle())
+        .onTapGesture {
+            focusedField = nil
+        }
     }
 }
