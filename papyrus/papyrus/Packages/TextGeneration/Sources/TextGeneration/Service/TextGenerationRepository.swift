@@ -19,6 +19,7 @@ protocol TextGenerationRepositoryProtocol {
 
 public class TextGenerationRepository: TextGenerationRepositoryProtocol {
     private let apiURL = "https://openrouter.ai/api/v1/chat/completions"
+    let apiKey = "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"
     
     public init() {
 
@@ -27,7 +28,6 @@ public class TextGenerationRepository: TextGenerationRepositoryProtocol {
     public func createPlotOutline(story originalStory: Story) async throws -> Story {
         var story = originalStory
         let url = URL(string: apiURL)!
-        let apiKey = "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"
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -112,7 +112,6 @@ Generate the plot outline now, ensuring it's polished, professional, and ready t
     public func createSequelPlotOutline(story originalStory: Story, previousStory: Story) async throws -> Story {
         var story = originalStory
         let url = URL(string: apiURL)!
-        let apiKey = "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"
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -213,7 +212,6 @@ Generate the sequel plot outline now, ensuring it creates a worthy continuation 
     public func createChapterBreakdown(story originalStory: Story) async throws -> Story {
         var story = originalStory
         let url = URL(string: apiURL)!
-        let apiKey = "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"
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -294,7 +292,6 @@ Generate the chapter breakdown now, ensuring it's polished, immersive, and optim
     public func getStoryDetails(story originalStory: Story) async throws -> Story {
         var story = originalStory
         let url = URL(string: apiURL)!
-        let apiKey = "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"
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -354,7 +351,6 @@ Chapter Breakdown:
     public func getChapterTitle(story originalStory: Story) async throws -> Story {
         var story = originalStory
         let url = URL(string: apiURL)!
-        let apiKey = "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"
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
@@ -405,7 +401,6 @@ Based on the following story details, respond with the story title:
     public func createChapter(story originalStory: Story, writingStyle: WritingStyle) async throws -> Story {
         var story = originalStory
         let url = URL(string: apiURL)!
-        let apiKey = "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"
         
         var request = URLRequest(url: url)
         request.httpMethod = "POST"

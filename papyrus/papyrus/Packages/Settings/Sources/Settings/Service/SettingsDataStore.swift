@@ -9,9 +9,12 @@ import Foundation
 
 public protocol SettingsDataStoreProtocol {
     func saveSettings(_ settings: SettingsState) async throws
-    func loadSettings() async throws -> SettingsState?
+    func loadSettings() async throws -> SettingsState
 }
 
+enum SettingsDataStoreError: Error {
+    case failedToFindFile
+}
 public class SettingsDataStore: SettingsDataStoreProtocol {
     private let fileManager = FileManager.default
     private let documentsDirectory: URL
@@ -30,9 +33,9 @@ public class SettingsDataStore: SettingsDataStoreProtocol {
         try data.write(to: settingsFileURL)
     }
     
-    public func loadSettings() async throws -> SettingsState? {
+    public func loadSettings() async throws -> SettingsState {
         guard fileManager.fileExists(atPath: settingsFileURL.path) else {
-            return nil
+            throw SettingsDataStoreError.failedToFindFile
         }
         
         let data = try Data(contentsOf: settingsFileURL)

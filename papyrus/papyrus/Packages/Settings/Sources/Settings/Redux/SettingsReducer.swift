@@ -8,10 +8,8 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction> = { state, ac
     switch action {
     case .selectWritingStyle(let style):
         newState.selectedWritingStyle = style
-    case .onLoadedSettings(let loadedSettings):
-        if let loadedSettings = loadedSettings {
-            newState = loadedSettings
-        }
+    case .onLoadedSettings(let settings):
+        newState = settings
     case .loadSettings,
          .saveSettings,
          .onSavedSettings,
