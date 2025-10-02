@@ -26,150 +26,69 @@ struct NewStoryForm: View {
             store.dispatch(.updateSetting($0))
         }
 
-        VStack(spacing: 0) {
-            VStack(alignment: .leading, spacing: 24) {
-                // Form header with close button
-                HStack {
-                    VStack(alignment: .leading, spacing: 6) {
-                        Text(isSequelMode ? "Create Sequel" : "New Tale")
-                            .font(.custom("Georgia", size: 20))
-                            .fontWeight(.medium)
-                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
-                        
-                        Rectangle()
-                            .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3))
-                            .frame(height: 1)
-                            .frame(maxWidth: 120)
-                    }
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                            showStoryForm = false
-                            isSequelMode = false
-                            focusedField = nil
-                        }
-                    }) {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 14, weight: .medium))
-                            .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
-                            .padding(8)
-                            .background(
-                                Circle()
-                                    .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.15))
-                            )
-                    }
-                }
-                .padding(.bottom, 8)
+        VStack(spacing: 20) {
+            // Header
+            HStack {
+                Text(isSequelMode ? "Create Sequel" : "New Story")
+                    .font(.custom("Georgia", size: 20))
+                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
                 
-                // Character field
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Image(systemName: "person.circle")
-                            .font(.system(size: 16))
-                            .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
-                        Text("Main Character")
-                            .font(.custom("Georgia", size: 15))
-                            .fontWeight(.medium)
-                            .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
-                    }
-                    
-                    TextField("Enter a name...", text: mainCharacter)
-                        .font(.custom("Georgia", size: 16))
-                        .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 14)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(Color(red: 0.92, green: 0.88, blue: 0.79))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(
-                                            focusedField == .mainCharacter
-                                            ? Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.6)
-                                            : Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.2),
-                                            lineWidth: focusedField == .mainCharacter ? 2 : 1
-                                        )
-                                )
-                        )
-                        .focused($focusedField, equals: .mainCharacter)
-                        .submitLabel(.next)
-                        .onSubmit {
-                            focusedField = .settingDetails
-                        }
-                }
+                Spacer()
                 
-                // Setting field
-                VStack(alignment: .leading, spacing: 10) {
-                    HStack {
-                        Image(systemName: "globe")
-                            .font(.system(size: 16))
-                            .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
-                        Text("Setting & World")
-                            .font(.custom("Georgia", size: 15))
-                            .fontWeight(.medium)
-                            .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
-                    }
-                    
-                    TextField("Describe the world...", text: settingDetails, axis: .vertical)
-                        .font(.custom("Georgia", size: 16))
-                        .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
-                        .lineLimit(2...4)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 14)
-                        .background(
-                            RoundedRectangle(cornerRadius: 8)
-                                .fill(Color(red: 0.92, green: 0.88, blue: 0.79))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .stroke(
-                                            focusedField == .settingDetails
-                                            ? Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.6)
-                                            : Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.2),
-                                            lineWidth: focusedField == .settingDetails ? 2 : 1
-                                        )
-                                )
-                        )
-                        .focused($focusedField, equals: .settingDetails)
-                        .submitLabel(.return)
-                        .onSubmit {
-                            focusedField = nil
-                        }
+                Button(action: {
+                    showStoryForm = false
+                    isSequelMode = false
+                    focusedField = nil
+                }) {
+                    Image(systemName: "xmark.circle.fill")
+                        .font(.system(size: 24))
+                        .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
                 }
-                
-                // Subtle tip
-                HStack {
-                    Image(systemName: "lightbulb.fill")
-                        .font(.system(size: 12))
-                        .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.6))
-                    Text("Try starting with your favorite character or a world you've always imagined")
-                        .font(.custom("Georgia", size: 13))
-                        .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
-                        .italic()
-                }
-                .padding(.top, 4)
             }
-            .padding(.horizontal, 24)
-            .padding(.vertical, 28)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: [
-                                Color(red: 0.96, green: 0.93, blue: 0.86),
-                                Color(red: 0.94, green: 0.90, blue: 0.82)
-                            ]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
+                
+            // Main character section
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Main Character")
+                    .font(.custom("Georgia", size: 14))
+                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                
+                TextField("Enter character name...", text: mainCharacter)
+                    .font(.custom("Georgia", size: 16))
+                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                    .padding(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
                     )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.15), lineWidth: 1)
+                    .focused($focusedField, equals: .mainCharacter)
+                    .submitLabel(.next)
+                    .onSubmit {
+                        focusedField = .settingDetails
+                    }
+            }
+                
+            // Story details section
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Story Details")
+                    .font(.custom("Georgia", size: 14))
+                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                
+                TextField("Describe the story setting and world...", text: settingDetails, axis: .vertical)
+                    .font(.custom("Georgia", size: 16))
+                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                    .lineLimit(3...6)
+                    .padding(12)
+                    .frame(height: 120)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
                     )
-                    .shadow(color: Color.black.opacity(0.08), radius: 8, x: 0, y: 4)
-            )
+                    .focused($focusedField, equals: .settingDetails)
+                    .submitLabel(.return)
+                    .onSubmit {
+                        focusedField = nil
+                    }
+            }
             
             // Write chapter button
             DisablablePrimaryButton(
@@ -184,8 +103,9 @@ struct NewStoryForm: View {
                     store.dispatch(.createStory)
                 }
             }
-            .padding(.top, 24)
-            .padding(.bottom, 32)
+            
+            Spacer()
         }
+        .padding(24)
     }
 }
