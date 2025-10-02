@@ -9,20 +9,20 @@ import Foundation
 import Combine
 
 public protocol SettingsEnvironmentProtocol {
-    func loadSettings() async throws -> SettingsState?
+    func loadSettings() async throws -> SettingsState
     func saveSettings(_ settings: SettingsState) async throws
     var settingsSubject: CurrentValueSubject<SettingsState?, Never> { get }
 }
 
 public class SettingsEnvironment: SettingsEnvironmentProtocol {
     private let dataStore: SettingsDataStoreProtocol
-    public let settingsSubject = CurrentValueSubject<SettingsState?, Never>(nil)
+    public var settingsSubject: CurrentValueSubject<SettingsState?, Never> = .init(nil)
     
     public init(dataStore: SettingsDataStoreProtocol = SettingsDataStore()) {
         self.dataStore = dataStore
     }
     
-    public func loadSettings() async throws -> SettingsState? {
+    public func loadSettings() async throws -> SettingsState {
         let settings = try await dataStore.loadSettings()
         settingsSubject.send(settings)
         return settings

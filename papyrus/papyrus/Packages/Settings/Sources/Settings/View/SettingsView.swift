@@ -3,8 +3,11 @@ import ReduxKit
 
 public struct SettingsView: View {
     @EnvironmentObject var store: SettingsStore
-    @State private var selectedStyle: WritingStyle = .classic
     @State private var showingStylePicker = false
+    
+    var selectedStyle: WritingStyle {
+        store.state.selectedWritingStyle
+    }
     
     public init() {}
     
@@ -16,9 +19,6 @@ public struct SettingsView: View {
         }
         .frame(width: 320)
         .background(Color(red: 0.98, green: 0.95, blue: 0.89))
-        .onAppear {
-            selectedStyle = store.state.selectedWritingStyle
-        }
     }
     
     private var settingsHeader: some View {
@@ -99,8 +99,7 @@ public struct SettingsView: View {
     
     private func writingStyleOptionButton(for style: WritingStyle) -> some View {
         Button(action: {
-            selectedStyle = style
-            store.dispatch(SettingsAction.selectWritingStyle(style))
+            store.dispatch(.selectWritingStyle(style))
             withAnimation {
                 showingStylePicker = false
             }

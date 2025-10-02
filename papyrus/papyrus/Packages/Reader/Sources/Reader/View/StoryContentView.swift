@@ -50,7 +50,7 @@ struct StoryContentView: View {
                                     title: "Next Chapter",
                                     icon: "book.pages"
                                 ) {
-                                    let writingStyle = store.state.settingsState?.selectedWritingStyle ?? .classic
+                                    let writingStyle = store.state.settingsState.selectedWritingStyle
                                     store.dispatch(.createChapter(story, writingStyle))
                                 }
                                 .padding(.bottom, 40)

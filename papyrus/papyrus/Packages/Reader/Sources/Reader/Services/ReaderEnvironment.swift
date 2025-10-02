@@ -21,7 +21,6 @@ public protocol ReaderEnvironmentProtocol {
     func getAllSavedStoryIds() async throws -> [UUID]
     func deleteStory(withId id: UUID) async throws
     func loadAllStories() async throws -> [Story]
-    var selectedWritingStyle: WritingStyle { get }
     var settingsEnvironment: SettingsEnvironmentProtocol { get }
 }
 
@@ -92,7 +91,4 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
         return stories
     }
     
-    public var selectedWritingStyle: WritingStyle {
-        settingsEnvironment.settingsSubject.value?.selectedWritingStyle ?? .classic
-    }
 }
