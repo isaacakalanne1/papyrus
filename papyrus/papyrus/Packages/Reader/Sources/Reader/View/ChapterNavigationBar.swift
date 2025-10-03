@@ -32,7 +32,7 @@ struct ChapterNavigationBar: View {
                     // Previous Chapter Button
                     Button(action: {
                         if story.chapterIndex > 0 {
-                            store.dispatch(.updateChapterIndex(story.chapterIndex - 1))
+                            store.dispatch(.updateChapterIndex(story, story.chapterIndex - 1))
                         }
                     }) {
                         Image(systemName: "chevron.left")
@@ -54,7 +54,7 @@ struct ChapterNavigationBar: View {
                     // Next Chapter Button
                     Button(action: {
                         if story.chapterIndex < story.chapters.count - 1 {
-                            store.dispatch(.updateChapterIndex(story.chapterIndex + 1))
+                            store.dispatch(.updateChapterIndex(story, story.chapterIndex + 1))
                         }
                     }) {
                         Image(systemName: "chevron.right")

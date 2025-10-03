@@ -95,6 +95,10 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToLoadStories
         }
     case .onCreatedChapter(let story):
+        return .updateChapterIndex(story, story.chapters.count - 1)
+    case .updateChapterIndex(let story, _):
+        return .saveStory(story)
+    case .saveStory(let story):
         do {
             // Save the current story first
             try await environment.saveStory(story)
@@ -113,17 +117,6 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         } catch {
             return .failedToCreateChapter
         }
-    case .updateChapterIndex:
-        // Save the story after chapter index is updated
-        if let story = state.story {
-            do {
-                try await environment.saveStory(story)
-                return nil
-            } catch {
-                return .failedToCreateChapter
-            }
-        }
-        return nil
     case .updateScrollOffset:
         // Save the story after scroll offset is updated
         if let story = state.story {
