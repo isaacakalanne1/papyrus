@@ -33,7 +33,8 @@ Generate the chapter breakdown now, ensuring it's polished, immersive, and optim
         ]
         
         let request = OpenRouterRequest(
-            messages: messages
+            messages: messages,
+            reasoning: OpenRouterReasoning()
         )
         
         return request.toData()

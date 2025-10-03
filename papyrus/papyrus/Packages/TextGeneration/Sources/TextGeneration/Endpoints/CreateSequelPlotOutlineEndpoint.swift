@@ -48,7 +48,8 @@ Generate the sequel plot outline now, ensuring it creates a worthy continuation 
         ]
         
         let request = OpenRouterRequest(
-            messages: messages
+            messages: messages,
+            reasoning: OpenRouterReasoning()
         )
         
         return request.toData()

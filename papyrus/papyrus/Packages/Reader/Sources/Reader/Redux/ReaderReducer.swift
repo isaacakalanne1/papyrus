@@ -14,6 +14,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     switch action {
     case .createStory:
         newState.isLoading = true
+        newState.showStoryForm = false
         newState.loadingStep = .creatingPlotOutline
         newState.story = .init(
             mainCharacter: newState.mainCharacter,
@@ -21,6 +22,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         )
     case .createSequel:
         newState.isLoading = true
+        newState.showStoryForm = false
         newState.loadingStep = .creatingPlotOutline
 
         newState.sequelStory = newState.story
