@@ -51,34 +51,7 @@ You are an expert storyteller and narrative designer with deep knowledge of clas
 - **Main Character:** \(story.mainCharacter)
 
 **Task:**
-Develop a high-quality plot outline that integrates the setting and main character seamlessly. The outline should be original, engaging, and emotionally resonant, with clear stakes, escalating conflict, and satisfying resolution. Aim for a story length equivalent to a novella or feature film (around 20,000-50,000 words if written out).
-
-**Structure the Outline Using the Three-Act Structure:**
-1. **Act 1: Setup (Introduction and Inciting Incident)**
-   - Introduce the main character in their ordinary world within the setting.
-   - Establish key relationships, motivations, flaws, and backstory.
-   - Present the inciting incident that disrupts the status quo and propels the character into the main conflict.
-   - End with the first turning point: the character commits to the journey.
-
-2. **Act 2: Confrontation (Rising Action and Midpoint)**
-   - Detail the main conflicts, both external (e.g., antagonists, environmental challenges in the setting) and internal (e.g., character's doubts or growth).
-   - Include 3-5 key plot points or scenes that build tension, introduce subplots, and show character development.
-   - Highlight the midpoint: a major reversal or revelation that raises the stakes.
-   - Incorporate themes relevant to the setting and character (e.g., redemption, survival, identity).
-
-3. **Act 3: Resolution (Climax and Denouement)**
-   - Build to the climax: the final confrontation where the character faces their greatest challenge.
-   - Resolve the main conflict, showing how the character has changed.
-   - Provide a denouement that ties up loose ends, hints at the future, and delivers emotional payoff.
-
-**Additional Guidelines for Quality:**
-- Ensure the plot is logical and consistent with the setting's rules (e.g., technology, magic, societal norms).
-- Create believable supporting characters, antagonists, and world-building elements that enhance the story without overwhelming it.
-- Balance pacing: start slow to build investment, accelerate in Act 2, and peak in Act 3.
-- Infuse variety, nuance, and moral complexity—avoid clichés unless subverted creatively.
-- Make the outline vivid and specific, with sensory details, dialogue snippets, and emotional beats where helpful.
-- Keep the total outline concise yet detailed (800-1500 words), using bullet points or numbered scenes for clarity.
-- Genre: [Optional: Specify if needed, e.g., sci-fi thriller; otherwise, infer from context and lean toward the most fitting genre.]
+Develop a high-quality plot outline that integrates the setting and main character seamlessly. The outline should be original, engaging, and emotionally resonant, with clear stakes, escalating conflict, and satisfying resolution. Aim for a story length equivalent to a novel (around 200,000-250,000 words if written out).
 
 Generate the plot outline now, ensuring it's polished, professional, and ready to inspire a full story.
 """
@@ -234,31 +207,7 @@ You are an expert narrative architect and editor with extensive experience in br
 - **Plot Outline:** \(story.plotOutline)
 
 **Task:**
-Expand the plot outline into a chapter-by-chapter breakdown for a complete story. Aim for 10-15 chapters to fit a novella or novel-length narrative (20,000-80,000 words), distributing chapters logically across the three acts (e.g., 3-4 in Act 1, 5-7 in Act 2, 2-4 in Act 3). Each chapter must stand alone in the breakdown with its own dedicated outline—no grouping chapters into ranges (e.g., avoid "Chapters 5-7"; treat each as "Chapter 5," "Chapter 6," etc.). Ensure the breakdown faithfully adapts the plot outline while adding granular details like key scenes, character arcs, dialogue hooks, and sensory elements to make it vivid and actionable.
-
-**Structure the Chapter Breakdown:**
-- **Overall Story Arc:** Briefly restate how chapters map to the three-act structure (e.g., Chapters 1-15: Act 1; Chapters 16-35: Act 2; Chapters 36-50: Act 3). Include estimated word count per chapter (e.g., 2,000-5,000 words) to guide pacing.
-- **Chapter-by-Chapter Outlines:** For *each individual chapter*, provide:
-  1. **Chapter Title:** A evocative, thematic title that hints at the content without spoiling.
-  2. **Act and Position:** Specify the act and its role in the overall plot (e.g., "Act 1: Builds the ordinary world and inciting incident").
-  3. **Summary (200-300 words):** A concise overview of the chapter's events, linking directly to the plot outline. Include:
-     - Key scenes or beats (3-6 major moments).
-     - Main character's actions, internal thoughts, and emotional progression.
-     - Interactions with supporting characters, antagonists, or setting elements.
-     - Rising tension, conflicts (external/internal), and subplots advanced.
-     - Vivid details: Sensory descriptions, pivotal dialogue snippets, and world-building tied to the setting.
-  4. **Pacing and Hooks:** Note the chapter's rhythm (e.g., slow build for character intro, fast action for climax). End with a hook or cliffhanger to propel into the next chapter.
-  5. **Themes and Development:** Highlight how the chapter advances core themes, character growth, and stakes from the plot outline.
-- **Total Length:** Keep the entire breakdown focused and professional (1,500-3,000 words), using numbered sections for chapters and bullet points for sub-elements where clarity aids.
-
-**Additional Guidelines for Quality:**
-- Maintain consistency with the plot outline's logic, setting rules, character motivations, and tone/genre.
-- Ensure progressive escalation: Early chapters establish investment; mid-chapters deepen conflicts and twists; later chapters deliver payoff.
-- Balance elements: 40% action/dialogue, 30% description/world-building, 20% internal monologue, 10% foreshadowing.
-- Avoid filler—every chapter must propel the story forward, reveal character, or heighten stakes.
-- Promote variety and nuance: Flesh out supporting cast with distinct voices and arcs; subvert expectations where the plot outline allows.
-- End chapters on strong notes: Questions, revelations, or dangers to maintain reader momentum.
-- If the plot outline suggests adjustments for better flow (e.g., splitting a beat across chapters), explain briefly and justify.
+Expand the plot outline into a chapter-by-chapter breakdown for a complete story. Aim for 40-55 chapters to fit a novel-length narrative (200,000-250,000 words), distributing chapters logically across the three acts (e.g., 10-15 in Act 1, 23-25 in Act 2, 7-10 in Act 3). Each chapter must stand alone in the breakdown with its own dedicated outline—no grouping chapters into ranges (e.g., avoid "Chapters 5-7"; treat each as "Chapter 5," "Chapter 6," etc.). Ensure the breakdown faithfully adapts the plot outline while adding granular details like key scenes, character arcs, dialogue hooks, and sensory elements to make it vivid and actionable.
 
 Generate the chapter breakdown now, ensuring it's polished, immersive, and optimized for writing a gripping story.
 """
