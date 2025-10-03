@@ -9,7 +9,7 @@ struct OpenRouterMessage: Encodable {
 struct OpenRouterReasoning: Encodable {
     let max_tokens: Int
     
-    init(max_tokens: Int = 4000) {
+    init(max_tokens: Int = 5000) {
         self.max_tokens = max_tokens
     }
 }

@@ -33,7 +33,8 @@ Write the full chapter text now, ensuring it's a standalone masterpiece that hon
         ]
         
         let request = OpenRouterRequest(
-            messages: messages
+            messages: messages,
+            reasoning: OpenRouterReasoning()
         )
         
         return request.toData()
