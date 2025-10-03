@@ -23,8 +23,15 @@ struct LoadingView: View {
     }
     
     private var stageProgress: CGFloat {
-        guard storyCreationStages.count > 1 else { return 0 }
-        return CGFloat(currentStageIndex) / CGFloat(storyCreationStages.count - 1)
+        // Start at 15% for step 1, end at 85% for step 4
+        // This leaves room for the "writing chapter" step visually
+        let startProgress: CGFloat = 0.15
+        let endProgress: CGFloat = 0.85
+        let progressRange = endProgress - startProgress
+        
+        guard storyCreationStages.count > 1 else { return startProgress }
+        let stepProgress = CGFloat(currentStageIndex) / CGFloat(storyCreationStages.count - 1)
+        return startProgress + (stepProgress * progressRange)
     }
     
     private var stageTitle: String {
@@ -140,7 +147,7 @@ struct LoadingView: View {
                         
                         Spacer()
                         
-                        Text("Step \(currentStageIndex + 1) of \(storyCreationStages.count)")
+                        Text("Step \(currentStageIndex + 1) of \(storyCreationStages.count + 1)")
                             .font(.custom("Georgia", size: 12))
                             .fontWeight(.medium)
                             .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
