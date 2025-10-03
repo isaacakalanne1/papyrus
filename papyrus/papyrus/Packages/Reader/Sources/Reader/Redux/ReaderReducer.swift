@@ -60,18 +60,12 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.isLoading = false
         newState.loadingStep = .idle
         // Update the story in loadedStories if it exists, or add it if not present
-        if var loadedStories = newState.loadedStories {
-            if let existingIndex = loadedStories.firstIndex(where: { $0.id == story.id }) {
-                // Update existing story
-                loadedStories[existingIndex] = story
-            } else {
-                // Add new story if not present
-                loadedStories.append(story)
-            }
-            newState.loadedStories = loadedStories
+        if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
+            // Update existing story
+            newState.loadedStories[existingIndex] = story
         } else {
-            // Initialize loadedStories with the new story if it was nil
-            newState.loadedStories = [story]
+            // Add new story if not present
+            newState.loadedStories.append(story)
         }
     case .updateMainCharacter(let mainCharacter):
         newState.mainCharacter = mainCharacter
@@ -98,10 +92,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         break // Handled by middleware
     case .onDeletedStory(let deletedStoryId):
         // Remove the deleted story from loadedStories
-        if var loadedStories = newState.loadedStories {
-            loadedStories.removeAll { $0.id == deletedStoryId }
-            newState.loadedStories = loadedStories
-        }
+        newState.loadedStories.removeAll { $0.id == deletedStoryId }
         // If the currently viewed story was deleted, clear it
         if newState.story?.id == deletedStoryId {
             newState.story = nil
@@ -118,10 +109,8 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             newState.story = story
             
             // Update the story in loadedStories as well
-            if var loadedStories = newState.loadedStories,
-               let existingIndex = loadedStories.firstIndex(where: { $0.id == story.id }) {
-                loadedStories[existingIndex] = story
-                newState.loadedStories = loadedStories
+            if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
+                newState.loadedStories[existingIndex] = story
             }
         }
     case .refreshSettings(let settings):

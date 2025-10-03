@@ -33,9 +33,9 @@ struct StoryMenu: View {
                 .padding(.top, 20)
                 
                 // Story list
-                if let stories = store.state.loadedStories, !stories.isEmpty {
+                if !store.state.loadedStories.isEmpty {
                     List {
-                        ForEach(stories, id: \.id) { story in
+                        ForEach(store.state.loadedStories, id: \.id) { story in
                             Button(action: {
                                 store.dispatch(.setStory(story))
                                 withAnimation(.easeInOut(duration: 0.3)) {
