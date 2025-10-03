@@ -20,7 +20,7 @@ enum ReaderAction: Sendable {
     case onGetStoryDetails(Story)
     case getChapterTitle(Story)
     case onGetChapterTitle(Story)
-    case createChapter(Story, WritingStyle)
+    case createChapter(Story)
     case onCreatedChapter(Story)
     case failedToCreateChapter
     

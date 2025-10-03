@@ -6,8 +6,8 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction> = { state, ac
     var newState = state
     
     switch action {
-    case .selectWritingStyle(let style):
-        newState.selectedWritingStyle = style
+    case .selectTextSize(let size):
+        newState.selectedTextSize = size
     case .onLoadedSettings(let settings):
         newState = settings
     case .loadSettings,
