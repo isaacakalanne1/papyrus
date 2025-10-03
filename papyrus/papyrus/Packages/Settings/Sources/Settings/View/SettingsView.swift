@@ -21,14 +21,15 @@ public struct SettingsView: View {
     }
     
     private var settingsHeader: some View {
-        HStack {
+        VStack(alignment: .leading, spacing: 8) {
             Text("Settings")
-                .font(.custom("Georgia", size: 28))
-                .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                .font(.custom("Georgia", size: 24))
+                .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
             
-            Spacer()
+            Divider()
+                .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.5))
         }
-        .padding(.horizontal)
+        .padding()
         .padding(.top, 20)
     }
     
