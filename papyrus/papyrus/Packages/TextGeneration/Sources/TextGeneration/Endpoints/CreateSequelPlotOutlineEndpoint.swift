@@ -48,7 +48,6 @@ Generate the sequel plot outline now, ensuring it creates a worthy continuation 
         ]
         
         let request = OpenRouterRequest(
-            model: "x-ai/grok-4-fast:free",
             messages: messages
         )
         

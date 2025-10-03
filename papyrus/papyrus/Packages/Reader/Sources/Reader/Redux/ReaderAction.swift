@@ -36,4 +36,5 @@ enum ReaderAction: Sendable {
     case updateChapterIndex(Int)
     case updateScrollOffset(CGFloat)
     case refreshSettings(SettingsState)
+    case setShowStoryForm(Bool)
 }

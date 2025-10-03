@@ -34,7 +34,6 @@ Generate the plot outline now, ensuring it's polished, professional, and ready t
         ]
         
         let request = OpenRouterRequest(
-            model: "x-ai/grok-4-fast:free",
             messages: messages
         )
         

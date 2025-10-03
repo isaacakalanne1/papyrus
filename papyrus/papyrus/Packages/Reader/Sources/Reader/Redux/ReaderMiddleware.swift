@@ -142,7 +142,8 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             .failedToLoadStories,
             .setStory,
             .onDeletedStory,
-            .refreshSettings:
+            .refreshSettings,
+            .setShowStoryForm:
         return nil
     }
 }

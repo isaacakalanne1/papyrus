@@ -13,7 +13,6 @@ struct StoryContentView: View {
     let story: Story
     @EnvironmentObject var store: ReaderStore
     @FocusState.Binding var focusedField: ReaderView.Field?
-    @Binding var showStoryForm: Bool
     @Binding var isSequelMode: Bool
     @Binding var currentScrollOffset: CGFloat
     @Binding var scrollViewHeight: CGFloat
@@ -63,21 +62,21 @@ struct StoryContentView: View {
                                 Group {
                                     if story.chapterIndex < story.maxNumberOfChapters - 1 && story.chapterIndex >= story.chapters.count - 1 {
                                         PrimaryButton(
-                                            title: "Next Chapter",
-                                            icon: "book.pages"
+                                            type: .nextChapter,
+                                            isDisabled: store.state.isLoading
                                         ) {
                                             store.dispatch(.createChapter(story))
                                         }
                                         .disabled(store.state.isLoading)
                                     } else if story.chapterIndex == story.maxNumberOfChapters - 1 {
                                         PrimaryButton(
-                                            title: "Create Sequel",
-                                            icon: "book.closed"
+                                            type: .createSequel,
+                                            isDisabled: store.state.isLoading
                                         ) {
                                             isSequelMode = true
                                             store.dispatch(.updateMainCharacter(story.mainCharacter))
                                             store.dispatch(.updateSetting(""))
-                                            showStoryForm = true
+                                            store.dispatch(.setShowStoryForm(true))
                                             focusedField = .settingDetails
                                         }
                                         .disabled(store.state.isLoading)

@@ -27,7 +27,6 @@ Based on the following story details, respond with the story title:
         ]
         
         let request = OpenRouterRequest(
-            model: "x-ai/grok-4-fast:free",
             messages: messages
         )
         

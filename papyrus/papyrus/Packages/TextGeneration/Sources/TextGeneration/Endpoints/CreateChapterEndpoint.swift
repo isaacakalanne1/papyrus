@@ -33,7 +33,6 @@ Write the full chapter text now, ensuring it's a standalone masterpiece that hon
         ]
         
         let request = OpenRouterRequest(
-            model: "x-ai/grok-4-fast:free",
             messages: messages
         )
         

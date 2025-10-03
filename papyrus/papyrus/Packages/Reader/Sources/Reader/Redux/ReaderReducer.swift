@@ -115,6 +115,8 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         }
     case .refreshSettings(let settings):
         newState.settingsState = settings
+    case .setShowStoryForm(let show):
+        newState.showStoryForm = show
     }
     return newState
 }

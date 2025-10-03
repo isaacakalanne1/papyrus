@@ -98,7 +98,14 @@ struct StoryMenu: View {
                 }
                 
                 // Create Story button at the bottom
-                NewStoryButton(showStoryForm: $showCreateStoryForm)
+                PrimaryButton(
+                    type: .newStory,
+                    isDisabled: store.state.isLoading
+                ) {
+                    withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                        showCreateStoryForm = true
+                    }
+                }
                     .padding(.horizontal, 20)
                     .padding(.bottom, 20)
             }
@@ -128,7 +135,6 @@ struct StoryMenu: View {
         .sheet(isPresented: $showCreateStoryForm) {
             NewStoryFormSheet(
                 focusedField: $focusedField,
-                showStoryForm: $showCreateStoryForm,
                 isSequelMode: $isSequelMode
             )
             .environmentObject(store)

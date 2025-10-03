@@ -19,7 +19,6 @@ struct ReaderView: View {
     @State private var settingDetails: String = ""
     @FocusState private var focusedField: Field?
     @State private var keyboardHeight: CGFloat = 0
-    @State private var showStoryForm: Bool = false
     @State private var isSequelMode: Bool = false
     @State private var currentScrollOffset: CGFloat = 0
     @State private var scrollOffsetTimer: Timer?
@@ -35,6 +34,11 @@ struct ReaderView: View {
     }
     
     public var body: some View {
+        let showStoryForm: Binding<Bool> = .init {
+            store.state.showStoryForm
+        } set: { newValue in
+            store.dispatch(.setShowStoryForm(newValue))
+        }
         ZStack(alignment: .leading) {
             // Main content
             VStack(spacing: 0) {
@@ -52,17 +56,14 @@ struct ReaderView: View {
                         StoryContentView(
                             story: story,
                             focusedField: $focusedField,
-                            showStoryForm: $showStoryForm,
                             isSequelMode: $isSequelMode,
                             currentScrollOffset: $currentScrollOffset,
                             scrollViewHeight: $scrollViewHeight,
                             startScrollOffsetTimer: startScrollOffsetTimer
                         )
-                    } else if !store.state.isLoading {
-                        // Welcome state (only show when not loading)
+                    } else {
                         WelcomeStateView(
                             focusedField: $focusedField,
-                            showStoryForm: $showStoryForm,
                             isSequelMode: $isSequelMode
                         )
                     }
@@ -154,10 +155,9 @@ struct ReaderView: View {
             
             // No longer need overlay here since we're using sheet
         }
-        .sheet(isPresented: $showStoryForm) {
+        .sheet(isPresented: showStoryForm) {
             NewStoryFormSheet(
                 focusedField: $focusedField,
-                showStoryForm: $showStoryForm,
                 isSequelMode: $isSequelMode
             )
             .environmentObject(store)
@@ -166,7 +166,7 @@ struct ReaderView: View {
         }
         .onChange(of: store.state.isLoading) { _, isLoading in
             if isLoading {
-                showStoryForm = false
+                store.dispatch(.setShowStoryForm(false))
                 isSequelMode = false
                 focusedField = nil
             }
