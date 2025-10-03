@@ -49,6 +49,11 @@ public struct SettingsView: View {
                 textSizeButton(for: size)
             }
         }
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color(red: 0.8, green: 0.75, blue: 0.7), lineWidth: 1)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal)
     }
     
@@ -56,42 +61,23 @@ public struct SettingsView: View {
         Button(action: {
             store.dispatch(.selectTextSize(size))
         }) {
-            VStack(spacing: 4) {
-                Text("A")
-                    .font(.custom("Georgia", size: size.fontSize * size.iconScale))
-                    .foregroundColor(size == selectedTextSize ? 
-                        Color(red: 0.8, green: 0.65, blue: 0.4) : 
-                        Color(red: 0.5, green: 0.45, blue: 0.4))
-                
-                Text(size.displayName)
-                    .font(.custom("Georgia", size: 12))
-                    .foregroundColor(size == selectedTextSize ? 
-                        Color(red: 0.8, green: 0.65, blue: 0.4) : 
-                        Color(red: 0.6, green: 0.55, blue: 0.5))
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 12)
-            .background(sizeButtonBackground(for: size))
+            Text("A")
+                .font(.custom("Georgia", size: size.fontSize * size.iconScale))
+                .foregroundColor(size == selectedTextSize ? 
+                    Color(red: 0.8, green: 0.65, blue: 0.4) : 
+                    Color(red: 0.5, green: 0.45, blue: 0.4))
+                .frame(maxWidth: .infinity)
+                .frame(height: 44)
+                .background(
+                    Group {
+                        if size == selectedTextSize {
+                            Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.8)
+                        } else {
+                            Color.clear
+                        }
+                    }
+                )
         }
         .buttonStyle(PlainButtonStyle())
-    }
-    
-    private func sizeButtonBackground(for size: TextSize) -> some View {
-        ZStack {
-            if size == selectedTextSize {
-                RoundedRectangle(cornerRadius: size == .small ? 12 : 0)
-                    .fill(Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.8))
-                RoundedRectangle(cornerRadius: size == .small ? 12 : 0)
-                    .stroke(Color(red: 0.8, green: 0.75, blue: 0.7), lineWidth: 1)
-            }
-        }
-        .clipShape(
-            UnevenRoundedRectangle(
-                topLeadingRadius: size == .small ? 12 : 0,
-                bottomLeadingRadius: size == .small ? 12 : 0,
-                bottomTrailingRadius: size == .extraLarge ? 12 : 0,
-                topTrailingRadius: size == .extraLarge ? 12 : 0
-            )
-        )
     }
 }
