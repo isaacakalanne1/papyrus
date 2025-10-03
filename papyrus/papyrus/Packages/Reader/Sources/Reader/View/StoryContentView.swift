@@ -97,9 +97,6 @@ struct StoryContentView: View {
                     }
                 }
             }
-            
-            // Chapter Navigation Bar
-            ChapterNavigationBar(story: story)
         }
     }
 }

@@ -38,33 +38,6 @@ struct ReaderView: View {
         ZStack(alignment: .leading) {
             // Main content
             VStack(spacing: 0) {
-                // Top bar with menu button
-                HStack {
-                    Button(action: {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            isMenuOpen.toggle()
-                        }
-                    }) {
-                        Image(systemName: "text.alignleft")
-                            .font(.system(size: 20))
-                            .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
-                            .padding()
-                    }
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            isSettingsOpen.toggle()
-                        }
-                    }) {
-                        Image(systemName: "gearshape")
-                            .font(.system(size: 20))
-                            .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
-                            .padding()
-                    }
-                }
-                .background(Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.8))
                 
                 // Loading bar (appears below top bar when loading)
                 if store.state.isLoading {
@@ -107,6 +80,11 @@ struct ReaderView: View {
                 )
                 .scrollBounceBehavior(.basedOnSize)
                 .animation(.easeInOut(duration: 0.4), value: store.state.isLoading)
+                
+                UnifiedNavigationBar(
+                    isMenuOpen: $isMenuOpen,
+                    isSettingsOpen: $isSettingsOpen
+                )
             }
             .gesture(
                 DragGesture()
