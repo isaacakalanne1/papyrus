@@ -34,7 +34,8 @@ Generate the plot outline now, ensuring it's polished, professional, and ready t
         ]
         
         let request = OpenRouterRequest(
-            messages: messages
+            messages: messages,
+            reasoning: OpenRouterReasoning()
         )
         
         return request.toData()

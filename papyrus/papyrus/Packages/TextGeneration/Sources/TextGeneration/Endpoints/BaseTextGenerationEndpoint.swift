@@ -6,16 +6,27 @@ struct OpenRouterMessage: Encodable {
     let content: String
 }
 
+struct OpenRouterReasoning: Encodable {
+    let max_tokens: Int
+    
+    init(max_tokens: Int = 4000) {
+        self.max_tokens = max_tokens
+    }
+}
+
 struct OpenRouterRequest: Encodable {
     let model: String
     let messages: [OpenRouterMessage]
+    let reasoning: OpenRouterReasoning?
     
     init(
         model: String = "x-ai/grok-4-fast",
-        messages: [OpenRouterMessage]
+        messages: [OpenRouterMessage],
+        reasoning: OpenRouterReasoning? = nil
     ) {
         self.model = model
         self.messages = messages
+        self.reasoning = reasoning
     }
 }
 

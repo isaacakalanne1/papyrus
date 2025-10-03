@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		11A977892E906878009AC729 /* papyrusTestplan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 11A977882E906878009AC729 /* papyrusTestplan.xctestplan */; };
 		11F5860F2E87130600084AEC /* Reader in Frameworks */ = {isa = PBXBuildFile; productRef = 11F5860E2E87130600084AEC /* Reader */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		11A977882E906878009AC729 /* papyrusTestplan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = papyrusTestplan.xctestplan; sourceTree = "<group>"; };
 		11F585DD2E870F5D00084AEC /* papyrus.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = papyrus.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		11F585EE2E870F5F00084AEC /* papyrusTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = papyrusTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		11F585F82E870F5F00084AEC /* papyrusUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = papyrusUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,6 +97,7 @@
 		11F585D42E870F5C00084AEC = {
 			isa = PBXGroup;
 			children = (
+				11A977882E906878009AC729 /* papyrusTestplan.xctestplan */,
 				11F585DF2E870F5D00084AEC /* papyrus */,
 				11F585F12E870F5F00084AEC /* papyrusTests */,
 				11F585FB2E870F5F00084AEC /* papyrusUITests */,
@@ -241,6 +244,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				11A977892E906878009AC729 /* papyrusTestplan.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
