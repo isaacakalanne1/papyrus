@@ -37,7 +37,7 @@ struct StoryContentView: View {
                             
                             // Content
                             Text(story.chapters[story.chapterIndex].content)
-                                .font(.custom("Georgia", size: 18))
+                                .font(.custom("Georgia", size: store.state.settingsState.selectedTextSize.fontSize))
                                 .lineSpacing(8)
                                 .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
                                 .padding(.horizontal, 32)
@@ -51,8 +51,7 @@ struct StoryContentView: View {
                                         title: "Next Chapter",
                                         icon: "book.pages"
                                     ) {
-                                        let writingStyle = store.state.settingsState.selectedWritingStyle
-                                        store.dispatch(.createChapter(story, writingStyle))
+                                        store.dispatch(.createChapter(story))
                                     }
                                     .disabled(store.state.isLoading)
                                 } else if story.chapterIndex == story.maxNumberOfChapters - 1 {

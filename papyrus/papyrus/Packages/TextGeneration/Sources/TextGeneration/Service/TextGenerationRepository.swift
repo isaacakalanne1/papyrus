@@ -6,7 +6,6 @@
 //
 
 import Foundation
-import Settings
 
 protocol TextGenerationRepositoryProtocol {
     func createPlotOutline(story originalStory: Story) async throws -> Story
@@ -14,7 +13,7 @@ protocol TextGenerationRepositoryProtocol {
     func createChapterBreakdown(story originalStory: Story) async throws -> Story
     func getStoryDetails(story originalStory: Story) async throws -> Story
     func getChapterTitle(story originalStory: Story) async throws -> Story
-    func createChapter(story originalStory: Story, writingStyle: WritingStyle) async throws -> Story
+    func createChapter(story originalStory: Story) async throws -> Story
 }
 
 public class TextGenerationRepository: TextGenerationRepositoryProtocol {
@@ -347,7 +346,7 @@ Based on the following story details, respond with the story title:
         return story
     }
     
-    public func createChapter(story originalStory: Story, writingStyle: WritingStyle) async throws -> Story {
+    public func createChapter(story originalStory: Story) async throws -> Story {
         var story = originalStory
         let url = URL(string: apiURL)!
         
@@ -364,28 +363,16 @@ Based on the following story details, respond with the story title:
             "messages": [
                 [
                     "role": "system",
-                    "content": writingStyle.intro.isEmpty ? "You are a creative story writer. Write chapters that follow the established plot outline and chapter breakdown." : writingStyle.intro
+                    "content": "You are an acclaimed novelist and creative writing expert, with a mastery of prose craft honed from studying masters like George R.R. Martin, Toni Morrison, and Neil Gaiman, as well as techniques from \"The Emotional Craft of Fiction\" by Donald Maass and \"Writing the Breakout Novel\" by Donald Maass. Your goal is to write a single, high-quality chapter of a story, seamlessly continuing from previous chapters while adhering precisely to the provided chapter breakdown. The result should be immersive, professional-grade narrative prose that captivates readers with vivid language, emotional depth, and tight plotting."
                 ],
                 [
                     "role": "user",
-                    "content": writingStyle.fullStyle.isEmpty ? """
+                    "content": """
 **Context Provided:**
 - **Full Plot Outline:** \(story.plotOutline)
 - **Full Chapter Breakdown:** \(story.chaptersBreakdown)
 - **Chapter Number to Write:** Chapter \(currentChapterNumber). Focus exclusively on this one chapter—do not write or summarize others.
 - **Previous Written Chapters:** \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
-
-Write the full chapter text now, ensuring it's a standalone masterpiece that honors the story's vision and leaves readers eager for more.
-""" : """
-\(writingStyle.intro.isEmpty)
-
-**Context Provided:**
-- **Full Plot Outline:** \(story.plotOutline)
-- **Full Chapter Breakdown:** \(story.chaptersBreakdown)
-- **Chapter Number to Write:** Chapter \(currentChapterNumber). Focus exclusively on this one chapter—do not write or summarize others.
-- **Previous Written Chapters:** \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
-
-\(writingStyle.fullStyle)
 
 Write the full chapter text now, ensuring it's a standalone masterpiece that honors the story's vision and leaves readers eager for more.
 """

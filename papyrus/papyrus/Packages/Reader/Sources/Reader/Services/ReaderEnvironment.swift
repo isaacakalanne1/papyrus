@@ -15,7 +15,7 @@ public protocol ReaderEnvironmentProtocol {
     func createChapterBreakdown(story: Story) async throws -> Story
     func getStoryDetails(story: Story) async throws -> Story
     func getChapterTitle(story: Story) async throws -> Story
-    func createChapter(story: Story, writingStyle: WritingStyle) async throws -> Story
+    func createChapter(story: Story) async throws -> Story
     func saveStory(_ story: Story) async throws
     func loadStory(withId id: UUID) async throws -> Story?
     func getAllSavedStoryIds() async throws -> [UUID]
@@ -58,8 +58,8 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
         try await textGenerationEnvironment.getChapterTitle(story: story)
     }
     
-    public func createChapter(story: Story, writingStyle: WritingStyle) async throws -> Story {
-        try await textGenerationEnvironment.createChapter(story: story, writingStyle: writingStyle)
+    public func createChapter(story: Story) async throws -> Story {
+        try await textGenerationEnvironment.createChapter(story: story)
     }
     
     public func saveStory(_ story: Story) async throws {

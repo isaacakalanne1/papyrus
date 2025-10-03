@@ -3,10 +3,9 @@ import ReduxKit
 
 public struct SettingsView: View {
     @EnvironmentObject var store: SettingsStore
-    @State private var showingStylePicker = false
     
-    var selectedStyle: WritingStyle {
-        store.state.selectedWritingStyle
+    var selectedTextSize: TextSize {
+        store.state.selectedTextSize
     }
     
     public init() {}
@@ -14,7 +13,7 @@ public struct SettingsView: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: 20) {
             settingsHeader
-            writingStyleSection
+            textSizeSection
             Spacer()
         }
         .frame(width: 320)
@@ -33,112 +32,66 @@ public struct SettingsView: View {
         .padding(.top, 20)
     }
     
-    private var writingStyleSection: some View {
+    private var textSizeSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Writing Style")
+            Text("Text Size")
                 .font(.custom("Georgia", size: 18))
                 .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
                 .padding(.horizontal)
             
-            writingStyleButton
-            
-            if showingStylePicker {
-                writingStylePicker
-            }
+            textSizeSelector
         }
     }
     
-    private var writingStyleButton: some View {
-        Button(action: {
-            withAnimation {
-                showingStylePicker.toggle()
-            }
-        }) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(selectedStyle.title)
-                        .font(.custom("Georgia", size: 16))
-                        .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
-                    
-                    Text(selectedStyle.subtitle)
-                        .font(.custom("Georgia", size: 14))
-                        .foregroundColor(Color(red: 0.6, green: 0.55, blue: 0.5))
-                        .lineLimit(2)
-                }
-                
-                Spacer()
-                
-                Image(systemName: showingStylePicker ? "chevron.up" : "chevron.down")
-                    .font(.system(size: 14))
-                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
-            }
-            .padding()
-            .background(buttonBackground)
-            .padding(.horizontal)
-        }
-    }
-    
-    private var buttonBackground: some View {
-        RoundedRectangle(cornerRadius: 12)
-            .fill(Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.6))
-            .overlay(
-                RoundedRectangle(cornerRadius: 12)
-                    .stroke(Color(red: 0.8, green: 0.75, blue: 0.7), lineWidth: 1)
-            )
-    }
-    
-    private var writingStylePicker: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            ForEach(WritingStyle.allCases, id: \.self) { style in
-                writingStyleOptionButton(for: style)
+    private var textSizeSelector: some View {
+        HStack(spacing: 0) {
+            ForEach(TextSize.allCases, id: \.self) { size in
+                textSizeButton(for: size)
             }
         }
         .padding(.horizontal)
-        .transition(.opacity.combined(with: .move(edge: .top)))
     }
     
-    private func writingStyleOptionButton(for style: WritingStyle) -> some View {
+    private func textSizeButton(for size: TextSize) -> some View {
         Button(action: {
-            store.dispatch(.selectWritingStyle(style))
-            withAnimation {
-                showingStylePicker = false
-            }
+            store.dispatch(.selectTextSize(size))
         }) {
-            HStack {
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(style.title)
-                        .font(.custom("Georgia", size: 16))
-                        .foregroundColor(titleColor(for: style))
-                    
-                    Text(style.subtitle)
-                        .font(.custom("Georgia", size: 14))
-                        .foregroundColor(Color(red: 0.6, green: 0.55, blue: 0.5))
-                        .lineLimit(2)
-                }
+            VStack(spacing: 4) {
+                Text("A")
+                    .font(.custom("Georgia", size: size.fontSize * size.iconScale))
+                    .foregroundColor(size == selectedTextSize ? 
+                        Color(red: 0.8, green: 0.65, blue: 0.4) : 
+                        Color(red: 0.5, green: 0.45, blue: 0.4))
                 
-                Spacer()
-                
-                if style == selectedStyle {
-                    Image(systemName: "checkmark")
-                        .font(.system(size: 14))
-                        .foregroundColor(Color(red: 0.8, green: 0.65, blue: 0.4))
-                }
+                Text(size.displayName)
+                    .font(.custom("Georgia", size: 12))
+                    .foregroundColor(size == selectedTextSize ? 
+                        Color(red: 0.8, green: 0.65, blue: 0.4) : 
+                        Color(red: 0.6, green: 0.55, blue: 0.5))
             }
-            .padding()
-            .background(optionBackground(for: style))
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 12)
+            .background(sizeButtonBackground(for: size))
         }
+        .buttonStyle(PlainButtonStyle())
     }
     
-    private func titleColor(for style: WritingStyle) -> Color {
-        style == selectedStyle ? 
-            Color(red: 0.8, green: 0.65, blue: 0.4) : 
-            Color(red: 0.3, green: 0.25, blue: 0.2)
-    }
-    
-    private func optionBackground(for style: WritingStyle) -> some View {
-        RoundedRectangle(cornerRadius: 8)
-            .fill(style == selectedStyle ? 
-                  Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.8) : 
-                  Color.clear)
+    private func sizeButtonBackground(for size: TextSize) -> some View {
+        ZStack {
+            if size == selectedTextSize {
+                RoundedRectangle(cornerRadius: size == .small ? 12 : 0)
+                    .fill(Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.8))
+                RoundedRectangle(cornerRadius: size == .small ? 12 : 0)
+                    .stroke(Color(red: 0.8, green: 0.75, blue: 0.7), lineWidth: 1)
+            }
+        }
+        .clipShape(
+            UnevenRoundedRectangle(
+                topLeadingRadius: size == .small ? 12 : 0,
+                bottomLeadingRadius: size == .small ? 12 : 0,
+                bottomTrailingRadius: size == .extraLarge ? 12 : 0,
+                topTrailingRadius: size == .extraLarge ? 12 : 0
+            )
+        )
     }
 }

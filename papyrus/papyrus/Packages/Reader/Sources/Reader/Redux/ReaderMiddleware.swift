@@ -51,8 +51,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         }
     case .onCreatedChapterBreakdown(let story):
         if story.maxNumberOfChapters > 0 {
-            let writingStyle = state.settingsState.selectedWritingStyle
-            return .createChapter(story, writingStyle)
+            return .createChapter(story)
         } else {
             return .getStoryDetails(story)
         }
@@ -73,11 +72,10 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToCreateChapter
         }
     case .onGetChapterTitle(let story):
-        let writingStyle = state.settingsState.selectedWritingStyle
-        return .createChapter(story, writingStyle)
-    case .createChapter(var story, let writingStyle):
+        return .createChapter(story)
+    case .createChapter(var story):
         do {
-            story = try await environment.createChapter(story: story, writingStyle: writingStyle)
+            story = try await environment.createChapter(story: story)
             return .onCreatedChapter(story)
         } catch {
             return .failedToCreateChapter

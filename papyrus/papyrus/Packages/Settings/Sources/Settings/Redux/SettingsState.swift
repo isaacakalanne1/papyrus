@@ -1,9 +1,9 @@
 import Foundation
 
 public struct SettingsState: Equatable, Codable, Sendable {
-    public var selectedWritingStyle: WritingStyle
+    public var selectedTextSize: TextSize
     
-    public init(selectedWritingStyle: WritingStyle = .classic) {
-        self.selectedWritingStyle = selectedWritingStyle
+    public init(selectedTextSize: TextSize = .medium) {
+        self.selectedTextSize = selectedTextSize
     }
 }
