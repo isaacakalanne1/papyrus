@@ -394,7 +394,7 @@ class ReaderReducerTests {
         expectedState.story?.chapterIndex = 1
         expectedState.story?.scrollOffset = 0
         
-        let newState = readerReducer(initialState, .updateChapterIndex(1))
+        let newState = readerReducer(initialState, .updateChapterIndex(story, 1))
         
         #expect(newState == expectedState)
     }
@@ -410,7 +410,7 @@ class ReaderReducerTests {
         expectedState.story?.chapterIndex = 0
         expectedState.story?.scrollOffset = 0
         
-        let newState = readerReducer(initialState, .updateChapterIndex(-1))
+        let newState = readerReducer(initialState, .updateChapterIndex(story, -1))
         
         #expect(newState == expectedState)
     }
@@ -427,19 +427,27 @@ class ReaderReducerTests {
         expectedState.story?.chapterIndex = 1 // Clamped to max index
         expectedState.story?.scrollOffset = 0
         
-        let newState = readerReducer(initialState, .updateChapterIndex(5))
+        let newState = readerReducer(initialState, .updateChapterIndex(story, 5))
         
         #expect(newState == expectedState)
     }
     
     @Test
-    func updateChapterIndex_noStory() {
-        let initialState = ReaderState(story: nil)
+    func updateChapterIndex_differentStory() {
+        let currentStory = Story(id: UUID(), chapterIndex: 0)
+        let differentStory = Story(id: UUID(), chapterIndex: 0, chapters: [
+            Chapter(title: "Chapter 1", content: ""),
+            Chapter(title: "Chapter 2", content: "")
+        ])
+        let initialState = ReaderState(story: currentStory)
         
         var expectedState = initialState
-        // No change expected when there's no story
+        // Current story should remain unchanged when updating a different story
+        expectedState.loadedStories = [differentStory]
+        expectedState.loadedStories[0].chapterIndex = 1
+        expectedState.loadedStories[0].scrollOffset = 0
         
-        let newState = readerReducer(initialState, .updateChapterIndex(1))
+        let newState = readerReducer(initialState, .updateChapterIndex(differentStory, 1))
         
         #expect(newState == expectedState)
     }
@@ -555,6 +563,19 @@ class ReaderReducerTests {
         // No change expected as deleteStory is handled by middleware
         
         let newState = readerReducer(initialState, .deleteStory(storyId))
+        
+        #expect(newState == expectedState)
+    }
+    
+    @Test
+    func saveStory_noStateChange() {
+        let story = Story(title: "Test Story")
+        let initialState = ReaderState(story: story)
+        
+        var expectedState = initialState
+        // No change expected as saveStory is handled by middleware
+        
+        let newState = readerReducer(initialState, .saveStory(story))
         
         #expect(newState == expectedState)
     }

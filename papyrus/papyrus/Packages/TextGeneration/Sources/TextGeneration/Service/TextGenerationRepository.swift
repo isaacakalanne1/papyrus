@@ -77,7 +77,6 @@ public class TextGenerationRepository: TextGenerationRepositoryProtocol {
         let content = try await networkCore.requestContent(endpoint)
         
         story.chapters.append(.init(content: content))
-        story.chapterIndex = story.chapters.count - 1
         return story
     }
 }

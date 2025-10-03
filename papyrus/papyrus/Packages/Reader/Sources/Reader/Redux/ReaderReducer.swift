@@ -90,8 +90,6 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.loadingStep = .idle
     case .setStory(let story):
         newState.story = story
-    case .deleteStory:
-        break // Handled by middleware
     case .onDeletedStory(let deletedStoryId):
         // Remove the deleted story from loadedStories
         newState.loadedStories.removeAll { $0.id == deletedStoryId }
@@ -99,11 +97,22 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         if newState.story?.id == deletedStoryId {
             newState.story = nil
         }
-    case .updateChapterIndex(let index):
-        if var story = newState.story {
-            story.scrollOffset = 0
-            story.chapterIndex = max(0, min(index, story.chapters.count - 1))
-            newState.story = story
+    case .updateChapterIndex(let story, let index):
+        var updatedStory = story
+        updatedStory.scrollOffset = 0
+        updatedStory.chapterIndex = max(0, min(index, story.chapters.count - 1))
+        
+        // Update the current story if it matches
+        if newState.story?.id == story.id {
+            newState.story = updatedStory
+        }
+        
+        // Update the story in loadedStories as well
+        if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
+            newState.loadedStories[existingIndex] = updatedStory
+        } else {
+            // Add to loadedStories if not present
+            newState.loadedStories.append(updatedStory)
         }
     case .updateScrollOffset(let offset):
         if var story = newState.story {
@@ -119,6 +128,9 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.settingsState = settings
     case .setShowStoryForm(let show):
         newState.showStoryForm = show
+    case .saveStory,
+            .deleteStory:
+        break
     }
     return newState
 }
