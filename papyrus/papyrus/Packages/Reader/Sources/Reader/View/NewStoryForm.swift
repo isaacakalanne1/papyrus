@@ -96,7 +96,7 @@ struct NewStoryForm: View {
                 title: isSequelMode ? "Create Sequel" : "Create Story",
                 icon: isSequelMode ? "book.closed" : "pencil.and.ruler",
                 size: .medium,
-                isDisabled: mainCharacter.wrappedValue.isEmpty
+                isDisabled: mainCharacter.wrappedValue.isEmpty || settingDetails.wrappedValue.isEmpty
             ) {
                 if isSequelMode {
                     store.dispatch(.createSequel)

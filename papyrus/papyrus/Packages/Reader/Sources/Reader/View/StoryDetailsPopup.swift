@@ -14,6 +14,7 @@ struct StoryDetailsPopup: View {
     @State private var copiedField: CopiedField? = nil
     
     enum CopiedField {
+        case title
         case mainCharacter
         case storyDetails
     }
@@ -34,6 +35,56 @@ struct StoryDetailsPopup: View {
                     Image(systemName: "xmark.circle.fill")
                         .font(.system(size: 24))
                         .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                }
+            }
+            
+            // Title section
+            VStack(alignment: .leading, spacing: 8) {
+                HStack {
+                    Text("Title")
+                        .font(.custom("Georgia", size: 14))
+                        .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        UIPasteboard.general.string = story.title.isEmpty ? "Untitled Story" : story.title
+                        withAnimation(.easeInOut(duration: 0.2)) {
+                            copiedField = .title
+                        }
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                            withAnimation(.easeInOut(duration: 0.2)) {
+                                if copiedField == .title {
+                                    copiedField = nil
+                                }
+                            }
+                        }
+                    }) {
+                        HStack(spacing: 4) {
+                            Image(systemName: copiedField == .title ? "checkmark" : "doc.on.doc")
+                                .font(.system(size: 12))
+                            Text(copiedField == .title ? "Copied" : "Copy")
+                                .font(.custom("Georgia", size: 12))
+                        }
+                        .foregroundColor(copiedField == .title ? Color.green : Color(red: 0.6, green: 0.5, blue: 0.4))
+                    }
+                }
+                
+                ScrollViewReader { proxy in
+                    ScrollView {
+                        Text(story.title.isEmpty ? "Untitled Story" : story.title)
+                            .font(.custom("Georgia", size: 16))
+                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(12)
+                            .id("titleText")
+                    }
+                    .frame(height: 40)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
+                    )
+                    .scrollBounceBehavior(.basedOnSize)
                 }
             }
             
@@ -78,7 +129,7 @@ struct StoryDetailsPopup: View {
                             .padding(12)
                             .id("mainCharacterText")
                     }
-                    .frame(height: 60)
+                    .frame(height: 40)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
                             .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))

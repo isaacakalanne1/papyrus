@@ -45,32 +45,31 @@ struct StoryContentView: View {
                                 .id("content")
                             
                             // Next Chapter or Create Sequel Button
-                            if story.chapterIndex < story.maxNumberOfChapters - 1 {
-                                PrimaryButton(
-                                    title: "Next Chapter",
-                                    icon: "book.pages"
-                                ) {
-                                    let writingStyle = store.state.settingsState.selectedWritingStyle
-                                    store.dispatch(.createChapter(story, writingStyle))
+                            Group {
+                                if story.chapterIndex < story.maxNumberOfChapters - 1 && story.chapterIndex >= story.chapters.count - 1 {
+                                    PrimaryButton(
+                                        title: "Next Chapter",
+                                        icon: "book.pages"
+                                    ) {
+                                        let writingStyle = store.state.settingsState.selectedWritingStyle
+                                        store.dispatch(.createChapter(story, writingStyle))
+                                    }
+                                    .disabled(store.state.isLoading)
+                                } else if story.chapterIndex == story.maxNumberOfChapters - 1 {
+                                    PrimaryButton(
+                                        title: "Create Sequel",
+                                        icon: "book.closed"
+                                    ) {
+                                        isSequelMode = true
+                                        store.dispatch(.updateMainCharacter(story.mainCharacter))
+                                        store.dispatch(.updateSetting(""))
+                                        showStoryForm = true
+                                        focusedField = .settingDetails
+                                    }
+                                    .disabled(store.state.isLoading)
                                 }
-                                .padding(.bottom, 40)
-                                .padding(.bottom, 80) // Additional space for navigation bar
-                                .disabled(store.state.isLoading)
-                            } else if story.chapterIndex == story.maxNumberOfChapters - 1 {
-                                PrimaryButton(
-                                    title: "Create Sequel",
-                                    icon: "book.closed"
-                                ) {
-                                    isSequelMode = true
-                                    store.dispatch(.updateMainCharacter(story.mainCharacter))
-                                    store.dispatch(.updateSetting(""))
-                                    showStoryForm = true
-                                    focusedField = .settingDetails
-                                }
-                                .padding(.bottom, 40)
-                                .padding(.bottom, 80) // Additional space for navigation bar
-                                .disabled(store.state.isLoading)
                             }
+                            .padding(.bottom, 30)
                         }
                     }
                     .coordinateSpace(name: "scroll")
