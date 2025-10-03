@@ -15,23 +15,21 @@ struct WelcomeStateView: View {
     var body: some View {
         ZStack {
             // Centered content (scroll icon and welcome text)
-            if focusedField == nil && !showStoryForm {
-                WelcomeView()
-                    .frame(maxWidth: .infinity, maxHeight: .infinity)
-                    .transition(.opacity)
-            }
+            
             
             // Bottom content (New Story button)
             VStack {
                 Spacer()
+                if focusedField == nil && !showStoryForm {
+                    WelcomeView()
+                        .frame(maxWidth: .infinity)
+                        .transition(.opacity)
+                }
+                Spacer()
                 
                 // Initial "New Story" button
                 NewStoryButton(showStoryForm: $showStoryForm)
-                    .padding(.bottom, 50)
-                    .transition(.asymmetric(
-                        insertion: .scale.combined(with: .opacity),
-                        removal: .scale.combined(with: .opacity)
-                    ))
+                    .padding(.bottom, 30)
             }
             .padding(.horizontal, 20)
         }

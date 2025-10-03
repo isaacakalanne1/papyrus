@@ -29,12 +29,8 @@ struct StoryDetailsPopup: View {
                 
                 Spacer()
                 
-                Button(action: {
+                PrimaryCloseButton {
                     isPresented = false
-                }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 24))
-                        .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
                 }
             }
             
