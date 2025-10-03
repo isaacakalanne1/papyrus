@@ -9,6 +9,14 @@ struct OpenRouterMessage: Encodable {
 struct OpenRouterRequest: Encodable {
     let model: String
     let messages: [OpenRouterMessage]
+    
+    init(
+        model: String = "x-ai/grok-4-fast",
+        messages: [OpenRouterMessage]
+    ) {
+        self.model = model
+        self.messages = messages
+    }
 }
 
 // Helper to create the body data for all text generation endpoints

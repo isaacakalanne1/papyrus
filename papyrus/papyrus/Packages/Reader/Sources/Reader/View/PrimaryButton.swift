@@ -62,74 +62,18 @@ enum PrimaryButtonSize {
 }
 
 struct PrimaryButton: View {
-    let title: String
-    let icon: String
-    let size: PrimaryButtonSize
-    let action: () -> Void
-    
-    init(
-        title: String,
-        icon: String,
-        size: PrimaryButtonSize = .large,
-        action: @escaping () -> Void
-    ) {
-        self.title = title
-        self.icon = icon
-        self.size = size
-        self.action = action
-    }
-    
-    var body: some View {
-        Button(action: action) {
-            HStack(spacing: 12) {
-                Image(systemName: icon)
-                    .font(.system(size: size.iconSize))
-                Text(title)
-                    .font(.custom("Georgia", size: size.fontSize))
-                    .fontWeight(.medium)
-            }
-            .foregroundColor(Color(red: 0.98, green: 0.95, blue: 0.89))
-            .padding(.horizontal, size.horizontalPadding)
-            .padding(.vertical, size.verticalPadding)
-            .background(
-                RoundedRectangle(cornerRadius: size.cornerRadius)
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: [
-                                Color(red: 0.45, green: 0.40, blue: 0.35),
-                                Color(red: 0.35, green: 0.30, blue: 0.25)
-                            ]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .shadow(
-                        color: Color.black.opacity(0.2),
-                        radius: size.shadowRadius,
-                        x: size.shadowOffset.x,
-                        y: size.shadowOffset.y
-                    )
-            )
-        }
-    }
-}
-
-struct DisablablePrimaryButton: View {
-    let title: String
-    let icon: String
+    let type: PrimaryButtonType
     let size: PrimaryButtonSize
     let isDisabled: Bool
     let action: () -> Void
     
     init(
-        title: String,
-        icon: String,
+        type: PrimaryButtonType,
         size: PrimaryButtonSize = .large,
         isDisabled: Bool = false,
         action: @escaping () -> Void
     ) {
-        self.title = title
-        self.icon = icon
+        self.type = type
         self.size = size
         self.isDisabled = isDisabled
         self.action = action
@@ -138,9 +82,9 @@ struct DisablablePrimaryButton: View {
     var body: some View {
         Button(action: action) {
             HStack(spacing: 12) {
-                Image(systemName: icon)
+                Image(systemName: type.icon)
                     .font(.system(size: size.iconSize))
-                Text(title)
+                Text(type.title)
                     .font(.custom("Georgia", size: size.fontSize))
                     .fontWeight(.medium)
             }

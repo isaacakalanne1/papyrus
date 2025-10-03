@@ -28,7 +28,6 @@ Chapter Breakdown:
         ]
         
         let request = OpenRouterRequest(
-            model: "x-ai/grok-4-fast:free",
             messages: messages
         )
         

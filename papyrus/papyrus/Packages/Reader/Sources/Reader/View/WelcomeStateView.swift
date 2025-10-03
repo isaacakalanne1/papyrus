@@ -8,8 +8,9 @@
 import SwiftUI
 
 struct WelcomeStateView: View {
+    @EnvironmentObject var store: ReaderStore
+
     @FocusState.Binding var focusedField: ReaderView.Field?
-    @Binding var showStoryForm: Bool
     @Binding var isSequelMode: Bool
     
     var body: some View {
@@ -20,7 +21,7 @@ struct WelcomeStateView: View {
             // Bottom content (New Story button)
             VStack {
                 Spacer()
-                if focusedField == nil && !showStoryForm {
+                if focusedField == nil && !store.state.showStoryForm {
                     WelcomeView()
                         .frame(maxWidth: .infinity)
                         .transition(.opacity)
@@ -28,7 +29,14 @@ struct WelcomeStateView: View {
                 Spacer()
                 
                 // Initial "New Story" button
-                NewStoryButton(showStoryForm: $showStoryForm)
+                PrimaryButton(
+                    type: .newStory,
+                    isDisabled: store.state.isLoading
+                ) {
+                    withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
+                        store.dispatch(.setShowStoryForm(true))
+                    }
+                }
                     .padding(.bottom, 30)
             }
             .padding(.horizontal, 20)

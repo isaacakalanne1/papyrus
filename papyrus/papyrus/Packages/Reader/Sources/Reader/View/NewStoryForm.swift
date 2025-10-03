@@ -8,9 +8,8 @@
 import SwiftUI
 
 struct NewStoryForm: View {
-    @FocusState.Binding var focusedField: ReaderView.Field?
     @EnvironmentObject var store: ReaderStore
-    @Binding var showStoryForm: Bool
+    @FocusState.Binding var focusedField: ReaderView.Field?
     @Binding var isSequelMode: Bool
     
     var body: some View {
@@ -36,7 +35,7 @@ struct NewStoryForm: View {
                 Spacer()
                 
                 PrimaryCloseButton {
-                    showStoryForm = false
+                    store.dispatch(.setShowStoryForm(false))
                     isSequelMode = false
                     focusedField = nil
                 }
@@ -88,11 +87,10 @@ struct NewStoryForm: View {
             }
             
             // Write chapter button
-            DisablablePrimaryButton(
-                title: isSequelMode ? "Create Sequel" : "Create Story",
-                icon: isSequelMode ? "book.closed" : "pencil.and.ruler",
+            PrimaryButton(
+                type: isSequelMode ? .createSequel : .createStory,
                 size: .medium,
-                isDisabled: mainCharacter.wrappedValue.isEmpty || settingDetails.wrappedValue.isEmpty
+                isDisabled: mainCharacter.wrappedValue.isEmpty || settingDetails.wrappedValue.isEmpty || store.state.isLoading
             ) {
                 if isSequelMode {
                     store.dispatch(.createSequel)

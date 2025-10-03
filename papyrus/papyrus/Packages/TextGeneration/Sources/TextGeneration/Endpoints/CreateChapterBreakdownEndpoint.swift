@@ -33,7 +33,6 @@ Generate the chapter breakdown now, ensuring it's polished, immersive, and optim
         ]
         
         let request = OpenRouterRequest(
-            model: "x-ai/grok-4-fast:free",
             messages: messages
         )
         

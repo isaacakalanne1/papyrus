@@ -17,6 +17,7 @@ public struct ReaderState: Equatable {
     var isLoading: Bool
     var loadingStep: LoadingStep
     var settingsState: SettingsState
+    var showStoryForm: Bool
 
     public init(
         mainCharacter: String = "",
@@ -26,7 +27,8 @@ public struct ReaderState: Equatable {
         sequelStory: Story? = nil,
         isLoading: Bool = false,
         loadingStep: LoadingStep = .idle,
-        settingsState: SettingsState = SettingsState()
+        settingsState: SettingsState = SettingsState(),
+        showStoryForm: Bool = false
     ) {
         self.mainCharacter = mainCharacter
         self.setting = setting
@@ -36,6 +38,7 @@ public struct ReaderState: Equatable {
         self.isLoading = isLoading
         self.loadingStep = loadingStep
         self.settingsState = settingsState
+        self.showStoryForm = showStoryForm
     }
 }
 

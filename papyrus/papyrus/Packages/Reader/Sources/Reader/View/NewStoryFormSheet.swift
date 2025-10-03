@@ -9,14 +9,12 @@ import SwiftUI
 
 struct NewStoryFormSheet: View {
     @FocusState.Binding var focusedField: ReaderView.Field?
-    @Binding var showStoryForm: Bool
     @Binding var isSequelMode: Bool
     @EnvironmentObject var store: ReaderStore
     
     var body: some View {
         NewStoryForm(
             focusedField: $focusedField,
-            showStoryForm: $showStoryForm,
             isSequelMode: $isSequelMode
         )
         .frame(width: 350, height: 500)
