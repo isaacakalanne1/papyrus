@@ -27,7 +27,7 @@ enum ReaderAction: Sendable {
     case loadAllStories
     case onLoadedStories([Story])
     case failedToLoadStories
-    case setStory(Story)
+    case setStory(Story?)
     case deleteStory(UUID)
     case onDeletedStory(UUID)
     

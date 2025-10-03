@@ -35,14 +35,10 @@ struct NewStoryForm: View {
                 
                 Spacer()
                 
-                Button(action: {
+                PrimaryCloseButton {
                     showStoryForm = false
                     isSequelMode = false
                     focusedField = nil
-                }) {
-                    Image(systemName: "xmark.circle.fill")
-                        .font(.system(size: 24))
-                        .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
                 }
             }
                 

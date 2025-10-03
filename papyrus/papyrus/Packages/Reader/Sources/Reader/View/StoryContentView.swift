@@ -21,60 +21,61 @@ struct StoryContentView: View {
     let startScrollOffsetTimer: () -> Void
     
     var body: some View {
-        VStack(spacing: 0) {
-            GeometryReader { scrollGeometry in
-                ScrollViewReader { proxy in
-                    ScrollView {
-                        VStack(spacing: 0) {
-                            // Geometry reader at the very top to track scroll offset
-                            GeometryReader { geometry in
-                                Color.clear
-                                    .preference(key: ScrollOffsetPreferenceKey.self,
-                                                value: -geometry.frame(in: .named("scroll")).minY)
-                            }
-                            .frame(height: 0)
-                            .id("topAnchor")
-                            
-                            // Content
-                            Text(story.chapters[story.chapterIndex].content)
-                                .font(.custom("Georgia", size: store.state.settingsState.selectedTextSize.fontSize))
-                                .lineSpacing(8)
-                                .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
-                                .padding(.horizontal, 32)
-                                .padding(.vertical, 40)
-                                .id("content")
-                            
-                            // Next Chapter or Create Sequel Button
-                            Group {
-                                if story.chapterIndex < story.maxNumberOfChapters - 1 && story.chapterIndex >= story.chapters.count - 1 {
-                                    PrimaryButton(
-                                        title: "Next Chapter",
-                                        icon: "book.pages"
-                                    ) {
-                                        store.dispatch(.createChapter(story))
-                                    }
-                                    .disabled(store.state.isLoading)
-                                } else if story.chapterIndex == story.maxNumberOfChapters - 1 {
-                                    PrimaryButton(
-                                        title: "Create Sequel",
-                                        icon: "book.closed"
-                                    ) {
-                                        isSequelMode = true
-                                        store.dispatch(.updateMainCharacter(story.mainCharacter))
-                                        store.dispatch(.updateSetting(""))
-                                        showStoryForm = true
-                                        focusedField = .settingDetails
-                                    }
-                                    .disabled(store.state.isLoading)
+        ZStack(alignment: .bottomTrailing) {
+            VStack(spacing: 0) {
+                GeometryReader { scrollGeometry in
+                    ScrollViewReader { proxy in
+                        ScrollView {
+                            VStack(spacing: 0) {
+                                // Geometry reader at the very top to track scroll offset
+                                GeometryReader { geometry in
+                                    Color.clear
+                                        .preference(key: ScrollOffsetPreferenceKey.self,
+                                                    value: -geometry.frame(in: .named("scroll")).minY)
                                 }
+                                .frame(height: 0)
+                                .id("topAnchor")
+                                
+                                // Content
+                                Text(story.chapters[story.chapterIndex].content)
+                                    .font(.custom("Georgia", size: store.state.settingsState.selectedTextSize.fontSize))
+                                    .lineSpacing(8)
+                                    .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
+                                    .padding(.horizontal, 32)
+                                    .padding(.vertical, 40)
+                                    .id("content")
+                                
+                                // Next Chapter or Create Sequel Button
+                                Group {
+                                    if story.chapterIndex < story.maxNumberOfChapters - 1 && story.chapterIndex >= story.chapters.count - 1 {
+                                        PrimaryButton(
+                                            title: "Next Chapter",
+                                            icon: "book.pages"
+                                        ) {
+                                            store.dispatch(.createChapter(story))
+                                        }
+                                        .disabled(store.state.isLoading)
+                                    } else if story.chapterIndex == story.maxNumberOfChapters - 1 {
+                                        PrimaryButton(
+                                            title: "Create Sequel",
+                                            icon: "book.closed"
+                                        ) {
+                                            isSequelMode = true
+                                            store.dispatch(.updateMainCharacter(story.mainCharacter))
+                                            store.dispatch(.updateSetting(""))
+                                            showStoryForm = true
+                                            focusedField = .settingDetails
+                                        }
+                                        .disabled(store.state.isLoading)
+                                    }
+                                }
+                                .padding(.bottom, 30)
                             }
-                            .padding(.bottom, 30)
                         }
-                    }
-                    .coordinateSpace(name: "scroll")
-                    .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                        DispatchQueue.main.async {
-                            currentScrollOffset = value
+                        .coordinateSpace(name: "scroll")
+                        .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
+                            DispatchQueue.main.async {
+                                currentScrollOffset = value
                         }
                     }
                     .onChange(of: story.chapterIndex) { oldValue, newValue in
@@ -95,8 +96,15 @@ struct StoryContentView: View {
                             }
                         }
                     }
+                    }
                 }
             }
+            
+            // Close button positioned at top right
+            PrimaryCloseButton {
+                store.dispatch(.setStory(nil))
+            }
+            .padding(16)
         }
     }
 }
