@@ -116,6 +116,13 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         if var story = newState.story {
             story.scrollOffset = offset
             newState.story = story
+            
+            // Update the story in loadedStories as well
+            if var loadedStories = newState.loadedStories,
+               let existingIndex = loadedStories.firstIndex(where: { $0.id == story.id }) {
+                loadedStories[existingIndex] = story
+                newState.loadedStories = loadedStories
+            }
         }
     case .refreshSettings(let settings):
         newState.settingsState = settings

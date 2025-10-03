@@ -20,6 +20,20 @@ struct StoryContentView: View {
     
     let startScrollOffsetTimer: () -> Void
     
+    private func setupStoryView(with proxy: ScrollViewProxy, scrollGeometry: GeometryProxy) {
+        scrollViewHeight = scrollGeometry.size.height
+        startScrollOffsetTimer()
+        // Scroll to saved position
+        if story.scrollOffset > 0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                // To scroll down by X points, we position the top anchor at -X/scrollViewHeight
+                let actualScrollHeight = scrollViewHeight > 0 ? scrollViewHeight : UIScreen.main.bounds.height
+                let anchorY = -(story.scrollOffset / actualScrollHeight)
+                proxy.scrollTo("topAnchor", anchor: UnitPoint(x: 0, y: anchorY))
+            }
+        }
+    }
+    
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             VStack(spacing: 0) {
@@ -76,26 +90,20 @@ struct StoryContentView: View {
                         .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                             DispatchQueue.main.async {
                                 currentScrollOffset = value
-                        }
-                    }
-                    .onChange(of: story.chapterIndex) { oldValue, newValue in
-                        if oldValue != newValue {
-                            proxy.scrollTo("content", anchor: .top)
-                        }
-                    }
-                    .onAppear {
-                        scrollViewHeight = scrollGeometry.size.height
-                        startScrollOffsetTimer()
-                        // Scroll to saved position
-                        if story.scrollOffset > 0 {
-                            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                                // To scroll down by X points, we position the top anchor at -X/scrollViewHeight
-                                let actualScrollHeight = scrollViewHeight > 0 ? scrollViewHeight : UIScreen.main.bounds.height
-                                let anchorY = -(story.scrollOffset / actualScrollHeight)
-                                proxy.scrollTo("topAnchor", anchor: UnitPoint(x: 0, y: anchorY))
                             }
                         }
-                    }
+                        .onChange(of: story.chapterIndex) { oldValue, newValue in
+                            if oldValue != newValue {
+                                proxy.scrollTo("content", anchor: .top)
+                                currentScrollOffset = 0
+                            }
+                        }
+                        .onChange(of: story.id, { oldValue, newValue in
+                            setupStoryView(with: proxy, scrollGeometry: scrollGeometry)
+                        })
+                        .onAppear {
+                            setupStoryView(with: proxy, scrollGeometry: scrollGeometry)
+                        }
                     }
                 }
             }
