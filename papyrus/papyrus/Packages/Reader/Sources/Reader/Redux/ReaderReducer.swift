@@ -14,14 +14,14 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     switch action {
     case .createStory:
         newState.isLoading = true
-        newState.loadingStep = .buildingStory
+        newState.loadingStep = .creatingPlotOutline
         newState.story = .init(
             mainCharacter: newState.mainCharacter,
             setting: newState.setting
         )
     case .createSequel:
         newState.isLoading = true
-        newState.loadingStep = .buildingStory
+        newState.loadingStep = .creatingPlotOutline
 
         newState.sequelStory = newState.story
         newState.sequelStory?.id = UUID()
@@ -34,22 +34,22 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         }
     case .createPlotOutline:
         newState.isLoading = true
-        newState.loadingStep = .buildingStory
+        newState.loadingStep = .creatingPlotOutline
     case .onCreatedPlotOutline:
         newState.isLoading = true // Keep loading for next step
     case .createChapterBreakdown:
         newState.isLoading = true
-        newState.loadingStep = .refiningDetails
+        newState.loadingStep = .creatingChapterBreakdown
     case .onCreatedChapterBreakdown:
         newState.isLoading = true // Keep loading for next step
     case .getStoryDetails:
         newState.isLoading = true
-        newState.loadingStep = .expandingNarrative
+        newState.loadingStep = .analyzingStructure
     case .onGetStoryDetails:
         newState.isLoading = true // Keep loading for next step
     case .getChapterTitle:
         newState.isLoading = true
-        newState.loadingStep = .addingDepth
+        newState.loadingStep = .preparingNarrative
     case .onGetChapterTitle:
         newState.isLoading = true // Keep loading for next step
     case .onCreatedChapter(let story):
@@ -79,7 +79,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.setting = setting
     case .createChapter:
         newState.isLoading = true
-        newState.loadingStep = .finalizingStory
+        newState.loadingStep = .writingChapter
     case .failedToCreateChapter:
         newState.isLoading = false
         newState.loadingStep = .idle
