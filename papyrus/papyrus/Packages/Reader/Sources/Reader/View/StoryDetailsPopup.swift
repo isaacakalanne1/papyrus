@@ -191,7 +191,7 @@ struct StoryDetailsPopup: View {
             Spacer()
         }
         .padding(24)
-        .frame(width: 350, height: 400)
+        .frame(width: 350, height: 450)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(

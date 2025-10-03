@@ -14,15 +14,12 @@ struct NewStoryFormSheet: View {
     @EnvironmentObject var store: ReaderStore
     
     var body: some View {
-        VStack(spacing: 0) {
-            NewStoryForm(
-                focusedField: $focusedField,
-                showStoryForm: $showStoryForm,
-                isSequelMode: $isSequelMode
-            )
-        }
-        .frame(width: 350)
-        .frame(minHeight: 450, idealHeight: 500, maxHeight: 600)
+        NewStoryForm(
+            focusedField: $focusedField,
+            showStoryForm: $showStoryForm,
+            isSequelMode: $isSequelMode
+        )
+        .frame(width: 350, height: 500)
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .fill(
