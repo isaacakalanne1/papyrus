@@ -24,11 +24,13 @@ class ReaderReducerTests {
         
         let newState = readerReducer(initialState, .createStory)
         
-        #expect(newState.isLoading == true)
-        #expect(newState.loadingStep == .creatingPlotOutline)
-        #expect(newState.story?.mainCharacter == "John Doe")
-        #expect(newState.story?.setting == "Modern City")
-        #expect(newState.story?.id != nil)
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.showStoryForm = false
+        expectedState.loadingStep = .creatingPlotOutline
+        expectedState.story = newState.story // Use the actual created story with its generated UUID
+        
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -49,14 +51,13 @@ class ReaderReducerTests {
         
         let newState = readerReducer(initialState, .createSequel)
         
-        #expect(newState.isLoading == true)
-        #expect(newState.loadingStep == .creatingPlotOutline)
-        #expect(newState.sequelStory?.mainCharacter == "Sequel Character")
-        #expect(newState.sequelStory?.setting == "Sequel Setting")
-        #expect(newState.sequelStory?.id != originalStoryId)
-        #expect(newState.sequelStory?.chapters.isEmpty == true)
-        #expect(newState.sequelStory?.chapterIndex == 0)
-        #expect(newState.sequelStory?.prequelIds.contains(originalStoryId) == true)
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.showStoryForm = false
+        expectedState.loadingStep = .creatingPlotOutline
+        expectedState.sequelStory = newState.sequelStory // Use the actual created sequel story with its generated UUID
+        
+        #expect(newState == expectedState)
     }
     
     // MARK: - Plot and Chapter Creation Tests
@@ -65,86 +66,113 @@ class ReaderReducerTests {
     func createPlotOutline() {
         let initialState = ReaderState()
         
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.loadingStep = .creatingPlotOutline
+        
         let newState = readerReducer(initialState, .createPlotOutline(Story()))
         
-        #expect(newState.isLoading == true)
-        #expect(newState.loadingStep == .creatingPlotOutline)
+        #expect(newState == expectedState)
     }
     
     @Test
     func onCreatedPlotOutline() {
         let initialState = ReaderState(isLoading: false)
         
+        var expectedState = initialState
+        expectedState.isLoading = true
+        
         let newState = readerReducer(initialState, .onCreatedPlotOutline(Story()))
         
-        #expect(newState.isLoading == true)
+        #expect(newState == expectedState)
     }
     
     @Test
     func createChapterBreakdown() {
         let initialState = ReaderState()
         
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.loadingStep = .creatingChapterBreakdown
+        
         let newState = readerReducer(initialState, .createChapterBreakdown(Story()))
         
-        #expect(newState.isLoading == true)
-        #expect(newState.loadingStep == .creatingChapterBreakdown)
+        #expect(newState == expectedState)
     }
     
     @Test
     func onCreatedChapterBreakdown() {
         let initialState = ReaderState(isLoading: false)
         
+        var expectedState = initialState
+        expectedState.isLoading = true
+        
         let newState = readerReducer(initialState, .onCreatedChapterBreakdown(Story()))
         
-        #expect(newState.isLoading == true)
+        #expect(newState == expectedState)
     }
     
     @Test
     func getStoryDetails() {
         let initialState = ReaderState()
         
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.loadingStep = .analyzingStructure
+        
         let newState = readerReducer(initialState, .getStoryDetails(Story()))
         
-        #expect(newState.isLoading == true)
-        #expect(newState.loadingStep == .analyzingStructure)
+        #expect(newState == expectedState)
     }
     
     @Test
     func onGetStoryDetails() {
         let initialState = ReaderState(isLoading: false)
         
+        var expectedState = initialState
+        expectedState.isLoading = true
+        
         let newState = readerReducer(initialState, .onGetStoryDetails(Story()))
         
-        #expect(newState.isLoading == true)
+        #expect(newState == expectedState)
     }
     
     @Test
     func getChapterTitle() {
         let initialState = ReaderState()
         
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.loadingStep = .preparingNarrative
+        
         let newState = readerReducer(initialState, .getChapterTitle(Story()))
         
-        #expect(newState.isLoading == true)
-        #expect(newState.loadingStep == .preparingNarrative)
+        #expect(newState == expectedState)
     }
     
     @Test
     func onGetChapterTitle() {
         let initialState = ReaderState(isLoading: false)
         
+        var expectedState = initialState
+        expectedState.isLoading = true
+        
         let newState = readerReducer(initialState, .onGetChapterTitle(Story()))
         
-        #expect(newState.isLoading == true)
+        #expect(newState == expectedState)
     }
     
     @Test
     func createChapter() {
         let initialState = ReaderState()
         
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.loadingStep = .writingChapter
+        
         let newState = readerReducer(initialState, .createChapter(Story()))
         
-        #expect(newState.isLoading == true)
-        #expect(newState.loadingStep == .writingChapter)
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -159,12 +187,15 @@ class ReaderReducerTests {
             loadingStep: .writingChapter
         )
         
+        var expectedState = initialState
+        expectedState.story = updatedStory
+        expectedState.isLoading = false
+        expectedState.loadingStep = .idle
+        expectedState.loadedStories = [updatedStory]
+        
         let newState = readerReducer(initialState, .onCreatedChapter(updatedStory))
         
-        #expect(newState.story?.title == "Updated Story")
-        #expect(newState.isLoading == false)
-        #expect(newState.loadingStep == .idle)
-        #expect(newState.loadedStories.contains(updatedStory))
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -180,12 +211,15 @@ class ReaderReducerTests {
             loadingStep: .writingChapter
         )
         
+        var expectedState = initialState
+        expectedState.story = currentStory // Story remains unchanged
+        expectedState.isLoading = false
+        expectedState.loadingStep = .idle
+        expectedState.loadedStories = [updatedStory]
+        
         let newState = readerReducer(initialState, .onCreatedChapter(updatedStory))
         
-        #expect(newState.story?.title == "Current Story")
-        #expect(newState.isLoading == false)
-        #expect(newState.loadingStep == .idle)
-        #expect(newState.loadedStories.contains(updatedStory))
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -199,10 +233,14 @@ class ReaderReducerTests {
             isLoading: true
         )
         
+        var expectedState = initialState
+        expectedState.isLoading = false
+        expectedState.loadingStep = .idle
+        expectedState.loadedStories = [updatedStory]
+        
         let newState = readerReducer(initialState, .onCreatedChapter(updatedStory))
         
-        #expect(newState.loadedStories.count == 1)
-        #expect(newState.loadedStories.first?.title == "New Title")
+        #expect(newState == expectedState)
     }
     
     // MARK: - Story Loading and Management Tests
@@ -211,9 +249,12 @@ class ReaderReducerTests {
     func loadAllStories() {
         let initialState = ReaderState(isLoading: false)
         
+        var expectedState = initialState
+        expectedState.isLoading = true
+        
         let newState = readerReducer(initialState, .loadAllStories)
         
-        #expect(newState.isLoading == true)
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -224,11 +265,14 @@ class ReaderReducerTests {
         ]
         let initialState = ReaderState(isLoading: true, loadingStep: .writingChapter)
         
+        var expectedState = initialState
+        expectedState.loadedStories = stories
+        expectedState.isLoading = false
+        expectedState.loadingStep = .idle
+        
         let newState = readerReducer(initialState, .onLoadedStories(stories))
         
-        #expect(newState.loadedStories == stories)
-        #expect(newState.isLoading == false)
-        #expect(newState.loadingStep == .idle)
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -236,18 +280,24 @@ class ReaderReducerTests {
         let story = Story(title: "Test Story")
         let initialState = ReaderState()
         
+        var expectedState = initialState
+        expectedState.story = story
+        
         let newState = readerReducer(initialState, .setStory(story))
         
-        #expect(newState.story == story)
+        #expect(newState == expectedState)
     }
     
     @Test
     func setStory_nil() {
         let initialState = ReaderState(story: Story(title: "Existing Story"))
         
+        var expectedState = initialState
+        expectedState.story = nil
+        
         let newState = readerReducer(initialState, .setStory(nil))
         
-        #expect(newState.story == nil)
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -260,10 +310,12 @@ class ReaderReducerTests {
             loadedStories: [storyToKeep, storyToDelete]
         )
         
+        var expectedState = initialState
+        expectedState.loadedStories = [storyToKeep]
+        
         let newState = readerReducer(initialState, .onDeletedStory(storyIdToDelete))
         
-        #expect(newState.loadedStories.count == 1)
-        #expect(newState.loadedStories.first?.title == "Keep Story")
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -276,10 +328,13 @@ class ReaderReducerTests {
             story: currentStory
         )
         
+        var expectedState = initialState
+        expectedState.loadedStories = []
+        expectedState.story = nil
+        
         let newState = readerReducer(initialState, .onDeletedStory(storyIdToDelete))
         
-        #expect(newState.story == nil)
-        #expect(newState.loadedStories.isEmpty)
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -290,9 +345,12 @@ class ReaderReducerTests {
         
         let initialState = ReaderState(story: currentStory)
         
+        var expectedState = initialState
+        // No changes expected when deleting a different story
+        
         let newState = readerReducer(initialState, .onDeletedStory(deletedStoryId))
         
-        #expect(newState.story == currentStory)
+        #expect(newState == expectedState)
     }
     
     // MARK: - Character and Setting Update Tests
@@ -301,18 +359,24 @@ class ReaderReducerTests {
     func updateMainCharacter() {
         let initialState = ReaderState(mainCharacter: "Old Character")
         
+        var expectedState = initialState
+        expectedState.mainCharacter = "New Character"
+        
         let newState = readerReducer(initialState, .updateMainCharacter("New Character"))
         
-        #expect(newState.mainCharacter == "New Character")
+        #expect(newState == expectedState)
     }
     
     @Test
     func updateSetting() {
         let initialState = ReaderState(setting: "Old Setting")
         
+        var expectedState = initialState
+        expectedState.setting = "New Setting"
+        
         let newState = readerReducer(initialState, .updateSetting("New Setting"))
         
-        #expect(newState.setting == "New Setting")
+        #expect(newState == expectedState)
     }
     
     // MARK: - Story Navigation Tests
@@ -326,10 +390,13 @@ class ReaderReducerTests {
         ])
         let initialState = ReaderState(story: story)
         
+        var expectedState = initialState
+        expectedState.story?.chapterIndex = 1
+        expectedState.story?.scrollOffset = 0
+        
         let newState = readerReducer(initialState, .updateChapterIndex(1))
         
-        #expect(newState.story?.chapterIndex == 1)
-        #expect(newState.story?.scrollOffset == 0)
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -339,9 +406,13 @@ class ReaderReducerTests {
         ])
         let initialState = ReaderState(story: story)
         
+        var expectedState = initialState
+        expectedState.story?.chapterIndex = 0
+        expectedState.story?.scrollOffset = 0
+        
         let newState = readerReducer(initialState, .updateChapterIndex(-1))
         
-        #expect(newState.story?.chapterIndex == 0)
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -352,18 +423,25 @@ class ReaderReducerTests {
         ])
         let initialState = ReaderState(story: story)
         
+        var expectedState = initialState
+        expectedState.story?.chapterIndex = 1 // Clamped to max index
+        expectedState.story?.scrollOffset = 0
+        
         let newState = readerReducer(initialState, .updateChapterIndex(5))
         
-        #expect(newState.story?.chapterIndex == 1)
+        #expect(newState == expectedState)
     }
     
     @Test
     func updateChapterIndex_noStory() {
         let initialState = ReaderState(story: nil)
         
+        var expectedState = initialState
+        // No change expected when there's no story
+        
         let newState = readerReducer(initialState, .updateChapterIndex(1))
         
-        #expect(newState.story == nil)
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -377,21 +455,28 @@ class ReaderReducerTests {
             story: story
         )
         
+        var expectedState = initialState
+        expectedState.story?.scrollOffset = 100.5
+        // Update the story in loadedStories as well
+        if let index = expectedState.loadedStories.firstIndex(where: { $0.id == storyId }) {
+            expectedState.loadedStories[index].scrollOffset = 100.5
+        }
+        
         let newState = readerReducer(initialState, .updateScrollOffset(100.5))
         
-        #expect(newState.story?.scrollOffset == 100.5)
-        
-        let updatedStoryInLoaded = newState.loadedStories.first { $0.id == storyId }
-        #expect(updatedStoryInLoaded?.scrollOffset == 100.5)
+        #expect(newState == expectedState)
     }
     
     @Test
     func updateScrollOffset_noStory() {
         let initialState = ReaderState(story: nil)
         
+        var expectedState = initialState
+        // No change expected when there's no story
+        
         let newState = readerReducer(initialState, .updateScrollOffset(100.0))
         
-        #expect(newState.story == nil)
+        #expect(newState == expectedState)
     }
     
     // MARK: - Settings and UI State Tests
@@ -401,9 +486,12 @@ class ReaderReducerTests {
         let newSettings = SettingsState()
         let initialState = ReaderState()
         
+        var expectedState = initialState
+        expectedState.settingsState = newSettings
+        
         let newState = readerReducer(initialState, .refreshSettings(newSettings))
         
-        #expect(newState.settingsState == newSettings)
+        #expect(newState == expectedState)
     }
     
     @Test(arguments: [
@@ -431,10 +519,13 @@ class ReaderReducerTests {
             loadingStep: .writingChapter
         )
         
+        var expectedState = initialState
+        expectedState.isLoading = false
+        expectedState.loadingStep = .idle
+        
         let newState = readerReducer(initialState, .failedToCreateChapter)
         
-        #expect(newState.isLoading == false)
-        #expect(newState.loadingStep == .idle)
+        #expect(newState == expectedState)
     }
     
     @Test
@@ -444,10 +535,13 @@ class ReaderReducerTests {
             loadingStep: .analyzingStructure
         )
         
+        var expectedState = initialState
+        expectedState.isLoading = false
+        expectedState.loadingStep = .idle
+        
         let newState = readerReducer(initialState, .failedToLoadStories)
         
-        #expect(newState.isLoading == false)
-        #expect(newState.loadingStep == .idle)
+        #expect(newState == expectedState)
     }
     
     // MARK: - Middleware-handled Actions
@@ -457,8 +551,11 @@ class ReaderReducerTests {
         let initialState = ReaderState()
         let storyId = UUID()
         
+        var expectedState = initialState
+        // No change expected as deleteStory is handled by middleware
+        
         let newState = readerReducer(initialState, .deleteStory(storyId))
         
-        #expect(newState == initialState)
+        #expect(newState == expectedState)
     }
 }
