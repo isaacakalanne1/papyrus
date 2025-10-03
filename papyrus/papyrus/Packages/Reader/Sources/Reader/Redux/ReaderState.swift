@@ -11,7 +11,7 @@ import Settings
 public struct ReaderState: Equatable {
     var mainCharacter: String
     var setting: String
-    var loadedStories: [Story]?
+    var loadedStories: [Story]
     var story: Story?
     var sequelStory: Story?
     var isLoading: Bool
@@ -21,7 +21,7 @@ public struct ReaderState: Equatable {
     public init(
         mainCharacter: String = "",
         setting: String = "",
-        loadedStories: [Story]? = nil,
+        loadedStories: [Story] = [],
         story: Story? = nil,
         sequelStory: Story? = nil,
         isLoading: Bool = false,
