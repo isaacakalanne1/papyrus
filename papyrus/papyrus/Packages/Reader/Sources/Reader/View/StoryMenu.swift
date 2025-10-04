@@ -135,7 +135,8 @@ struct StoryMenu: View {
         .sheet(isPresented: $showCreateStoryForm) {
             NewStoryFormSheet(
                 focusedField: $focusedField,
-                isSequelMode: $isSequelMode
+                isSequelMode: $isSequelMode,
+                dismissAction: { showCreateStoryForm = false }
             )
             .environmentObject(store)
             .presentationBackground(.clear)

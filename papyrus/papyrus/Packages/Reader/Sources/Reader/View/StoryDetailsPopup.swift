@@ -20,7 +20,15 @@ struct StoryDetailsPopup: View {
     }
     
     var body: some View {
-        VStack(spacing: 20) {
+        ZStack {
+            // Invisible background to catch taps
+            Color.clear
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    isPresented = false
+                }
+            
+            VStack(spacing: 20) {
             // Header
             HStack {
                 Text("Story Details")
@@ -184,23 +192,25 @@ struct StoryDetailsPopup: View {
                 }
             }
             
-            Spacer()
-        }
-        .padding(24)
-        .frame(width: 350, height: 450)
-        .background(
-            RoundedRectangle(cornerRadius: 16)
-                .fill(
-                    LinearGradient(
-                        gradient: Gradient(colors: [
-                            Color(red: 0.98, green: 0.95, blue: 0.89),
-                            Color(red: 0.96, green: 0.92, blue: 0.84)
-                        ]),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
+                Spacer()
+            }
+            .padding(24)
+            .frame(width: 350, height: 450)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(
+                        LinearGradient(
+                            gradient: Gradient(colors: [
+                                Color(red: 0.98, green: 0.95, blue: 0.89),
+                                Color(red: 0.96, green: 0.92, blue: 0.84)
+                            ]),
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
                     )
-                )
-                .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
-        )
+                    .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
+            )
+            .onTapGesture { } // Prevent tap from propagating to background
+        }
     }
 }

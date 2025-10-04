@@ -16,8 +16,6 @@ struct WelcomeStateView: View {
     
     var body: some View {
         ZStack {
-            // Centered content (scroll icon and welcome text)
-            
             
             // Bottom content (New Story button)
             VStack {
