@@ -27,8 +27,8 @@ public struct SubscriptionRootView: View {
         SubscriptionView()
             .environmentObject(store)
             .onAppear {
-                store.dispatch(SubscriptionAction.loadProduct)
-                store.dispatch(SubscriptionAction.checkSubscriptionStatus)
+                store.dispatch(.loadProduct)
+                store.dispatch(.checkSubscriptionStatus)
             }
     }
 }

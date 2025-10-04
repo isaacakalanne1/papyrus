@@ -14,7 +14,6 @@ public struct SettingsView: View {
         VStack(alignment: .leading, spacing: 20) {
             settingsHeader
             textSizeSection
-            Spacer()
         }
         .frame(width: 320)
         .background(Color(red: 0.98, green: 0.95, blue: 0.89))
