@@ -1,0 +1,259 @@
+//
+//  MockReaderEnvironment.swift
+//  Reader
+//
+//  Created by Isaac Akalanne on 03/10/2025.
+//
+
+import Foundation
+import TextGeneration
+import Settings
+import Subscription
+@testable import Reader
+
+class MockReaderEnvironment: ReaderEnvironmentProtocol {
+    
+    // MARK: - Spy Properties for Method Calls
+    var createPlotOutlineCalled = false
+    var createPlotOutlineCalledWith: Story?
+    
+    var createSequelPlotOutlineCalled = false
+    var createSequelPlotOutlineCalledWith: (story: Story, previousStory: Story)?
+    
+    var createChapterBreakdownCalled = false
+    var createChapterBreakdownCalledWith: Story?
+    
+    var getStoryDetailsCalled = false
+    var getStoryDetailsCalledWith: Story?
+    
+    var getChapterTitleCalled = false
+    var getChapterTitleCalledWith: Story?
+    
+    var createChapterCalled = false
+    var createChapterCalledWith: Story?
+    
+    var saveStoryCalled = false
+    var saveStoryCalledWith: Story?
+    var saveStoryCallCount = 0
+    var saveStoryCallHistory: [Story] = []
+    
+    var loadStoryWithIdCalled = false
+    var loadStoryWithIdCalledWith: UUID?
+    
+    var getAllSavedStoryIdsCalled = false
+    
+    var deleteStoryWithIdCalled = false
+    var deleteStoryWithIdCalledWith: UUID?
+    
+    var loadAllStoriesCalled = false
+    
+    var loadSubscriptionsCalled = false
+    
+    // MARK: - Return Values and Error Configuration
+    var createPlotOutlineReturnValue: Story?
+    var createPlotOutlineError: Error?
+    
+    var createSequelPlotOutlineReturnValue: Story?
+    var createSequelPlotOutlineError: Error?
+    
+    var createChapterBreakdownReturnValue: Story?
+    var createChapterBreakdownError: Error?
+    
+    var getStoryDetailsReturnValue: Story?
+    var getStoryDetailsError: Error?
+    
+    var getChapterTitleReturnValue: Story?
+    var getChapterTitleError: Error?
+    
+    var createChapterReturnValue: Story?
+    var createChapterError: Error?
+    
+    var saveStoryError: Error?
+    
+    var loadStoryWithIdReturnValue: Story?
+    var loadStoryWithIdError: Error?
+    
+    var getAllSavedStoryIdsReturnValue: [UUID] = []
+    var getAllSavedStoryIdsError: Error?
+    
+    var deleteStoryWithIdError: Error?
+    
+    var loadAllStoriesReturnValue: [Story] = []
+    var loadAllStoriesError: Error?
+    
+    // MARK: - Environment Properties
+    var settingsEnvironment: SettingsEnvironmentProtocol
+    var subscriptionEnvironment: SubscriptionEnvironmentProtocol
+    
+    // MARK: - Initialization
+    init(
+        settingsEnvironment: SettingsEnvironmentProtocol = MockSettingsEnvironment(),
+        subscriptionEnvironment: SubscriptionEnvironmentProtocol = MockSubscriptionEnvironment()
+    ) {
+        self.settingsEnvironment = settingsEnvironment
+        self.subscriptionEnvironment = subscriptionEnvironment
+    }
+    
+    // MARK: - ReaderEnvironmentProtocol Methods
+    
+    func createPlotOutline(story: Story) async throws -> Story {
+        createPlotOutlineCalled = true
+        createPlotOutlineCalledWith = story
+        
+        if let error = createPlotOutlineError {
+            throw error
+        }
+        
+        return createPlotOutlineReturnValue ?? story
+    }
+    
+    func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story {
+        createSequelPlotOutlineCalled = true
+        createSequelPlotOutlineCalledWith = (story: story, previousStory: previousStory)
+        
+        if let error = createSequelPlotOutlineError {
+            throw error
+        }
+        
+        return createSequelPlotOutlineReturnValue ?? story
+    }
+    
+    func createChapterBreakdown(story: Story) async throws -> Story {
+        createChapterBreakdownCalled = true
+        createChapterBreakdownCalledWith = story
+        
+        if let error = createChapterBreakdownError {
+            throw error
+        }
+        
+        return createChapterBreakdownReturnValue ?? story
+    }
+    
+    func getStoryDetails(story: Story) async throws -> Story {
+        getStoryDetailsCalled = true
+        getStoryDetailsCalledWith = story
+        
+        if let error = getStoryDetailsError {
+            throw error
+        }
+        
+        return getStoryDetailsReturnValue ?? story
+    }
+    
+    func getChapterTitle(story: Story) async throws -> Story {
+        getChapterTitleCalled = true
+        getChapterTitleCalledWith = story
+        
+        if let error = getChapterTitleError {
+            throw error
+        }
+        
+        return getChapterTitleReturnValue ?? story
+    }
+    
+    func createChapter(story: Story) async throws -> Story {
+        createChapterCalled = true
+        createChapterCalledWith = story
+        
+        if let error = createChapterError {
+            throw error
+        }
+        
+        return createChapterReturnValue ?? story
+    }
+    
+    func saveStory(_ story: Story) async throws {
+        saveStoryCalled = true
+        saveStoryCalledWith = story
+        saveStoryCallCount += 1
+        saveStoryCallHistory.append(story)
+        
+        if let error = saveStoryError {
+            throw error
+        }
+    }
+    
+    func loadStory(withId id: UUID) async throws -> Story? {
+        loadStoryWithIdCalled = true
+        loadStoryWithIdCalledWith = id
+        
+        if let error = loadStoryWithIdError {
+            throw error
+        }
+        
+        return loadStoryWithIdReturnValue
+    }
+    
+    func getAllSavedStoryIds() async throws -> [UUID] {
+        getAllSavedStoryIdsCalled = true
+        
+        if let error = getAllSavedStoryIdsError {
+            throw error
+        }
+        
+        return getAllSavedStoryIdsReturnValue
+    }
+    
+    func deleteStory(withId id: UUID) async throws {
+        deleteStoryWithIdCalled = true
+        deleteStoryWithIdCalledWith = id
+        
+        if let error = deleteStoryWithIdError {
+            throw error
+        }
+    }
+    
+    func loadAllStories() async throws -> [Story] {
+        loadAllStoriesCalled = true
+        
+        if let error = loadAllStoriesError {
+            throw error
+        }
+        
+        return loadAllStoriesReturnValue
+    }
+    
+    func loadSubscriptions() async {
+        loadSubscriptionsCalled = true
+    }
+}
+
+// MARK: - Mock Settings Environment
+
+class MockSettingsEnvironment: SettingsEnvironmentProtocol {
+    var saveSettingsCalled = false
+    var saveSettingsCalledWith: SettingsState?
+    
+    var loadSettingsCalled = false
+    var loadSettingsReturnValue: SettingsState = SettingsState()
+    
+    func saveSettings(_ settings: SettingsState) async throws {
+        saveSettingsCalled = true
+        saveSettingsCalledWith = settings
+    }
+    
+    func loadSettings() async throws -> SettingsState {
+        loadSettingsCalled = true
+        return loadSettingsReturnValue
+    }
+}
+
+// MARK: - Mock Subscription Environment
+
+class MockSubscriptionEnvironment: SubscriptionEnvironmentProtocol {
+    var loadSubscriptionOnInitCalled = false
+    
+    func loadSubscriptionOnInit() async {
+        loadSubscriptionOnInitCalled = true
+    }
+}
+
+// MARK: - Test Error
+
+struct TestError: Error, Equatable {
+    let message: String
+    
+    init(_ message: String = "Test error") {
+        self.message = message
+    }
+}
