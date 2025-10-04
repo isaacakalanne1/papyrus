@@ -9,7 +9,7 @@ import Reader
 import Settings
 import TextGeneration
 
-extension ReaderState {
+public extension ReaderState {
     static var arrange: ReaderState {
         arrange()
     }

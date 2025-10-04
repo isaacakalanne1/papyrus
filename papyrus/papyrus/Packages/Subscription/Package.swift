@@ -39,7 +39,14 @@ let package = Package(
         ),
         .testTarget(
             name: "SubscriptionTests",
-            dependencies: ["Subscription", "SubscriptionMocks"]
+            dependencies: [
+                "Subscription", 
+                "SubscriptionMocks",
+                .product(name: "SettingsMocks", package: "Settings")
+            ],
+            resources: [
+                .copy("Products.storekit")
+            ]
         ),
     ]
 )
