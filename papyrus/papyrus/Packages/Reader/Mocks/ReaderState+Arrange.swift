@@ -24,9 +24,7 @@ public extension ReaderState {
         loadingStep: LoadingStep = .idle,
         settingsState: SettingsState = SettingsState(),
         showStoryForm: Bool = false,
-        showSubscriptionSheet: Bool = false,
-        isMenuOpen: Bool = false,
-        isSettingsOpen: Bool = false
+        showSubscriptionSheet: Bool = false
     ) -> ReaderState {
         .init(
             mainCharacter: mainCharacter,
@@ -38,9 +36,7 @@ public extension ReaderState {
             loadingStep: loadingStep,
             settingsState: settingsState,
             showStoryForm: showStoryForm,
-            showSubscriptionSheet: showSubscriptionSheet,
-            isMenuOpen: isMenuOpen,
-            isSettingsOpen: isSettingsOpen
+            showSubscriptionSheet: showSubscriptionSheet
         )
     }
 }
