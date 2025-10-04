@@ -625,6 +625,38 @@ class ReaderReducerTests {
         #expect(newState == expectedState)
     }
     
+    @Test(arguments: [
+        true,
+        false
+    ])
+    func setMenuOpen(boolValue: Bool) {
+        let initialState = ReaderState.arrange
+        var expectedState = initialState
+        expectedState.isMenuOpen = boolValue
+        
+        let newState = readerReducer(
+            initialState,
+            .setMenuOpen(boolValue)
+        )
+        #expect(newState == expectedState)
+    }
+    
+    @Test(arguments: [
+        true,
+        false
+    ])
+    func setSettingsOpen(boolValue: Bool) {
+        let initialState = ReaderState.arrange
+        var expectedState = initialState
+        expectedState.isSettingsOpen = boolValue
+        
+        let newState = readerReducer(
+            initialState,
+            .setSettingsOpen(boolValue)
+        )
+        #expect(newState == expectedState)
+    }
+    
     // MARK: - canCreateChapter Computed Property Tests
     
     @Test

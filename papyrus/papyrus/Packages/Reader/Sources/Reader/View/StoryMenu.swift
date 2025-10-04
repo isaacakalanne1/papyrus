@@ -10,14 +10,17 @@ import TextGeneration
 
 struct StoryMenu: View {
     @EnvironmentObject var store: ReaderStore
-    @Binding var isMenuOpen: Bool
     let dragOffset: CGFloat
     @State private var selectedStoryForDetails: Story?
-    @State private var showCreateStoryForm = false
     @State private var isSequelMode = false
     @FocusState private var focusedField: ReaderView.Field?
     
     var body: some View {
+        let showStoryForm: Binding<Bool> = .init {
+            store.state.showStoryForm
+        } set: { newValue in
+            store.dispatch(.setShowStoryForm(newValue))
+        }
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 // Menu header
@@ -39,7 +42,7 @@ struct StoryMenu: View {
                             Button(action: {
                                 store.dispatch(.setStory(story))
                                 withAnimation(.easeInOut(duration: 0.3)) {
-                                    isMenuOpen = false
+                                    store.dispatch(.setMenuOpen(false))
                                 }
                             }) {
                                 HStack {
@@ -104,7 +107,7 @@ struct StoryMenu: View {
                     isDisabled: store.state.isLoading
                 ) {
                     withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
-                        showCreateStoryForm = true
+                        store.dispatch(.setShowStoryForm(true))
                     }
                 }
                     .padding(.horizontal, 20)
@@ -121,7 +124,7 @@ struct StoryMenu: View {
                     endPoint: .bottomTrailing
                 )
             )
-            .offset(x: isMenuOpen ? 0 : -280 + dragOffset)
+            .offset(x: store.state.isMenuOpen ? 0 : -280 + dragOffset)
             
             Spacer()
         }
@@ -133,11 +136,10 @@ struct StoryMenu: View {
                 .presentationBackground(.clear)
                 .presentationDragIndicator(.hidden)
         }
-        .sheet(isPresented: $showCreateStoryForm) {
+        .sheet(isPresented: showStoryForm) {
             NewStoryFormSheet(
                 focusedField: $focusedField,
-                isSequelMode: $isSequelMode,
-                dismissAction: { showCreateStoryForm = false }
+                isSequelMode: $isSequelMode
             )
             .environmentObject(store)
             .presentationBackground(.clear)

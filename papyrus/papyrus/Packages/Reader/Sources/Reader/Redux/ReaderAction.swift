@@ -42,5 +42,7 @@ enum ReaderAction: Equatable, Sendable {
     case refreshSettings(SettingsState)
     case setShowStoryForm(Bool)
     case setShowSubscriptionSheet(Bool)
+    case setMenuOpen(Bool)
+    case setSettingsOpen(Bool)
     case loadSubscriptions
 }

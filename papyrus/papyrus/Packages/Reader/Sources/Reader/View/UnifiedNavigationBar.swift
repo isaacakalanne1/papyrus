@@ -10,8 +10,6 @@ import TextGeneration
 
 struct UnifiedNavigationBar: View {
     @EnvironmentObject var store: ReaderStore
-    @Binding var isMenuOpen: Bool
-    @Binding var isSettingsOpen: Bool
     
     var body: some View {
         VStack(spacing: 0) {
@@ -19,7 +17,7 @@ struct UnifiedNavigationBar: View {
                 // Menu button (left)
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.3)) {
-                        isMenuOpen.toggle()
+                        store.dispatch(.setMenuOpen(!store.state.isMenuOpen))
                     }
                 }) {
                     Image(systemName: "text.alignleft")
@@ -93,7 +91,7 @@ struct UnifiedNavigationBar: View {
                 // Settings button (right)
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.3)) {
-                        isSettingsOpen.toggle()
+                        store.dispatch(.setSettingsOpen(!store.state.isSettingsOpen))
                     }
                 }) {
                     Image(systemName: "gearshape")

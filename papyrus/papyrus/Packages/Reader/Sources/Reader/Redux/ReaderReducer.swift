@@ -130,6 +130,10 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.showStoryForm = show
     case .setShowSubscriptionSheet(let show):
         newState.showSubscriptionSheet = show
+    case .setMenuOpen(let isOpen):
+        newState.isMenuOpen = isOpen
+    case .setSettingsOpen(let isOpen):
+        newState.isSettingsOpen = isOpen
     case .saveStory,
             .deleteStory,
             .loadSubscriptions,
