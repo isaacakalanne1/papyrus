@@ -8,7 +8,7 @@
 import Foundation
 import TextGeneration
 
-protocol ReaderDataStoreProtocol {
+public protocol ReaderDataStoreProtocol {
     func saveStory(_ story: Story) async throws
     func loadStory(withId id: UUID) async throws -> Story?
     func getAllSavedStoryIds() async throws -> [UUID]
@@ -32,7 +32,7 @@ public class ReaderDataStore: ReaderDataStoreProtocol {
         storiesDirectory.appendingPathComponent("story_ids.json")
     }
     
-    init() {
+    public init() {
         createStoriesDirectoryIfNeeded()
     }
     
