@@ -42,6 +42,7 @@
 				Packages/SDIconsKit,
 				Packages/SDNetworkCore,
 				Packages/Settings,
+				Packages/Subscription,
 				Packages/TextGeneration,
 			);
 			target = 11F585DC2E870F5C00084AEC /* papyrus */;
