@@ -157,7 +157,7 @@ public struct SubscriptionView: View {
                     }
                     
                     Button(action: {
-                        store.dispatch(SubscriptionAction.purchaseSubscription)
+                        store.dispatch(.purchaseSubscription)
                     }) {
                         Text("Subscribe Now")
                             .font(.custom("Georgia", size: 18))
@@ -175,7 +175,7 @@ public struct SubscriptionView: View {
                     
                     HStack(spacing: 12) {
                         Button(action: {
-                            store.dispatch(SubscriptionAction.restorePurchases)
+                            store.dispatch(.restorePurchases)
                         }) {
                             Text("Restore Purchases")
                                 .font(.custom("Georgia", size: 14))
