@@ -27,7 +27,10 @@ let package = Package(
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
             name: "TextGeneration",
-            dependencies: ["Settings", "SDNetworkCore"]),
+            dependencies: [
+                "Settings",
+                "SDNetworkCore"
+            ]),
         .target(
             name: "TextGenerationMocks",
             dependencies: [
@@ -37,7 +40,11 @@ let package = Package(
         ),
         .testTarget(
             name: "TextGenerationTests",
-            dependencies: ["TextGeneration", "TextGenerationMocks"]
+            dependencies: [
+                "TextGeneration",
+                "TextGenerationMocks",
+                "SDNetworkCore"
+            ]
         ),
     ]
 )
