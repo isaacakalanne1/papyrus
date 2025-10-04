@@ -34,12 +34,13 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
     public let subscriptionEnvironment: SubscriptionEnvironmentProtocol
     
     public init(
+        dataStore: ReaderDataStoreProtocol = ReaderDataStore(),
         textGenerationEnvironment: TextGenerationEnvironmentProtocol,
         settingsEnvironment: SettingsEnvironmentProtocol,
         subscriptionEnvironment: SubscriptionEnvironmentProtocol
     ) {
         self.textGenerationEnvironment = textGenerationEnvironment
-        self.dataStore = ReaderDataStore()
+        self.dataStore = dataStore
         self.settingsEnvironment = settingsEnvironment
         self.subscriptionEnvironment = subscriptionEnvironment
     }
