@@ -11,4 +11,12 @@ public struct SettingsState: Equatable, Codable, Sendable {
         self.selectedTextSize = selectedTextSize
         self.isSubscribed = isSubscribed
     }
+    
+    public init(
+        from decoder: any Decoder
+    ) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.selectedTextSize = try container.decode(TextSize.self, forKey: .selectedTextSize)
+        self.isSubscribed = try container.decode(Bool.self, forKey: .isSubscribed)
+    }
 }

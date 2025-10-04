@@ -16,13 +16,28 @@ class ReaderReducerTests {
     // MARK: - Story Creation Tests
     
     @Test
-    func createStory() {
+    func createStory_noStateChange() {
         let initialState = ReaderState(
             mainCharacter: "John Doe",
             setting: "Modern City"
         )
         
         let newState = readerReducer(initialState, .createStory)
+        
+        var expectedState = initialState
+        // No change expected as createStory is handled by middleware
+        
+        #expect(newState == expectedState)
+    }
+    
+    @Test
+    func beginCreateStory() {
+        let initialState = ReaderState(
+            mainCharacter: "John Doe",
+            setting: "Modern City"
+        )
+        
+        let newState = readerReducer(initialState, .beginCreateStory)
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -34,7 +49,7 @@ class ReaderReducerTests {
     }
     
     @Test
-    func createSequel() {
+    func createSequel_noStateChange() {
         let originalStoryId = UUID()
         let originalStory = Story(
             id: originalStoryId,
@@ -50,6 +65,30 @@ class ReaderReducerTests {
         )
         
         let newState = readerReducer(initialState, .createSequel)
+        
+        var expectedState = initialState
+        // No change expected as createSequel is handled by middleware
+        
+        #expect(newState == expectedState)
+    }
+    
+    @Test
+    func beginCreateSequel() {
+        let originalStoryId = UUID()
+        let originalStory = Story(
+            id: originalStoryId,
+            mainCharacter: "Original Character",
+            setting: "Original Setting",
+            title: "Original Story"
+        )
+        
+        let initialState = ReaderState(
+            mainCharacter: "Sequel Character",
+            setting: "Sequel Setting",
+            story: originalStory
+        )
+        
+        let newState = readerReducer(initialState, .beginCreateSequel)
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -163,14 +202,26 @@ class ReaderReducerTests {
     }
     
     @Test
-    func createChapter() {
+    func createChapter_noStateChange() {
+        let initialState = ReaderState()
+        
+        var expectedState = initialState
+        // No change expected as createChapter is handled by middleware
+        
+        let newState = readerReducer(initialState, .createChapter(Story()))
+        
+        #expect(newState == expectedState)
+    }
+    
+    @Test
+    func beginCreateChapter() {
         let initialState = ReaderState()
         
         var expectedState = initialState
         expectedState.isLoading = true
         expectedState.loadingStep = .writingChapter
         
-        let newState = readerReducer(initialState, .createChapter(Story()))
+        let newState = readerReducer(initialState, .beginCreateChapter(Story()))
         
         #expect(newState == expectedState)
     }
@@ -550,6 +601,84 @@ class ReaderReducerTests {
         let newState = readerReducer(initialState, .failedToLoadStories)
         
         #expect(newState == expectedState)
+    }
+    
+    @Test(arguments: [
+        true,
+        false
+    ])
+    func setShowSubscriptionSheet(boolValue: Bool) {
+        let initialState = ReaderState()
+        var expectedState = initialState
+        expectedState.showSubscriptionSheet = boolValue
+        
+        let newState = readerReducer(
+            initialState,
+            .setShowSubscriptionSheet(boolValue)
+        )
+        #expect(newState == expectedState)
+    }
+    
+    // MARK: - canCreateChapter Computed Property Tests
+    
+    @Test
+    func canCreateChapter_noStory_returnsTrue() {
+        let state = ReaderState(story: nil)
+        #expect(state.canCreateChapter == true)
+    }
+    
+    @Test
+    func canCreateChapter_subscribedUser_returnsTrue() {
+        let story = Story(chapters: [
+            Chapter(title: "Chapter 1", content: ""),
+            Chapter(title: "Chapter 2", content: ""),
+            Chapter(title: "Chapter 3", content: "")
+        ])
+        let state = ReaderState(
+            story: story,
+            settingsState: SettingsState(isSubscribed: true)
+        )
+        #expect(state.canCreateChapter == true)
+    }
+    
+    @Test
+    func canCreateChapter_unsubscribedUser_lessThan2Chapters_returnsTrue() {
+        let story = Story(chapters: [
+            Chapter(title: "Chapter 1", content: "")
+        ])
+        let state = ReaderState(
+            story: story,
+            settingsState: SettingsState(isSubscribed: false)
+        )
+        #expect(state.canCreateChapter == true)
+    }
+    
+    @Test
+    func canCreateChapter_unsubscribedUser_exactly2Chapters_returnsFalse() {
+        let story = Story(chapters: [
+            Chapter(title: "Chapter 1", content: ""),
+            Chapter(title: "Chapter 2", content: "")
+        ])
+        let state = ReaderState(
+            story: story,
+            settingsState: SettingsState(isSubscribed: false)
+        )
+        #expect(state.canCreateChapter == false)
+    }
+    
+    @Test
+    func canCreateChapter_unsubscribedUser_moreThan2Chapters_returnsFalse() {
+        let story = Story(chapters: [
+            Chapter(title: "Chapter 1", content: ""),
+            Chapter(title: "Chapter 2", content: ""),
+            Chapter(title: "Chapter 3", content: ""),
+            Chapter(title: "Chapter 4", content: "")
+        ])
+        let state = ReaderState(
+            story: story,
+            settingsState: SettingsState(isSubscribed: false)
+        )
+        #expect(state.canCreateChapter == false)
     }
     
     // MARK: - Middleware-handled Actions
