@@ -12,6 +12,10 @@ import Settings
 enum ReaderAction: Sendable {
     case createStory
     case createSequel
+    case createChapter(Story)
+    case beginCreateStory
+    case beginCreateSequel
+    case beginCreateChapter(Story)
     case createPlotOutline(Story)
     case onCreatedPlotOutline(Story)
     case createChapterBreakdown(Story)
@@ -20,7 +24,6 @@ enum ReaderAction: Sendable {
     case onGetStoryDetails(Story)
     case getChapterTitle(Story)
     case onGetChapterTitle(Story)
-    case createChapter(Story)
     case onCreatedChapter(Story)
     case failedToCreateChapter
     
@@ -38,5 +41,6 @@ enum ReaderAction: Sendable {
     case saveStory(Story)
     case refreshSettings(SettingsState)
     case setShowStoryForm(Bool)
+    case setShowSubscriptionSheet(Bool)
     case loadSubscriptions
 }
