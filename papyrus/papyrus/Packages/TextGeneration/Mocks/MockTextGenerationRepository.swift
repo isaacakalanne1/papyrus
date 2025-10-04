@@ -1,14 +1,14 @@
 //
-//  MockTextGenerationEnvironment.swift
+//  MockTextGenerationRepository.swift
 //  TextGeneration
 //
-//  Created by Isaac Akalanne on 03/10/2025.
+//  Created by Isaac Akalanne on 04/10/2025.
 //
 
 import Foundation
-import TextGeneration
+@testable import TextGeneration
 
-public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
+public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
     
     // MARK: - Spy Properties for Method Calls
     public var createPlotOutlineCalled = false
@@ -57,78 +57,78 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     // MARK: - Initialization
     public init() {}
     
-    // MARK: - TextGenerationEnvironmentProtocol Methods
+    // MARK: - TextGenerationRepositoryProtocol Methods
     
-    public func createPlotOutline(story: Story) async throws -> Story {
+    public func createPlotOutline(story originalStory: Story) async throws -> Story {
         createPlotOutlineCalled = true
-        createPlotOutlineCalledWith = story
+        createPlotOutlineCalledWith = originalStory
         createPlotOutlineCallCount += 1
         
         if let error = createPlotOutlineError {
             throw error
         }
         
-        return createPlotOutlineReturnValue ?? story
+        return createPlotOutlineReturnValue ?? originalStory
     }
     
-    public func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story {
+    public func createSequelPlotOutline(story originalStory: Story, previousStory: Story) async throws -> Story {
         createSequelPlotOutlineCalled = true
-        createSequelPlotOutlineCalledWith = (story: story, previousStory: previousStory)
+        createSequelPlotOutlineCalledWith = (story: originalStory, previousStory: previousStory)
         createSequelPlotOutlineCallCount += 1
         
         if let error = createSequelPlotOutlineError {
             throw error
         }
         
-        return createSequelPlotOutlineReturnValue ?? story
+        return createSequelPlotOutlineReturnValue ?? originalStory
     }
     
-    public func createChapterBreakdown(story: Story) async throws -> Story {
+    public func createChapterBreakdown(story originalStory: Story) async throws -> Story {
         createChapterBreakdownCalled = true
-        createChapterBreakdownCalledWith = story
+        createChapterBreakdownCalledWith = originalStory
         createChapterBreakdownCallCount += 1
         
         if let error = createChapterBreakdownError {
             throw error
         }
         
-        return createChapterBreakdownReturnValue ?? story
+        return createChapterBreakdownReturnValue ?? originalStory
     }
     
-    public func getStoryDetails(story: Story) async throws -> Story {
+    public func getStoryDetails(story originalStory: Story) async throws -> Story {
         getStoryDetailsCalled = true
-        getStoryDetailsCalledWith = story
+        getStoryDetailsCalledWith = originalStory
         getStoryDetailsCallCount += 1
         
         if let error = getStoryDetailsError {
             throw error
         }
         
-        return getStoryDetailsReturnValue ?? story
+        return getStoryDetailsReturnValue ?? originalStory
     }
     
-    public func getChapterTitle(story: Story) async throws -> Story {
+    public func getChapterTitle(story originalStory: Story) async throws -> Story {
         getChapterTitleCalled = true
-        getChapterTitleCalledWith = story
+        getChapterTitleCalledWith = originalStory
         getChapterTitleCallCount += 1
         
         if let error = getChapterTitleError {
             throw error
         }
         
-        return getChapterTitleReturnValue ?? story
+        return getChapterTitleReturnValue ?? originalStory
     }
     
-    public func createChapter(story: Story) async throws -> Story {
+    public func createChapter(story originalStory: Story) async throws -> Story {
         createChapterCalled = true
-        createChapterCalledWith = story
+        createChapterCalledWith = originalStory
         createChapterCallCount += 1
         
         if let error = createChapterError {
             throw error
         }
         
-        return createChapterReturnValue ?? story
+        return createChapterReturnValue ?? originalStory
     }
     
     // MARK: - Helper Methods
@@ -175,15 +175,5 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         
         createChapterReturnValue = nil
         createChapterError = nil
-    }
-}
-
-// MARK: - Test Error
-
-public struct TextGenerationTestError: Error, Equatable {
-    public let message: String
-    
-    public init(_ message: String = "TextGeneration test error") {
-        self.message = message
     }
 }
