@@ -13,8 +13,10 @@ protocol TextGenerationRepositoryProtocol {
 public class TextGenerationRepository: TextGenerationRepositoryProtocol {
     private let networkCore: SDNetworkCore
     
-    public init() {
-        self.networkCore = SDNetworkCore()
+    public init(
+        networkCore: SDNetworkCore = SDNetworkCore()
+    ) {
+        self.networkCore = networkCore
     }
     
     public func createPlotOutline(story originalStory: Story) async throws -> Story {
