@@ -38,4 +38,5 @@ enum ReaderAction: Sendable {
     case saveStory(Story)
     case refreshSettings(SettingsState)
     case setShowStoryForm(Bool)
+    case loadSubscriptions
 }

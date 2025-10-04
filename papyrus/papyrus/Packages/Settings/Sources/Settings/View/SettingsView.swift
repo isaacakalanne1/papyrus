@@ -81,4 +81,5 @@ public struct SettingsView: View {
         }
         .buttonStyle(PlainButtonStyle())
     }
+    
 }

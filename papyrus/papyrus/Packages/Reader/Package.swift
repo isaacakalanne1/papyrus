@@ -18,6 +18,7 @@ let package = Package(
     dependencies: [
         .package(name: "TextGeneration", path: "../TextGeneration"),
         .package(name: "Settings", path: "../Settings"),
+        .package(name: "Subscription", path: "../Subscription"),
         .package(name: "SDIconsKit", path: "../SDIconsKit"),
         .package(url: "https://github.com/isaacakalanne1/reduxkit.git", from: "1.0.1")
     ],
@@ -29,6 +30,7 @@ let package = Package(
             dependencies: [
                 "TextGeneration",
                 "Settings",
+                "Subscription",
                 "SDIconsKit",
                 .product(name: "ReduxKit", package: "reduxkit")
             ]),
