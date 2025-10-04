@@ -24,19 +24,19 @@ public protocol ReaderEnvironmentProtocol {
     func loadAllStories() async throws -> [Story]
     func loadSubscriptions() async
     var settingsEnvironment: SettingsEnvironmentProtocol { get }
-    var subscriptionEnvironment: SubscriptionEnvironmentProtocol? { get }
+    var subscriptionEnvironment: SubscriptionEnvironmentProtocol { get }
 }
 
 public struct ReaderEnvironment: ReaderEnvironmentProtocol {
     private let textGenerationEnvironment: TextGenerationEnvironmentProtocol
     private let dataStore: ReaderDataStoreProtocol
     public let settingsEnvironment: SettingsEnvironmentProtocol
-    public let subscriptionEnvironment: SubscriptionEnvironmentProtocol?
+    public let subscriptionEnvironment: SubscriptionEnvironmentProtocol
     
     public init(
         textGenerationEnvironment: TextGenerationEnvironmentProtocol,
         settingsEnvironment: SettingsEnvironmentProtocol,
-        subscriptionEnvironment: SubscriptionEnvironmentProtocol? = nil
+        subscriptionEnvironment: SubscriptionEnvironmentProtocol
     ) {
         self.textGenerationEnvironment = textGenerationEnvironment
         self.dataStore = ReaderDataStore()
@@ -98,7 +98,7 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
     }
     
     public func loadSubscriptions() async {
-        await subscriptionEnvironment?.loadSubscriptionOnInit()
+        await subscriptionEnvironment.loadSubscriptionOnInit()
     }
     
 }
