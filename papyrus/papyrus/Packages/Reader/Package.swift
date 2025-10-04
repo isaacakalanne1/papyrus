@@ -14,6 +14,10 @@ let package = Package(
             name: "Reader",
             targets: ["Reader"]
         ),
+        .library(
+            name: "ReaderMocks",
+            targets: ["ReaderMocks"]
+        ),
     ],
     dependencies: [
         .package(name: "TextGeneration", path: "../TextGeneration"),
@@ -33,10 +37,23 @@ let package = Package(
                 "Subscription",
                 "SDIconsKit",
                 .product(name: "ReduxKit", package: "reduxkit")
-            ]),
+            ]
+        ),
+        .target(
+            name: "ReaderMocks",
+            dependencies: [
+                "TextGeneration",
+                "Settings",
+                "Subscription"
+            ],
+            path: "Mocks"
+        ),
         .testTarget(
             name: "ReaderTests",
-            dependencies: ["Reader"]
+            dependencies: [
+                "Reader",
+                "ReaderMocks"
+            ]
         ),
     ]
 )
