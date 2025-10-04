@@ -155,9 +155,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             .onDeletedStory,
             .refreshSettings,
             .setShowStoryForm,
-            .setShowSubscriptionSheet,
-            .setMenuOpen,
-            .setSettingsOpen:
+            .setShowSubscriptionSheet:
         return nil
     }
 }
