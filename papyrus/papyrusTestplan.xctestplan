@@ -14,9 +14,44 @@
   "testTargets" : [
     {
       "target" : {
+        "containerPath" : "container:papyrus\/Packages\/TextGeneration",
+        "identifier" : "TextGenerationTests",
+        "name" : "TextGenerationTests"
+      }
+    },
+    {
+      "target" : {
         "containerPath" : "container:papyrus\/Packages\/Reader",
         "identifier" : "ReaderTests",
         "name" : "ReaderTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:papyrus\/Packages\/SDNetworkCore",
+        "identifier" : "SDNetworkCoreTests",
+        "name" : "SDNetworkCoreTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:papyrus\/Packages\/SDIconsKit",
+        "identifier" : "SDIconsKitTests",
+        "name" : "SDIconsKitTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:papyrus\/Packages\/Settings",
+        "identifier" : "SettingsTests",
+        "name" : "SettingsTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:papyrus\/Packages\/Subscription",
+        "identifier" : "SubscriptionTests",
+        "name" : "SubscriptionTests"
       }
     }
   ],
