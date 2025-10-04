@@ -1,7 +1,7 @@
 import Foundation
 import SDNetworkCore
 
-protocol TextGenerationRepositoryProtocol {
+public protocol TextGenerationRepositoryProtocol {
     func createPlotOutline(story originalStory: Story) async throws -> Story
     func createSequelPlotOutline(story originalStory: Story, previousStory: Story) async throws -> Story
     func createChapterBreakdown(story originalStory: Story) async throws -> Story

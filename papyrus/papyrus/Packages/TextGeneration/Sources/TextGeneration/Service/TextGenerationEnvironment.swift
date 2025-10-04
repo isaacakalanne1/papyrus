@@ -19,8 +19,10 @@ public protocol TextGenerationEnvironmentProtocol {
 public struct TextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     private let repository: TextGenerationRepositoryProtocol
     
-    public init() {
-        self.repository = TextGenerationRepository()
+    public init(
+        repository: TextGenerationRepositoryProtocol = TextGenerationRepository()
+    ) {
+        self.repository = repository
     }
     
     public func createPlotOutline(story: Story) async throws -> Story {
