@@ -1,4 +1,5 @@
 import Foundation
+import FirebaseFirestore
 
 public enum SDNetworkError: Error {
     case invalidURL
@@ -8,16 +9,33 @@ public enum SDNetworkError: Error {
 }
 
 public class SDNetworkCore {
-    private let apiKey: String
     private let session: URLSession
     
-    public init(apiKey: String = "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") {
-        self.apiKey = apiKey
+    public init() {
         self.session = URLSession.shared
     }
     
+    public func getAuthKey() async throws -> String {
+        let db = Firestore.firestore()
+        let document = try await db.collection("config").document("api_keys").getDocument()
+        
+        guard document.exists else {
+            throw NSError(domain: "APIRequestType", code: 404, userInfo: [NSLocalizedDescriptionKey: "API keys document not found"])
+        }
+        
+        guard let apiKey = document.data()?["openrouter_api_key"] as? String,
+              !apiKey.isEmpty else {
+            throw NSError(domain: "APIRequestType", code: 401, userInfo: [NSLocalizedDescriptionKey: "OpenRouter API key not found"])
+        }
+        return apiKey
+    }
+    
     public func request<E: Endpoint>(_ endpoint: E) async throws -> E.Response {
-        let request = try createURLRequest(from: endpoint)
+        let apiKey = try await getAuthKey()
+        let request = try createURLRequest(
+            from: endpoint,
+            apiKey: apiKey
+        )
         let (data, response) = try await session.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -35,7 +53,10 @@ public class SDNetworkCore {
         }
     }
     
-    private func createURLRequest<E: Endpoint>(from endpoint: E) throws -> URLRequest {
+    private func createURLRequest<E: Endpoint>(
+        from endpoint: E,
+        apiKey: String
+    ) throws -> URLRequest {
         guard let url = URL(string: endpoint.baseURL + endpoint.path) else {
             throw SDNetworkError.invalidURL
         }
