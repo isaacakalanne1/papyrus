@@ -185,6 +185,22 @@ public struct SubscriptionView: View {
                         .buttonStyle(PlainButtonStyle())
                         .disabled(state.isLoading)
                     }
+                    
+                    HStack(spacing: 16) {
+                        Link(destination: URL(string: "https://www.smileydude.co.uk/post/papyrus-privacy-policy")!) {
+                            Text("Privacy Policy")
+                                .font(.custom("Georgia", size: 12))
+                                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                                .underline()
+                        }
+                        
+                        Link(destination: URL(string: "https://www.smileydude.co.uk/post/papyrus-terms-of-use-eula")!) {
+                            Text("Terms of Use (EULA)")
+                                .font(.custom("Georgia", size: 12))
+                                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                                .underline()
+                        }
+                    }
                 }
             }
         }

@@ -47,7 +47,7 @@ struct NewStoryForm: View {
                     .font(.custom("Georgia", size: 14))
                     .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
                 
-                TextField("Enter character name...", text: mainCharacter)
+                TextField("E.g, Sherlock Holmes", text: mainCharacter)
                     .font(.custom("Georgia", size: 16))
                     .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
                     .padding(12)
@@ -64,7 +64,7 @@ struct NewStoryForm: View {
                 
             // Story details section
             VStack(alignment: .leading, spacing: 8) {
-                Text("Story Details")
+                Text("Setting & Details")
                     .font(.custom("Georgia", size: 14))
                     .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
                 
@@ -73,7 +73,7 @@ struct NewStoryForm: View {
                         .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
                         .frame(height: 120)
                     
-                    TextField("Describe the story setting and world...", text: settingDetails, axis: .vertical)
+                    TextField("E.g, Living in Los Angeles, has famous superheroes as clients", text: settingDetails, axis: .vertical)
                         .font(.custom("Georgia", size: 16))
                         .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
                         .lineLimit(3...6)
