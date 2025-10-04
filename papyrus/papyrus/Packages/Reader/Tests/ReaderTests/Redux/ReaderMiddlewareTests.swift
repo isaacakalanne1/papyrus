@@ -636,7 +636,11 @@ class ReaderMiddlewareTests {
             .onDeletedStory(UUID()),
             .refreshSettings(SettingsState()),
             .setShowStoryForm(true),
-            .setShowSubscriptionSheet(true)
+            .setShowSubscriptionSheet(true),
+            .setMenuOpen(true),
+            .setMenuOpen(false),
+            .setSettingsOpen(true),
+            .setSettingsOpen(false)
         ]
         
         for action in noOpActions {

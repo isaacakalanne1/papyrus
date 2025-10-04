@@ -12,12 +12,8 @@ import Subscription
 
 struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
-    @State private var isMenuOpen: Bool = false
-    @State private var isSettingsOpen: Bool = false
     @State private var settingsDragOffset: CGFloat = 0
     @State private var dragOffset: CGFloat = 0
-    @State private var mainCharacter: String = ""
-    @State private var settingDetails: String = ""
     @FocusState private var focusedField: Field?
     @State private var keyboardHeight: CGFloat = 0
     @State private var isSequelMode: Bool = false
@@ -45,6 +41,18 @@ struct ReaderView: View {
             store.state.showSubscriptionSheet
         } set: { newValue in
             store.dispatch(.setShowSubscriptionSheet(newValue))
+        }
+        
+        let isMenuOpen: Binding<Bool> = .init {
+            store.state.isMenuOpen
+        } set: { newValue in
+            store.dispatch(.setMenuOpen(newValue))
+        }
+        
+        let isSettingsOpen: Binding<Bool> = .init {
+            store.state.isSettingsOpen
+        } set: { newValue in
+            store.dispatch(.setSettingsOpen(newValue))
         }
         ZStack(alignment: .leading) {
             // Main content
@@ -89,10 +97,7 @@ struct ReaderView: View {
                 .scrollBounceBehavior(.basedOnSize)
                 .animation(.easeInOut(duration: 0.4), value: store.state.isLoading)
                 
-                UnifiedNavigationBar(
-                    isMenuOpen: $isMenuOpen,
-                    isSettingsOpen: $isSettingsOpen
-                )
+                UnifiedNavigationBar()
             }
             .gesture(
                 DragGesture()
@@ -110,13 +115,13 @@ struct ReaderView: View {
                         // Open menu if dragged enough from left
                         if dragOffset > 100 {
                             withAnimation(.easeInOut(duration: 0.3)) {
-                                isMenuOpen = true
+                                store.dispatch(.setMenuOpen(true))
                             }
                         }
                         // Open settings if dragged enough from right
                         else if settingsDragOffset < -100 {
                             withAnimation(.easeInOut(duration: 0.3)) {
-                                isSettingsOpen = true
+                                store.dispatch(.setSettingsOpen(true))
                             }
                         }
                         dragOffset = 0
@@ -125,29 +130,28 @@ struct ReaderView: View {
             )
             
             // Side menu overlay
-            if isMenuOpen {
+            if store.state.isMenuOpen {
                 Color.black.opacity(0.3)
                     .ignoresSafeArea()
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.3)) {
-                            isMenuOpen = false
+                            store.dispatch(.setMenuOpen(false))
                         }
                     }
             }
             
             // Side menu
             StoryMenu(
-                isMenuOpen: $isMenuOpen,
                 dragOffset: dragOffset
             )
             
             // Settings menu overlay
-            if isSettingsOpen {
+            if store.state.isSettingsOpen {
                 Color.black.opacity(0.3)
                     .ignoresSafeArea()
                     .onTapGesture {
                         withAnimation(.easeInOut(duration: 0.3)) {
-                            isSettingsOpen = false
+                            store.dispatch(.setSettingsOpen(false))
                         }
                     }
             }
@@ -194,8 +198,8 @@ struct ReaderView: View {
                 }
                 .frame(width: 320)
                 .background(Color(red: 0.98, green: 0.95, blue: 0.89))
-                .offset(x: isSettingsOpen ? 0 : 320 + settingsDragOffset)
-                .animation(.easeInOut(duration: 0.3), value: isSettingsOpen)
+                .offset(x: store.state.isSettingsOpen ? 0 : 320 + settingsDragOffset)
+                .animation(.easeInOut(duration: 0.3), value: store.state.isSettingsOpen)
             }
             
             // No longer need overlay here since we're using sheet
