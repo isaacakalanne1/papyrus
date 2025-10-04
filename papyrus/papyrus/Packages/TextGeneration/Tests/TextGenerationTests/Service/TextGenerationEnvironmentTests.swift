@@ -65,7 +65,7 @@ class TextGenerationEnvironmentTests {
         
         do {
             _ = try await environment.createPlotOutline(story: inputStory)
-            #expect(false, "Expected error to be thrown")
+            Issue.record("Expected error to be thrown")
         } catch {
             #expect(error is TextGenerationTestError)
         }
@@ -110,7 +110,7 @@ class TextGenerationEnvironmentTests {
         
         do {
             _ = try await environment.createSequelPlotOutline(story: inputStory, previousStory: previousStory)
-            #expect(false, "Expected error to be thrown")
+            Issue.record("Expected error to be thrown")
         } catch {
             #expect(error is TextGenerationTestError)
         }
@@ -150,7 +150,7 @@ class TextGenerationEnvironmentTests {
         
         do {
             _ = try await environment.createChapterBreakdown(story: inputStory)
-            #expect(false, "Expected error to be thrown")
+            Issue.record("Expected error to be thrown")
         } catch {
             #expect(error is TextGenerationTestError)
         }
@@ -190,7 +190,7 @@ class TextGenerationEnvironmentTests {
         
         do {
             _ = try await environment.getStoryDetails(story: inputStory)
-            #expect(false, "Expected error to be thrown")
+            Issue.record("Expected error to be thrown")
         } catch {
             #expect(error is TextGenerationTestError)
         }
@@ -230,7 +230,7 @@ class TextGenerationEnvironmentTests {
         
         do {
             _ = try await environment.getChapterTitle(story: inputStory)
-            #expect(false, "Expected error to be thrown")
+            Issue.record("Expected error to be thrown")
         } catch {
             #expect(error is TextGenerationTestError)
         }
@@ -270,7 +270,7 @@ class TextGenerationEnvironmentTests {
         
         do {
             _ = try await environment.createChapter(story: inputStory)
-            #expect(false, "Expected error to be thrown")
+            Issue.record("Expected error to be thrown")
         } catch {
             #expect(error is TextGenerationTestError)
         }
