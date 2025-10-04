@@ -50,9 +50,20 @@ public struct ReaderState: Equatable {
         // Allow creation if user is subscribed OR if story has fewer than 2 chapters
         return settingsState.isSubscribed || story.chapters.count < 2
     }
+    
+    // Computed property for content state
+    var contentState: ContentState {
+        if let story = story,
+           !story.chapters.isEmpty,
+           story.chapterIndex < story.chapters.count {
+            return .story(story)
+        } else {
+            return .welcome
+        }
+    }
 }
 
-public enum LoadingStep: Equatable {
+public enum LoadingStep: Equatable, Sendable {
     case idle
     case creatingPlotOutline    // Step 1: Creating the overall story plot
     case creatingChapterBreakdown // Step 2: Breaking down into chapters

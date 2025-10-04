@@ -138,8 +138,8 @@ class CreateSequelPlotOutlineEndpointTests {
     
     @Test
     func body_includesPreviousChapters() throws {
-        let chapter1 = Chapter(title: "Beginning", content: "Once upon a time...")
-        let chapter2 = Chapter(title: "Middle", content: "The adventure continues...")
+        let chapter1 = Chapter(content: "Once upon a time...")
+        let chapter2 = Chapter(content: "The adventure continues...")
         let previousStory = Story(chapters: [chapter1, chapter2])
         let story = Story()
         let endpoint = CreateSequelPlotOutlineEndpoint(story: story, previousStory: previousStory)
@@ -154,8 +154,8 @@ class CreateSequelPlotOutlineEndpointTests {
         
         // Verify previous chapters are included with proper formatting
         #expect(userContent?.contains("**Previous Story Chapters:**") == true)
-        #expect(userContent?.contains("Chapter 1:\nOnce upon a time...") == true)
-        #expect(userContent?.contains("Chapter 2:\nThe adventure continues...") == true)
+        #expect(userContent?.contains("Once upon a time...") == true)
+        #expect(userContent?.contains("The adventure continues...") == true)
     }
     
     @Test
@@ -241,7 +241,7 @@ class CreateSequelPlotOutlineEndpointTests {
     func responseType() {
         let story = Story()
         let previousStory = Story()
-        let endpoint = CreateSequelPlotOutlineEndpoint(story: story, previousStory: previousStory)
+        let _ = CreateSequelPlotOutlineEndpoint(story: story, previousStory: previousStory)
         
         // This test verifies the response type is correctly defined
         let _: OpenRouterResponse.Type = CreateSequelPlotOutlineEndpoint.Response.self

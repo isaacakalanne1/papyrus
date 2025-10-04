@@ -435,9 +435,9 @@ class ReaderReducerTests {
     @Test
     func updateChapterIndex_validIndex() {
         let story = Story(chapterIndex: 0, chapters: [
-            Chapter(title: "Chapter 1", content: ""),
-            Chapter(title: "Chapter 2", content: ""),
-            Chapter(title: "Chapter 3", content: "")
+            Chapter(content: ""),
+            Chapter(content: ""),
+            Chapter(content: "")
         ])
         let initialState = ReaderState.arrange(story: story)
         
@@ -455,7 +455,7 @@ class ReaderReducerTests {
     @Test
     func updateChapterIndex_belowZero() {
         let story = Story(chapterIndex: 2, chapters: [
-            Chapter(title: "Chapter 1", content: "")
+            Chapter(content: "")
         ])
         let initialState = ReaderState.arrange(story: story)
         
@@ -473,8 +473,8 @@ class ReaderReducerTests {
     @Test
     func updateChapterIndex_aboveMaximum() {
         let story = Story(chapterIndex: 0, chapters: [
-            Chapter(title: "Chapter 1", content: ""),
-            Chapter(title: "Chapter 2", content: "")
+            Chapter(content: ""),
+            Chapter(content: "")
         ])
         let initialState = ReaderState.arrange(story: story)
         
@@ -493,8 +493,8 @@ class ReaderReducerTests {
     func updateChapterIndex_differentStory() {
         let currentStory = Story(id: UUID(), chapterIndex: 0)
         let differentStory = Story(id: UUID(), chapterIndex: 0, chapters: [
-            Chapter(title: "Chapter 1", content: ""),
-            Chapter(title: "Chapter 2", content: "")
+            Chapter(content: ""),
+            Chapter(content: "")
         ])
         let initialState = ReaderState.arrange(story: currentStory)
         
@@ -636,9 +636,9 @@ class ReaderReducerTests {
     @Test
     func canCreateChapter_subscribedUser_returnsTrue() {
         let story = Story(chapters: [
-            Chapter(title: "Chapter 1", content: ""),
-            Chapter(title: "Chapter 2", content: ""),
-            Chapter(title: "Chapter 3", content: "")
+            Chapter(content: ""),
+            Chapter(content: ""),
+            Chapter(content: "")
         ])
         let state = ReaderState.arrange(
             story: story,
@@ -650,7 +650,7 @@ class ReaderReducerTests {
     @Test
     func canCreateChapter_unsubscribedUser_lessThan2Chapters_returnsTrue() {
         let story = Story(chapters: [
-            Chapter(title: "Chapter 1", content: "")
+            Chapter(content: "")
         ])
         let state = ReaderState.arrange(
             story: story,
@@ -662,8 +662,8 @@ class ReaderReducerTests {
     @Test
     func canCreateChapter_unsubscribedUser_exactly2Chapters_returnsFalse() {
         let story = Story(chapters: [
-            Chapter(title: "Chapter 1", content: ""),
-            Chapter(title: "Chapter 2", content: "")
+            Chapter(content: ""),
+            Chapter(content: "")
         ])
         let state = ReaderState.arrange(
             story: story,
@@ -675,10 +675,10 @@ class ReaderReducerTests {
     @Test
     func canCreateChapter_unsubscribedUser_moreThan2Chapters_returnsFalse() {
         let story = Story(chapters: [
-            Chapter(title: "Chapter 1", content: ""),
-            Chapter(title: "Chapter 2", content: ""),
-            Chapter(title: "Chapter 3", content: ""),
-            Chapter(title: "Chapter 4", content: "")
+            Chapter(content: ""),
+            Chapter(content: ""),
+            Chapter(content: ""),
+            Chapter(content: "")
         ])
         let state = ReaderState.arrange(
             story: story,

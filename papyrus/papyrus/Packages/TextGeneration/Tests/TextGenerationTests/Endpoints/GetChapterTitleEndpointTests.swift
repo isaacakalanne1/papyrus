@@ -130,7 +130,7 @@ class GetChapterTitleEndpointTests {
     @Test
     func responseType() {
         let story = Story()
-        let endpoint = GetChapterTitleEndpoint(story: story)
+        let _ = GetChapterTitleEndpoint(story: story)
         
         // This test verifies the response type is correctly defined
         let _: OpenRouterResponse.Type = GetChapterTitleEndpoint.Response.self

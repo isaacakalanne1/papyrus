@@ -37,8 +37,8 @@ class ReaderMiddlewareTests {
     func createStory_cannotCreate_returnsSetShowSubscriptionSheet() async {
         let state = ReaderState(
             story: Story(chapters: [
-                Chapter(title: "Chapter 1", content: ""),
-                Chapter(title: "Chapter 2", content: "")
+                Chapter(content: ""),
+                Chapter(content: "")
             ]),
             settingsState: SettingsState(isSubscribed: false)
         )
@@ -66,8 +66,8 @@ class ReaderMiddlewareTests {
     func createSequel_cannotCreate_returnsSetShowSubscriptionSheet() async {
         let state = ReaderState(
             story: Story(chapters: [
-                Chapter(title: "Chapter 1", content: ""),
-                Chapter(title: "Chapter 2", content: "")
+                Chapter(content: ""),
+                Chapter(content: "")
             ]),
             settingsState: SettingsState(isSubscribed: false)
         )
@@ -220,7 +220,7 @@ class ReaderMiddlewareTests {
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
         let outputStory = Story(title: "Output Story", chapters: [
-            Chapter(title: "Chapter 1", content: "")
+            Chapter(content: "")
         ])
         environment.getChapterTitleReturnValue = outputStory
         
@@ -275,8 +275,8 @@ class ReaderMiddlewareTests {
     func createChapter_cannotCreate_returnsSetShowSubscriptionSheet() async {
         let state = ReaderState(
             story: Story(chapters: [
-                Chapter(title: "Chapter 1", content: ""),
-                Chapter(title: "Chapter 2", content: "")
+                Chapter(content: ""),
+                Chapter(content: "")
             ]),
             settingsState: SettingsState(isSubscribed: false)
         )
@@ -353,9 +353,9 @@ class ReaderMiddlewareTests {
         let story = Story(
             title: "Test Story",
             chapters: [
-                Chapter(title: "Chapter 1", content: ""),
-                Chapter(title: "Chapter 2", content: ""),
-                Chapter(title: "Chapter 3", content: "")
+                Chapter(content: ""),
+                Chapter(content: ""),
+                Chapter(content: "")
             ]
         )
         
@@ -595,7 +595,7 @@ class ReaderMiddlewareTests {
         let inputStory = Story(title: "Input Story")
         let outputStory = Story(
             title: "Output Story",
-            chapters: [Chapter(title: "New Chapter", content: "Content")]
+            chapters: [Chapter(content: "Content")]
         )
         environment.createChapterReturnValue = outputStory
         

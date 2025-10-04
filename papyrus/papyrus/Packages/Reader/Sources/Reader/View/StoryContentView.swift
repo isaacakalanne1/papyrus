@@ -108,7 +108,7 @@ struct StoryContentView: View {
             }
             
             // Close button positioned at top right
-            PrimaryCloseButton {
+            MenuButton(type: .close) {
                 store.dispatch(.setStory(nil))
             }
             .padding(16)

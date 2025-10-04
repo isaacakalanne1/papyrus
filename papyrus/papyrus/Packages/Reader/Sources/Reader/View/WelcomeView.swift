@@ -1,22 +1,20 @@
 //
-//  WelcomeStateView.swift
+//  WelcomeView.swift
 //  Reader
 //
-//  Created by Isaac Akalanne on 29/09/2025.
+//  Created by Isaac Akalanne on 04/10/2025.
 //
 
-import SDIconsKit
 import SwiftUI
+import SDIconsKit
 
-struct WelcomeStateView: View {
+struct WelcomeView: View {
     @EnvironmentObject var store: ReaderStore
-
     @FocusState.Binding var focusedField: ReaderView.Field?
     @Binding var isSequelMode: Bool
     
     var body: some View {
         ZStack {
-            
             // Bottom content (New Story button)
             VStack {
                 Spacer()
