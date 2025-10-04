@@ -13,6 +13,10 @@ let package = Package(
         .library(
             name: "TextGeneration",
             targets: ["TextGeneration"]),
+        .library(
+            name: "TextGenerationMocks",
+            targets: ["TextGenerationMocks"]
+        ),
     ],
     dependencies: [
         .package(name: "Settings", path: "../Settings"),
@@ -24,9 +28,16 @@ let package = Package(
         .target(
             name: "TextGeneration",
             dependencies: ["Settings", "SDNetworkCore"]),
+        .target(
+            name: "TextGenerationMocks",
+            dependencies: [
+                "TextGeneration"
+            ],
+            path: "Mocks"
+        ),
         .testTarget(
             name: "TextGenerationTests",
-            dependencies: ["TextGeneration"]
+            dependencies: ["TextGeneration", "TextGenerationMocks"]
         ),
     ]
 )

@@ -46,7 +46,7 @@ public class ReaderDataStore: ReaderDataStoreProtocol {
         storiesDirectory.appendingPathComponent("\(id.uuidString).json")
     }
     
-    func saveStory(_ story: Story) async throws {
+    public func saveStory(_ story: Story) async throws {
         let storyData = try encoder.encode(story)
         let storyURL = storyFileURL(for: story.id)
         
@@ -60,7 +60,7 @@ public class ReaderDataStore: ReaderDataStoreProtocol {
         }
     }
     
-    func loadStory(withId id: UUID) async throws -> Story? {
+    public func loadStory(withId id: UUID) async throws -> Story? {
         let storyURL = storyFileURL(for: id)
         
         guard fileManager.fileExists(atPath: storyURL.path) else {
@@ -71,7 +71,7 @@ public class ReaderDataStore: ReaderDataStoreProtocol {
         return try decoder.decode(Story.self, from: data)
     }
     
-    func getAllSavedStoryIds() async throws -> [UUID] {
+    public func getAllSavedStoryIds() async throws -> [UUID] {
         guard fileManager.fileExists(atPath: storyIdsFileURL.path) else {
             return []
         }
@@ -80,7 +80,7 @@ public class ReaderDataStore: ReaderDataStoreProtocol {
         return try decoder.decode([UUID].self, from: data)
     }
     
-    func deleteStory(withId id: UUID) async throws {
+    public func deleteStory(withId id: UUID) async throws {
         let storyURL = storyFileURL(for: id)
         
         if fileManager.fileExists(atPath: storyURL.path) {

@@ -444,6 +444,8 @@ class ReaderReducerTests {
         var expectedState = initialState
         expectedState.story?.chapterIndex = 1
         expectedState.story?.scrollOffset = 0
+        // The reducer adds the updated story to loadedStories
+        expectedState.loadedStories = [expectedState.story!]
         
         let newState = readerReducer(initialState, .updateChapterIndex(story, 1))
         
@@ -460,6 +462,8 @@ class ReaderReducerTests {
         var expectedState = initialState
         expectedState.story?.chapterIndex = 0
         expectedState.story?.scrollOffset = 0
+        // The reducer adds the updated story to loadedStories
+        expectedState.loadedStories = [expectedState.story!]
         
         let newState = readerReducer(initialState, .updateChapterIndex(story, -1))
         
@@ -477,6 +481,8 @@ class ReaderReducerTests {
         var expectedState = initialState
         expectedState.story?.chapterIndex = 1 // Clamped to max index
         expectedState.story?.scrollOffset = 0
+        // The reducer adds the updated story to loadedStories
+        expectedState.loadedStories = [expectedState.story!]
         
         let newState = readerReducer(initialState, .updateChapterIndex(story, 5))
         
