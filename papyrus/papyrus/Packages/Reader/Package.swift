@@ -44,6 +44,7 @@ let package = Package(
             dependencies: [
                 "Reader",
                 "TextGeneration",
+                .product(name: "TextGenerationMocks", package: "TextGeneration"),
                 "Settings",
                 .product(name: "SettingsMocks", package: "Settings"),
                 "Subscription",
