@@ -9,7 +9,7 @@ import Foundation
 import TextGeneration
 import Settings
 
-enum ReaderAction: Sendable {
+enum ReaderAction: Equatable, Sendable {
     case createStory
     case createSequel
     case createChapter(Story)

@@ -9,7 +9,11 @@ import Testing
 import Foundation
 import TextGeneration
 import Settings
+import SettingsMocks
+import Subscription
+import SubscriptionMocks
 @testable import Reader
+@testable import ReaderMocks
 
 @MainActor
 class ReaderMiddlewareTests {
@@ -81,7 +85,7 @@ class ReaderMiddlewareTests {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
-        let outputStory = Story(title: "Output Story", plotOutline: "Test plot")
+        let outputStory = Story(plotOutline: "Test plot", title: "Output Story")
         environment.createPlotOutlineReturnValue = outputStory
         
         let result = await readerMiddleware(state, .createPlotOutline(inputStory), environment)
@@ -96,7 +100,7 @@ class ReaderMiddlewareTests {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
-        environment.createPlotOutlineError = TestError("Plot outline failed")
+        environment.createPlotOutlineError = ReaderTestError("Plot outline failed")
         
         let result = await readerMiddleware(state, .createPlotOutline(inputStory), environment)
         
@@ -122,7 +126,7 @@ class ReaderMiddlewareTests {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
-        let outputStory = Story(title: "Output Story", chapterBreakdown: "Test breakdown")
+        let outputStory = Story(chaptersBreakdown: "Test breakdown", title: "Output Story")
         environment.createChapterBreakdownReturnValue = outputStory
         
         let result = await readerMiddleware(state, .createChapterBreakdown(inputStory), environment)
@@ -137,7 +141,7 @@ class ReaderMiddlewareTests {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
-        environment.createChapterBreakdownError = TestError("Breakdown failed")
+        environment.createChapterBreakdownError = ReaderTestError("Breakdown failed")
         
         let result = await readerMiddleware(state, .createChapterBreakdown(inputStory), environment)
         
@@ -149,7 +153,7 @@ class ReaderMiddlewareTests {
     func onCreatedChapterBreakdown_withChapters_returnsBeginCreateChapter() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
-        let story = Story(title: "Test Story", maxNumberOfChapters: 5)
+        let story = Story(maxNumberOfChapters: 5, title: "Test Story")
         
         let result = await readerMiddleware(state, .onCreatedChapterBreakdown(story), environment)
         
@@ -160,7 +164,7 @@ class ReaderMiddlewareTests {
     func onCreatedChapterBreakdown_noChapters_returnsGetStoryDetails() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
-        let story = Story(title: "Test Story", maxNumberOfChapters: 0)
+        let story = Story(maxNumberOfChapters: 0, title: "Test Story")
         
         let result = await readerMiddleware(state, .onCreatedChapterBreakdown(story), environment)
         
@@ -174,7 +178,7 @@ class ReaderMiddlewareTests {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
-        let outputStory = Story(title: "Output Story", storyDetails: "Test details")
+        let outputStory = Story(setting: "Test details", title: "Output Story")
         environment.getStoryDetailsReturnValue = outputStory
         
         let result = await readerMiddleware(state, .getStoryDetails(inputStory), environment)
@@ -189,7 +193,7 @@ class ReaderMiddlewareTests {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
-        environment.getStoryDetailsError = TestError("Details failed")
+        environment.getStoryDetailsError = ReaderTestError("Details failed")
         
         let result = await readerMiddleware(state, .getStoryDetails(inputStory), environment)
         
@@ -232,7 +236,7 @@ class ReaderMiddlewareTests {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
-        environment.getChapterTitleError = TestError("Title failed")
+        environment.getChapterTitleError = ReaderTestError("Title failed")
         
         let result = await readerMiddleware(state, .getChapterTitle(inputStory), environment)
         
@@ -306,7 +310,7 @@ class ReaderMiddlewareTests {
     func loadAllStories_failure_returnsFailedToLoadStories() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
-        environment.loadAllStoriesError = TestError("Load failed")
+        environment.loadAllStoriesError = ReaderTestError("Load failed")
         
         let result = await readerMiddleware(state, .loadAllStories, environment)
         
@@ -332,7 +336,7 @@ class ReaderMiddlewareTests {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let storyId = UUID()
-        environment.deleteStoryWithIdError = TestError("Delete failed")
+        environment.deleteStoryWithIdError = ReaderTestError("Delete failed")
         
         let result = await readerMiddleware(state, .deleteStory(storyId), environment)
         
@@ -394,12 +398,11 @@ class ReaderMiddlewareTests {
         let prequelId1 = UUID()
         let prequelId2 = UUID()
         let story = Story(
-            title: "Test Story",
-            prequelIds: [prequelId1, prequelId2]
+            prequelIds: [prequelId1, prequelId2], title: "Test Story"
         )
         
-        let prequel1 = Story(id: prequelId1, title: "Prequel 1", sequelIds: [])
-        let prequel2 = Story(id: prequelId2, title: "Prequel 2", sequelIds: [story.id])
+        let prequel1 = Story(id: prequelId1, sequelIds: [], title: "Prequel 1")
+        let prequel2 = Story(id: prequelId2, sequelIds: [story.id], title: "Prequel 2")
         
         environment.loadStoryWithIdReturnValue = nil
         
@@ -416,7 +419,7 @@ class ReaderMiddlewareTests {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let story = Story(title: "Test Story")
-        environment.saveStoryError = TestError("Save failed")
+        environment.saveStoryError = ReaderTestError("Save failed")
         
         let result = await readerMiddleware(state, .saveStory(story), environment)
         
@@ -428,11 +431,11 @@ class ReaderMiddlewareTests {
     
     @Test
     func updateScrollOffset_withStory_savesStory() async {
-        let story = Story(title: "Test Story", scrollOffset: 100.0)
+        let story = Story(scrollOffset: 100.0, title: "Test Story")
         let state = ReaderState(story: story)
         let environment = MockReaderEnvironment()
         
-        let result = await readerMiddleware(state, .updateScrollOffset, environment)
+        let result = await readerMiddleware(state, .updateScrollOffset(0), environment)
         
         #expect(environment.saveStoryCalled)
         #expect(environment.saveStoryCalledWith?.id == story.id)
@@ -444,7 +447,7 @@ class ReaderMiddlewareTests {
         let state = ReaderState(story: nil)
         let environment = MockReaderEnvironment()
         
-        let result = await readerMiddleware(state, .updateScrollOffset, environment)
+        let result = await readerMiddleware(state, .updateScrollOffset(0), environment)
         
         #expect(!environment.saveStoryCalled)
         #expect(result == nil)
@@ -455,9 +458,9 @@ class ReaderMiddlewareTests {
         let story = Story(title: "Test Story")
         let state = ReaderState(story: story)
         let environment = MockReaderEnvironment()
-        environment.saveStoryError = TestError("Save failed")
+        environment.saveStoryError = ReaderTestError("Save failed")
         
-        let result = await readerMiddleware(state, .updateScrollOffset, environment)
+        let result = await readerMiddleware(state, .updateScrollOffset(0), environment)
         
         #expect(environment.saveStoryCalled)
         #expect(result == .failedToCreateChapter)
@@ -558,7 +561,7 @@ class ReaderMiddlewareTests {
             sequelStory: sequelStory
         )
         let environment = MockReaderEnvironment()
-        environment.saveStoryError = TestError("Save failed")
+        environment.saveStoryError = ReaderTestError("Save failed")
         
         let result = await readerMiddleware(state, .beginCreateSequel, environment)
         
@@ -575,7 +578,7 @@ class ReaderMiddlewareTests {
             sequelStory: sequelStory
         )
         let environment = MockReaderEnvironment()
-        environment.createSequelPlotOutlineError = TestError("Create sequel failed")
+        environment.createSequelPlotOutlineError = ReaderTestError("Create sequel failed")
         
         let result = await readerMiddleware(state, .beginCreateSequel, environment)
         
@@ -608,7 +611,7 @@ class ReaderMiddlewareTests {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
-        environment.createChapterError = TestError("Chapter creation failed")
+        environment.createChapterError = ReaderTestError("Chapter creation failed")
         
         let result = await readerMiddleware(state, .beginCreateChapter(inputStory), environment)
         

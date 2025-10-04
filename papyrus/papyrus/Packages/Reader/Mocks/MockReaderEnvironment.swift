@@ -8,10 +8,12 @@
 import Foundation
 import TextGeneration
 import Settings
+import SettingsMocks
 import Subscription
+import SubscriptionMocks
 @testable import Reader
 
-class MockReaderEnvironment: ReaderEnvironmentProtocol {
+public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     
     // MARK: - Spy Properties for Method Calls
     var createPlotOutlineCalled = false
@@ -82,11 +84,11 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
     var loadAllStoriesError: Error?
     
     // MARK: - Environment Properties
-    var settingsEnvironment: SettingsEnvironmentProtocol
-    var subscriptionEnvironment: SubscriptionEnvironmentProtocol
+    public var settingsEnvironment: SettingsEnvironmentProtocol
+    public var subscriptionEnvironment: SubscriptionEnvironmentProtocol
     
     // MARK: - Initialization
-    init(
+    public init(
         settingsEnvironment: SettingsEnvironmentProtocol = MockSettingsEnvironment(),
         subscriptionEnvironment: SubscriptionEnvironmentProtocol = MockSubscriptionEnvironment()
     ) {
@@ -96,7 +98,7 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
     
     // MARK: - ReaderEnvironmentProtocol Methods
     
-    func createPlotOutline(story: Story) async throws -> Story {
+    public func createPlotOutline(story: Story) async throws -> Story {
         createPlotOutlineCalled = true
         createPlotOutlineCalledWith = story
         
@@ -107,7 +109,7 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return createPlotOutlineReturnValue ?? story
     }
     
-    func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story {
+    public func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story {
         createSequelPlotOutlineCalled = true
         createSequelPlotOutlineCalledWith = (story: story, previousStory: previousStory)
         
@@ -118,7 +120,7 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return createSequelPlotOutlineReturnValue ?? story
     }
     
-    func createChapterBreakdown(story: Story) async throws -> Story {
+    public func createChapterBreakdown(story: Story) async throws -> Story {
         createChapterBreakdownCalled = true
         createChapterBreakdownCalledWith = story
         
@@ -129,7 +131,7 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return createChapterBreakdownReturnValue ?? story
     }
     
-    func getStoryDetails(story: Story) async throws -> Story {
+    public func getStoryDetails(story: Story) async throws -> Story {
         getStoryDetailsCalled = true
         getStoryDetailsCalledWith = story
         
@@ -140,7 +142,7 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return getStoryDetailsReturnValue ?? story
     }
     
-    func getChapterTitle(story: Story) async throws -> Story {
+    public func getChapterTitle(story: Story) async throws -> Story {
         getChapterTitleCalled = true
         getChapterTitleCalledWith = story
         
@@ -151,7 +153,7 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return getChapterTitleReturnValue ?? story
     }
     
-    func createChapter(story: Story) async throws -> Story {
+    public func createChapter(story: Story) async throws -> Story {
         createChapterCalled = true
         createChapterCalledWith = story
         
@@ -162,7 +164,7 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return createChapterReturnValue ?? story
     }
     
-    func saveStory(_ story: Story) async throws {
+    public func saveStory(_ story: Story) async throws {
         saveStoryCalled = true
         saveStoryCalledWith = story
         saveStoryCallCount += 1
@@ -173,7 +175,7 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
         }
     }
     
-    func loadStory(withId id: UUID) async throws -> Story? {
+    public func loadStory(withId id: UUID) async throws -> Story? {
         loadStoryWithIdCalled = true
         loadStoryWithIdCalledWith = id
         
@@ -184,7 +186,7 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return loadStoryWithIdReturnValue
     }
     
-    func getAllSavedStoryIds() async throws -> [UUID] {
+    public func getAllSavedStoryIds() async throws -> [UUID] {
         getAllSavedStoryIdsCalled = true
         
         if let error = getAllSavedStoryIdsError {
@@ -194,7 +196,7 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return getAllSavedStoryIdsReturnValue
     }
     
-    func deleteStory(withId id: UUID) async throws {
+    public func deleteStory(withId id: UUID) async throws {
         deleteStoryWithIdCalled = true
         deleteStoryWithIdCalledWith = id
         
@@ -203,7 +205,7 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
         }
     }
     
-    func loadAllStories() async throws -> [Story] {
+    public func loadAllStories() async throws -> [Story] {
         loadAllStoriesCalled = true
         
         if let error = loadAllStoriesError {
@@ -213,47 +215,17 @@ class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return loadAllStoriesReturnValue
     }
     
-    func loadSubscriptions() async {
+    public func loadSubscriptions() async {
         loadSubscriptionsCalled = true
-    }
-}
-
-// MARK: - Mock Settings Environment
-
-class MockSettingsEnvironment: SettingsEnvironmentProtocol {
-    var saveSettingsCalled = false
-    var saveSettingsCalledWith: SettingsState?
-    
-    var loadSettingsCalled = false
-    var loadSettingsReturnValue: SettingsState = SettingsState()
-    
-    func saveSettings(_ settings: SettingsState) async throws {
-        saveSettingsCalled = true
-        saveSettingsCalledWith = settings
-    }
-    
-    func loadSettings() async throws -> SettingsState {
-        loadSettingsCalled = true
-        return loadSettingsReturnValue
-    }
-}
-
-// MARK: - Mock Subscription Environment
-
-class MockSubscriptionEnvironment: SubscriptionEnvironmentProtocol {
-    var loadSubscriptionOnInitCalled = false
-    
-    func loadSubscriptionOnInit() async {
-        loadSubscriptionOnInitCalled = true
     }
 }
 
 // MARK: - Test Error
 
-struct TestError: Error, Equatable {
-    let message: String
+public struct ReaderTestError: Error, Equatable {
+    public let message: String
     
-    init(_ message: String = "Test error") {
+    public init(_ message: String = "Reader test error") {
         self.message = message
     }
 }
