@@ -5,6 +5,7 @@
 //  Created by Isaac Akalanne on 29/09/2025.
 //
 
+import SDIconsKit
 import SwiftUI
 
 struct WelcomeStateView: View {
@@ -21,11 +22,10 @@ struct WelcomeStateView: View {
             // Bottom content (New Story button)
             VStack {
                 Spacer()
-                if focusedField == nil && !store.state.showStoryForm {
-                    WelcomeView()
-                        .frame(maxWidth: .infinity)
-                        .transition(.opacity)
-                }
+                SDIcons.scroll.image
+                    .frame(width: 64, height: 64)
+                    .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                    .opacity(0.5)
                 Spacer()
                 
                 // Initial "New Story" button
