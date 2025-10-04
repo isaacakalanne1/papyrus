@@ -1,6 +1,6 @@
 import Foundation
 
-public enum SettingsAction: Sendable {
+public enum SettingsAction: Equatable, Sendable {
     case selectTextSize(TextSize)
     case loadSettings
     case onLoadedSettings(SettingsState)

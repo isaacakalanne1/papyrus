@@ -18,7 +18,9 @@ public class SettingsEnvironment: SettingsEnvironmentProtocol {
     private let dataStore: SettingsDataStoreProtocol
     public var settingsSubject: CurrentValueSubject<SettingsState?, Never> = .init(nil)
     
-    public init(dataStore: SettingsDataStoreProtocol = SettingsDataStore()) {
+    public init(
+        dataStore: SettingsDataStoreProtocol = SettingsDataStore()
+    ) {
         self.dataStore = dataStore
     }
     
