@@ -37,7 +37,7 @@ struct StoryDetailsPopup: View {
                 
                 Spacer()
                 
-                PrimaryCloseButton {
+                MenuButton(type: .close) {
                     isPresented = false
                 }
             }

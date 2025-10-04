@@ -238,7 +238,7 @@ class CreateChapterBreakdownEndpointTests {
     @Test
     func responseType() {
         let story = Story()
-        let endpoint = CreateChapterBreakdownEndpoint(story: story)
+        let _ = CreateChapterBreakdownEndpoint(story: story)
         
         // This test verifies the response type is correctly defined
         let _: OpenRouterResponse.Type = CreateChapterBreakdownEndpoint.Response.self

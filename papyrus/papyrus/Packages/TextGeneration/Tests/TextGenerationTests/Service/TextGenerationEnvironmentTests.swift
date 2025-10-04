@@ -245,9 +245,9 @@ class TextGenerationEnvironmentTests {
         let mockRepository = MockTextGenerationRepository()
         let environment = TextGenerationEnvironment(repository: mockRepository)
         
-        let existingChapter = Chapter(title: "Chapter 1", content: "First chapter content")
+        let existingChapter = Chapter(content: "First chapter content")
         let inputStory = Story(chapters: [existingChapter])
-        let newChapter = Chapter(title: "Chapter 2", content: "Second chapter content")
+        let newChapter = Chapter(content: "Second chapter content")
         let expectedStory = Story(chapters: [existingChapter, newChapter])
         mockRepository.createChapterReturnValue = expectedStory
         
@@ -256,7 +256,6 @@ class TextGenerationEnvironmentTests {
         #expect(mockRepository.createChapterCalled)
         #expect(mockRepository.createChapterCalledWith?.id == inputStory.id)
         #expect(result.chapters.count == 2)
-        #expect(result.chapters[1].title == "Chapter 2")
     }
     
     @Test

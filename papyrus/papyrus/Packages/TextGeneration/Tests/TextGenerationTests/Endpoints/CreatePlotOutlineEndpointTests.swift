@@ -178,7 +178,7 @@ class CreatePlotOutlineEndpointTests {
     @Test
     func responseType() {
         let story = Story()
-        let endpoint = CreatePlotOutlineEndpoint(story: story)
+        let _ = CreatePlotOutlineEndpoint(story: story)
         
         // This test verifies the response type is correctly defined
         let _: OpenRouterResponse.Type = CreatePlotOutlineEndpoint.Response.self

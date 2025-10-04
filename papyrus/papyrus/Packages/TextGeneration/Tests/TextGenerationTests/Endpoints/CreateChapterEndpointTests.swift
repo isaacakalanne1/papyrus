@@ -106,8 +106,8 @@ class CreateChapterEndpointTests {
     
     @Test
     func body_calculatesCurrentChapterNumber() throws {
-        let chapter1 = Chapter(title: "First", content: "Chapter one content")
-        let chapter2 = Chapter(title: "Second", content: "Chapter two content")
+        let chapter1 = Chapter(content: "Chapter one content")
+        let chapter2 = Chapter(content: "Chapter two content")
         let story = Story(chapters: [chapter1, chapter2])
         let endpoint = CreateChapterEndpoint(story: story)
         
@@ -161,8 +161,8 @@ class CreateChapterEndpointTests {
     
     @Test
     func body_includesPreviousChapters() throws {
-        let chapter1 = Chapter(title: "Beginning", content: "Once upon a time in a land far away...")
-        let chapter2 = Chapter(title: "Adventure", content: "The hero set off on their quest...")
+        let chapter1 = Chapter(content: "Once upon a time in a land far away...")
+        let chapter2 = Chapter(content: "The hero set off on their quest...")
         let story = Story(chapters: [chapter1, chapter2])
         let endpoint = CreateChapterEndpoint(story: story)
         
@@ -279,7 +279,7 @@ class CreateChapterEndpointTests {
     @Test
     func responseType() {
         let story = Story()
-        let endpoint = CreateChapterEndpoint(story: story)
+        let _ = CreateChapterEndpoint(story: story)
         
         // This test verifies the response type is correctly defined
         let _: OpenRouterResponse.Type = CreateChapterEndpoint.Response.self

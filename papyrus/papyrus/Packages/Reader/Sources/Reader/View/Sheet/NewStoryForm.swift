@@ -34,7 +34,7 @@ struct NewStoryForm: View {
                 
                 Spacer()
                 
-                PrimaryCloseButton {
+                MenuButton(type: .close) {
                     store.dispatch(.setShowStoryForm(false))
                     isSequelMode = false
                     focusedField = nil

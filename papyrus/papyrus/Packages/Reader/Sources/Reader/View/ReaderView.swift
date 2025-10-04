@@ -56,25 +56,13 @@ struct ReaderView: View {
                         .transition(.move(edge: .top).combined(with: .opacity))
                 }
                 
-                ZStack {
-                    if let story = store.state.story,
-                       !story.chapters.isEmpty,
-                       story.chapterIndex < story.chapters.count {
-                        StoryContentView(
-                            story: story,
-                            focusedField: $focusedField,
-                            isSequelMode: $isSequelMode,
-                            currentScrollOffset: $currentScrollOffset,
-                            scrollViewHeight: $scrollViewHeight,
-                            startScrollOffsetTimer: startScrollOffsetTimer
-                        )
-                    } else {
-                        WelcomeStateView(
-                            focusedField: $focusedField,
-                            isSequelMode: $isSequelMode
-                        )
-                    }
-                }
+                ContentStateView(
+                    focusedField: $focusedField,
+                    isSequelMode: $isSequelMode,
+                    currentScrollOffset: $currentScrollOffset,
+                    scrollViewHeight: $scrollViewHeight,
+                    startScrollOffsetTimer: startScrollOffsetTimer
+                )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(
                     LinearGradient(
@@ -124,15 +112,10 @@ struct ReaderView: View {
                     }
             )
             
-            // Side menu overlay
-            if isMenuOpen {
-                Color.black.opacity(0.3)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            isMenuOpen = false
-                        }
-                    }
+            // Modal overlay for both menu and settings
+            ModalOverlay(isPresented: isMenuOpen || isSettingsOpen) {
+                isMenuOpen = false
+                isSettingsOpen = false
             }
             
             // Side menu
@@ -141,64 +124,11 @@ struct ReaderView: View {
                 dragOffset: dragOffset
             )
             
-            // Settings menu overlay
-            if isSettingsOpen {
-                Color.black.opacity(0.3)
-                    .ignoresSafeArea()
-                    .onTapGesture {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            isSettingsOpen = false
-                        }
-                    }
-            }
-            
             // Settings menu (slides from right)
-            HStack {
-                Spacer()
-                VStack {
-                    SettingsRootView(
-                        environment: store.environment.settingsEnvironment
-                    )
-                    
-                    VStack(spacing: 0) {
-                        Divider()
-                            .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3))
-                            .padding(.horizontal)
-                        
-                        Button(action: {
-                            store.dispatch(.setShowSubscriptionSheet(true))
-                        }) {
-                            HStack {
-                                Image(systemName: "crown.fill")
-                                    .font(.system(size: 18))
-                                    .foregroundColor(Color(red: 0.8, green: 0.65, blue: 0.4))
-                                
-                                Text("Premium")
-                                    .font(.custom("Georgia", size: 18))
-                                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
-                                
-                                Spacer()
-                                
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 14))
-                                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
-                            }
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 16)
-                            .frame(maxWidth: .infinity)
-                            .background(Color(red: 0.98, green: 0.95, blue: 0.89))
-                        }
-                        .buttonStyle(PlainButtonStyle())
-                    }
-                    Spacer()
-                }
-                .frame(width: 320)
-                .background(Color(red: 0.98, green: 0.95, blue: 0.89))
-                .offset(x: isSettingsOpen ? 0 : 320 + settingsDragOffset)
-                .animation(.easeInOut(duration: 0.3), value: isSettingsOpen)
-            }
-            
-            // No longer need overlay here since we're using sheet
+            SettingsPanel(
+                isOpen: isSettingsOpen,
+                dragOffset: settingsDragOffset
+            )
         }
         .sheet(isPresented: showStoryForm) {
             NewStoryFormSheet(
@@ -213,18 +143,10 @@ struct ReaderView: View {
             SubscriptionRootView(environment: store.environment.subscriptionEnvironment)
                 .presentationDragIndicator(.visible)
         }
-        .onChange(of: store.state.isLoading) { _, isLoading in
-            if isLoading {
-                store.dispatch(.setShowStoryForm(false))
-                isSequelMode = false
-                focusedField = nil
-            }
-        }
         .onAppear {
             store.dispatch(.loadAllStories)
             store.dispatch(.loadSubscriptions)
         }
-//        .ignoresSafeArea(.all, edges: .bottom)
     }
     
     private func startScrollOffsetTimer() {

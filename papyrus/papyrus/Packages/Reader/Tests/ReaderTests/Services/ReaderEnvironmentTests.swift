@@ -164,7 +164,7 @@ class ReaderEnvironmentTests {
         
         let inputStory = Story(title: "Test Story")
         let outputStory = Story(title: "Output Story", chapters: [
-            Chapter(title: "Chapter 1", content: "")
+            Chapter(content: "")
         ])
         mockTextGeneration.getChapterTitleReturnValue = outputStory
         
@@ -173,7 +173,6 @@ class ReaderEnvironmentTests {
         #expect(mockTextGeneration.getChapterTitleCalled)
         #expect(mockTextGeneration.getChapterTitleCalledWith?.id == inputStory.id)
         #expect(result.chapters.count == 1)
-        #expect(result.chapters.first?.title == "Chapter 1")
     }
     
     @Test
@@ -192,7 +191,7 @@ class ReaderEnvironmentTests {
         
         let inputStory = Story(title: "Test Story")
         let outputStory = Story(title: "Output Story", chapters: [
-            Chapter(title: "New Chapter", content: "Chapter content")
+            Chapter(content: "Chapter content")
         ])
         mockTextGeneration.createChapterReturnValue = outputStory
         
