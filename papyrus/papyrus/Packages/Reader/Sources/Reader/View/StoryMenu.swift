@@ -95,6 +95,7 @@ struct StoryMenu: View {
                             .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
                         Spacer()
                     }
+                    .padding()
                 }
                 
                 // Create Story button at the bottom
