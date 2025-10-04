@@ -8,6 +8,7 @@
 import SwiftUI
 import UIKit
 import Settings
+import Subscription
 
 struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
@@ -148,9 +149,23 @@ struct ReaderView: View {
             // Settings menu (slides from right)
             HStack {
                 Spacer()
-                SettingsRootView(environment: store.environment.settingsEnvironment)
-                    .offset(x: isSettingsOpen ? 0 : 320 + settingsDragOffset)
-                    .animation(.easeInOut(duration: 0.3), value: isSettingsOpen)
+                VStack(spacing: 0) {
+                    SettingsRootView(
+                        environment: store.environment.settingsEnvironment
+                    )
+                    
+                    if let subscriptionEnvironment = store.environment.subscriptionEnvironment {
+                        Divider()
+                            .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3))
+                            .padding(.horizontal)
+                        
+                        SubscriptionRootView(environment: subscriptionEnvironment)
+                            .frame(maxWidth: .infinity)
+                    }
+                }
+                .frame(width: 320)
+                .offset(x: isSettingsOpen ? 0 : 320 + settingsDragOffset)
+                .animation(.easeInOut(duration: 0.3), value: isSettingsOpen)
             }
             
             // No longer need overlay here since we're using sheet
@@ -173,6 +188,7 @@ struct ReaderView: View {
         }
         .onAppear {
             store.dispatch(.loadAllStories)
+            store.dispatch(.loadSubscriptions)
         }
 //        .ignoresSafeArea(.all, edges: .bottom)
     }

@@ -8,6 +8,7 @@
 import Foundation
 import TextGeneration
 import Settings
+import Subscription
 
 public protocol ReaderEnvironmentProtocol {
     func createPlotOutline(story: Story) async throws -> Story
@@ -21,21 +22,26 @@ public protocol ReaderEnvironmentProtocol {
     func getAllSavedStoryIds() async throws -> [UUID]
     func deleteStory(withId id: UUID) async throws
     func loadAllStories() async throws -> [Story]
+    func loadSubscriptions() async
     var settingsEnvironment: SettingsEnvironmentProtocol { get }
+    var subscriptionEnvironment: SubscriptionEnvironmentProtocol? { get }
 }
 
 public struct ReaderEnvironment: ReaderEnvironmentProtocol {
     private let textGenerationEnvironment: TextGenerationEnvironmentProtocol
     private let dataStore: ReaderDataStoreProtocol
     public let settingsEnvironment: SettingsEnvironmentProtocol
+    public let subscriptionEnvironment: SubscriptionEnvironmentProtocol?
     
     public init(
         textGenerationEnvironment: TextGenerationEnvironmentProtocol,
-        settingsEnvironment: SettingsEnvironmentProtocol
+        settingsEnvironment: SettingsEnvironmentProtocol,
+        subscriptionEnvironment: SubscriptionEnvironmentProtocol? = nil
     ) {
         self.textGenerationEnvironment = textGenerationEnvironment
         self.dataStore = ReaderDataStore()
         self.settingsEnvironment = settingsEnvironment
+        self.subscriptionEnvironment = subscriptionEnvironment
     }
     
     public func createPlotOutline(story: Story) async throws -> Story {
@@ -89,6 +95,10 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
         }
         
         return stories
+    }
+    
+    public func loadSubscriptions() async {
+        await subscriptionEnvironment?.loadSubscriptionOnInit()
     }
     
 }

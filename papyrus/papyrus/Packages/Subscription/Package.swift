@@ -5,17 +5,25 @@ import PackageDescription
 
 let package = Package(
     name: "Subscription",
+    platforms: [
+        .iOS("17.4")
+    ],
     products: [
-        // Products define the executables and libraries a package produces, making them visible to other packages.
         .library(
             name: "Subscription",
             targets: ["Subscription"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/isaacakalanne1/reduxkit.git", from: "1.0.1"),
+        .package(name: "Settings", path: "../Settings")
+    ],
     targets: [
-        // Targets are the basic building blocks of a package, defining a module or a test suite.
-        // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "Subscription"),
+            name: "Subscription",
+            dependencies: [
+                .product(name: "ReduxKit", package: "reduxkit"),
+                "Settings"
+            ]),
         .testTarget(
             name: "SubscriptionTests",
             dependencies: ["Subscription"]

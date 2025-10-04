@@ -128,6 +128,9 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             }
         }
         return nil
+    case .loadSubscriptions:
+        await environment.loadSubscriptions()
+        return nil
     case .failedToCreateChapter,
             .updateSetting,
             .updateMainCharacter,
