@@ -17,7 +17,7 @@ class ReaderReducerTests {
     
     @Test
     func createStory_noStateChange() {
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             mainCharacter: "John Doe",
             setting: "Modern City"
         )
@@ -32,7 +32,7 @@ class ReaderReducerTests {
     
     @Test
     func beginCreateStory() {
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             mainCharacter: "John Doe",
             setting: "Modern City"
         )
@@ -58,7 +58,7 @@ class ReaderReducerTests {
             title: "Original Story"
         )
         
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             mainCharacter: "Sequel Character",
             setting: "Sequel Setting",
             story: originalStory
@@ -82,7 +82,7 @@ class ReaderReducerTests {
             title: "Original Story"
         )
         
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             mainCharacter: "Sequel Character",
             setting: "Sequel Setting",
             story: originalStory
@@ -103,7 +103,7 @@ class ReaderReducerTests {
     
     @Test
     func createPlotOutline() {
-        let initialState = ReaderState()
+        let initialState = ReaderState.arrange
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -116,7 +116,7 @@ class ReaderReducerTests {
     
     @Test
     func onCreatedPlotOutline() {
-        let initialState = ReaderState(isLoading: false)
+        let initialState = ReaderState.arrange(isLoading: false)
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -128,7 +128,7 @@ class ReaderReducerTests {
     
     @Test
     func createChapterBreakdown() {
-        let initialState = ReaderState()
+        let initialState = ReaderState.arrange
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -141,7 +141,7 @@ class ReaderReducerTests {
     
     @Test
     func onCreatedChapterBreakdown() {
-        let initialState = ReaderState(isLoading: false)
+        let initialState = ReaderState.arrange(isLoading: false)
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -153,7 +153,7 @@ class ReaderReducerTests {
     
     @Test
     func getStoryDetails() {
-        let initialState = ReaderState()
+        let initialState = ReaderState.arrange
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -166,7 +166,7 @@ class ReaderReducerTests {
     
     @Test
     func onGetStoryDetails() {
-        let initialState = ReaderState(isLoading: false)
+        let initialState = ReaderState.arrange(isLoading: false)
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -178,7 +178,7 @@ class ReaderReducerTests {
     
     @Test
     func getChapterTitle() {
-        let initialState = ReaderState()
+        let initialState = ReaderState.arrange
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -191,7 +191,7 @@ class ReaderReducerTests {
     
     @Test
     func onGetChapterTitle() {
-        let initialState = ReaderState(isLoading: false)
+        let initialState = ReaderState.arrange(isLoading: false)
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -203,7 +203,7 @@ class ReaderReducerTests {
     
     @Test
     func createChapter_noStateChange() {
-        let initialState = ReaderState()
+        let initialState = ReaderState.arrange
         
         var expectedState = initialState
         // No change expected as createChapter is handled by middleware
@@ -215,7 +215,7 @@ class ReaderReducerTests {
     
     @Test
     func beginCreateChapter() {
-        let initialState = ReaderState()
+        let initialState = ReaderState.arrange
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -232,7 +232,7 @@ class ReaderReducerTests {
         let existingStory = Story(id: storyId, title: "Existing Story")
         let updatedStory = Story(id: storyId, title: "Updated Story")
         
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             story: existingStory,
             isLoading: true,
             loadingStep: .writingChapter
@@ -256,7 +256,7 @@ class ReaderReducerTests {
         let currentStory = Story(id: currentStoryId, title: "Current Story")
         let updatedStory = Story(id: differentStoryId, title: "Different Story")
         
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             story: currentStory,
             isLoading: true,
             loadingStep: .writingChapter
@@ -279,7 +279,7 @@ class ReaderReducerTests {
         let existingStory = Story(id: storyId, title: "Old Title")
         let updatedStory = Story(id: storyId, title: "New Title")
         
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             loadedStories: [existingStory],
             isLoading: true
         )
@@ -298,7 +298,7 @@ class ReaderReducerTests {
     
     @Test
     func loadAllStories() {
-        let initialState = ReaderState(isLoading: false)
+        let initialState = ReaderState.arrange(isLoading: false)
         
         var expectedState = initialState
         expectedState.isLoading = true
@@ -314,7 +314,7 @@ class ReaderReducerTests {
             Story(title: "Story 1"),
             Story(title: "Story 2")
         ]
-        let initialState = ReaderState(isLoading: true, loadingStep: .writingChapter)
+        let initialState = ReaderState.arrange(isLoading: true, loadingStep: .writingChapter)
         
         var expectedState = initialState
         expectedState.loadedStories = stories
@@ -329,7 +329,7 @@ class ReaderReducerTests {
     @Test
     func setStory() {
         let story = Story(title: "Test Story")
-        let initialState = ReaderState()
+        let initialState = ReaderState.arrange
         
         var expectedState = initialState
         expectedState.story = story
@@ -341,7 +341,7 @@ class ReaderReducerTests {
     
     @Test
     func setStory_nil() {
-        let initialState = ReaderState(story: Story(title: "Existing Story"))
+        let initialState = ReaderState.arrange(story: Story(title: "Existing Story"))
         
         var expectedState = initialState
         expectedState.story = nil
@@ -357,7 +357,7 @@ class ReaderReducerTests {
         let storyToKeep = Story(title: "Keep Story")
         let storyToDelete = Story(id: storyIdToDelete, title: "Delete Story")
         
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             loadedStories: [storyToKeep, storyToDelete]
         )
         
@@ -374,7 +374,7 @@ class ReaderReducerTests {
         let storyIdToDelete = UUID()
         let currentStory = Story(id: storyIdToDelete, title: "Current Story")
         
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             loadedStories: [currentStory],
             story: currentStory
         )
@@ -394,7 +394,7 @@ class ReaderReducerTests {
         let deletedStoryId = UUID()
         let currentStory = Story(id: currentStoryId, title: "Current Story")
         
-        let initialState = ReaderState(story: currentStory)
+        let initialState = ReaderState.arrange(story: currentStory)
         
         var expectedState = initialState
         // No changes expected when deleting a different story
@@ -408,7 +408,7 @@ class ReaderReducerTests {
     
     @Test
     func updateMainCharacter() {
-        let initialState = ReaderState(mainCharacter: "Old Character")
+        let initialState = ReaderState.arrange(mainCharacter: "Old Character")
         
         var expectedState = initialState
         expectedState.mainCharacter = "New Character"
@@ -420,7 +420,7 @@ class ReaderReducerTests {
     
     @Test
     func updateSetting() {
-        let initialState = ReaderState(setting: "Old Setting")
+        let initialState = ReaderState.arrange(setting: "Old Setting")
         
         var expectedState = initialState
         expectedState.setting = "New Setting"
@@ -439,7 +439,7 @@ class ReaderReducerTests {
             Chapter(title: "Chapter 2", content: ""),
             Chapter(title: "Chapter 3", content: "")
         ])
-        let initialState = ReaderState(story: story)
+        let initialState = ReaderState.arrange(story: story)
         
         var expectedState = initialState
         expectedState.story?.chapterIndex = 1
@@ -457,7 +457,7 @@ class ReaderReducerTests {
         let story = Story(chapterIndex: 2, chapters: [
             Chapter(title: "Chapter 1", content: "")
         ])
-        let initialState = ReaderState(story: story)
+        let initialState = ReaderState.arrange(story: story)
         
         var expectedState = initialState
         expectedState.story?.chapterIndex = 0
@@ -476,7 +476,7 @@ class ReaderReducerTests {
             Chapter(title: "Chapter 1", content: ""),
             Chapter(title: "Chapter 2", content: "")
         ])
-        let initialState = ReaderState(story: story)
+        let initialState = ReaderState.arrange(story: story)
         
         var expectedState = initialState
         expectedState.story?.chapterIndex = 1 // Clamped to max index
@@ -496,7 +496,7 @@ class ReaderReducerTests {
             Chapter(title: "Chapter 1", content: ""),
             Chapter(title: "Chapter 2", content: "")
         ])
-        let initialState = ReaderState(story: currentStory)
+        let initialState = ReaderState.arrange(story: currentStory)
         
         var expectedState = initialState
         // Current story should remain unchanged when updating a different story
@@ -515,7 +515,7 @@ class ReaderReducerTests {
         let story = Story(id: storyId, scrollOffset: 0)
         let anotherStory = Story(title: "Another Story")
         
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             loadedStories: [story, anotherStory],
             story: story
         )
@@ -534,7 +534,7 @@ class ReaderReducerTests {
     
     @Test
     func updateScrollOffset_noStory() {
-        let initialState = ReaderState(story: nil)
+        let initialState = ReaderState.arrange(story: nil)
         
         var expectedState = initialState
         // No change expected when there's no story
@@ -549,7 +549,7 @@ class ReaderReducerTests {
     @Test
     func refreshSettings() {
         let newSettings = SettingsState()
-        let initialState = ReaderState()
+        let initialState = ReaderState.arrange
         
         var expectedState = initialState
         expectedState.settingsState = newSettings
@@ -564,7 +564,7 @@ class ReaderReducerTests {
         false
     ])
     func setShowStoryForm(boolValue: Bool) {
-        let initialState = ReaderState()
+        let initialState = ReaderState.arrange
         var expectedState = initialState
         expectedState.showStoryForm = boolValue
         
@@ -579,7 +579,7 @@ class ReaderReducerTests {
     
     @Test
     func failedToCreateChapter() {
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             isLoading: true,
             loadingStep: .writingChapter
         )
@@ -595,7 +595,7 @@ class ReaderReducerTests {
     
     @Test
     func failedToLoadStories() {
-        let initialState = ReaderState(
+        let initialState = ReaderState.arrange(
             isLoading: true,
             loadingStep: .analyzingStructure
         )
@@ -614,7 +614,7 @@ class ReaderReducerTests {
         false
     ])
     func setShowSubscriptionSheet(boolValue: Bool) {
-        let initialState = ReaderState()
+        let initialState = ReaderState.arrange
         var expectedState = initialState
         expectedState.showSubscriptionSheet = boolValue
         
@@ -629,7 +629,7 @@ class ReaderReducerTests {
     
     @Test
     func canCreateChapter_noStory_returnsTrue() {
-        let state = ReaderState(story: nil)
+        let state = ReaderState.arrange(story: nil)
         #expect(state.canCreateChapter == true)
     }
     
@@ -640,7 +640,7 @@ class ReaderReducerTests {
             Chapter(title: "Chapter 2", content: ""),
             Chapter(title: "Chapter 3", content: "")
         ])
-        let state = ReaderState(
+        let state = ReaderState.arrange(
             story: story,
             settingsState: SettingsState(isSubscribed: true)
         )
@@ -652,7 +652,7 @@ class ReaderReducerTests {
         let story = Story(chapters: [
             Chapter(title: "Chapter 1", content: "")
         ])
-        let state = ReaderState(
+        let state = ReaderState.arrange(
             story: story,
             settingsState: SettingsState(isSubscribed: false)
         )
@@ -665,7 +665,7 @@ class ReaderReducerTests {
             Chapter(title: "Chapter 1", content: ""),
             Chapter(title: "Chapter 2", content: "")
         ])
-        let state = ReaderState(
+        let state = ReaderState.arrange(
             story: story,
             settingsState: SettingsState(isSubscribed: false)
         )
@@ -680,7 +680,7 @@ class ReaderReducerTests {
             Chapter(title: "Chapter 3", content: ""),
             Chapter(title: "Chapter 4", content: "")
         ])
-        let state = ReaderState(
+        let state = ReaderState.arrange(
             story: story,
             settingsState: SettingsState(isSubscribed: false)
         )
@@ -691,7 +691,7 @@ class ReaderReducerTests {
     
     @Test
     func deleteStory_noStateChange() {
-        let initialState = ReaderState()
+        let initialState = ReaderState.arrange
         let storyId = UUID()
         
         var expectedState = initialState
@@ -705,7 +705,7 @@ class ReaderReducerTests {
     @Test
     func saveStory_noStateChange() {
         let story = Story(title: "Test Story")
-        let initialState = ReaderState(story: story)
+        let initialState = ReaderState.arrange(story: story)
         
         var expectedState = initialState
         // No change expected as saveStory is handled by middleware
