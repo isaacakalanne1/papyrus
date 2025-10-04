@@ -42,9 +42,12 @@ let package = Package(
         .target(
             name: "ReaderMocks",
             dependencies: [
+                "Reader",
                 "TextGeneration",
                 "Settings",
-                "Subscription"
+                .product(name: "SettingsMocks", package: "Settings"),
+                "Subscription",
+                .product(name: "SubscriptionMocks", package: "Subscription")
             ],
             path: "Mocks"
         ),

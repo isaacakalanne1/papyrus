@@ -13,6 +13,10 @@ let package = Package(
         .library(
             name: "Settings",
             targets: ["Settings"]),
+        .library(
+            name: "SettingsMocks",
+            targets: ["SettingsMocks"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/isaacakalanne1/reduxkit.git", from: "1.0.1")
@@ -25,9 +29,16 @@ let package = Package(
             dependencies: [
                 .product(name: "ReduxKit", package: "reduxkit")
             ]),
+        .target(
+            name: "SettingsMocks",
+            dependencies: [
+                "Settings"
+            ],
+            path: "Mocks"
+        ),
         .testTarget(
             name: "SettingsTests",
-            dependencies: ["Settings"]
+            dependencies: ["Settings", "SettingsMocks"]
         ),
     ]
 )

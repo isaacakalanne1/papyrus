@@ -12,6 +12,10 @@ let package = Package(
         .library(
             name: "Subscription",
             targets: ["Subscription"]),
+        .library(
+            name: "SubscriptionMocks",
+            targets: ["SubscriptionMocks"]
+        ),
     ],
     dependencies: [
         .package(url: "https://github.com/isaacakalanne1/reduxkit.git", from: "1.0.1"),
@@ -24,9 +28,18 @@ let package = Package(
                 .product(name: "ReduxKit", package: "reduxkit"),
                 "Settings"
             ]),
+        .target(
+            name: "SubscriptionMocks",
+            dependencies: [
+                "Subscription",
+                "Settings",
+                .product(name: "SettingsMocks", package: "Settings")
+            ],
+            path: "Mocks"
+        ),
         .testTarget(
             name: "SubscriptionTests",
-            dependencies: ["Subscription"]
+            dependencies: ["Subscription", "SubscriptionMocks"]
         ),
     ]
 )
