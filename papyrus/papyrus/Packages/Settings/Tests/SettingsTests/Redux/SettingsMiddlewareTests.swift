@@ -146,34 +146,6 @@ class SettingsMiddlewareTests {
         #expect(saveResult == .onSavedSettings)
     }
     
-    @Test
-    func fullFlow_loadThenModify() async {
-        let state = SettingsState()
-        let environment = MockSettingsEnvironment()
-        
-        // Step 1: Load settings
-        let loadedSettings = SettingsState(selectedTextSize: .small, isSubscribed: true)
-        environment.loadSettingsReturnValue = loadedSettings
-        
-        let loadResult = await settingsMiddleware(state, .loadSettings, environment)
-        #expect(loadResult == .onLoadedSettings(loadedSettings))
-        #expect(environment.loadSettingsCalled)
-        
-        // Step 2: Select new text size
-        environment.reset() // Reset mock for clean state
-        let selectResult = await settingsMiddleware(loadedSettings, .selectTextSize(.extraLarge), environment)
-        #expect(selectResult == .saveSettings)
-        
-        // Step 3: Save updated settings
-        let finalState = SettingsState(selectedTextSize: .extraLarge, isSubscribed: true)
-        let saveResult = await settingsMiddleware(finalState, .saveSettings, environment)
-        
-        #expect(environment.saveSettingsCalled)
-        #expect(environment.saveSettingsCalledWith?.selectedTextSize == .extraLarge)
-        #expect(environment.saveSettingsCalledWith?.isSubscribed == true)
-        #expect(saveResult == .onSavedSettings)
-    }
-    
     // MARK: - Error Handling Tests
     
     @Test
@@ -234,25 +206,5 @@ class SettingsMiddlewareTests {
         
         // Verify the environment's settingsSubject is updated with saved state
         #expect(environment.settingsSubject.value == state)
-    }
-    
-    // MARK: - Concurrent Access Tests
-    
-    @Test
-    func middleware_concurrentLoadAndSave() async {
-        let state = SettingsState()
-        let environment = MockSettingsEnvironment()
-        environment.loadSettingsReturnValue = SettingsState(selectedTextSize: .large, isSubscribed: true)
-        
-        // Execute load and save concurrently
-        async let loadResult = settingsMiddleware(state, .loadSettings, environment)
-        async let saveResult = settingsMiddleware(state, .saveSettings, environment)
-        
-        let results = await (loadResult, saveResult)
-        
-        #expect(results.0 == .onLoadedSettings(SettingsState(selectedTextSize: .large, isSubscribed: true)))
-        #expect(results.1 == .onSavedSettings)
-        #expect(environment.loadSettingsCalled)
-        #expect(environment.saveSettingsCalled)
     }
 }

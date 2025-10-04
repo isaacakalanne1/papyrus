@@ -20,7 +20,9 @@ public protocol SubscriptionRepositoryProtocol {
 public class SubscriptionRepository: SubscriptionRepositoryProtocol {
     private let service: SubscriptionServiceProtocol
     
-    public init(service: SubscriptionServiceProtocol = SubscriptionService()) {
+    public init(
+        service: SubscriptionServiceProtocol = SubscriptionService()
+    ) {
         self.service = service
     }
     

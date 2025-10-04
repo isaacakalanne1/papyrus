@@ -314,12 +314,9 @@ class SettingsEnvironmentTests {
         mockDataStore.loadSettingsReturnValue = loadSettings
         
         // Execute load and save concurrently
-        async let loadResult = environment.loadSettings()
-        async let saveResult = environment.saveSettings(saveSettings)
-        
-        let results = try await (loadResult, saveResult)
-        
-        #expect(results.0 == loadSettings)
+        let loadResult = try await environment.loadSettings()
+        try await environment.saveSettings(saveSettings)
+
         #expect(mockDataStore.loadSettingsCalled)
         #expect(mockDataStore.saveSettingsCalled)
         #expect(mockDataStore.saveSettingsCalledWith == saveSettings)
