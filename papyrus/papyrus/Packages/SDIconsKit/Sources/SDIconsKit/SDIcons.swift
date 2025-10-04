@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public enum SDIcons {
+public enum SDIcons: Sendable {
     case scroll
     
     var name: String {

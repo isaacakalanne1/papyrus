@@ -10,14 +10,6 @@ public protocol Endpoint {
     var body: Data? { get }
 }
 
-public enum HTTPMethod: String {
-    case get = "GET"
-    case post = "POST"
-    case put = "PUT"
-    case delete = "DELETE"
-    case patch = "PATCH"
-}
-
 // Default implementations
 public extension Endpoint {
     var baseURL: String {
