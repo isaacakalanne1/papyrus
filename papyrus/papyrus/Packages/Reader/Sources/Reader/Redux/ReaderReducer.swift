@@ -12,7 +12,7 @@ import ReduxKit
 let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     var newState = state
     switch action {
-    case .createStory:
+    case .beginCreateStory:
         newState.isLoading = true
         newState.showStoryForm = false
         newState.loadingStep = .creatingPlotOutline
@@ -20,7 +20,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             mainCharacter: newState.mainCharacter,
             setting: newState.setting
         )
-    case .createSequel:
+    case .beginCreateSequel:
         newState.isLoading = true
         newState.showStoryForm = false
         newState.loadingStep = .creatingPlotOutline
@@ -73,7 +73,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.mainCharacter = mainCharacter
     case .updateSetting(let setting):
         newState.setting = setting
-    case .createChapter:
+    case .beginCreateChapter:
         newState.isLoading = true
         newState.loadingStep = .writingChapter
     case .failedToCreateChapter:
@@ -128,9 +128,14 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.settingsState = settings
     case .setShowStoryForm(let show):
         newState.showStoryForm = show
+    case .setShowSubscriptionSheet(let show):
+        newState.showSubscriptionSheet = show
     case .saveStory,
             .deleteStory,
-            .loadSubscriptions:
+            .loadSubscriptions,
+            .createStory,
+            .createSequel,
+            .createChapter:
         break
     }
     return newState

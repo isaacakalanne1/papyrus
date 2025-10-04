@@ -24,7 +24,6 @@ struct ReaderView: View {
     @State private var currentScrollOffset: CGFloat = 0
     @State private var scrollOffsetTimer: Timer?
     @State private var scrollViewHeight: CGFloat = 0
-    @State private var isSubscriptionSheetOpen: Bool = false
     
     enum Field {
         case mainCharacter
@@ -40,6 +39,12 @@ struct ReaderView: View {
             store.state.showStoryForm
         } set: { newValue in
             store.dispatch(.setShowStoryForm(newValue))
+        }
+        
+        let showSubscriptionSheet: Binding<Bool> = .init {
+            store.state.showSubscriptionSheet
+        } set: { newValue in
+            store.dispatch(.setShowSubscriptionSheet(newValue))
         }
         ZStack(alignment: .leading) {
             // Main content
@@ -161,7 +166,7 @@ struct ReaderView: View {
                             .padding(.horizontal)
                         
                         Button(action: {
-                            isSubscriptionSheetOpen = true
+                            store.dispatch(.setShowSubscriptionSheet(true))
                         }) {
                             HStack {
                                 Image(systemName: "crown.fill")
@@ -204,7 +209,7 @@ struct ReaderView: View {
             .presentationBackground(.clear)
             .presentationDragIndicator(.hidden)
         }
-        .sheet(isPresented: $isSubscriptionSheetOpen) {
+        .sheet(isPresented: showSubscriptionSheet) {
             SubscriptionRootView(environment: store.environment.subscriptionEnvironment)
                 .presentationDragIndicator(.visible)
         }

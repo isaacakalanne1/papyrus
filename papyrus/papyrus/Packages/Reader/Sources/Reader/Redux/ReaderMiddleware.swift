@@ -13,26 +13,15 @@ import Settings
 let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentProtocol> = { state, action, environment in
     switch action {
     case .createStory:
-        guard let story = state.story else {
-            return .failedToCreateChapter
+        if !state.canCreateChapter {
+            return .setShowSubscriptionSheet(true)
         }
-        return .createPlotOutline(story)
+        return .beginCreateStory
     case .createSequel:
-        guard var currentStory = state.story,
-              var sequelStory = state.sequelStory else {
-            return .failedToCreateChapter
+        if !state.canCreateChapter {
+            return .setShowSubscriptionSheet(true)
         }
-
-        do {
-            try await environment.saveStory(currentStory)
-            let sequelStory = try await environment.createSequelPlotOutline(
-                story: sequelStory,
-                previousStory: currentStory
-            )
-            return .onCreatedPlotOutline(sequelStory)
-        } catch {
-            return .failedToCreateChapter
-        }
+        return .beginCreateSequel
     case .createPlotOutline(var story):
         do {
             story = try await environment.createPlotOutline(story: story)
@@ -51,7 +40,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         }
     case .onCreatedChapterBreakdown(let story):
         if story.maxNumberOfChapters > 0 {
-            return .createChapter(story)
+            return .beginCreateChapter(story)
         } else {
             return .getStoryDetails(story)
         }
@@ -72,14 +61,12 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToCreateChapter
         }
     case .onGetChapterTitle(let story):
-        return .createChapter(story)
-    case .createChapter(var story):
-        do {
-            story = try await environment.createChapter(story: story)
-            return .onCreatedChapter(story)
-        } catch {
-            return .failedToCreateChapter
+        return .beginCreateChapter(story)
+    case .createChapter(let story):
+        if !state.canCreateChapter {
+            return .setShowSubscriptionSheet(true)
         }
+        return .beginCreateChapter(story)
     case .loadAllStories:
         do {
             let stories = try await environment.loadAllStories()
@@ -131,6 +118,34 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
     case .loadSubscriptions:
         await environment.loadSubscriptions()
         return nil
+    case .beginCreateStory:
+        guard let story = state.story else {
+            return .failedToCreateChapter
+        }
+        return .createPlotOutline(story)
+    case .beginCreateSequel:
+        guard var currentStory = state.story,
+              var sequelStory = state.sequelStory else {
+            return .failedToCreateChapter
+        }
+
+        do {
+            try await environment.saveStory(currentStory)
+            let sequelStory = try await environment.createSequelPlotOutline(
+                story: sequelStory,
+                previousStory: currentStory
+            )
+            return .onCreatedPlotOutline(sequelStory)
+        } catch {
+            return .failedToCreateChapter
+        }
+    case .beginCreateChapter(var story):
+        do {
+            story = try await environment.createChapter(story: story)
+            return .onCreatedChapter(story)
+        } catch {
+            return .failedToCreateChapter
+        }
     case .failedToCreateChapter,
             .updateSetting,
             .updateMainCharacter,
@@ -139,7 +154,8 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             .setStory,
             .onDeletedStory,
             .refreshSettings,
-            .setShowStoryForm:
+            .setShowStoryForm,
+            .setShowSubscriptionSheet:
         return nil
     }
 }
