@@ -41,51 +41,28 @@ struct NewStoryForm: View {
                 }
             }
                 
-            // Main character section
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Main Character")
-                    .font(.custom("Georgia", size: 14))
-                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
-                
-                TextField("E.g, Sherlock Holmes", text: mainCharacter)
-                    .font(.custom("Georgia", size: 16))
-                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
-                    .padding(12)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
-                    )
-                    .focused($focusedField, equals: .mainCharacter)
-                    .submitLabel(.next)
-                    .onSubmit {
-                        focusedField = .settingDetails
-                    }
+            FormFieldView(
+                label: "Main Character",
+                placeholder: "E.g, Sherlock Holmes",
+                text: mainCharacter,
+                focusedField: $focusedField,
+                fieldValue: .mainCharacter
+            ) {
+                focusedField = .settingDetails
             }
                 
-            // Story details section
-            VStack(alignment: .leading, spacing: 8) {
-                Text("Setting & Details")
-                    .font(.custom("Georgia", size: 14))
-                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
-                
-                ZStack(alignment: .topLeading) {
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
-                        .frame(height: 120)
-                    
-                    TextField("E.g, Living in Los Angeles, has famous superheroes as clients", text: settingDetails, axis: .vertical)
-                        .font(.custom("Georgia", size: 16))
-                        .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
-                        .lineLimit(3...6)
-                        .padding(12)
-                        .focused($focusedField, equals: .settingDetails)
-                        .submitLabel(.return)
-                        .onSubmit {
-                            focusedField = nil
-                        }
-                }
+            FormFieldView(
+                label: "Setting & Details",
+                placeholder: "E.g, Living in Los Angeles, has famous superheroes as clients",
+                text: settingDetails,
+                focusedField: $focusedField,
+                fieldValue: .settingDetails
+            ) {
+                focusedField = nil
             }
-            
+
+            Spacer()
+
             // Write chapter button
             PrimaryButton(
                 type: isSequelMode ? .createSequel : .createStory,
