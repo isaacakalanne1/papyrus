@@ -32,7 +32,7 @@ struct ChapterWritingLoadingView: View {
                         .fill(
                             LinearGradient(
                                 gradient: Gradient(colors: [
-                                    Color(red: 0.8, green: 0.65, blue: 0.4),
+                                    PapyrusColor.accent.color,
                                     Color(red: 0.7, green: 0.55, blue: 0.3)
                                 ]),
                                 startPoint: .topLeading,
@@ -87,7 +87,7 @@ struct ChapterWritingLoadingView: View {
                     LinearGradient(
                         gradient: Gradient(colors: [
                             PapyrusColor.background.color.opacity(0.95),
-                            Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.95)
+                            PapyrusColor.backgroundSecondary.color.opacity(0.95)
                         ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing

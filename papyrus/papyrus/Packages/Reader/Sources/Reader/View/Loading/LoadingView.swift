@@ -128,7 +128,7 @@ struct LoadingView: View {
                     
                     Image(systemName: "book.pages")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(Color(red: 0.35, green: 0.30, blue: 0.25))
+                        .foregroundColor(PapyrusColor.buttonGradientBottom.color)
                 }
                 .onAppear {
                     withAnimation(
@@ -263,7 +263,7 @@ struct LoadingView: View {
                 LinearGradient(
                     gradient: Gradient(colors: [
                         PapyrusColor.background.color.opacity(0.95),
-                        Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.95)
+                        PapyrusColor.backgroundSecondary.color.opacity(0.95)
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing

@@ -60,7 +60,7 @@ public struct SubscriptionView: View {
     private var loadingView: some View {
         VStack(spacing: 16) {
             ProgressView()
-                .progressViewStyle(CircularProgressViewStyle(tint: Color(red: 0.8, green: 0.65, blue: 0.4)))
+                .progressViewStyle(CircularProgressViewStyle(tint: PapyrusColor.accent.color))
                 .scaleEffect(1.2)
             
             Text("Loading subscription details...")
@@ -89,10 +89,10 @@ public struct SubscriptionView: View {
             .frame(maxWidth: .infinity)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.6))
+                    .fill(PapyrusColor.backgroundSecondary.color.opacity(0.6))
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
-                            .stroke(Color(red: 0.8, green: 0.75, blue: 0.7), lineWidth: 1)
+                            .stroke(PapyrusColor.border.color, lineWidth: 1)
                     )
             )
             
@@ -142,7 +142,7 @@ public struct SubscriptionView: View {
             .padding(20)
             .background(
                 RoundedRectangle(cornerRadius: 16)
-                    .fill(Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.4))
+                    .fill(PapyrusColor.backgroundSecondary.color.opacity(0.4))
             )
             
             if let product = state.product {
@@ -150,7 +150,7 @@ public struct SubscriptionView: View {
                     VStack(spacing: 4) {
                         Text(product.displayPrice)
                             .font(.custom("Georgia", size: 28))
-                            .foregroundColor(Color(red: 0.8, green: 0.65, blue: 0.4))
+                            .foregroundColor(PapyrusColor.accent.color)
                         
                         Text("per month")
                             .font(.custom("Georgia", size: 14))
@@ -168,7 +168,7 @@ public struct SubscriptionView: View {
                             .frame(height: 52)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color(red: 0.8, green: 0.65, blue: 0.4))
+                                    .fill(PapyrusColor.accent.color)
                             )
                     }
                     .buttonStyle(PlainButtonStyle())
@@ -211,7 +211,7 @@ public struct SubscriptionView: View {
         HStack(spacing: 12) {
             Image(systemName: icon)
                 .font(.system(size: 20))
-                .foregroundColor(Color(red: 0.8, green: 0.65, blue: 0.4))
+                .foregroundColor(PapyrusColor.accent.color)
                 .frame(width: 28)
             
             Text(text)
@@ -229,7 +229,7 @@ public struct SubscriptionView: View {
             
             Text(error)
                 .font(.custom("Georgia", size: 14))
-                .foregroundColor(Color(red: 0.6, green: 0.3, blue: 0.2))
+                .foregroundColor(PapyrusColor.error.color)
             
             Spacer()
             
@@ -238,7 +238,7 @@ public struct SubscriptionView: View {
             }) {
                 Image(systemName: "xmark")
                     .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(Color(red: 0.6, green: 0.3, blue: 0.2))
+                    .foregroundColor(PapyrusColor.error.color)
             }
             .buttonStyle(PlainButtonStyle())
         }
