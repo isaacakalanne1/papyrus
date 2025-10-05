@@ -58,7 +58,8 @@ let package = Package(
             name: "ReaderTests",
             dependencies: [
                 "Reader",
-                "ReaderMocks"
+                "ReaderMocks",
+                "PapyrusStyleKit"
             ]
         ),
     ]
