@@ -125,7 +125,7 @@ struct ReaderView: View {
             )
             
             // Settings menu (slides from right)
-            SettingsPanel(
+            SettingsMenu(
                 isOpen: isSettingsOpen,
                 dragOffset: settingsDragOffset
             )
