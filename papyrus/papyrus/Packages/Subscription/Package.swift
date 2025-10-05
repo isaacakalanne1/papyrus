@@ -19,14 +19,16 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/isaacakalanne1/reduxkit.git", from: "1.0.1"),
-        .package(name: "Settings", path: "../Settings")
+        .package(name: "Settings", path: "../Settings"),
+        .package(name: "PapyrusStyleKit", path: "../PapyrusStyleKit")
     ],
     targets: [
         .target(
             name: "Subscription",
             dependencies: [
                 .product(name: "ReduxKit", package: "reduxkit"),
-                "Settings"
+                "Settings",
+                "PapyrusStyleKit"
             ]),
         .target(
             name: "SubscriptionMocks",

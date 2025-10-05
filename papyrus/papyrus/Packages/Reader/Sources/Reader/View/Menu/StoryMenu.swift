@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TextGeneration
+import PapyrusStyleKit
 
 struct StoryMenu: View {
     @EnvironmentObject var store: ReaderStore
@@ -26,16 +27,7 @@ struct StoryMenu: View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 // Menu header
-                VStack(alignment: .leading, spacing: 8) {
-                    Text("Your Stories")
-                        .font(.custom("Georgia", size: 24))
-                        .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
-                    
-                    Divider()
-                        .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.5))
-                }
-                .padding()
-                .padding(.top, 20)
+                MenuMainHeader("Your Stories")
                 
                 // Story list
                 if !store.state.loadedStories.isEmpty {
