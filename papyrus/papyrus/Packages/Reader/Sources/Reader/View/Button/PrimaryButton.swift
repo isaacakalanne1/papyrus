@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PapyrusStyleKit
 
 enum PrimaryButtonSize {
     case large
@@ -88,7 +89,7 @@ struct PrimaryButton: View {
                     .font(.custom("Georgia", size: size.fontSize))
                     .fontWeight(.medium)
             }
-            .foregroundColor(Color(red: 0.98, green: 0.95, blue: 0.89))
+            .foregroundColor(PapyrusColor.background.color)
             .padding(.horizontal, size.horizontalPadding)
             .padding(.vertical, size.verticalPadding)
             .background(

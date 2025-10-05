@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PapyrusStyleKit
 
 struct LoadingView: View {
     let loadingStep: LoadingStep
@@ -261,7 +262,7 @@ struct LoadingView: View {
             .fill(
                 LinearGradient(
                     gradient: Gradient(colors: [
-                        Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.95),
+                        PapyrusColor.background.color.opacity(0.95),
                         Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.95)
                     ]),
                     startPoint: .topLeading,
@@ -281,7 +282,7 @@ struct LoadingView: View {
         LoadingView(loadingStep: .creatingPlotOutline, hasExistingStory: false)
         
         Rectangle()
-            .fill(Color(red: 0.98, green: 0.95, blue: 0.89))
+            .fill(PapyrusColor.background.color)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
@@ -291,7 +292,7 @@ struct LoadingView: View {
         LoadingView(loadingStep: .writingChapter, hasExistingStory: true)
         
         Rectangle()
-            .fill(Color(red: 0.98, green: 0.95, blue: 0.89))
+            .fill(PapyrusColor.background.color)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
@@ -301,7 +302,7 @@ struct LoadingView: View {
         LoadingView(loadingStep: .idle, hasExistingStory: true)
         
         Rectangle()
-            .fill(Color(red: 0.98, green: 0.95, blue: 0.89))
+            .fill(PapyrusColor.background.color)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

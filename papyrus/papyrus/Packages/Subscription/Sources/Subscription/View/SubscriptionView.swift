@@ -8,6 +8,7 @@
 import SwiftUI
 import ReduxKit
 import StoreKit
+import PapyrusStyleKit
 
 public struct SubscriptionView: View {
     @EnvironmentObject var store: SubscriptionStore
@@ -39,7 +40,7 @@ public struct SubscriptionView: View {
                 .padding(20)
             }
         }
-        .background(Color(red: 0.98, green: 0.95, blue: 0.89))
+        .background(PapyrusColor.background.color)
     }
     
     private var headerSection: some View {

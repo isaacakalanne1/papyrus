@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PapyrusStyleKit
 
 struct ChapterWritingLoadingView: View {
     @State private var pulseScale: CGFloat = 1.0
@@ -85,7 +86,7 @@ struct ChapterWritingLoadingView: View {
                 .fill(
                     LinearGradient(
                         gradient: Gradient(colors: [
-                            Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.95),
+                            PapyrusColor.background.color.opacity(0.95),
                             Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.95)
                         ]),
                         startPoint: .topLeading,
@@ -145,14 +146,14 @@ struct ChapterWritingLoadingView: View {
                 .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
                 .padding()
         }
-        .background(Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.95))
+        .background(PapyrusColor.background.color.opacity(0.95))
         
         // Chapter writing loading view
         ChapterWritingLoadingView()
         
         // Simulated content
         Rectangle()
-            .fill(Color(red: 0.98, green: 0.95, blue: 0.89))
+            .fill(PapyrusColor.background.color)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

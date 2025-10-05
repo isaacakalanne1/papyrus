@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TextGeneration
+import PapyrusStyleKit
 
 struct UnifiedNavigationBar: View {
     @EnvironmentObject var store: ReaderStore
@@ -45,7 +46,7 @@ struct UnifiedNavigationBar: View {
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(Color(red: 0.98, green: 0.95, blue: 0.89).opacity(0.95))
+            .background(PapyrusColor.background.color.opacity(0.95))
             
             Divider()
                 .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3))
