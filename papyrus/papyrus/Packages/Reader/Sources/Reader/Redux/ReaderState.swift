@@ -19,6 +19,7 @@ public struct ReaderState: Equatable {
     var settingsState: SettingsState
     var showStoryForm: Bool
     var showSubscriptionSheet: Bool
+    var selectedStoryForDetails: Story?
 
     public init(
         mainCharacter: String = "",
@@ -30,7 +31,8 @@ public struct ReaderState: Equatable {
         loadingStep: LoadingStep = .idle,
         settingsState: SettingsState = SettingsState(),
         showStoryForm: Bool = false,
-        showSubscriptionSheet: Bool = false
+        showSubscriptionSheet: Bool = false,
+        selectedStoryForDetails: Story? = nil
     ) {
         self.mainCharacter = mainCharacter
         self.setting = setting
@@ -42,6 +44,7 @@ public struct ReaderState: Equatable {
         self.settingsState = settingsState
         self.showStoryForm = showStoryForm
         self.showSubscriptionSheet = showSubscriptionSheet
+        self.selectedStoryForDetails = selectedStoryForDetails
     }
     
     // Computed property to check if user can create more chapters

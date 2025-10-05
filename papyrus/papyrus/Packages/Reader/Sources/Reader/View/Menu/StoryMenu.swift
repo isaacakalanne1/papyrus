@@ -13,7 +13,6 @@ struct StoryMenu: View {
     @EnvironmentObject var store: ReaderStore
     @Binding var isMenuOpen: Bool
     let dragOffset: CGFloat
-    @State private var selectedStoryForDetails: Story?
     @State private var isSequelMode = false
     @FocusState private var focusedField: ReaderView.Field?
     
@@ -41,12 +40,6 @@ struct StoryMenu: View {
                                     withAnimation(.easeInOut(duration: 0.3)) {
                                         isMenuOpen = false
                                     }
-                                },
-                                onInfo: {
-                                    selectedStoryForDetails = story
-                                },
-                                onDelete: {
-                                    store.dispatch(.deleteStory(story.id))
                                 }
                             )
                         }
@@ -84,10 +77,13 @@ struct StoryMenu: View {
             
             Spacer()
         }
-        .sheet(item: $selectedStoryForDetails) { story in
+        .sheet(item: Binding(
+            get: { store.state.selectedStoryForDetails },
+            set: { store.dispatch(.setSelectedStoryForDetails($0)) }
+        )) { story in
             StoryDetailsPopup(story: story, isPresented: Binding(
-                get: { selectedStoryForDetails != nil },
-                set: { if !$0 { selectedStoryForDetails = nil } }
+                get: { store.state.selectedStoryForDetails != nil },
+                set: { if !$0 { store.dispatch(.setSelectedStoryForDetails(nil)) } }
             ))
             .presentationBackground(.clear)
             .presentationDragIndicator(.hidden)
