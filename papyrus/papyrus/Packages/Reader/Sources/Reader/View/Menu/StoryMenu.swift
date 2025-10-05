@@ -111,7 +111,7 @@ struct StoryMenu: View {
             .background(
                 LinearGradient(
                     gradient: Gradient(colors: [
-                        Color(red: 0.98, green: 0.95, blue: 0.89),
+                        PapyrusColor.background.color,
                         Color(red: 0.96, green: 0.92, blue: 0.84)
                     ]),
                     startPoint: .topLeading,

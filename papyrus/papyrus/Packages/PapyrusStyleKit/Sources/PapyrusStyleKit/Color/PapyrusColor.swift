@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-enum PapyrusColor {
+public enum PapyrusColor {
     case background
     
-    var color: Color {
+    public var color: Color {
         switch self {
         case .background:
-            Color.red // Background color here
+            Color(red: 0.98, green: 0.95, blue: 0.89)
         }
     }
 }

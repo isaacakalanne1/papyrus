@@ -64,5 +64,4 @@ public struct SubscriptionMenuButton: View {
         print("Premium button tapped")
     })
     .frame(width: 320)
-    .background(Color(red: 0.98, green: 0.95, blue: 0.89))
 }

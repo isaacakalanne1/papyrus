@@ -20,7 +20,7 @@ public struct SettingsView: View {
             }
         }
         .frame(width: 320)
-        .background(Color(red: 0.98, green: 0.95, blue: 0.89))
+        .background(PapyrusColor.background.color)
     }
     
     private var textSizeSection: some View {

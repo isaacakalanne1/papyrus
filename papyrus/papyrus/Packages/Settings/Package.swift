@@ -20,7 +20,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/isaacakalanne1/reduxkit.git", from: "1.0.1"),
-        .package(path: "../PapyrusStyleKit")
+        .package(name: "PapyrusStyleKit", path: "../PapyrusStyleKit")
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -28,8 +28,8 @@ let package = Package(
         .target(
             name: "Settings",
             dependencies: [
-                .product(name: "ReduxKit", package: "reduxkit"),
-                .product(name: "PapyrusStyleKit", package: "PapyrusStyleKit")
+                "PapyrusStyleKit",
+                .product(name: "ReduxKit", package: "reduxkit")
             ]),
         .target(
             name: "SettingsMocks",
