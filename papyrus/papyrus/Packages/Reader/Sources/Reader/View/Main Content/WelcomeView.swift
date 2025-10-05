@@ -20,7 +20,7 @@ struct WelcomeView: View {
                 Spacer()
                 SDIcons.scroll.image
                     .frame(width: 64, height: 64)
-                    .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                    .foregroundColor(PapyrusColor.iconPrimary.color)
                     .opacity(0.5)
                 Spacer()
                 

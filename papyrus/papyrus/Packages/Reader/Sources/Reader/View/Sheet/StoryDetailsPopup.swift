@@ -71,7 +71,7 @@ struct StoryDetailsPopup: View {
                             Text(copiedField == .title ? "Copied" : "Copy")
                                 .font(.custom("Georgia", size: 12))
                         }
-                        .foregroundColor(copiedField == .title ? Color.green : Color(red: 0.6, green: 0.5, blue: 0.4))
+                        .foregroundColor(copiedField == .title ? Color.green : PapyrusColor.iconPrimary.color)
                     }
                 }
                 
@@ -87,7 +87,7 @@ struct StoryDetailsPopup: View {
                     .frame(height: 40)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
+                            .fill(PapyrusColor.iconPrimary.color.opacity(0.1))
                     )
                     .scrollBounceBehavior(.basedOnSize)
                 }
@@ -121,7 +121,7 @@ struct StoryDetailsPopup: View {
                             Text(copiedField == .mainCharacter ? "Copied" : "Copy")
                                 .font(.custom("Georgia", size: 12))
                         }
-                        .foregroundColor(copiedField == .mainCharacter ? Color.green : Color(red: 0.6, green: 0.5, blue: 0.4))
+                        .foregroundColor(copiedField == .mainCharacter ? Color.green : PapyrusColor.iconPrimary.color)
                     }
                 }
                 
@@ -137,7 +137,7 @@ struct StoryDetailsPopup: View {
                     .frame(height: 40)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
+                            .fill(PapyrusColor.iconPrimary.color.opacity(0.1))
                     )
                     .scrollBounceBehavior(.basedOnSize)
                 }
@@ -171,7 +171,7 @@ struct StoryDetailsPopup: View {
                             Text(copiedField == .storyDetails ? "Copied" : "Copy")
                                 .font(.custom("Georgia", size: 12))
                         }
-                        .foregroundColor(copiedField == .storyDetails ? Color.green : Color(red: 0.6, green: 0.5, blue: 0.4))
+                        .foregroundColor(copiedField == .storyDetails ? Color.green : PapyrusColor.iconPrimary.color)
                     }
                 }
                 
@@ -187,7 +187,7 @@ struct StoryDetailsPopup: View {
                     .frame(height: 150)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
+                            .fill(PapyrusColor.iconPrimary.color.opacity(0.1))
                     )
                     .scrollBounceBehavior(.basedOnSize)
                 }

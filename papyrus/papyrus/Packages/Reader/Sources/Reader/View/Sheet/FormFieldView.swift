@@ -42,7 +42,7 @@ struct FormFieldView: View {
             .padding(12)
             .background {
                 RoundedRectangle(cornerRadius: 8)
-                    .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1))
+                    .fill(PapyrusColor.iconPrimary.color.opacity(0.1))
             }
             .submitLabel(.return)
             .onSubmit {

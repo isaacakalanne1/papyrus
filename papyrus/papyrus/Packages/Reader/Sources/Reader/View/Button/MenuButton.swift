@@ -29,7 +29,7 @@ struct MenuButton: View {
                 .foregroundColor(
                     isEnabled 
                     ? type.color
-                    : Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3)
+                    : PapyrusColor.iconPrimary.color.opacity(0.3)
                 )
                 .frame(width: type.frameSize, height: type.frameSize)
         }

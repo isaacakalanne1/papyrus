@@ -50,8 +50,8 @@ enum MenuButtonType {
     
     var color: Color {
         switch self {
-        case .close: return Color(red: 0.6, green: 0.5, blue: 0.4)
-        default: return Color(red: 0.4, green: 0.35, blue: 0.3)
+        case .close: return PapyrusColor.iconPrimary.color
+        default: return PapyrusColor.iconSecondary.color
         }
     }
 }

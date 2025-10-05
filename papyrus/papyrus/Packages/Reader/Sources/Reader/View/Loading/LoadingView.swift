@@ -151,7 +151,7 @@ struct LoadingView: View {
                         Text("Step \(currentStageIndex + 1) of \(storyCreationStages.count + 1)")
                             .font(.custom("Georgia", size: 12))
                             .fontWeight(.medium)
-                            .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                            .foregroundColor(PapyrusColor.iconSecondary.color)
                     }
                     
                     // Progress bar
@@ -159,7 +159,7 @@ struct LoadingView: View {
                         ZStack(alignment: .leading) {
                             // Background track
                             RoundedRectangle(cornerRadius: 3)
-                                .fill(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.2))
+                                .fill(PapyrusColor.iconPrimary.color.opacity(0.2))
                                 .frame(height: 3)
                             
                             // Progress fill with subtle gradient
@@ -236,7 +236,7 @@ struct LoadingView: View {
                     
                     Text("Your new chapter awaits")
                         .font(.custom("Georgia", size: 12))
-                        .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                        .foregroundColor(PapyrusColor.iconSecondary.color)
                 }
                 
                 Spacer()
@@ -271,7 +271,7 @@ struct LoadingView: View {
             )
             .overlay(
                 Rectangle()
-                    .stroke(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1), lineWidth: 0.5)
+                    .stroke(PapyrusColor.iconPrimary.color.opacity(0.1), lineWidth: 0.5)
                     .blur(radius: 0.5)
             )
     }
