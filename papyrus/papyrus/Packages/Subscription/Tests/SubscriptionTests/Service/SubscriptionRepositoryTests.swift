@@ -20,7 +20,7 @@ class SubscriptionRepositoryTests {
     private var repository: SubscriptionRepository!
     private var mockProduct: Product!
     private var mockTransaction: Transaction!
-    private var testSession: SKTestSession!
+//    private var testSession: SKTestSession!
     
     // MARK: - Setup
     
@@ -28,6 +28,7 @@ class SubscriptionRepositoryTests {
         mockService = MockSubscriptionService()
         repository = SubscriptionRepository(service: mockService)
         
+        // TODO: Activate once StoreKit Testing is working
         // Set up StoreKitTest session using Bundle.module
 //        guard let configURL = Bundle.module.url(forResource: "Products", withExtension: "storekit") else {
 //            throw SubscriptionTestError("Could not find Products.storekit configuration file")

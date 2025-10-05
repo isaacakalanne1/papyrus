@@ -9,9 +9,7 @@ import Testing
 import Foundation
 @testable import TextGeneration
 import TextGenerationMocks
-import Settings
 import SettingsMocks
-import Subscription
 import SubscriptionMocks
 @testable import Reader
 @testable import ReaderMocks

@@ -28,6 +28,7 @@ struct ReaderStateTests {
         #expect(state.loadingStep == .idle)
         #expect(!state.showStoryForm)
         #expect(!state.showSubscriptionSheet)
+        #expect(state.selectedStoryForDetails == nil)
     }
     
     @Test("Custom initialization should set all properties")
@@ -48,7 +49,8 @@ struct ReaderStateTests {
             loadingStep: .creatingPlotOutline,
             settingsState: settingsState,
             showStoryForm: true,
-            showSubscriptionSheet: true
+            showSubscriptionSheet: true,
+            selectedStoryForDetails: story
         )
         
         // Then
@@ -61,6 +63,7 @@ struct ReaderStateTests {
         #expect(state.loadingStep == .creatingPlotOutline)
         #expect(state.showStoryForm)
         #expect(state.showSubscriptionSheet)
+        #expect(state.selectedStoryForDetails != nil)
     }
     
     @Test("Can create chapter without story")

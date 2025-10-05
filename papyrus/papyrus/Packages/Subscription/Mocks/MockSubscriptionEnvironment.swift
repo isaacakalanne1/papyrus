@@ -7,8 +7,6 @@
 
 import Foundation
 import StoreKit
-import Settings
-import SettingsMocks
 @testable import Subscription
 
 public class MockSubscriptionEnvironment: SubscriptionEnvironmentProtocol {
