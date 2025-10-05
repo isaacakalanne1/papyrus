@@ -65,7 +65,7 @@ public struct SubscriptionView: View {
             
             Text("Loading subscription details...")
                 .font(.custom("Georgia", size: 16))
-                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                .foregroundColor(PapyrusColor.textSecondary.color)
         }
         .frame(maxWidth: .infinity, minHeight: 200)
     }
@@ -83,7 +83,7 @@ public struct SubscriptionView: View {
                 
                 Text("Enjoy unlimited chapter creation")
                     .font(.custom("Georgia", size: 16))
-                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                    .foregroundColor(PapyrusColor.textSecondary.color)
             }
             .padding(24)
             .frame(maxWidth: .infinity)
@@ -99,7 +99,7 @@ public struct SubscriptionView: View {
             VStack(spacing: 8) {
                 Text("Subscription Status")
                     .font(.custom("Georgia", size: 14))
-                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                    .foregroundColor(PapyrusColor.textSecondary.color)
                 
                 Text(state.isSubscribed ? "Active" : "Inactive")
                     .font(.custom("Georgia", size: 16))
@@ -111,7 +111,7 @@ public struct SubscriptionView: View {
             }) {
                 Text("Restore Purchases")
                     .font(.custom("Georgia", size: 14))
-                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                    .foregroundColor(PapyrusColor.textSecondary.color)
                     .underline()
             }
             .buttonStyle(PlainButtonStyle())
@@ -130,7 +130,7 @@ public struct SubscriptionView: View {
                 
                 Text("Create unlimited chapters and bring your stories to life")
                     .font(.custom("Georgia", size: 16))
-                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                    .foregroundColor(PapyrusColor.textSecondary.color)
                     .multilineTextAlignment(.center)
             }
             
@@ -154,7 +154,7 @@ public struct SubscriptionView: View {
                         
                         Text("per month")
                             .font(.custom("Georgia", size: 14))
-                            .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                            .foregroundColor(PapyrusColor.textSecondary.color)
                     }
                     
                     Button(action: {
@@ -180,7 +180,7 @@ public struct SubscriptionView: View {
                         }) {
                             Text("Restore Purchases")
                                 .font(.custom("Georgia", size: 14))
-                                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                                .foregroundColor(PapyrusColor.textSecondary.color)
                                 .underline()
                         }
                         .buttonStyle(PlainButtonStyle())
@@ -191,14 +191,14 @@ public struct SubscriptionView: View {
                         Link(destination: URL(string: "https://www.smileydude.co.uk/post/papyrus-privacy-policy")!) {
                             Text("Privacy Policy")
                                 .font(.custom("Georgia", size: 12))
-                                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                                .foregroundColor(PapyrusColor.textSecondary.color)
                                 .underline()
                         }
                         
                         Link(destination: URL(string: "https://www.smileydude.co.uk/post/papyrus-terms-of-use-eula")!) {
                             Text("Terms of Use (EULA)")
                                 .font(.custom("Georgia", size: 12))
-                                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                                .foregroundColor(PapyrusColor.textSecondary.color)
                                 .underline()
                         }
                     }

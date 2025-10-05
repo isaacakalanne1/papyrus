@@ -29,7 +29,7 @@ struct FormFieldView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(label)
                 .font(.custom("Georgia", size: 14))
-                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                .foregroundColor(PapyrusColor.textSecondary.color)
             
             TextField(
                 placeholder,

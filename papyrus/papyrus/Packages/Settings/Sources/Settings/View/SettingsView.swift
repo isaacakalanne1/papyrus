@@ -53,7 +53,7 @@ public struct SettingsView: View {
                 .font(.custom("Georgia", size: size.fontSize * size.iconScale))
                 .foregroundColor(size == selectedTextSize ? 
                     Color(red: 0.8, green: 0.65, blue: 0.4) : 
-                    Color(red: 0.5, green: 0.45, blue: 0.4))
+                    PapyrusColor.textSecondary.color)
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
                 .background(

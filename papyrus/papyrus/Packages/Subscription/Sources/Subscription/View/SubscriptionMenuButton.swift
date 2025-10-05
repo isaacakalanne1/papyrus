@@ -37,7 +37,7 @@ public struct SubscriptionMenuButton: View {
                         
                         Image(systemName: "chevron.right")
                             .font(.system(size: 14))
-                            .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                            .foregroundColor(PapyrusColor.textSecondary.color)
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)

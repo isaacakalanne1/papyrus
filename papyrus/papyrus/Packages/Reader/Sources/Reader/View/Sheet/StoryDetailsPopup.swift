@@ -48,7 +48,7 @@ struct StoryDetailsPopup: View {
                 HStack {
                     Text("Title")
                         .font(.custom("Georgia", size: 14))
-                        .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                        .foregroundColor(PapyrusColor.textSecondary.color)
                     
                     Spacer()
                     
@@ -98,7 +98,7 @@ struct StoryDetailsPopup: View {
                 HStack {
                     Text("Main Character")
                         .font(.custom("Georgia", size: 14))
-                        .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                        .foregroundColor(PapyrusColor.textSecondary.color)
                     
                     Spacer()
                     
@@ -148,7 +148,7 @@ struct StoryDetailsPopup: View {
                 HStack {
                     Text("Story Details")
                         .font(.custom("Georgia", size: 14))
-                        .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                        .foregroundColor(PapyrusColor.textSecondary.color)
                     
                     Spacer()
                     

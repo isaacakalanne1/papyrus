@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PapyrusStyleKit
 
 struct MenuButton: View {
     let type: MenuButtonType
