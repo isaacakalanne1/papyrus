@@ -56,13 +56,13 @@ struct ChapterWritingLoadingView: View {
                         Text("Writing Chapter")
                             .font(.custom("Georgia", size: 18))
                             .fontWeight(.semibold)
-                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                            .foregroundColor(PapyrusColor.textPrimary.color)
                         
                         ForEach(0..<3, id: \.self) { index in
                             Text(".")
                                 .font(.custom("Georgia", size: 18))
                                 .fontWeight(.semibold)
-                                .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                                .foregroundColor(PapyrusColor.textPrimary.color)
                                 .opacity(index < dotCount ? 1 : 0)
                         }
                     }

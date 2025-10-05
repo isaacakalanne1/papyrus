@@ -1,4 +1,5 @@
 import SwiftUI
+import PapyrusStyleKit
 
 struct FormFieldView: View {
     let label: String
@@ -36,7 +37,7 @@ struct FormFieldView: View {
                 axis: .vertical
             )
             .font(.custom("Georgia", size: 16))
-            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+            .foregroundColor(PapyrusColor.textPrimary.color)
             .lineLimit(3, reservesSpace: true)
             .padding(12)
             .background {

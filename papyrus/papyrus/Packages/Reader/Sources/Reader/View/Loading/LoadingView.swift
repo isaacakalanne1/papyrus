@@ -144,7 +144,7 @@ struct LoadingView: View {
                         Text(stageTitle)
                             .font(.custom("Georgia", size: 15))
                             .fontWeight(.semibold)
-                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                            .foregroundColor(PapyrusColor.textPrimary.color)
                         
                         Spacer()
                         

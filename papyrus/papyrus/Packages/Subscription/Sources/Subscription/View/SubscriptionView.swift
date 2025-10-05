@@ -47,7 +47,7 @@ public struct SubscriptionView: View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Premium")
                 .font(.custom("Georgia", size: 24))
-                .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                .foregroundColor(PapyrusColor.textPrimary.color)
             
             Divider()
                 .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.5))
@@ -79,7 +79,7 @@ public struct SubscriptionView: View {
                 
                 Text("You're subscribed!")
                     .font(.custom("Georgia", size: 20))
-                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                    .foregroundColor(PapyrusColor.textPrimary.color)
                 
                 Text("Enjoy unlimited chapter creation")
                     .font(.custom("Georgia", size: 16))
@@ -103,7 +103,7 @@ public struct SubscriptionView: View {
                 
                 Text(state.isSubscribed ? "Active" : "Inactive")
                     .font(.custom("Georgia", size: 16))
-                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                    .foregroundColor(PapyrusColor.textPrimary.color)
             }
             
             Button(action: {
@@ -124,7 +124,7 @@ public struct SubscriptionView: View {
             VStack(spacing: 16) {
                 Text("Unlock Your\nCreative Potential")
                     .font(.custom("Georgia", size: 24))
-                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                    .foregroundColor(PapyrusColor.textPrimary.color)
                     .multilineTextAlignment(.center)
                     .lineSpacing(4)
                 
@@ -216,7 +216,7 @@ public struct SubscriptionView: View {
             
             Text(text)
                 .font(.custom("Georgia", size: 16))
-                .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                .foregroundColor(PapyrusColor.textPrimary.color)
             
             Spacer()
         }
