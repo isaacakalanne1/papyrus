@@ -33,66 +33,28 @@ struct StoryMenu: View {
                 if !store.state.loadedStories.isEmpty {
                     List {
                         ForEach(store.state.loadedStories, id: \.id) { story in
-                            Button(action: {
-                                store.dispatch(.setStory(story))
-                                withAnimation(.easeInOut(duration: 0.3)) {
-                                    isMenuOpen = false
-                                }
-                            }) {
-                                HStack {
-                                    Image(systemName: "book.closed")
-                                        .font(.system(size: 16))
-                                        .foregroundColor(PapyrusColor.iconPrimary.color)
-                                    
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text(story.title.isEmpty ? "Untitled Story" : story.title)
-                                            .font(.custom("Georgia", size: 16))
-                                            .foregroundColor(PapyrusColor.textPrimary.color)
-                                            .lineLimit(1)
-                                        
-                                        if !story.chapters.isEmpty {
-                                            Text("\(story.chapters.count) chapter\(story.chapters.count == 1 ? "" : "s")")
-                                                .font(.custom("Georgia", size: 12))
-                                                .foregroundColor(PapyrusColor.textSecondary.color)
-                                        }
+                            StoryListItem(
+                                story: story,
+                                isSelected: story.id == store.state.story?.id,
+                                onTap: {
+                                    store.dispatch(.setStory(story))
+                                    withAnimation(.easeInOut(duration: 0.3)) {
+                                        isMenuOpen = false
                                     }
-                                    
-                                    Spacer()
-                                    
-                                    Button(action: {
-                                        selectedStoryForDetails = story
-                                    }) {
-                                        Image(systemName: "info.circle")
-                                            .font(.system(size: 20))
-                                            .foregroundColor(PapyrusColor.iconPrimary.color)
-                                    }
-                                    .buttonStyle(PlainButtonStyle())
-                                }
-                            }
-                            .listRowBackground(
-                                PapyrusColor.iconPrimary.color
-                                    .opacity(story.id == store.state.story?.id ? 0.15 : 0)
-                            )
-                            .swipeActions(edge: .trailing, allowsFullSwipe: false) {
-                                Button(role: .destructive) {
+                                },
+                                onInfo: {
+                                    selectedStoryForDetails = story
+                                },
+                                onDelete: {
                                     store.dispatch(.deleteStory(story.id))
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
                                 }
-                            }
+                            )
                         }
                     }
                     .listStyle(PlainListStyle())
                     .scrollContentBackground(.hidden)
                 } else {
-                    VStack {
-                        Spacer()
-                        Text("No saved stories yet")
-                            .font(.custom("Georgia", size: 16))
-                            .foregroundColor(PapyrusColor.iconPrimary.color)
-                        Spacer()
-                    }
-                    .padding()
+                    NoStoriesView()
                 }
                 
                 // Create Story button at the bottom
@@ -127,8 +89,8 @@ struct StoryMenu: View {
                 get: { selectedStoryForDetails != nil },
                 set: { if !$0 { selectedStoryForDetails = nil } }
             ))
-                .presentationBackground(.clear)
-                .presentationDragIndicator(.hidden)
+            .presentationBackground(.clear)
+            .presentationDragIndicator(.hidden)
         }
         .sheet(isPresented: showStoryForm) {
             NewStoryFormSheet(
@@ -141,4 +103,3 @@ struct StoryMenu: View {
         }
     }
 }
-
