@@ -130,6 +130,8 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.showStoryForm = show
     case .setShowSubscriptionSheet(let show):
         newState.showSubscriptionSheet = show
+    case .setSelectedStoryForDetails(let story):
+        newState.selectedStoryForDetails = story
     case .saveStory,
             .deleteStory,
             .loadSubscriptions,

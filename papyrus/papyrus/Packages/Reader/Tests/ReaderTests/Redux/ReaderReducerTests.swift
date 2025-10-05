@@ -625,6 +625,34 @@ class ReaderReducerTests {
         #expect(newState == expectedState)
     }
     
+    // MARK: - Selected Story for Details Tests
+    
+    @Test
+    func setSelectedStoryForDetails_withStory() {
+        let story = Story(title: "Test Story")
+        let initialState = ReaderState.arrange
+        
+        var expectedState = initialState
+        expectedState.selectedStoryForDetails = story
+        
+        let newState = readerReducer(initialState, .setSelectedStoryForDetails(story))
+        
+        #expect(newState == expectedState)
+    }
+    
+    @Test
+    func setSelectedStoryForDetails_withNil() {
+        let initialStory = Story(title: "Initial Story")
+        let initialState = ReaderState.arrange(selectedStoryForDetails: initialStory)
+        
+        var expectedState = initialState
+        expectedState.selectedStoryForDetails = nil
+        
+        let newState = readerReducer(initialState, .setSelectedStoryForDetails(nil))
+        
+        #expect(newState == expectedState)
+    }
+    
     // MARK: - canCreateChapter Computed Property Tests
     
     @Test

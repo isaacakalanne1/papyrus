@@ -13,8 +13,8 @@ struct StoryListItem: View {
     let story: Story
     let isSelected: Bool
     let onTap: () -> Void
-    let onInfo: () -> Void
-    let onDelete: () -> Void
+    
+    @EnvironmentObject var store: ReaderStore
     
     var body: some View {
         Button(action: onTap) {
@@ -38,7 +38,9 @@ struct StoryListItem: View {
                 
                 Spacer()
                 
-                Button(action: onInfo) {
+                Button(action: {
+                    store.dispatch(.setSelectedStoryForDetails(story))
+                }) {
                     Image(systemName: "info.circle")
                         .font(.system(size: 20))
                         .foregroundColor(PapyrusColor.iconPrimary.color)
@@ -52,7 +54,7 @@ struct StoryListItem: View {
         )
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(role: .destructive) {
-                onDelete()
+                store.dispatch(.deleteStory(story.id))
             } label: {
                 Label("Delete", systemImage: "trash")
             }

@@ -10,8 +10,6 @@ import Foundation
 import TextGeneration
 import Settings
 import SettingsMocks
-import Subscription
-import SubscriptionMocks
 @testable import Reader
 @testable import ReaderMocks
 
@@ -619,6 +617,29 @@ class ReaderMiddlewareTests {
         #expect(result == .failedToCreateChapter)
     }
     
+    // MARK: - Selected Story for Details Tests
+    
+    @Test
+    func setSelectedStoryForDetails_withStory_returnsNil() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        let story = Story(title: "Test Story")
+        
+        let result = await readerMiddleware(state, .setSelectedStoryForDetails(story), environment)
+        
+        #expect(result == nil)
+    }
+    
+    @Test
+    func setSelectedStoryForDetails_withNil_returnsNil() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        
+        let result = await readerMiddleware(state, .setSelectedStoryForDetails(nil), environment)
+        
+        #expect(result == nil)
+    }
+    
     // MARK: - No-op Actions Test
     
     @Test
@@ -636,7 +657,8 @@ class ReaderMiddlewareTests {
             .onDeletedStory(UUID()),
             .refreshSettings(SettingsState()),
             .setShowStoryForm(true),
-            .setShowSubscriptionSheet(true)
+            .setShowSubscriptionSheet(true),
+            .setSelectedStoryForDetails(Story())
         ]
         
         for action in noOpActions {
