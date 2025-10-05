@@ -39,7 +39,7 @@ public struct SettingsView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(PapyrusColor.border.color, lineWidth: 1)
+                .stroke(PapyrusColor.borderSecondary.color, lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal, 20)
