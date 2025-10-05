@@ -1,5 +1,6 @@
 import SwiftUI
 import ReduxKit
+import PapyrusStyleKit
 
 public struct SettingsView: View {
     @EnvironmentObject var store: SettingsStore
@@ -11,33 +12,20 @@ public struct SettingsView: View {
     public init() {}
     
     public var body: some View {
-        VStack(alignment: .leading, spacing: 20) {
-            settingsHeader
-            textSizeSection
+        VStack(alignment: .leading, spacing: 0) {
+            MenuMainHeader("Settings")
+            
+            VStack(alignment: .leading, spacing: 20) {
+                textSizeSection
+            }
         }
         .frame(width: 320)
         .background(Color(red: 0.98, green: 0.95, blue: 0.89))
     }
     
-    private var settingsHeader: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Settings")
-                .font(.custom("Georgia", size: 24))
-                .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
-            
-            Divider()
-                .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.5))
-        }
-        .padding()
-        .padding(.top, 20)
-    }
-    
     private var textSizeSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            Text("Text Size")
-                .font(.custom("Georgia", size: 18))
-                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
-                .padding(.horizontal)
+            MenuSubheader("Text Size")
             
             textSizeSelector
         }
@@ -54,7 +42,7 @@ public struct SettingsView: View {
                 .stroke(Color(red: 0.8, green: 0.75, blue: 0.7), lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(.horizontal)
+        .padding(.horizontal, 20)
     }
     
     private func textSizeButton(for size: TextSize) -> some View {

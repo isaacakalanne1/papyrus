@@ -24,6 +24,7 @@ let package = Package(
         .package(name: "Settings", path: "../Settings"),
         .package(name: "Subscription", path: "../Subscription"),
         .package(name: "SDIconsKit", path: "../SDIconsKit"),
+        .package(name: "PapyrusStyleKit", path: "../PapyrusStyleKit"),
         .package(url: "https://github.com/isaacakalanne1/reduxkit.git", from: "1.0.1")
     ],
     targets: [
@@ -36,6 +37,7 @@ let package = Package(
                 "Settings",
                 "Subscription",
                 "SDIconsKit",
+                "PapyrusStyleKit",
                 .product(name: "ReduxKit", package: "reduxkit")
             ]
         ),
