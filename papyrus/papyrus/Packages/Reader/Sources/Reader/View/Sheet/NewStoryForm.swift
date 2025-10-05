@@ -46,8 +46,7 @@ struct NewStoryForm: View {
                 label: "Main Character",
                 placeholder: "E.g, Sherlock Holmes",
                 text: mainCharacter,
-                focusedField: $focusedField,
-                fieldValue: .mainCharacter
+                focusedField: $focusedField
             ) {
                 focusedField = .settingDetails
             }
@@ -56,8 +55,7 @@ struct NewStoryForm: View {
                 label: "Setting & Details",
                 placeholder: "E.g, Living in Los Angeles, has famous superheroes as clients",
                 text: settingDetails,
-                focusedField: $focusedField,
-                fieldValue: .settingDetails
+                focusedField: $focusedField
             ) {
                 focusedField = nil
             }
