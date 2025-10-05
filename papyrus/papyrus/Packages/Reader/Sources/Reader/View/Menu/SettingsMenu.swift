@@ -1,5 +1,5 @@
 //
-//  SettingsPanel.swift
+//  SettingsMenu.swift
 //  Reader
 //
 //  Created by Isaac Akalanne on 04/10/2025.
@@ -8,7 +8,7 @@
 import SwiftUI
 import Settings
 
-struct SettingsPanel: View {
+struct SettingsMenu: View {
     @EnvironmentObject var store: ReaderStore
     let isOpen: Bool
     let dragOffset: CGFloat
