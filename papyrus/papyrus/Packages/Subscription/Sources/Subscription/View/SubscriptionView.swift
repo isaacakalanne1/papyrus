@@ -92,7 +92,7 @@ public struct SubscriptionView: View {
                     .fill(PapyrusColor.backgroundSecondary.color.opacity(0.6))
                     .overlay(
                         RoundedRectangle(cornerRadius: 16)
-                            .stroke(PapyrusColor.border.color, lineWidth: 1)
+                            .stroke(PapyrusColor.borderPrimary.color, lineWidth: 1)
                     )
             )
             

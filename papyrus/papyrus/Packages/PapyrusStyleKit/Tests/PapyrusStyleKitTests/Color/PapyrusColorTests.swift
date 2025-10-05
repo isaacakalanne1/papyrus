@@ -18,7 +18,8 @@ class PapyrusColorTests {
         (PapyrusColor.backgroundSecondary, 0.96, 0.92, 0.84),
         (PapyrusColor.buttonGradientTop, 0.45, 0.40, 0.35),
         (PapyrusColor.buttonGradientBottom, 0.35, 0.30, 0.25),
-        (PapyrusColor.border, 0.35, 0.30, 0.25),
+        (PapyrusColor.borderPrimary, 0.35, 0.30, 0.25),
+        (PapyrusColor.borderSecondary, 0.8, 0.75, 0.7),
         (PapyrusColor.accent, 0.8, 0.65, 0.4),
         (PapyrusColor.textPrimary, 0.3, 0.25, 0.2),
         (PapyrusColor.textSecondary, 0.5, 0.45, 0.4),
@@ -47,7 +48,7 @@ class PapyrusColorTests {
     @Test
     func papyrusColor_borderAndButtonGradientBottomConsistency() {
         // Verify that border and buttonGradientBottom use the same color values
-        let borderColor = PapyrusColor.border.color
+        let borderColor = PapyrusColor.borderPrimary.color
         let buttonBottomColor = PapyrusColor.buttonGradientBottom.color
         
         let borderDescription = String(describing: borderColor)
@@ -151,7 +152,8 @@ class PapyrusColorTests {
             (.backgroundSecondary, 0.96, 0.92, 0.84),
             (.buttonGradientTop, 0.45, 0.40, 0.35),
             (.buttonGradientBottom, 0.35, 0.30, 0.25),
-            (.border, 0.35, 0.30, 0.25),
+            (.borderPrimary, 0.35, 0.30, 0.25),
+            (.borderSecondary, 0.8, 0.75, 0.7),
             (.accent, 0.8, 0.65, 0.4),
             (.textPrimary, 0.3, 0.25, 0.2),
             (.textSecondary, 0.5, 0.45, 0.4),

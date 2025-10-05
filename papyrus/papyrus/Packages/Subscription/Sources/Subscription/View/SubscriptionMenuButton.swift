@@ -44,7 +44,7 @@ public struct SubscriptionMenuButton: View {
                     .frame(maxWidth: .infinity)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(PapyrusColor.border.color, lineWidth: 1)
+                            .stroke(PapyrusColor.borderSecondary.color, lineWidth: 1)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
                                     .fill(PapyrusColor.backgroundSecondary.color.opacity(0.3))

@@ -15,7 +15,8 @@ public enum PapyrusColor: Sendable {
     case buttonGradientBottom
     
     /// Border
-    case border
+    case borderPrimary
+    case borderSecondary
     
     /// Accent
     case accent
@@ -40,8 +41,10 @@ public enum PapyrusColor: Sendable {
         case .buttonGradientTop:
             Color(red: 0.45, green: 0.40, blue: 0.35)
         case .buttonGradientBottom,
-                .border:
+                .borderPrimary:
             Color(red: 0.35, green: 0.30, blue: 0.25)
+        case .borderSecondary:
+            Color(red: 0.8, green: 0.75, blue: 0.7)
         case .accent:
             Color(red: 0.8, green: 0.65, blue: 0.4)
         case .textPrimary:
