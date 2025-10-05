@@ -7,6 +7,7 @@
 
 import SwiftUI
 import TextGeneration
+import PapyrusStyleKit
 
 struct ChapterNavigationView: View {
     @EnvironmentObject var store: ReaderStore
@@ -27,7 +28,7 @@ struct ChapterNavigationView: View {
             // Chapter Indicator
             Text("Chapter \(story.chapterIndex + 1) of \(story.maxNumberOfChapters > 0 ? story.maxNumberOfChapters : story.chapters.count)")
                 .font(.custom("Georgia", size: 12))
-                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                .foregroundColor(PapyrusColor.textSecondary.color)
                 .frame(maxWidth: 200)
             
             // Next Chapter Button

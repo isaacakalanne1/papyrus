@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PapyrusStyleKit
 
 enum MenuButtonType {
     case menu

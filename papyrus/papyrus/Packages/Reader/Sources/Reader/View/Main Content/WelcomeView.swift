@@ -7,6 +7,7 @@
 
 import SwiftUI
 import SDIconsKit
+import PapyrusStyleKit
 
 struct WelcomeView: View {
     @EnvironmentObject var store: ReaderStore

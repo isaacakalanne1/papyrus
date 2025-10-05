@@ -53,7 +53,7 @@ struct StoryMenu: View {
                                         if !story.chapters.isEmpty {
                                             Text("\(story.chapters.count) chapter\(story.chapters.count == 1 ? "" : "s")")
                                                 .font(.custom("Georgia", size: 12))
-                                                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                                                .foregroundColor(PapyrusColor.textSecondary.color)
                                         }
                                     }
                                     

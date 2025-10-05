@@ -71,7 +71,7 @@ struct ChapterWritingLoadingView: View {
                         Text(currentQuote)
                             .font(.custom("Georgia", size: 13))
                             .italic()
-                            .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                            .foregroundColor(PapyrusColor.textSecondary.color)
                             .transition(.opacity.combined(with: .move(edge: .bottom)))
                     }
                 }
@@ -139,7 +139,7 @@ struct ChapterWritingLoadingView: View {
             Spacer()
             Text("Chapter 5 of 12")
                 .font(.custom("Georgia", size: 14))
-                .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                .foregroundColor(PapyrusColor.textSecondary.color)
             Spacer()
             Image(systemName: "gearshape")
                 .font(.system(size: 20))

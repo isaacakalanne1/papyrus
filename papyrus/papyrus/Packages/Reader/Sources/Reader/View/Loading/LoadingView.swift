@@ -187,7 +187,7 @@ struct LoadingView: View {
                 Text("Crafting your unique story foundation")
                     .font(.custom("Georgia", size: 13))
                     .italic()
-                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                    .foregroundColor(PapyrusColor.textSecondary.color)
                 
                 Spacer()
             }
@@ -247,7 +247,7 @@ struct LoadingView: View {
                 Text("Your story continues to unfold...")
                     .font(.custom("Georgia", size: 13))
                     .italic()
-                    .foregroundColor(Color(red: 0.5, green: 0.45, blue: 0.4))
+                    .foregroundColor(PapyrusColor.textSecondary.color)
                 
                 Spacer()
             }
