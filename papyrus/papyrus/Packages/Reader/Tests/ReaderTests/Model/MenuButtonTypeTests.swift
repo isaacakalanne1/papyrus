@@ -50,8 +50,8 @@ struct MenuButtonTypeTests {
     
     @Test("Menu button colors should be correct")
     func menuButtonColor() {
-        let expectedCloseColor = Color(red: 0.6, green: 0.5, blue: 0.4)
-        let expectedDefaultColor = Color(red: 0.4, green: 0.35, blue: 0.3)
+        let expectedCloseColor = PapyrusColor.iconPrimary.color
+        let expectedDefaultColor = PapyrusColor.iconSecondary.color
         
         #expect(MenuButtonType.close.color == expectedCloseColor)
         #expect(MenuButtonType.menu.color == expectedDefaultColor)

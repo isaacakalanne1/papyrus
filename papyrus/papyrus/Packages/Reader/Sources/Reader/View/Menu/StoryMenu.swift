@@ -42,7 +42,7 @@ struct StoryMenu: View {
                                 HStack {
                                     Image(systemName: "book.closed")
                                         .font(.system(size: 16))
-                                        .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                                        .foregroundColor(PapyrusColor.iconPrimary.color)
                                     
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(story.title.isEmpty ? "Untitled Story" : story.title)
@@ -64,13 +64,13 @@ struct StoryMenu: View {
                                     }) {
                                         Image(systemName: "info.circle")
                                             .font(.system(size: 20))
-                                            .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                                            .foregroundColor(PapyrusColor.iconPrimary.color)
                                     }
                                     .buttonStyle(PlainButtonStyle())
                                 }
                             }
                             .listRowBackground(
-                                Color(red: 0.6, green: 0.5, blue: 0.4)
+                                PapyrusColor.iconPrimary.color
                                     .opacity(story.id == store.state.story?.id ? 0.15 : 0)
                             )
                             .swipeActions(edge: .trailing, allowsFullSwipe: false) {
@@ -89,7 +89,7 @@ struct StoryMenu: View {
                         Spacer()
                         Text("No saved stories yet")
                             .font(.custom("Georgia", size: 16))
-                            .foregroundColor(Color(red: 0.6, green: 0.5, blue: 0.4))
+                            .foregroundColor(PapyrusColor.iconPrimary.color)
                         Spacer()
                     }
                     .padding()

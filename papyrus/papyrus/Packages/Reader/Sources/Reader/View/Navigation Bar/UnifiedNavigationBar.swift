@@ -49,7 +49,7 @@ struct UnifiedNavigationBar: View {
             .background(PapyrusColor.background.color.opacity(0.95))
             
             Divider()
-                .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.3))
+                .background(PapyrusColor.iconPrimary.color.opacity(0.3))
         }
     }
 }

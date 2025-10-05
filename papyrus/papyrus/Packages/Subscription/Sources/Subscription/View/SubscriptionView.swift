@@ -50,7 +50,7 @@ public struct SubscriptionView: View {
                 .foregroundColor(PapyrusColor.textPrimary.color)
             
             Divider()
-                .background(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.5))
+                .background(PapyrusColor.iconPrimary.color.opacity(0.5))
         }
         .padding(.horizontal, 20)
         .padding(.top, 20)

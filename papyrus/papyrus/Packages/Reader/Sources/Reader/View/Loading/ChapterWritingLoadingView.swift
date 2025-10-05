@@ -95,7 +95,7 @@ struct ChapterWritingLoadingView: View {
                 )
                 .overlay(
                     Rectangle()
-                        .stroke(Color(red: 0.6, green: 0.5, blue: 0.4).opacity(0.1), lineWidth: 0.5)
+                        .stroke(PapyrusColor.iconPrimary.color.opacity(0.1), lineWidth: 0.5)
                         .blur(radius: 0.5)
                 )
         )
@@ -134,7 +134,7 @@ struct ChapterWritingLoadingView: View {
         HStack {
             Image(systemName: "text.alignleft")
                 .font(.system(size: 20))
-                .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                .foregroundColor(PapyrusColor.iconSecondary.color)
                 .padding()
             Spacer()
             Text("Chapter 5 of 12")
@@ -143,7 +143,7 @@ struct ChapterWritingLoadingView: View {
             Spacer()
             Image(systemName: "gearshape")
                 .font(.system(size: 20))
-                .foregroundColor(Color(red: 0.4, green: 0.35, blue: 0.3))
+                .foregroundColor(PapyrusColor.iconSecondary.color)
                 .padding()
         }
         .background(PapyrusColor.background.color.opacity(0.95))
