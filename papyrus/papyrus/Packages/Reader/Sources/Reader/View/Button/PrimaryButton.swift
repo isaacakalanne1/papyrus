@@ -97,8 +97,8 @@ struct PrimaryButton: View {
                     .fill(
                         LinearGradient(
                             gradient: Gradient(colors: [
-                                Color(red: 0.45, green: 0.40, blue: 0.35),
-                                Color(red: 0.35, green: 0.30, blue: 0.25)
+                                PapyrusColor.buttonGradientTop.color,
+                                PapyrusColor.buttonGradientBottom.color
                             ]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing

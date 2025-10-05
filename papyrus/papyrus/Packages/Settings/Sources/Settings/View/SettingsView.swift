@@ -39,7 +39,7 @@ public struct SettingsView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(Color(red: 0.8, green: 0.75, blue: 0.7), lineWidth: 1)
+                .stroke(PapyrusColor.border.color, lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal, 20)
@@ -52,14 +52,14 @@ public struct SettingsView: View {
             Text("A")
                 .font(.custom("Georgia", size: size.fontSize * size.iconScale))
                 .foregroundColor(size == selectedTextSize ? 
-                    Color(red: 0.8, green: 0.65, blue: 0.4) : 
+                    PapyrusColor.accent.color : 
                     PapyrusColor.textSecondary.color)
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
                 .background(
                     Group {
                         if size == selectedTextSize {
-                            Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.8)
+                            PapyrusColor.backgroundSecondary.color.opacity(0.8)
                         } else {
                             Color.clear
                         }

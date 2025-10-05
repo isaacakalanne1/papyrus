@@ -27,7 +27,7 @@ public struct SubscriptionMenuButton: View {
                     HStack {
                         Image(systemName: "crown.fill")
                             .font(.system(size: 18))
-                            .foregroundColor(Color(red: 0.8, green: 0.65, blue: 0.4))
+                            .foregroundColor(PapyrusColor.accent.color)
                         
                         Text("Premium")
                             .font(.custom("Georgia", size: 18))
@@ -44,10 +44,10 @@ public struct SubscriptionMenuButton: View {
                     .frame(maxWidth: .infinity)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color(red: 0.8, green: 0.75, blue: 0.7), lineWidth: 1)
+                            .stroke(PapyrusColor.border.color, lineWidth: 1)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color(red: 0.96, green: 0.92, blue: 0.84).opacity(0.3))
+                                    .fill(PapyrusColor.backgroundSecondary.color.opacity(0.3))
                             )
                     )
                     .padding(.horizontal)
