@@ -6,7 +6,6 @@ struct FormFieldView: View {
     let placeholder: String
     @Binding var text: String
     let focusedField: FocusState<ReaderView.Field?>.Binding
-    let fieldValue: ReaderView.Field
     let onSubmit: (() -> Void)?
     
     init(
@@ -14,14 +13,12 @@ struct FormFieldView: View {
         placeholder: String,
         text: Binding<String>,
         focusedField: FocusState<ReaderView.Field?>.Binding,
-        fieldValue: ReaderView.Field,
         onSubmit: (() -> Void)? = nil
     ) {
         self.label = label
         self.placeholder = placeholder
         self._text = text
         self.focusedField = focusedField
-        self.fieldValue = fieldValue
         self.onSubmit = onSubmit
     }
     

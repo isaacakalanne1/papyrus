@@ -11,7 +11,6 @@ import PapyrusStyleKit
 
 struct WelcomeView: View {
     @EnvironmentObject var store: ReaderStore
-    @FocusState.Binding var focusedField: ReaderView.Field?
     @Binding var isSequelMode: Bool
     
     var body: some View {
@@ -38,6 +37,5 @@ struct WelcomeView: View {
             }
             .padding(.horizontal, 20)
         }
-        .animation(.easeInOut(duration: 0.3), value: focusedField)
     }
 }

@@ -385,6 +385,28 @@ class ReaderMiddlewareTests {
         
         #expect(environment.saveStoryCalled)
         #expect(environment.saveStoryCalledWith?.id == story.id)
+        #expect(!environment.loadStoryWithIdCalled) // No prequel IDs, so loadStory should not be called
+        #expect(environment.loadStoryWithIdCalledWith == nil)
+        #expect(result == nil)
+    }
+    
+    @Test
+    func saveStory_withSinglePrequelId_loadsPrequelStory() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        
+        let prequelId = UUID()
+        let story = Story(
+            prequelIds: [prequelId], title: "Test Story"
+        )
+        
+        environment.loadStoryWithIdReturnValue = nil
+        
+        let result = await readerMiddleware(state, .saveStory(story), environment)
+        
+        #expect(environment.saveStoryCalled)
+        #expect(environment.loadStoryWithIdCalled)
+        #expect(environment.loadStoryWithIdCalledWith == prequelId)
         #expect(result == nil)
     }
     
@@ -409,6 +431,9 @@ class ReaderMiddlewareTests {
         #expect(environment.saveStoryCalled)
         #expect(environment.saveStoryCallCount >= 1) // At least the main story
         #expect(environment.loadStoryWithIdCalled)
+        // Note: loadStoryWithIdCalledWith will contain the last prequel ID called (prequelId2)
+        // since the middleware loops through prequelIds and the mock only tracks the last call
+        #expect(environment.loadStoryWithIdCalledWith == prequelId2)
         #expect(result == nil)
     }
     

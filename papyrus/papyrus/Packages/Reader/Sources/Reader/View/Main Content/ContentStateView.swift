@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import TextGeneration
 
 struct ContentStateView: View {
     @EnvironmentObject var store: ReaderStore
@@ -21,7 +20,6 @@ struct ContentStateView: View {
         switch store.state.contentState {
         case .welcome:
             WelcomeView(
-                focusedField: $focusedField,
                 isSequelMode: $isSequelMode
             )
         case .story(let story):
