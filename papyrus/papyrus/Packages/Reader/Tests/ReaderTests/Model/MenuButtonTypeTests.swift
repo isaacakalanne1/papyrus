@@ -7,6 +7,7 @@
 
 import Testing
 import SwiftUI
+import PapyrusStyleKit
 @testable import Reader
 
 @Suite("MenuButtonType Tests")

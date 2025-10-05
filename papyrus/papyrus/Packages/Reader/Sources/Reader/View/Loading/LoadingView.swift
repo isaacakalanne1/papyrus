@@ -128,7 +128,7 @@ struct LoadingView: View {
                     
                     Image(systemName: "book.pages")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(PapyrusColor.buttonGradientBottom.color)
+                        .foregroundColor(PapyrusColor.border.color)
                 }
                 .onAppear {
                     withAnimation(

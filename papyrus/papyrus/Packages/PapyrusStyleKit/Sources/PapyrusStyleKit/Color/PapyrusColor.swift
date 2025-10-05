@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public enum PapyrusColor {
+public enum PapyrusColor: Sendable {
     /// Background
     case background
     case backgroundSecondary
@@ -39,9 +39,8 @@ public enum PapyrusColor {
             Color(red: 0.96, green: 0.92, blue: 0.84)
         case .buttonGradientTop:
             Color(red: 0.45, green: 0.40, blue: 0.35)
-        case .buttonGradientBottom:
-            Color(red: 0.35, green: 0.30, blue: 0.25)
-        case .border:
+        case .buttonGradientBottom,
+                .border:
             Color(red: 0.35, green: 0.30, blue: 0.25)
         case .accent:
             Color(red: 0.8, green: 0.65, blue: 0.4)
