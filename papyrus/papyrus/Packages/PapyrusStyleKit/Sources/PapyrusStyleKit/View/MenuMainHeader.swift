@@ -20,7 +20,7 @@ public struct MenuMainHeader: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.custom("Georgia", size: 24))
-                .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                .foregroundColor(PapyrusColor.textPrimary.color)
             
             if showDivider {
                 Divider()

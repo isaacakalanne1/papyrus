@@ -34,7 +34,7 @@ struct StoryDetailsPopup: View {
             HStack {
                 Text("Story Details")
                     .font(.custom("Georgia", size: 20))
-                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                    .foregroundColor(PapyrusColor.textPrimary.color)
                 
                 Spacer()
                 
@@ -79,7 +79,7 @@ struct StoryDetailsPopup: View {
                     ScrollView {
                         Text(story.title.isEmpty ? "Untitled Story" : story.title)
                             .font(.custom("Georgia", size: 16))
-                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                            .foregroundColor(PapyrusColor.textPrimary.color)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(12)
                             .id("titleText")
@@ -129,7 +129,7 @@ struct StoryDetailsPopup: View {
                     ScrollView {
                         Text(story.mainCharacter.isEmpty ? "Not specified" : story.mainCharacter)
                             .font(.custom("Georgia", size: 16))
-                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                            .foregroundColor(PapyrusColor.textPrimary.color)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(12)
                             .id("mainCharacterText")
@@ -179,7 +179,7 @@ struct StoryDetailsPopup: View {
                     ScrollView {
                         Text(story.setting.isEmpty ? "Not specified" : story.setting)
                             .font(.custom("Georgia", size: 16))
-                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                            .foregroundColor(PapyrusColor.textPrimary.color)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(12)
                             .id("settingText")

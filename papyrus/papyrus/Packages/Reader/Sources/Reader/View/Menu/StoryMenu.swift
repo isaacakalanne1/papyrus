@@ -47,7 +47,7 @@ struct StoryMenu: View {
                                     VStack(alignment: .leading, spacing: 2) {
                                         Text(story.title.isEmpty ? "Untitled Story" : story.title)
                                             .font(.custom("Georgia", size: 16))
-                                            .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                                            .foregroundColor(PapyrusColor.textPrimary.color)
                                             .lineLimit(1)
                                         
                                         if !story.chapters.isEmpty {

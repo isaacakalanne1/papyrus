@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import PapyrusStyleKit
 
 struct NewStoryForm: View {
     @EnvironmentObject var store: ReaderStore
@@ -30,7 +31,7 @@ struct NewStoryForm: View {
             HStack {
                 Text(isSequelMode ? "Create Sequel" : "New Story")
                     .font(.custom("Georgia", size: 20))
-                    .foregroundColor(Color(red: 0.3, green: 0.25, blue: 0.2))
+                    .foregroundColor(PapyrusColor.textPrimary.color)
                 
                 Spacer()
                 
