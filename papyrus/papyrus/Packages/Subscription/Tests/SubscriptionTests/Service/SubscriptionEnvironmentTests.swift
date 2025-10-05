@@ -20,8 +20,6 @@ class SubscriptionEnvironmentTests {
     private var mockRepository: MockSubscriptionRepository!
     private var mockSettingsEnvironment: MockSettingsEnvironment!
     private var subscriptionEnvironment: SubscriptionEnvironment!
-    private var mockProduct: Product!
-    private var mockTransaction: Transaction!
     
     // MARK: - Setup
     
@@ -32,11 +30,6 @@ class SubscriptionEnvironmentTests {
             repository: mockRepository,
             settingsEnvironment: mockSettingsEnvironment
         )
-        
-        // For unit tests, we don't need StoreKit sessions since we're mocking the repository layer
-        
-        // For transaction, we'll still use nil since we're mocking the repository layer
-        mockTransaction = nil
     }
     
     // MARK: - fetchSubscriptionProduct Tests

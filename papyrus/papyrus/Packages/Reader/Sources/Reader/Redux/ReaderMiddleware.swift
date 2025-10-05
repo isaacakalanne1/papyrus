@@ -7,7 +7,6 @@
 
 import Foundation
 import ReduxKit
-import Settings
 
 @MainActor
 let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentProtocol> = { state, action, environment in

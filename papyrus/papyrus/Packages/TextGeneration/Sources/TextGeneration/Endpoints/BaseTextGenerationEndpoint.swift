@@ -1,5 +1,4 @@
 import Foundation
-import SDNetworkCore
 
 struct OpenRouterMessage: Encodable {
     let role: String

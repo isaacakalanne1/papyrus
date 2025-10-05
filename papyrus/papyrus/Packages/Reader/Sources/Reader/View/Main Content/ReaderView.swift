@@ -7,7 +7,6 @@
 
 import SwiftUI
 import UIKit
-import Settings
 import Subscription
 import PapyrusStyleKit
 
@@ -17,10 +16,7 @@ struct ReaderView: View {
     @State private var isSettingsOpen: Bool = false
     @State private var settingsDragOffset: CGFloat = 0
     @State private var dragOffset: CGFloat = 0
-    @State private var mainCharacter: String = ""
-    @State private var settingDetails: String = ""
     @FocusState private var focusedField: Field?
-    @State private var keyboardHeight: CGFloat = 0
     @State private var isSequelMode: Bool = false
     @State private var currentScrollOffset: CGFloat = 0
     @State private var scrollOffsetTimer: Timer?
