@@ -73,41 +73,19 @@ struct ReaderView: View {
                 )
                 .scrollBounceBehavior(.basedOnSize)
                 .animation(.easeInOut(duration: 0.4), value: store.state.isLoading)
+                .menuGestures(
+                    isMenuOpen: $isMenuOpen,
+                    isSettingsOpen: $isSettingsOpen,
+                    dragOffset: $dragOffset,
+                    settingsDragOffset: $settingsDragOffset,
+                    includeBackgroundGestures: true
+                )
                 
                 UnifiedNavigationBar(
                     isMenuOpen: $isMenuOpen,
                     isSettingsOpen: $isSettingsOpen
                 )
             }
-            .gesture(
-                DragGesture()
-                    .onChanged { value in
-                        // Handle left edge swipe for menu
-                        if !isMenuOpen && !isSettingsOpen && value.startLocation.x < 20 && value.translation.width > 0 {
-                            dragOffset = min(value.translation.width, 280)
-                        }
-                        // Handle right edge swipe for settings
-                        else if !isMenuOpen && !isSettingsOpen && value.startLocation.x > UIScreen.main.bounds.width - 20 && value.translation.width < 0 {
-                            settingsDragOffset = max(value.translation.width, -320)
-                        }
-                    }
-                    .onEnded { value in
-                        // Open menu if dragged enough from left
-                        if !isMenuOpen && dragOffset > 100 {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                isMenuOpen = true
-                            }
-                        }
-                        // Open settings if dragged enough from right
-                        else if !isSettingsOpen && settingsDragOffset < -100 {
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                isSettingsOpen = true
-                            }
-                        }
-                        dragOffset = 0
-                        settingsDragOffset = 0
-                    }
-            )
             
             // Modal overlay for both menu and settings
             ModalOverlay(
