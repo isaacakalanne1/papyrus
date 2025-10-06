@@ -28,9 +28,9 @@ struct SettingsMenu: View {
                 })
                 Spacer()
             }
-            .frame(width: 320)
+            .frame(width: 280)
             .background(PapyrusColor.background.color)
-            .offset(x: isOpen ? max(0, dragOffset) : 320 + dragOffset)
+            .offset(x: isOpen ? max(0, dragOffset) : 280 + dragOffset)
             .animation(.easeInOut(duration: 0.3), value: isOpen)
         }
     }

@@ -63,5 +63,4 @@ public struct SubscriptionMenuButton: View {
     SubscriptionMenuButton(action: {
         print("Premium button tapped")
     })
-    .frame(width: 320)
 }
