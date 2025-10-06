@@ -30,7 +30,7 @@ struct SettingsMenu: View {
             }
             .frame(width: 320)
             .background(PapyrusColor.background.color)
-            .offset(x: isOpen ? 0 : 320 + dragOffset)
+            .offset(x: isOpen ? max(0, dragOffset) : 320 + dragOffset)
             .animation(.easeInOut(duration: 0.3), value: isOpen)
         }
     }
