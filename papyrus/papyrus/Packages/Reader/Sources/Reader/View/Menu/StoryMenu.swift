@@ -73,7 +73,7 @@ struct StoryMenu: View {
                     endPoint: .bottomTrailing
                 )
             )
-            .offset(x: isMenuOpen ? 0 : -280 + dragOffset)
+            .offset(x: isMenuOpen ? min(0, dragOffset) : -280 + dragOffset)
             
             Spacer()
         }

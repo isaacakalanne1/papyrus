@@ -83,23 +83,23 @@ struct ReaderView: View {
                 DragGesture()
                     .onChanged { value in
                         // Handle left edge swipe for menu
-                        if value.startLocation.x < 20 && value.translation.width > 0 {
+                        if !isMenuOpen && !isSettingsOpen && value.startLocation.x < 20 && value.translation.width > 0 {
                             dragOffset = min(value.translation.width, 280)
                         }
                         // Handle right edge swipe for settings
-                        else if value.startLocation.x > UIScreen.main.bounds.width - 20 && value.translation.width < 0 {
+                        else if !isMenuOpen && !isSettingsOpen && value.startLocation.x > UIScreen.main.bounds.width - 20 && value.translation.width < 0 {
                             settingsDragOffset = max(value.translation.width, -320)
                         }
                     }
                     .onEnded { value in
                         // Open menu if dragged enough from left
-                        if dragOffset > 100 {
+                        if !isMenuOpen && dragOffset > 100 {
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 isMenuOpen = true
                             }
                         }
                         // Open settings if dragged enough from right
-                        else if settingsDragOffset < -100 {
+                        else if !isSettingsOpen && settingsDragOffset < -100 {
                             withAnimation(.easeInOut(duration: 0.3)) {
                                 isSettingsOpen = true
                             }
@@ -110,10 +110,43 @@ struct ReaderView: View {
             )
             
             // Modal overlay for both menu and settings
-            ModalOverlay(isPresented: isMenuOpen || isSettingsOpen) {
-                isMenuOpen = false
-                isSettingsOpen = false
-            }
+            ModalOverlay(
+                isPresented: isMenuOpen || isSettingsOpen,
+                opacity: calculateOverlayOpacity(),
+                onDismiss: {
+                    isMenuOpen = false
+                    isSettingsOpen = false
+                },
+                onDrag: { value in
+                    // Handle menu closing gesture
+                    if isMenuOpen && value.translation.width < 0 {
+                        dragOffset = max(value.translation.width, -280)
+                    }
+                    // Handle settings closing gesture
+                    else if isSettingsOpen && value.translation.width > 0 {
+                        settingsDragOffset = min(value.translation.width, 320)
+                    }
+                },
+                onDragEnded: { value in
+                    // Close menu if dragged enough to the left
+                    if isMenuOpen && dragOffset < -100 {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            isMenuOpen = false
+                        }
+                    }
+                    // Close settings if dragged enough to the right
+                    else if isSettingsOpen && settingsDragOffset > 100 {
+                        withAnimation(.easeInOut(duration: 0.3)) {
+                            isSettingsOpen = false
+                        }
+                    }
+                    // Reset offsets
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        dragOffset = 0
+                        settingsDragOffset = 0
+                    }
+                }
+            )
             
             // Side menu
             StoryMenu(
@@ -156,6 +189,38 @@ struct ReaderView: View {
                 }
             }
         }
+    }
+    
+    private func calculateOverlayOpacity() -> Double {
+        var opacity: Double = 0
+        
+        // Calculate opacity for menu
+        if isMenuOpen {
+            // When closing menu (dragging left)
+            if dragOffset < 0 {
+                opacity = 0.3 * (1 + dragOffset / 280.0)
+            } else {
+                opacity = 0.3
+            }
+        } else if dragOffset > 0 {
+            // When opening menu (dragging right from left edge)
+            opacity = Double(dragOffset / 280.0) * 0.3
+        }
+        
+        // Calculate opacity for settings
+        if isSettingsOpen {
+            // When closing settings (dragging right)
+            if settingsDragOffset > 0 {
+                opacity = 0.3 * (1 - settingsDragOffset / 320.0)
+            } else {
+                opacity = 0.3
+            }
+        } else if settingsDragOffset < 0 {
+            // When opening settings (dragging left from right edge)
+            opacity = Double(abs(settingsDragOffset) / 320.0) * 0.3
+        }
+        
+        return max(0, min(opacity, 0.3))
     }
 }
 
