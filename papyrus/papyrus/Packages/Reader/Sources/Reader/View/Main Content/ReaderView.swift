@@ -77,8 +77,7 @@ struct ReaderView: View {
                     isMenuOpen: $isMenuOpen,
                     isSettingsOpen: $isSettingsOpen,
                     dragOffset: $dragOffset,
-                    settingsDragOffset: $settingsDragOffset,
-                    includeBackgroundGestures: true
+                    settingsDragOffset: $settingsDragOffset
                 )
                 
                 UnifiedNavigationBar(
@@ -94,36 +93,14 @@ struct ReaderView: View {
                 onDismiss: {
                     isMenuOpen = false
                     isSettingsOpen = false
-                },
-                onDrag: { value in
-                    // Handle menu closing gesture
-                    if isMenuOpen && value.translation.width < 0 {
-                        dragOffset = max(value.translation.width, -280)
-                    }
-                    // Handle settings closing gesture
-                    else if isSettingsOpen && value.translation.width > 0 {
-                        settingsDragOffset = min(value.translation.width, 320)
-                    }
-                },
-                onDragEnded: { value in
-                    // Close menu if dragged enough to the left
-                    if isMenuOpen && dragOffset < -100 {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            isMenuOpen = false
-                        }
-                    }
-                    // Close settings if dragged enough to the right
-                    else if isSettingsOpen && settingsDragOffset > 100 {
-                        withAnimation(.easeInOut(duration: 0.3)) {
-                            isSettingsOpen = false
-                        }
-                    }
-                    // Reset offsets
-                    withAnimation(.easeInOut(duration: 0.3)) {
-                        dragOffset = 0
-                        settingsDragOffset = 0
-                    }
                 }
+            )
+            .menuGestures(
+                isMenuOpen: $isMenuOpen,
+                isSettingsOpen: $isSettingsOpen,
+                dragOffset: $dragOffset,
+                settingsDragOffset: $settingsDragOffset,
+                isForClosing: true
             )
             
             // Side menu
@@ -189,13 +166,13 @@ struct ReaderView: View {
         if isSettingsOpen {
             // When closing settings (dragging right)
             if settingsDragOffset > 0 {
-                opacity = 0.3 * (1 - settingsDragOffset / 320.0)
+                opacity = 0.3 * (1 - settingsDragOffset / 280.0)
             } else {
                 opacity = 0.3
             }
         } else if settingsDragOffset < 0 {
             // When opening settings (dragging left from right edge)
-            opacity = Double(abs(settingsDragOffset) / 320.0) * 0.3
+            opacity = Double(abs(settingsDragOffset) / 280.0) * 0.3
         }
         
         return max(0, min(opacity, 0.3))

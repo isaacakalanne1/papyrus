@@ -19,7 +19,6 @@ public struct SettingsView: View {
                 textSizeSection
             }
         }
-        .frame(width: 320)
         .background(PapyrusColor.background.color)
     }
     

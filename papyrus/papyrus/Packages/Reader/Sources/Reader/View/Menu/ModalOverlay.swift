@@ -11,8 +11,6 @@ struct ModalOverlay: View {
     let isPresented: Bool
     let opacity: Double
     let onDismiss: () -> Void
-    let onDrag: (DragGesture.Value) -> Void
-    let onDragEnded: (DragGesture.Value) -> Void
     
     var body: some View {
         if isPresented || opacity > 0 {
@@ -23,11 +21,6 @@ struct ModalOverlay: View {
                         onDismiss()
                     }
                 }
-                .gesture(
-                    DragGesture()
-                        .onChanged(onDrag)
-                        .onEnded(onDragEnded)
-                )
                 .allowsHitTesting(opacity > 0.01)
         }
     }

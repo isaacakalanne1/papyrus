@@ -34,6 +34,5 @@ public struct MenuSubheader: View {
         MenuSectionDivider()
         MenuSubheader("Subscription")
     }
-    .frame(width: 320)
     .background(PapyrusColor.background.color)
 }
