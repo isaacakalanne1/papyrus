@@ -12,19 +12,10 @@ struct NewStoryForm: View {
     @EnvironmentObject var store: ReaderStore
     @FocusState.Binding var focusedField: ReaderView.Field?
     @Binding var isSequelMode: Bool
+    @State var mainCharacter: String = ""
+    @State var settingDetails: String = ""
     
     var body: some View {
-        let mainCharacter: Binding<String> = .init {
-            store.state.mainCharacter
-        } set: {
-            store.dispatch(.updateMainCharacter($0))
-        }
-        
-        let settingDetails: Binding<String> = .init {
-            store.state.setting
-        } set: {
-            store.dispatch(.updateSetting($0))
-        }
 
         VStack(spacing: 20) {
             // Header
@@ -45,7 +36,7 @@ struct NewStoryForm: View {
             FormFieldView(
                 label: "Main Character",
                 placeholder: "E.g, Sherlock Holmes",
-                text: mainCharacter,
+                text: $mainCharacter,
                 focusedField: $focusedField
             ) {
                 focusedField = .settingDetails
@@ -54,7 +45,7 @@ struct NewStoryForm: View {
             FormFieldView(
                 label: "Setting & Details",
                 placeholder: "E.g, Living in Los Angeles, has famous superheroes as clients",
-                text: settingDetails,
+                text: $settingDetails,
                 focusedField: $focusedField
             ) {
                 focusedField = nil
@@ -66,7 +57,7 @@ struct NewStoryForm: View {
             PrimaryButton(
                 type: isSequelMode ? .createSequel : .createStory,
                 size: .medium,
-                isDisabled: mainCharacter.wrappedValue.isEmpty || settingDetails.wrappedValue.isEmpty || store.state.isLoading
+                isDisabled: mainCharacter.isEmpty || settingDetails.isEmpty || store.state.isLoading
             ) {
                 if isSequelMode {
                     store.dispatch(.createSequel)
@@ -81,6 +72,12 @@ struct NewStoryForm: View {
         .contentShape(Rectangle())
         .onTapGesture {
             focusedField = nil
+        }
+        .onChange(of: mainCharacter) { oldValue, newValue in
+            store.dispatch(.updateMainCharacter(newValue))
+        }
+        .onChange(of: settingDetails) { oldValue, newValue in
+            store.dispatch(.updateSetting(newValue))
         }
     }
 }
