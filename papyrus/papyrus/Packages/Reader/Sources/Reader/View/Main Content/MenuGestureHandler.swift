@@ -56,28 +56,8 @@ struct MenuGestureHandler: ViewModifier {
     }
     
     private func handleDragChange(_ value: DragGesture.Value) {
-        if isForClosing {
-            // Handle menu closing gesture
-            if isMenuOpen && value.translation.width < 0 {
-                dragOffset = max(value.translation.width, -menuWidth)
-            }
-            // Handle settings closing gesture
-            else if isSettingsOpen && value.translation.width > 0 {
-                settingsDragOffset = min(value.translation.width, settingsWidth)
-            }
-        } else {
-            // Only process horizontal swipes (ignore vertical swipes)
-            if !isMenuOpen && !isSettingsOpen && abs(value.translation.height) < abs(value.translation.width) {
-                // Swipe right to open menu
-                if value.translation.width > 0 {
-                    dragOffset = min(value.translation.width, menuWidth)
-                }
-                // Swipe left to open settings
-                else if value.translation.width < 0 {
-                    settingsDragOffset = max(value.translation.width, -settingsWidth)
-                }
-            }
-        }
+        dragOffset = value.translation.width
+        print("offset is \(dragOffset)")
     }
     
     private func handleDragEnd(_ value: DragGesture.Value) {
@@ -89,7 +69,7 @@ struct MenuGestureHandler: ViewModifier {
                 }
             }
             // Close settings if dragged enough to the right
-            else if isSettingsOpen && settingsDragOffset > closeThreshold {
+            else if isSettingsOpen && dragOffset > closeThreshold {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     isSettingsOpen = false
                 }
@@ -102,7 +82,7 @@ struct MenuGestureHandler: ViewModifier {
                 }
             }
             // Open settings if dragged enough from right
-            else if !isSettingsOpen && settingsDragOffset < -openThreshold {
+            else if !isSettingsOpen && dragOffset < -openThreshold {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     isSettingsOpen = true
                 }
