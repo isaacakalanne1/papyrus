@@ -14,8 +14,6 @@ struct MenuGestureHandler: ViewModifier {
     // Configuration
     let openThreshold: CGFloat
     let closeThreshold: CGFloat
-    let menuWidth: CGFloat
-    let settingsWidth: CGFloat
     let isForClosing: Bool
     
     init(
@@ -23,16 +21,12 @@ struct MenuGestureHandler: ViewModifier {
         dragOffset: Binding<CGFloat>,
         openThreshold: CGFloat,
         closeThreshold: CGFloat,
-        menuWidth: CGFloat,
-        settingsWidth: CGFloat,
         isForClosing: Bool
     ) {
         self._menuStatus = menuStatus
         self._dragOffset = dragOffset
         self.openThreshold = openThreshold
         self.closeThreshold = closeThreshold
-        self.menuWidth = menuWidth
-        self.settingsWidth = settingsWidth
         self.isForClosing = isForClosing
     }
     
@@ -96,8 +90,6 @@ extension View {
         dragOffset: Binding<CGFloat>,
         openThreshold: CGFloat = 50,
         closeThreshold: CGFloat = 50,
-        menuWidth: CGFloat = 280,
-        settingsWidth: CGFloat = 280,
         isForClosing: Bool = false
     ) -> some View {
         self.modifier(
@@ -106,8 +98,6 @@ extension View {
                 dragOffset: dragOffset,
                 openThreshold: openThreshold,
                 closeThreshold: closeThreshold,
-                menuWidth: menuWidth,
-                settingsWidth: settingsWidth,
                 isForClosing: isForClosing
             )
         )
