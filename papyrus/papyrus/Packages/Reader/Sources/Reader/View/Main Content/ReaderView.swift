@@ -13,7 +13,6 @@ import PapyrusStyleKit
 struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
     @State private var menuStatus: MenuStatus = .closed
-    @State private var settingsDragOffset: CGFloat = 0
     @State private var dragOffset: CGFloat = 0
     @FocusState private var focusedField: Field?
     @State private var isSequelMode: Bool = false
@@ -80,8 +79,7 @@ struct ReaderView: View {
                 .animation(.easeInOut(duration: 0.4), value: store.state.isLoading)
                 .menuGestures(
                     menuStatus: $menuStatus,
-                    dragOffset: $dragOffset,
-                    settingsDragOffset: $settingsDragOffset
+                    dragOffset: $dragOffset
                 )
                 
                 UnifiedNavigationBar(
@@ -101,7 +99,6 @@ struct ReaderView: View {
             .menuGestures(
                 menuStatus: $menuStatus,
                 dragOffset: $dragOffset,
-                settingsDragOffset: $settingsDragOffset,
                 isForClosing: true
             )
             
