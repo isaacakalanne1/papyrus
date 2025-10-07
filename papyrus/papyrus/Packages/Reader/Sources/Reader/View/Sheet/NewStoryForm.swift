@@ -57,7 +57,8 @@ struct NewStoryForm: View {
             PrimaryButton(
                 type: isSequelMode ? .createSequel : .createStory,
                 size: .medium,
-                isDisabled: mainCharacter.isEmpty || settingDetails.isEmpty || store.state.isLoading
+                isDisabled: mainCharacter.isEmpty || settingDetails.isEmpty,
+                isLoading: store.state.isLoading
             ) {
                 if isSequelMode {
                     store.dispatch(.createSequel)

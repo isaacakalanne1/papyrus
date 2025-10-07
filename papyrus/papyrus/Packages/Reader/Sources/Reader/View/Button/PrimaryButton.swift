@@ -66,28 +66,40 @@ struct PrimaryButton: View {
     let type: PrimaryButtonType
     let size: PrimaryButtonSize
     let isDisabled: Bool
+    let isLoading: Bool
     let action: () -> Void
     
     init(
         type: PrimaryButtonType,
         size: PrimaryButtonSize = .large,
         isDisabled: Bool = false,
+        isLoading: Bool = false,
         action: @escaping () -> Void
     ) {
         self.type = type
         self.size = size
         self.isDisabled = isDisabled
+        self.isLoading = isLoading
         self.action = action
     }
     
     var body: some View {
         Button(action: action) {
-            HStack(spacing: 12) {
-                Image(systemName: type.icon)
-                    .font(.system(size: size.iconSize))
-                Text(type.title)
-                    .font(.custom("Georgia", size: size.fontSize))
-                    .fontWeight(.medium)
+            ZStack {
+                HStack(spacing: 12) {
+                    Image(systemName: type.icon)
+                        .font(.system(size: size.iconSize))
+                    Text(type.title)
+                        .font(.custom("Georgia", size: size.fontSize))
+                        .fontWeight(.medium)
+                }
+                .opacity(isLoading ? 0 : 1)
+                
+                if isLoading {
+                    ProgressView()
+                        .progressViewStyle(CircularProgressViewStyle(tint: PapyrusColor.background.color))
+                        .scaleEffect(size == .large ? 1.0 : 0.9)
+                }
             }
             .foregroundColor(PapyrusColor.background.color)
             .padding(.horizontal, size.horizontalPadding)
@@ -104,7 +116,7 @@ struct PrimaryButton: View {
                             endPoint: .bottomTrailing
                         )
                     )
-                    .opacity(isDisabled ? 0.6 : 1.0)
+                    .opacity(isDisabled || isLoading ? 0.6 : 1.0)
                     .shadow(
                         color: Color.black.opacity(0.2),
                         radius: size.shadowRadius,
@@ -113,8 +125,8 @@ struct PrimaryButton: View {
                     )
             )
         }
-        .disabled(isDisabled)
-        .scaleEffect(isDisabled ? 0.98 : 1.0)
-        .animation(.easeInOut(duration: 0.15), value: isDisabled)
+        .disabled(isDisabled || isLoading)
+        .scaleEffect(isDisabled || isLoading ? 0.98 : 1.0)
+        .animation(.easeInOut(duration: 0.15), value: isDisabled || isLoading)
     }
 }
