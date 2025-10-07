@@ -10,7 +10,6 @@ import SwiftUI
 struct MenuGestureHandler: ViewModifier {
     @Binding var menuStatus: ReaderView.MenuStatus
     @Binding var dragOffset: CGFloat
-    @Binding var settingsDragOffset: CGFloat
     
     // Configuration
     let openThreshold: CGFloat
@@ -22,7 +21,6 @@ struct MenuGestureHandler: ViewModifier {
     init(
         menuStatus: Binding<ReaderView.MenuStatus>,
         dragOffset: Binding<CGFloat>,
-        settingsDragOffset: Binding<CGFloat>,
         openThreshold: CGFloat,
         closeThreshold: CGFloat,
         menuWidth: CGFloat,
@@ -31,7 +29,6 @@ struct MenuGestureHandler: ViewModifier {
     ) {
         self._menuStatus = menuStatus
         self._dragOffset = dragOffset
-        self._settingsDragOffset = settingsDragOffset
         self.openThreshold = openThreshold
         self.closeThreshold = closeThreshold
         self.menuWidth = menuWidth
@@ -89,7 +86,6 @@ struct MenuGestureHandler: ViewModifier {
         // Reset offsets
         withAnimation(.easeInOut(duration: 0.3)) {
             dragOffset = 0
-            settingsDragOffset = 0
         }
     }
 }
@@ -98,7 +94,6 @@ extension View {
     func menuGestures(
         menuStatus: Binding<ReaderView.MenuStatus>,
         dragOffset: Binding<CGFloat>,
-        settingsDragOffset: Binding<CGFloat>,
         openThreshold: CGFloat = 50,
         closeThreshold: CGFloat = 50,
         menuWidth: CGFloat = 280,
@@ -109,7 +104,6 @@ extension View {
             MenuGestureHandler(
                 menuStatus: menuStatus,
                 dragOffset: dragOffset,
-                settingsDragOffset: settingsDragOffset,
                 openThreshold: openThreshold,
                 closeThreshold: closeThreshold,
                 menuWidth: menuWidth,
