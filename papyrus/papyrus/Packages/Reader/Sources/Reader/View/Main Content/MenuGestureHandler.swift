@@ -45,7 +45,6 @@ struct MenuGestureHandler: ViewModifier {
     
     private func handleDragChange(_ value: DragGesture.Value) {
         dragOffset = value.translation.width
-        print("offset is \(dragOffset)")
     }
     
     private func handleDragEnd(_ value: DragGesture.Value) {
