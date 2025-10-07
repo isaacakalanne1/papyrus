@@ -13,6 +13,7 @@ struct StoryMenu: View {
     @EnvironmentObject var store: ReaderStore
     @Binding var isMenuOpen: Bool
     let dragOffset: CGFloat
+    let menuStatus: ReaderView.MenuStatus
     @State private var isSequelMode = false
     @FocusState private var focusedField: ReaderView.Field?
     
@@ -74,7 +75,7 @@ struct StoryMenu: View {
                     endPoint: .bottomTrailing
                 )
             )
-            .offset(x: isMenuOpen ? min(0, dragOffset) : -280 + dragOffset)
+            .offset(x: calculateOffset())
             
             Spacer()
         }
@@ -97,6 +98,20 @@ struct StoryMenu: View {
             .environmentObject(store)
             .presentationBackground(.clear)
             .presentationDragIndicator(.hidden)
+        }
+    }
+    
+    private func calculateOffset() -> CGFloat {
+        switch menuStatus {
+        case .storyOpen:
+            // Menu is open, allow closing gesture
+            return min(0, dragOffset)
+        case .settingsOpen:
+            // Settings is open, keep menu offscreen
+            return -280
+        case .closed:
+            // Both closed, only respond to positive drag (opening gesture)
+            return -280 + max(0, dragOffset)
         }
     }
 }

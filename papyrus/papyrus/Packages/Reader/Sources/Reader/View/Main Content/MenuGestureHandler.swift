@@ -8,8 +8,7 @@
 import SwiftUI
 
 struct MenuGestureHandler: ViewModifier {
-    @Binding var isMenuOpen: Bool
-    @Binding var isSettingsOpen: Bool
+    @Binding var menuStatus: ReaderView.MenuStatus
     @Binding var dragOffset: CGFloat
     @Binding var settingsDragOffset: CGFloat
     
@@ -21,8 +20,7 @@ struct MenuGestureHandler: ViewModifier {
     let isForClosing: Bool
     
     init(
-        isMenuOpen: Binding<Bool>,
-        isSettingsOpen: Binding<Bool>,
+        menuStatus: Binding<ReaderView.MenuStatus>,
         dragOffset: Binding<CGFloat>,
         settingsDragOffset: Binding<CGFloat>,
         openThreshold: CGFloat,
@@ -31,8 +29,7 @@ struct MenuGestureHandler: ViewModifier {
         settingsWidth: CGFloat,
         isForClosing: Bool
     ) {
-        self._isMenuOpen = isMenuOpen
-        self._isSettingsOpen = isSettingsOpen
+        self._menuStatus = menuStatus
         self._dragOffset = dragOffset
         self._settingsDragOffset = settingsDragOffset
         self.openThreshold = openThreshold
@@ -63,28 +60,28 @@ struct MenuGestureHandler: ViewModifier {
     private func handleDragEnd(_ value: DragGesture.Value) {
         if isForClosing {
             // Close menu if dragged enough to the left
-            if isMenuOpen && dragOffset < -closeThreshold {
+            if menuStatus == .storyOpen && dragOffset < -closeThreshold {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    isMenuOpen = false
+                    menuStatus = .closed
                 }
             }
             // Close settings if dragged enough to the right
-            else if isSettingsOpen && dragOffset > closeThreshold {
+            else if menuStatus == .settingsOpen && dragOffset > closeThreshold {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    isSettingsOpen = false
+                    menuStatus = .closed
                 }
             }
         } else {
             // Open menu if dragged enough from left
-            if !isMenuOpen && dragOffset > openThreshold {
+            if menuStatus == .closed && dragOffset > openThreshold {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    isMenuOpen = true
+                    menuStatus = .storyOpen
                 }
             }
             // Open settings if dragged enough from right
-            else if !isSettingsOpen && dragOffset < -openThreshold {
+            else if menuStatus == .closed && dragOffset < -openThreshold {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    isSettingsOpen = true
+                    menuStatus = .settingsOpen
                 }
             }
         }
@@ -99,8 +96,7 @@ struct MenuGestureHandler: ViewModifier {
 
 extension View {
     func menuGestures(
-        isMenuOpen: Binding<Bool>,
-        isSettingsOpen: Binding<Bool>,
+        menuStatus: Binding<ReaderView.MenuStatus>,
         dragOffset: Binding<CGFloat>,
         settingsDragOffset: Binding<CGFloat>,
         openThreshold: CGFloat = 50,
@@ -111,8 +107,7 @@ extension View {
     ) -> some View {
         self.modifier(
             MenuGestureHandler(
-                isMenuOpen: isMenuOpen,
-                isSettingsOpen: isSettingsOpen,
+                menuStatus: menuStatus,
                 dragOffset: dragOffset,
                 settingsDragOffset: settingsDragOffset,
                 openThreshold: openThreshold,

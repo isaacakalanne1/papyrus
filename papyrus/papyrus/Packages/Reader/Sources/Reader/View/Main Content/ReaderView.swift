@@ -12,8 +12,7 @@ import PapyrusStyleKit
 
 struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
-    @State private var isMenuOpen: Bool = false
-    @State private var isSettingsOpen: Bool = false
+    @State private var menuStatus: MenuStatus = .closed
     @State private var settingsDragOffset: CGFloat = 0
     @State private var dragOffset: CGFloat = 0
     @FocusState private var focusedField: Field?
@@ -21,6 +20,12 @@ struct ReaderView: View {
     @State private var currentScrollOffset: CGFloat = 0
     @State private var scrollOffsetTimer: Timer?
     @State private var scrollViewHeight: CGFloat = 0
+    
+    enum MenuStatus {
+        case closed
+        case storyOpen
+        case settingsOpen
+    }
     
     enum Field {
         case mainCharacter
@@ -74,30 +79,27 @@ struct ReaderView: View {
                 .scrollBounceBehavior(.basedOnSize)
                 .animation(.easeInOut(duration: 0.4), value: store.state.isLoading)
                 .menuGestures(
-                    isMenuOpen: $isMenuOpen,
-                    isSettingsOpen: $isSettingsOpen,
+                    menuStatus: $menuStatus,
                     dragOffset: $dragOffset,
                     settingsDragOffset: $settingsDragOffset
                 )
                 
                 UnifiedNavigationBar(
-                    isMenuOpen: $isMenuOpen,
-                    isSettingsOpen: $isSettingsOpen
+                    isMenuOpen: .constant(menuStatus == .storyOpen),
+                    isSettingsOpen: .constant(menuStatus == .settingsOpen)
                 )
             }
             
             // Modal overlay for both menu and settings
             ModalOverlay(
-                isPresented: isMenuOpen || isSettingsOpen,
+                isPresented: menuStatus != .closed,
                 opacity: calculateOverlayOpacity(),
                 onDismiss: {
-                    isMenuOpen = false
-                    isSettingsOpen = false
+                    menuStatus = .closed
                 }
             )
             .menuGestures(
-                isMenuOpen: $isMenuOpen,
-                isSettingsOpen: $isSettingsOpen,
+                menuStatus: $menuStatus,
                 dragOffset: $dragOffset,
                 settingsDragOffset: $settingsDragOffset,
                 isForClosing: true
@@ -105,14 +107,16 @@ struct ReaderView: View {
             
             // Side menu
             StoryMenu(
-                isMenuOpen: $isMenuOpen,
-                dragOffset: dragOffset
+                isMenuOpen: .constant(menuStatus == .storyOpen),
+                dragOffset: dragOffset,
+                menuStatus: menuStatus
             )
             
             // Settings menu (slides from right)
             SettingsMenu(
-                isOpen: isSettingsOpen,
-                dragOffset: dragOffset
+                isOpen: menuStatus == .settingsOpen,
+                dragOffset: dragOffset,
+                menuStatus: menuStatus
             )
         }
         .sheet(isPresented: showStoryForm) {
@@ -149,30 +153,34 @@ struct ReaderView: View {
     private func calculateOverlayOpacity() -> Double {
         var opacity: Double = 0
         
-        // Calculate opacity for menu
-        if isMenuOpen {
-            // When closing menu (dragging left)
+        switch menuStatus {
+        case .storyOpen:
+            // When menu is open
             if dragOffset < 0 {
+                // Closing menu (dragging left)
                 opacity = 0.3 * (1 + dragOffset / 280.0)
             } else {
                 opacity = 0.3
             }
-        } else if dragOffset > 0 {
-            // When opening menu (dragging right from left edge)
-            opacity = Double(dragOffset / 280.0) * 0.3
-        }
-        
-        // Calculate opacity for settings
-        if isSettingsOpen {
-            // When closing settings (dragging right)
+            
+        case .settingsOpen:
+            // When settings is open
             if dragOffset > 0 {
+                // Closing settings (dragging right)
                 opacity = 0.3 * (1 - dragOffset / 280.0)
             } else {
                 opacity = 0.3
             }
-        } else if dragOffset < 0 {
-            // When opening settings (dragging left from right edge)
-            opacity = Double(abs(dragOffset) / 280.0) * 0.3
+            
+        case .closed:
+            // When both are closed, calculate based on drag direction
+            if dragOffset > 0 {
+                // Opening menu (dragging right)
+                opacity = Double(dragOffset / 280.0) * 0.3
+            } else if dragOffset < 0 {
+                // Opening settings (dragging left)
+                opacity = Double(abs(dragOffset) / 280.0) * 0.3
+            }
         }
         
         return max(0, min(opacity, 0.3))
