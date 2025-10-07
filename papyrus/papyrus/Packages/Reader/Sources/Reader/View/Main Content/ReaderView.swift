@@ -112,7 +112,7 @@ struct ReaderView: View {
             // Settings menu (slides from right)
             SettingsMenu(
                 isOpen: isSettingsOpen,
-                dragOffset: settingsDragOffset
+                dragOffset: dragOffset
             )
         }
         .sheet(isPresented: showStoryForm) {
@@ -165,14 +165,14 @@ struct ReaderView: View {
         // Calculate opacity for settings
         if isSettingsOpen {
             // When closing settings (dragging right)
-            if settingsDragOffset > 0 {
-                opacity = 0.3 * (1 - settingsDragOffset / 280.0)
+            if dragOffset > 0 {
+                opacity = 0.3 * (1 - dragOffset / 280.0)
             } else {
                 opacity = 0.3
             }
-        } else if settingsDragOffset < 0 {
+        } else if dragOffset < 0 {
             // When opening settings (dragging left from right edge)
-            opacity = Double(abs(settingsDragOffset) / 280.0) * 0.3
+            opacity = Double(abs(dragOffset) / 280.0) * 0.3
         }
         
         return max(0, min(opacity, 0.3))
