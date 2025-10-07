@@ -83,8 +83,26 @@ struct ReaderView: View {
                 )
                 
                 UnifiedNavigationBar(
-                    isMenuOpen: .constant(menuStatus == .storyOpen),
-                    isSettingsOpen: .constant(menuStatus == .settingsOpen)
+                    isMenuOpen: Binding(
+                        get: { menuStatus == .storyOpen },
+                        set: { newValue in
+                            if newValue {
+                                menuStatus = .storyOpen
+                            } else {
+                                menuStatus = .closed
+                            }
+                        }
+                    ),
+                    isSettingsOpen: Binding(
+                        get: { menuStatus == .settingsOpen },
+                        set: { newValue in
+                            if newValue {
+                                menuStatus = .settingsOpen
+                            } else {
+                                menuStatus = .closed
+                            }
+                        }
+                    )
                 )
             }
             
@@ -104,7 +122,16 @@ struct ReaderView: View {
             
             // Side menu
             StoryMenu(
-                isMenuOpen: .constant(menuStatus == .storyOpen),
+                isMenuOpen: Binding(
+                    get: { menuStatus == .storyOpen },
+                    set: { newValue in
+                        if newValue {
+                            menuStatus = .storyOpen
+                        } else {
+                            menuStatus = .closed
+                        }
+                    }
+                ),
                 dragOffset: dragOffset,
                 menuStatus: menuStatus
             )
