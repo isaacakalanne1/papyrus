@@ -53,7 +53,8 @@ struct StoryMenu: View {
                 // Create Story button at the bottom
                 PrimaryButton(
                     type: .newStory,
-                    isDisabled: store.state.isLoading
+                    isDisabled: false,
+                    isLoading: store.state.isLoading
                 ) {
                     withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                         store.dispatch(.setShowStoryForm(true))

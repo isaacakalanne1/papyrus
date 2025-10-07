@@ -63,7 +63,8 @@ struct StoryContentView: View {
                                     if story.chapterIndex < story.maxNumberOfChapters - 1 && story.chapterIndex >= story.chapters.count - 1 {
                                         PrimaryButton(
                                             type: .nextChapter,
-                                            isDisabled: store.state.isLoading
+                                            isDisabled: !store.state.canCreateChapter,
+                                            isLoading: store.state.isLoading
                                         ) {
                                             store.dispatch(.createChapter(story))
                                         }
@@ -71,7 +72,8 @@ struct StoryContentView: View {
                                     } else if story.chapterIndex == story.maxNumberOfChapters - 1 {
                                         PrimaryButton(
                                             type: .createSequel,
-                                            isDisabled: store.state.isLoading
+                                            isDisabled: false,
+                                            isLoading: store.state.isLoading
                                         ) {
                                             isSequelMode = true
                                             store.dispatch(.updateMainCharacter(story.mainCharacter))
