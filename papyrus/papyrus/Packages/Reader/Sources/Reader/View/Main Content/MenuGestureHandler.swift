@@ -44,14 +44,7 @@ struct MenuGestureHandler: ViewModifier {
     }
     
     private func handleDragChange(_ value: DragGesture.Value) {
-        // Only update dragOffset if the gesture is primarily horizontal
-        let horizontalMovement = abs(value.translation.width)
-        let verticalMovement = abs(value.translation.height)
-        
-        // Check if horizontal movement is greater than vertical movement
-        if horizontalMovement > verticalMovement {
-            dragOffset = value.translation.width
-        }
+        dragOffset = value.translation.width
     }
     
     private func handleDragEnd(_ value: DragGesture.Value) {
