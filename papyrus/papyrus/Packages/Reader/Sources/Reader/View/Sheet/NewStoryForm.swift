@@ -14,6 +14,8 @@ struct NewStoryForm: View {
     @Binding var isSequelMode: Bool
     @State var mainCharacter: String = ""
     @State var settingDetails: String = ""
+    @State private var showMainCharacterHint = false
+    @State private var showSettingDetailsHint = false
     
     var body: some View {
 
@@ -37,7 +39,9 @@ struct NewStoryForm: View {
                 label: "Main Character",
                 placeholder: "E.g, Sherlock Holmes",
                 text: $mainCharacter,
-                focusedField: $focusedField
+                focusedField: $focusedField,
+                showHint: showMainCharacterHint,
+                hintText: showMainCharacterHint ? "Please provide a main character for your story" : nil
             ) {
                 focusedField = .settingDetails
             }
@@ -46,7 +50,9 @@ struct NewStoryForm: View {
                 label: "Setting & Details",
                 placeholder: "E.g, Living in Los Angeles, has famous superheroes as clients",
                 text: $settingDetails,
-                focusedField: $focusedField
+                focusedField: $focusedField,
+                showHint: showSettingDetailsHint,
+                hintText: showSettingDetailsHint ? "Add some details about the setting" : nil
             ) {
                 focusedField = nil
             }
@@ -57,13 +63,26 @@ struct NewStoryForm: View {
             PrimaryButton(
                 type: isSequelMode ? .createSequel : .createStory,
                 size: .medium,
-                isDisabled: mainCharacter.isEmpty || settingDetails.isEmpty,
+                isDisabled: false,
                 isLoading: store.state.isLoading
             ) {
-                if isSequelMode {
-                    store.dispatch(.createSequel)
+                // Check if fields are filled
+                let isMainCharacterEmpty = mainCharacter.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                let isSettingDetailsEmpty = settingDetails.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                
+                if isMainCharacterEmpty || isSettingDetailsEmpty {
+                    // Show hints for empty fields
+                    withAnimation(.easeInOut(duration: 0.3)) {
+                        showMainCharacterHint = isMainCharacterEmpty
+                        showSettingDetailsHint = isSettingDetailsEmpty
+                    }
                 } else {
-                    store.dispatch(.createStory)
+                    // Proceed with creation
+                    if isSequelMode {
+                        store.dispatch(.createSequel)
+                    } else {
+                        store.dispatch(.createStory)
+                    }
                 }
             }
             
@@ -79,6 +98,26 @@ struct NewStoryForm: View {
         }
         .onChange(of: settingDetails) { oldValue, newValue in
             store.dispatch(.updateSetting(newValue))
+        }
+        .onChange(of: mainCharacter) { oldValue, newValue in
+            if showMainCharacterHint && !newValue
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .trimmingCharacters(in: .punctuationCharacters)
+                .isEmpty {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    showMainCharacterHint = false
+                }
+            }
+        }
+        .onChange(of: settingDetails) { oldValue, newValue in
+            if showSettingDetailsHint && !newValue
+                .trimmingCharacters(in: .whitespacesAndNewlines)
+                .trimmingCharacters(in: .punctuationCharacters)
+                .isEmpty {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    showSettingDetailsHint = false
+                }
+            }
         }
     }
 }
