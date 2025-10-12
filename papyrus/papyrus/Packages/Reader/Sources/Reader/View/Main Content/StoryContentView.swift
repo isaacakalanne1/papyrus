@@ -14,14 +14,12 @@ struct StoryContentView: View {
     @EnvironmentObject var store: ReaderStore
     @FocusState.Binding var focusedField: ReaderView.Field?
     @Binding var isSequelMode: Bool
-    @Binding var currentScrollOffset: CGFloat
+    @State var currentScrollOffset: CGFloat = 0
     @Binding var scrollViewHeight: CGFloat
-    
-    let startScrollOffsetTimer: () -> Void
+    @State private var scrollOffsetTimer: Timer?
     
     private func setupStoryView(with proxy: ScrollViewProxy, scrollGeometry: GeometryProxy) {
         scrollViewHeight = scrollGeometry.size.height
-        startScrollOffsetTimer()
         // Scroll to saved position
         if story.scrollOffset > 0 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
@@ -114,6 +112,24 @@ struct StoryContentView: View {
                 store.dispatch(.setStory(nil))
             }
             .padding(16)
+        }
+        .onAppear {
+            startScrollOffsetTimer()
+        }
+        .onDisappear {
+            scrollOffsetTimer?.invalidate()
+        }
+    }
+    
+    private func startScrollOffsetTimer() {
+        scrollOffsetTimer?.invalidate()
+        scrollOffsetTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
+            DispatchQueue.main.async {
+                if let story = store.state.story,
+                   abs(currentScrollOffset - story.scrollOffset) > 1 {
+                    store.dispatch(.updateScrollOffset(currentScrollOffset))
+                }
+            }
         }
     }
 }
