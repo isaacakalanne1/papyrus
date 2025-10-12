@@ -15,7 +15,7 @@ enum ReaderAction: Equatable, Sendable {
     case createChapter(Story)
     case beginCreateStory
     case beginCreateSequel
-    case beginCreateChapter(Story)
+    case beginCreateChapter(Story, WritingChapterStatus)
     case createStoryTheme(Story)
     case onCreatedThemeDescription(Story)
     case createPlotOutline(Story)

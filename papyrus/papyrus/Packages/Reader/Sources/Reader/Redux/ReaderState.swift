@@ -66,6 +66,11 @@ public struct ReaderState: Equatable {
     }
 }
 
+public enum WritingChapterStatus: Equatable, Sendable {
+    case visible
+    case hidden
+}
+
 public enum LoadingStep: Equatable, Sendable {
     case idle
     case identifyingTheme       // Step 1: Identifying story theme
@@ -73,5 +78,5 @@ public enum LoadingStep: Equatable, Sendable {
     case creatingChapterBreakdown // Step 3: Breaking down into chapters
     case analyzingStructure     // Step 4: Analyzing story structure
     case preparingNarrative     // Step 5: Preparing for narration
-    case writingChapter         // Separate state for writing individual chapters
+    case writingChapter(WritingChapterStatus)         // Separate state for writing individual chapters
 }
