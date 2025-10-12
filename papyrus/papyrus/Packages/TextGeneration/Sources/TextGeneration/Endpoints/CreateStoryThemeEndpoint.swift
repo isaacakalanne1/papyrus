@@ -13,26 +13,15 @@ struct CreateStoryThemeEndpoint: Endpoint {
     var body: Data? {
         let messages = [
             OpenRouterMessage(
-                role: "system",
-                content: "You are a creative story theme analyzer. Identify the core theme and genre of a story based on the main character and setting."
-            ),
-            OpenRouterMessage(
                 role: "user",
                 content: """
-You are an expert in narrative themes and genres. Your task is to analyze the provided main character and setting to identify the most likely story theme the user wants to explore.
+You are an expert story theme creator, who specializes in detailing the type of story the user likely wants
 
-**Context Provided:**
-- **Main Character:** \(story.mainCharacter)
-- **Setting:** \(story.setting)
+Below is the provided story details by the user:
+Main Character: \(story.mainCharacter)
+Setting & details: \(story.setting)
 
-**Task:**
-Based on these elements, provide a concise description of the story's theme and genre. Consider:
-- The implicit narrative potential in the character/setting combination
-- Common themes that naturally emerge from these elements
-- The likely tone and emotional core of the story
-- Genre conventions that might apply
-
-Provide a 2-3 sentence theme description that captures the essence of what this story will likely explore.
+Write out a detailed description of the story theme, the type of story the user likely wants
 """
             )
         ]

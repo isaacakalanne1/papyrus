@@ -19,7 +19,7 @@ struct OpenRouterRequest: Encodable {
     let reasoning: OpenRouterReasoning?
     
     init(
-        model: String = "x-ai/grok-4-fast",
+        model: String = "deepseek/deepseek-chat-v3.1",
         messages: [OpenRouterMessage],
         reasoning: OpenRouterReasoning? = nil
     ) {
