@@ -14,15 +14,15 @@ struct GetStoryDetailsEndpoint: Endpoint {
         let messages = [
             OpenRouterMessage(
                 role: "system",
-                content: "You are a story analysis expert. Count the total number of chapters in a chapter breakdown and return only the integer number."
+                content: "You are a story analysis expert. Count the total number of chapters in a plot outline and return only the integer number."
             ),
             OpenRouterMessage(
                 role: "user",
                 content: """
-Analyze the following chapter breakdown and return ONLY the total number of chapters as an integer (e.g., just "12" or "15"):
+Analyze the following plot outline and return ONLY the total number of chapters as an integer (e.g., just "12" or "15"):
 
-Chapter Breakdown:
-\(story.chaptersBreakdown)
+Plot outline:
+\(story.plotOutline)
 """
             )
         ]
