@@ -15,7 +15,7 @@ enum ReaderAction: Equatable, Sendable {
     case createChapter(Story)
     case beginCreateStory
     case beginCreateSequel
-    case beginCreateChapter(Story)
+    case beginCreateChapter(Story, WritingChapterStatus)
     case createStoryTheme(Story)
     case onCreatedThemeDescription(Story)
     case createPlotOutline(Story)
@@ -45,5 +45,6 @@ enum ReaderAction: Equatable, Sendable {
     case setShowStoryForm(Bool)
     case setShowSubscriptionSheet(Bool)
     case loadSubscriptions
+    case onLoadedSubscriptions(Bool)
     case setSelectedStoryForDetails(Story?)
 }
