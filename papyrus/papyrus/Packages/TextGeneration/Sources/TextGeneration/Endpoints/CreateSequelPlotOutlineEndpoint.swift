@@ -38,6 +38,7 @@ You are an expert storyteller and narrative designer with deep knowledge of clas
 **New Sequel Context:**
 - **Setting:** \(story.setting)
 - **Main Character:** \(story.mainCharacter)
+- **Theme:** \(story.themeDescription)
 
 **Task:**
 Develop a high-quality sequel plot outline that integrates the setting and main character seamlessly. The outline should be original, engaging, and emotionally resonant, with clear stakes, escalating conflict, and satisfying resolution. Aim for a story length equivalent to a novel (around 200,000-250,000 words if written out).

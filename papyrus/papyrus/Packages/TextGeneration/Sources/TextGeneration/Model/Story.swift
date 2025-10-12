@@ -11,6 +11,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
     public var id: UUID
     public var mainCharacter: String
     public var setting: String
+    var themeDescription: String
     var plotOutline: String
     var chaptersBreakdown: String
     public var chapterIndex: Int
@@ -26,6 +27,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         id: UUID = UUID(),
         mainCharacter: String = "",
         setting: String = "",
+        themeDescription: String = "",
         plotOutline: String = "",
         chaptersBreakdown: String = "",
         chapterIndex: Int = 0,
@@ -39,6 +41,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         self.id = id
         self.mainCharacter = mainCharacter
         self.setting = setting
+        self.themeDescription = themeDescription
         self.plotOutline = plotOutline
         self.chaptersBreakdown = chaptersBreakdown
         self.chapterIndex = chapterIndex
@@ -57,6 +60,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         self.id = try container.decode(UUID.self, forKey: .id)
         self.mainCharacter = try container.decode(String.self, forKey: .mainCharacter)
         self.setting = try container.decode(String.self, forKey: .setting)
+        self.themeDescription = try container.decodeIfPresent(String.self, forKey: .themeDescription) ?? ""
         self.plotOutline = try container.decode(String.self, forKey: .plotOutline)
         self.chaptersBreakdown = try container.decode(String.self, forKey: .chaptersBreakdown)
         self.chapterIndex = try container.decode(Int.self, forKey: .chapterIndex)

@@ -21,6 +21,15 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .setShowSubscriptionSheet(true)
         }
         return .beginCreateSequel
+    case .createStoryTheme(var story):
+        do {
+            story = try await environment.createStoryTheme(story: story)
+            return .onCreatedThemeDescription(story)
+        } catch {
+            return .failedToCreateChapter
+        }
+    case .onCreatedThemeDescription(let story):
+        return .createPlotOutline(story)
     case .createPlotOutline(var story):
         do {
             story = try await environment.createPlotOutline(story: story)
@@ -121,7 +130,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         guard let story = state.story else {
             return .failedToCreateChapter
         }
-        return .createPlotOutline(story)
+        return .createStoryTheme(story)
     case .beginCreateSequel:
         guard var currentStory = state.story,
               var sequelStory = state.sequelStory else {
@@ -130,8 +139,11 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
 
         do {
             try await environment.saveStory(currentStory)
+            // First create theme for sequel
+            let themedSequelStory = try await environment.createStoryTheme(story: sequelStory)
+            // Then create plot outline with theme
             let sequelStory = try await environment.createSequelPlotOutline(
-                story: sequelStory,
+                story: themedSequelStory,
                 previousStory: currentStory
             )
             return .onCreatedPlotOutline(sequelStory)
@@ -155,7 +167,8 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             .refreshSettings,
             .setShowStoryForm,
             .setShowSubscriptionSheet,
-            .setSelectedStoryForDetails:
+            .setSelectedStoryForDetails,
+            .onCreatedThemeDescription:
         return nil
     }
 }

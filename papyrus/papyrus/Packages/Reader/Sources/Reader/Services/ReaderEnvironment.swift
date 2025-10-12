@@ -11,6 +11,7 @@ import Settings
 import Subscription
 
 public protocol ReaderEnvironmentProtocol {
+    func createStoryTheme(story: Story) async throws -> Story
     func createPlotOutline(story: Story) async throws -> Story
     func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story
     func createChapterBreakdown(story: Story) async throws -> Story
@@ -43,6 +44,10 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
         self.dataStore = dataStore
         self.settingsEnvironment = settingsEnvironment
         self.subscriptionEnvironment = subscriptionEnvironment
+    }
+    
+    public func createStoryTheme(story: Story) async throws -> Story {
+        try await textGenerationEnvironment.createStoryTheme(story: story)
     }
     
     public func createPlotOutline(story: Story) async throws -> Story {
