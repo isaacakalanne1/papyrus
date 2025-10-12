@@ -108,6 +108,7 @@ class BaseTextGenerationEndpointTests {
         #expect(jsonReasoning?["max_tokens"] as? Int == 1500)
     }
     
+    
     @Test
     func openRouterRequest_encodingWithoutReasoning() throws {
         let messages = [OpenRouterMessage(role: "user", content: "Test")]
