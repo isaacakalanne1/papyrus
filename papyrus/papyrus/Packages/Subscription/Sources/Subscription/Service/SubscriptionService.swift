@@ -21,7 +21,6 @@ public protocol SubscriptionServiceProtocol {
     func restorePurchases() async throws -> [Transaction]
     func checkSubscriptionStatus() async -> Bool
     func currentSubscription() async -> Product.SubscriptionInfo.Status?
-    func getCompleteSubscriptionStatus() async -> (isSubscribed: Bool, status: Product.SubscriptionInfo.Status?)
     func startTransactionListener() async
 }
 
@@ -129,27 +128,6 @@ public class SubscriptionService: SubscriptionServiceProtocol {
         }
         
         return nil
-    }
-    
-    public func getCompleteSubscriptionStatus() async -> (isSubscribed: Bool, status: Product.SubscriptionInfo.Status?) {
-        do {
-            let products = try await fetchProducts()
-            guard let product = products.first else { return (false, nil) }
-            
-            let statuses = try await product.subscription?.status ?? []
-            let status = statuses.first(where: { status in
-                switch status.state {
-                case .subscribed, .inBillingRetryPeriod:
-                    return true
-                default:
-                    return false
-                }
-            })
-            
-            return (status != nil, status)
-        } catch {
-            return (false, nil)
-        }
     }
     
     private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {

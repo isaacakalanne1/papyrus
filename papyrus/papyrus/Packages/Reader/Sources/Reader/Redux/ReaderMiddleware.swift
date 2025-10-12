@@ -48,7 +48,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         }
     case .onCreatedChapterBreakdown(let story):
         if story.maxNumberOfChapters > 0 {
-            return .beginCreateChapter(story, .visible)
+            return .beginCreateChapter(story)
         } else {
             return .getStoryDetails(story)
         }
@@ -69,12 +69,12 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToCreateChapter
         }
     case .onGetChapterTitle(let story):
-        return .beginCreateChapter(story, .visible)
+        return .beginCreateChapter(story)
     case .createChapter(let story):
         if !state.canCreateChapter {
             return .setShowSubscriptionSheet(true)
         }
-        return .beginCreateChapter(story, .visible)
+        return .beginCreateChapter(story)
     case .loadAllStories:
         do {
             let stories = try await environment.loadAllStories()
@@ -90,16 +90,8 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToLoadStories
         }
     case .onCreatedChapter(let story):
-        if story.chapters.count == 1 ||
-            story.chapters.count == story.maxNumberOfChapters + 1 {
-            return .updateChapterIndex(story, story.chapters.count - 1)
-        }
-        return nil
-    case .updateChapterIndex(let story, let index):
-        if state.canAutoCreateChapter {
-            return .beginCreateChapter(story, .hidden)
-        }
-        
+        return .updateChapterIndex(story, story.chapters.count - 1)
+    case .updateChapterIndex(let story, _):
         return .saveStory(story)
     case .saveStory(let story):
         do {
@@ -132,12 +124,8 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         }
         return nil
     case .loadSubscriptions:
-        do {
-            let isSubscribed = try await environment.loadSubscriptions()
-            return .onLoadedSubscriptions(isSubscribed)
-        } catch {
-            return .onLoadedSubscriptions(false)
-        }
+        await environment.loadSubscriptions()
+        return nil
     case .beginCreateStory:
         guard let story = state.story else {
             return .failedToCreateChapter
@@ -162,28 +150,23 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         } catch {
             return .failedToCreateChapter
         }
-    case .beginCreateChapter(var story, _):
+    case .beginCreateChapter(var story):
         do {
             story = try await environment.createChapter(story: story)
             return .onCreatedChapter(story)
         } catch {
             return .failedToCreateChapter
         }
-    case .setStory(let story):
-        if let story {
-            return .updateChapterIndex(story, story.chapterIndex)
-        }
-        return nil
     case .failedToCreateChapter,
             .updateSetting,
             .updateMainCharacter,
             .onLoadedStories,
             .failedToLoadStories,
+            .setStory,
             .onDeletedStory,
             .refreshSettings,
             .setShowStoryForm,
             .setShowSubscriptionSheet,
-            .onLoadedSubscriptions,
             .setSelectedStoryForDetails:
         return nil
     }

@@ -14,7 +14,7 @@ struct GetChapterTitleEndpoint: Endpoint {
         let messages = [
             OpenRouterMessage(
                 role: "system",
-                content: ""
+                content: "You are a creative story titling expert. Generate a compelling title for a story based on its details."
             ),
             OpenRouterMessage(
                 role: "user",
@@ -22,8 +22,6 @@ struct GetChapterTitleEndpoint: Endpoint {
 Based on the following story details, respond with the story title:
 
 **Plot Outline:** \(story.plotOutline)
-
-Reply with only the story title.
 """
             )
         ]

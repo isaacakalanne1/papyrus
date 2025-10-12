@@ -29,8 +29,6 @@ Plot outline: \(story.plotOutline)
 
 Chapter breakdown: \(story.chaptersBreakdown)
 
-Chapters so far: \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
-
 Write chapter \(currentChapterNumber) based on the above story details
 """
             )

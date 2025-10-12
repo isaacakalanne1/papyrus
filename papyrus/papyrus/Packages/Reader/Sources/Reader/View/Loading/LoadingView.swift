@@ -49,14 +49,14 @@ struct LoadingView: View {
             return "Analyzing Structure"
         case .preparingNarrative:
             return "Preparing Narrative"
-        case .writingChapter(_):
+        case .writingChapter:
             return "Writing Chapter"
         }
     }
     
     var body: some View {
         Group {
-            if case .writingChapter(let status) = loadingStep, status == .visible {
+            if loadingStep == .writingChapter {
                 ChapterWritingLoadingView()
             } else if showChapterReady && hasExistingStory {
                 chapterReadyView
@@ -291,7 +291,7 @@ struct LoadingView: View {
 
 #Preview("Chapter Writing") {
     VStack(spacing: 0) {
-        LoadingView(loadingStep: .writingChapter(.visible), hasExistingStory: true)
+        LoadingView(loadingStep: .writingChapter, hasExistingStory: true)
         
         Rectangle()
             .fill(PapyrusColor.background.color)

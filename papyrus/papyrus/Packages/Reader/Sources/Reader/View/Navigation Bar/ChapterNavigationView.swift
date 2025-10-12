@@ -13,17 +13,6 @@ struct ChapterNavigationView: View {
     @EnvironmentObject var store: ReaderStore
     let story: Story
     
-    private var isViewingLatestChapter: Bool {
-        story.chapterIndex == story.chapters.count - 1
-    }
-    
-    private var isCreatingChapterWithHiddenStatus: Bool {
-        if case .writingChapter(let status) = store.state.loadingStep {
-            return status == .hidden
-        }
-        return false
-    }
-    
     var body: some View {
         HStack(spacing: 16) {
             // Previous Chapter Button
@@ -35,7 +24,6 @@ struct ChapterNavigationView: View {
                     store.dispatch(.updateChapterIndex(story, story.chapterIndex - 1))
                 }
             }
-            .frame(width: 24, height: 24)
             
             // Chapter Indicator
             Text("Chapter \(story.chapterIndex + 1) of \(story.maxNumberOfChapters > 0 ? story.maxNumberOfChapters : story.chapters.count)")
@@ -43,25 +31,15 @@ struct ChapterNavigationView: View {
                 .foregroundColor(PapyrusColor.textSecondary.color)
                 .frame(maxWidth: 200)
             
-            // Next Chapter Button or Loading Spinner
-            Group {
-                if isViewingLatestChapter && isCreatingChapterWithHiddenStatus {
-                    // Show loading spinner
-                    ProgressView()
-                        .scaleEffect(0.8)
-                        .foregroundColor(PapyrusColor.iconSecondary.color)
-                } else {
-                    MenuButton(
-                        type: .next,
-                        isEnabled: story.chapterIndex < story.chapters.count - 1
-                    ) {
-                        if story.chapterIndex < story.chapters.count - 1 {
-                            store.dispatch(.updateChapterIndex(story, story.chapterIndex + 1))
-                        }
-                    }
+            // Next Chapter Button
+            MenuButton(
+                type: .next,
+                isEnabled: story.chapterIndex < story.chapters.count - 1
+            ) {
+                if story.chapterIndex < story.chapters.count - 1 {
+                    store.dispatch(.updateChapterIndex(story, story.chapterIndex + 1))
                 }
             }
-            .frame(width: 24, height: 24)
         }
     }
 }

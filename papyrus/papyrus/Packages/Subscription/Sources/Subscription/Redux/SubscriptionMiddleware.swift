@@ -38,7 +38,16 @@ public let subscriptionMiddleware: Middleware<SubscriptionState, SubscriptionAct
         
     case .checkSubscriptionStatus:
         do {
-            let (isSubscribed, status) = try await environment.getCompleteSubscriptionStatus()
+            let isSubscribed = try await environment.checkSubscriptionStatus()
+            let product = try await environment.fetchSubscriptionProduct()
+            let status = try await product.subscription?.status.first(where: { status in
+                switch status.state {
+                case .subscribed, .inBillingRetryPeriod:
+                    return true
+                default:
+                    return false
+                }
+            })
             return .subscriptionStatusUpdated(isSubscribed: isSubscribed, status: status)
         } catch {
             return .subscriptionStatusUpdated(isSubscribed: false, status: nil)
