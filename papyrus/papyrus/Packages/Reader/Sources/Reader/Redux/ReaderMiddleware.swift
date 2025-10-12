@@ -90,16 +90,16 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToLoadStories
         }
     case .onCreatedChapter(let story):
-        if story.chapters.count == story.maxNumberOfChapters + 1 {
+        if story.chapters.count == 1 ||
+            story.chapters.count == story.maxNumberOfChapters + 1 {
             return .updateChapterIndex(story, story.chapters.count - 1)
         }
         return nil
     case .updateChapterIndex(let story, let index):
         // If viewing the latest available chapter, trigger chapter creation with hidden status
         let isViewingLatestChapter = index == story.chapters.count - 1
-        let canCreateMore = story.chapters.count < story.maxNumberOfChapters
         
-        if isViewingLatestChapter && canCreateMore && state.canCreateChapter {
+        if isViewingLatestChapter && state.canCreateChapter && story.chapters.count != story.maxNumberOfFreeChapters {
             // Start creating the next chapter with hidden status
             return .beginCreateChapter(story, .hidden)
         }
@@ -136,8 +136,12 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         }
         return nil
     case .loadSubscriptions:
-        await environment.loadSubscriptions()
-        return nil
+        do {
+            let isSubscribed = try await environment.loadSubscriptions()
+            return .onLoadedSubscriptions(isSubscribed)
+        } catch {
+            return .onLoadedSubscriptions(false)
+        }
     case .beginCreateStory:
         guard let story = state.story else {
             return .failedToCreateChapter
@@ -183,6 +187,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             .refreshSettings,
             .setShowStoryForm,
             .setShowSubscriptionSheet,
+            .onLoadedSubscriptions,
             .setSelectedStoryForDetails:
         return nil
     }

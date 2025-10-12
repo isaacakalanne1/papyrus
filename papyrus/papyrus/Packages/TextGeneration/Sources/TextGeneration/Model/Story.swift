@@ -16,6 +16,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
     var chaptersBreakdown: String
     public var chapterIndex: Int
     public var maxNumberOfChapters: Int
+    public var maxNumberOfFreeChapters: Int
     public var scrollOffset: CGFloat
     public var prequelIds: [UUID]
     public var sequelIds: [UUID]
@@ -32,6 +33,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         chaptersBreakdown: String = "",
         chapterIndex: Int = 0,
         maxNumberOfChapters: Int = 0,
+        maxNumberOfFreeChapters: Int = 2,
         scrollOffset: CGFloat = 0,
         prequelIds: [UUID] = [],
         sequelIds: [UUID] = [],
@@ -46,6 +48,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         self.chaptersBreakdown = chaptersBreakdown
         self.chapterIndex = chapterIndex
         self.maxNumberOfChapters = maxNumberOfChapters
+        self.maxNumberOfFreeChapters = maxNumberOfFreeChapters
         self.scrollOffset = scrollOffset
         self.prequelIds = prequelIds
         self.sequelIds = sequelIds

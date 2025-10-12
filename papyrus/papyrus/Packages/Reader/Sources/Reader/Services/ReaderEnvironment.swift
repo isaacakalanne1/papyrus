@@ -23,7 +23,7 @@ public protocol ReaderEnvironmentProtocol {
     func getAllSavedStoryIds() async throws -> [UUID]
     func deleteStory(withId id: UUID) async throws
     func loadAllStories() async throws -> [Story]
-    func loadSubscriptions() async
+    func loadSubscriptions() async throws -> Bool
     var settingsEnvironment: SettingsEnvironmentProtocol { get }
     var subscriptionEnvironment: SubscriptionEnvironmentProtocol { get }
 }
@@ -103,8 +103,9 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
         return stories
     }
     
-    public func loadSubscriptions() async {
-        await subscriptionEnvironment.loadSubscriptionOnInit()
+    public func loadSubscriptions() async throws -> Bool {
+        let (isSubscribed, _) = try await subscriptionEnvironment.getCompleteSubscriptionStatus()
+        return isSubscribed
     }
     
 }

@@ -51,7 +51,7 @@ public struct ReaderState: Equatable {
     var canCreateChapter: Bool {
         guard let story = story else { return true }
         // Allow creation if user is subscribed OR if story has fewer than 2 chapters
-        return settingsState.isSubscribed || story.chapters.count < 2
+        return settingsState.isSubscribed || story.chapters.count < story.maxNumberOfFreeChapters
     }
     
     // Computed property for content state

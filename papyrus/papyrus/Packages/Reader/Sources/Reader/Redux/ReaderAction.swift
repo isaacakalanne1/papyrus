@@ -45,5 +45,6 @@ enum ReaderAction: Equatable, Sendable {
     case setShowStoryForm(Bool)
     case setShowSubscriptionSheet(Bool)
     case loadSubscriptions
+    case onLoadedSubscriptions(Bool)
     case setSelectedStoryForDetails(Story?)
 }
