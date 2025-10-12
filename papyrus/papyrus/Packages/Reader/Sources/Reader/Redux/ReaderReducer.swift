@@ -148,9 +148,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             .loadSubscriptions,
             .createStory,
             .createSequel,
-            .createChapter,
-            .createStoryTheme,
-            .onCreatedThemeDescription:
+            .createChapter:
         break
     }
     return newState
