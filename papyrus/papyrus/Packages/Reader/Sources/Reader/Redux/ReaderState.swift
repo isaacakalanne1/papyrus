@@ -54,6 +54,13 @@ public struct ReaderState: Equatable {
         return settingsState.isSubscribed || story.chapters.count < story.maxNumberOfFreeChapters
     }
     
+    var canAutoCreateChapter: Bool {
+        guard let story = story else { return false }
+        return canCreateChapter &&
+        story.chapterIndex == story.chapters.count - 1 &&
+        (story.chapters.count != story.maxNumberOfFreeChapters || settingsState.isSubscribed)
+    }
+    
     // Computed property for content state
     var contentState: ContentState {
         if let story = story,

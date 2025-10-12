@@ -96,11 +96,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         }
         return nil
     case .updateChapterIndex(let story, let index):
-        // If viewing the latest available chapter, trigger chapter creation with hidden status
-        let isViewingLatestChapter = index == story.chapters.count - 1
-        
-        if isViewingLatestChapter && state.canCreateChapter && story.chapters.count != story.maxNumberOfFreeChapters {
-            // Start creating the next chapter with hidden status
+        if state.canAutoCreateChapter {
             return .beginCreateChapter(story, .hidden)
         }
         

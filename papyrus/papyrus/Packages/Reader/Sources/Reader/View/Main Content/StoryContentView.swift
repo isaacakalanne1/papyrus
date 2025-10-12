@@ -135,8 +135,7 @@ struct StoryContentView: View {
     
     var canManuallyCreateNextChapter: Bool {
         story.chapterIndex < story.maxNumberOfChapters - 1 &&
-        story.chapterIndex >= story.chapters.count - 1 &&
-        !store.state.settingsState.isSubscribed
+        story.chapterIndex >= story.chapters.count - 1
     }
     
     var canCreateSequel: Bool {
