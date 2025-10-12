@@ -75,6 +75,11 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .setShowSubscriptionSheet(true)
         }
         return .beginCreateChapter(story)
+    case .setAutoCreatingChapter(let isAuto, let story):
+        if isAuto, let story = story {
+            return .beginCreateChapter(story)
+        }
+        return nil
     case .loadAllStories:
         do {
             let stories = try await environment.loadAllStories()

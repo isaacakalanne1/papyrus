@@ -50,7 +50,8 @@ struct ReaderView: View {
             VStack(spacing: 0) {
                 
                 // Loading bar (appears below top bar when loading)
-                if store.state.isLoading {
+                // Don't show loading bar when auto-creating chapters
+                if store.state.isLoading && !store.state.isAutoCreatingChapter {
                     LoadingView(loadingStep: store.state.loadingStep, hasExistingStory: store.state.story != nil)
                         .transition(.move(edge: .top).combined(with: .opacity))
                 }

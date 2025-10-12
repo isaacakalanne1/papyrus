@@ -72,6 +72,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         }
         newState.isLoading = false
         newState.loadingStep = .idle
+        newState.isAutoCreatingChapter = false
         // Update the story in loadedStories if it exists, or add it if not present
         if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
             // Update existing story
@@ -87,9 +88,11 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .beginCreateChapter:
         newState.isLoading = true
         newState.loadingStep = .writingChapter
+        newState.isAutoCreatingChapter = false
     case .failedToCreateChapter:
         newState.isLoading = false
         newState.loadingStep = .idle
+        newState.isAutoCreatingChapter = false
     case .loadAllStories:
         newState.isLoading = true
     case .onLoadedStories(let stories):
@@ -143,6 +146,8 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.showSubscriptionSheet = show
     case .setSelectedStoryForDetails(let story):
         newState.selectedStoryForDetails = story
+    case .setAutoCreatingChapter(let isAuto, _):
+        newState.isAutoCreatingChapter = isAuto
     case .saveStory,
             .deleteStory,
             .loadSubscriptions,

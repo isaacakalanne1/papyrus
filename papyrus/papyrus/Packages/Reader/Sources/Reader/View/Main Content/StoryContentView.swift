@@ -56,18 +56,9 @@ struct StoryContentView: View {
                                     .padding(.vertical, 40)
                                     .id("content")
                                 
-                                // Next Chapter or Create Sequel Button
+                                // Create Sequel Button (only show when at final chapter)
                                 Group {
-                                    if story.chapterIndex < story.maxNumberOfChapters - 1 && story.chapterIndex >= story.chapters.count - 1 {
-                                        PrimaryButton(
-                                            type: .nextChapter,
-                                            isDisabled: store.state.isLoading,
-                                            isLoading: store.state.isLoading
-                                        ) {
-                                            store.dispatch(.createChapter(story))
-                                        }
-                                        .disabled(store.state.isLoading)
-                                    } else if story.chapterIndex == story.maxNumberOfChapters - 1 {
+                                    if story.chapterIndex == story.maxNumberOfChapters - 1 {
                                         PrimaryButton(
                                             type: .createSequel,
                                             isDisabled: store.state.isLoading,
