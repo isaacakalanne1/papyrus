@@ -95,7 +95,7 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
         var stories: [Story] = []
         
         for id in storyIds {
-            if let story = try await dataStore.loadStory(withId: id) {
+            if let story = try? await dataStore.loadStory(withId: id) {
                 stories.append(story)
             }
         }
