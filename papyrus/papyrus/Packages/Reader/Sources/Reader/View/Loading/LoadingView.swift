@@ -16,7 +16,7 @@ struct LoadingView: View {
     @State private var showChapterReady: Bool = false
     
     private var storyCreationStages: [LoadingStep] {
-        [.creatingPlotOutline, .creatingChapterBreakdown, .analyzingStructure, .preparingNarrative]
+        [.identifyingTheme, .creatingPlotOutline, .creatingChapterBreakdown, .analyzingStructure, .preparingNarrative]
     }
     
     private var currentStageIndex: Int {
@@ -39,6 +39,8 @@ struct LoadingView: View {
         switch loadingStep {
         case .idle:
             return "Preparing"
+        case .identifyingTheme:
+            return "Identifying Theme"
         case .creatingPlotOutline:
             return "Creating Plot Outline"
         case .creatingChapterBreakdown:

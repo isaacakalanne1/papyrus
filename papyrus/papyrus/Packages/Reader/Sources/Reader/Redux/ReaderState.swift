@@ -68,9 +68,10 @@ public struct ReaderState: Equatable {
 
 public enum LoadingStep: Equatable, Sendable {
     case idle
-    case creatingPlotOutline    // Step 1: Creating the overall story plot
-    case creatingChapterBreakdown // Step 2: Breaking down into chapters
-    case analyzingStructure     // Step 3: Analyzing story structure
-    case preparingNarrative     // Step 4: Preparing for narration
+    case identifyingTheme       // Step 1: Identifying story theme
+    case creatingPlotOutline    // Step 2: Creating the overall story plot
+    case creatingChapterBreakdown // Step 3: Breaking down into chapters
+    case analyzingStructure     // Step 4: Analyzing story structure
+    case preparingNarrative     // Step 5: Preparing for narration
     case writingChapter         // Separate state for writing individual chapters
 }

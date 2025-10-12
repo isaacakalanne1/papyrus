@@ -2,6 +2,7 @@ import Foundation
 import SDNetworkCore
 
 public protocol TextGenerationRepositoryProtocol {
+    func createStoryTheme(story originalStory: Story) async throws -> Story
     func createPlotOutline(story originalStory: Story) async throws -> Story
     func createSequelPlotOutline(story originalStory: Story, previousStory: Story) async throws -> Story
     func createChapterBreakdown(story originalStory: Story) async throws -> Story
@@ -17,6 +18,15 @@ public class TextGenerationRepository: TextGenerationRepositoryProtocol {
         networkCore: SDNetworkCore = SDNetworkCore()
     ) {
         self.networkCore = networkCore
+    }
+    
+    public func createStoryTheme(story originalStory: Story) async throws -> Story {
+        var story = originalStory
+        let endpoint = CreateStoryThemeEndpoint(story: story)
+        let content = try await networkCore.requestContent(endpoint)
+        
+        story.themeDescription = content
+        return story
     }
     
     public func createPlotOutline(story originalStory: Story) async throws -> Story {

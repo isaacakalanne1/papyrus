@@ -15,7 +15,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .beginCreateStory:
         newState.isLoading = true
         newState.showStoryForm = false
-        newState.loadingStep = .creatingPlotOutline
+        newState.loadingStep = .identifyingTheme
         newState.story = .init(
             mainCharacter: newState.mainCharacter,
             setting: newState.setting
@@ -23,7 +23,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .beginCreateSequel:
         newState.isLoading = true
         newState.showStoryForm = false
-        newState.loadingStep = .creatingPlotOutline
+        newState.loadingStep = .identifyingTheme
 
         newState.sequelStory = newState.story
         newState.sequelStory?.id = UUID()
@@ -33,6 +33,17 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.sequelStory?.chapterIndex = 0
         if let prequelId = newState.story?.id {
             newState.sequelStory?.prequelIds.append(prequelId)
+        }
+    case .createStoryTheme:
+        newState.isLoading = true
+        newState.loadingStep = .identifyingTheme
+    case .onCreatedThemeDescription(let story):
+        newState.isLoading = true // Keep loading for next step
+        // Update the story with theme
+        if newState.story?.id == story.id {
+            newState.story = story
+        } else if newState.sequelStory?.id == story.id {
+            newState.sequelStory = story
         }
     case .createPlotOutline:
         newState.isLoading = true
@@ -137,7 +148,9 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             .loadSubscriptions,
             .createStory,
             .createSequel,
-            .createChapter:
+            .createChapter,
+            .createStoryTheme,
+            .onCreatedThemeDescription:
         break
     }
     return newState
