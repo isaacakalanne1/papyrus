@@ -14,6 +14,7 @@ public protocol SubscriptionRepositoryProtocol {
     func restorePurchases() async throws
     func isSubscribed() async -> Bool
     func getCurrentSubscriptionStatus() async -> Product.SubscriptionInfo.Status?
+    func getCompleteSubscriptionStatus() async -> (isSubscribed: Bool, status: Product.SubscriptionInfo.Status?)
     func startTransactionListener() async
 }
 
@@ -49,6 +50,10 @@ public class SubscriptionRepository: SubscriptionRepositoryProtocol {
     
     public func getCurrentSubscriptionStatus() async -> Product.SubscriptionInfo.Status? {
         return await service.currentSubscription()
+    }
+    
+    public func getCompleteSubscriptionStatus() async -> (isSubscribed: Bool, status: Product.SubscriptionInfo.Status?) {
+        return await service.getCompleteSubscriptionStatus()
     }
     
     public func startTransactionListener() async {

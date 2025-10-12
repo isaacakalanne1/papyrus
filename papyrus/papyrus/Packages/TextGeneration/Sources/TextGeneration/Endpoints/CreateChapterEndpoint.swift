@@ -27,7 +27,13 @@ Theme description: \(story.themeDescription)
 
 Plot outline: \(story.plotOutline)
 
-Chapter breakdown: \(story.chaptersBreakdown)
+\(story.chaptersBreakdown.isEmpty ? "" : "Chapter breakdown: \(story.chaptersBreakdown)")
+
+Chapters so far: \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
+
+Chapters so far: \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
+
+Chapters so far: \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
 
 Write chapter \(currentChapterNumber) based on the above story details
 """
@@ -35,7 +41,7 @@ Write chapter \(currentChapterNumber) based on the above story details
         ]
         
         let request = OpenRouterRequest(
-            model: "x-ai/grok-4-fast",
+//            model: "deepseek/deepseek-v3.2-exp",
             messages: messages,
             reasoning: OpenRouterReasoning()
         )

@@ -23,14 +23,14 @@ Setting & details: \(story.setting)
 
 Theme description: \(story.themeDescription)
 
-Write the plot outline for the story based on the above details
+Write the plot outline, writing each individual chapter outline, for the story based on the above details
 """
             )
         ]
         
         let request = OpenRouterRequest(
             messages: messages,
-            reasoning: OpenRouterReasoning()
+            reasoning: OpenRouterReasoning(temperature: 0.9)
         )
         
         return request.toData()

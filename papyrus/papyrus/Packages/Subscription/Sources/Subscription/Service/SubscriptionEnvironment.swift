@@ -15,6 +15,7 @@ public protocol SubscriptionEnvironmentProtocol {
     func purchaseSubscription() async throws
     func restorePurchases() async throws
     func checkSubscriptionStatus() async throws -> Bool
+    func getCompleteSubscriptionStatus() async throws -> (isSubscribed: Bool, status: Product.SubscriptionInfo.Status?)
     func loadSubscriptionOnInit() async
     func startTransactionListener() async
 }
@@ -49,6 +50,12 @@ public class SubscriptionEnvironment: SubscriptionEnvironmentProtocol {
         let isSubscribed = await repository.isSubscribed()
         await updateSubscriptionStatusInSettings()
         return isSubscribed
+    }
+    
+    public func getCompleteSubscriptionStatus() async throws -> (isSubscribed: Bool, status: Product.SubscriptionInfo.Status?) {
+        let result = await repository.getCompleteSubscriptionStatus()
+        await updateSubscriptionStatusInSettings()
+        return result
     }
     
     public func loadSubscriptionOnInit() async {

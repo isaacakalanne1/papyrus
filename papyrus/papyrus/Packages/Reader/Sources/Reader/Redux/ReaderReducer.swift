@@ -84,9 +84,9 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.mainCharacter = mainCharacter
     case .updateSetting(let setting):
         newState.setting = setting
-    case .beginCreateChapter:
+    case .beginCreateChapter(_, let status):
         newState.isLoading = true
-        newState.loadingStep = .writingChapter
+        newState.loadingStep = .writingChapter(status)
     case .failedToCreateChapter:
         newState.isLoading = false
         newState.loadingStep = .idle
@@ -143,6 +143,8 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.showSubscriptionSheet = show
     case .setSelectedStoryForDetails(let story):
         newState.selectedStoryForDetails = story
+    case .onLoadedSubscriptions(let isSubscribed):
+        newState.settingsState.isSubscribed = isSubscribed
     case .saveStory,
             .deleteStory,
             .loadSubscriptions,

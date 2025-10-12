@@ -58,7 +58,7 @@ struct StoryContentView: View {
                                 
                                 // Next Chapter or Create Sequel Button
                                 Group {
-                                    if story.chapterIndex < story.maxNumberOfChapters - 1 && story.chapterIndex >= story.chapters.count - 1 {
+                                    if canManuallyCreateNextChapter {
                                         PrimaryButton(
                                             type: .nextChapter,
                                             isDisabled: store.state.isLoading,
@@ -131,5 +131,14 @@ struct StoryContentView: View {
                 }
             }
         }
+    }
+    
+    var canManuallyCreateNextChapter: Bool {
+        story.chapterIndex < story.maxNumberOfChapters - 1 &&
+        story.chapterIndex >= story.chapters.count - 1
+    }
+    
+    var canCreateSequel: Bool {
+        story.chapterIndex == story.maxNumberOfChapters - 1
     }
 }
