@@ -68,6 +68,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         self.chaptersBreakdown = try container.decode(String.self, forKey: .chaptersBreakdown)
         self.chapterIndex = try container.decode(Int.self, forKey: .chapterIndex)
         self.maxNumberOfChapters = try container.decodeIfPresent(Int.self, forKey: .maxNumberOfChapters) ?? 0
+        self.maxNumberOfFreeChapters = try container.decodeIfPresent(Int.self, forKey: .maxNumberOfFreeChapters) ?? 2
         self.scrollOffset = try container.decodeIfPresent(CGFloat.self, forKey: .scrollOffset) ?? 0
         self.prequelIds = try container.decodeIfPresent([UUID].self, forKey: .prequelIds) ?? []
         self.sequelIds = try container.decodeIfPresent([UUID].self, forKey: .prequelIds) ?? []
