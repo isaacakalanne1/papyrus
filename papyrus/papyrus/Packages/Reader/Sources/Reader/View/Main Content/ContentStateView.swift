@@ -11,10 +11,7 @@ struct ContentStateView: View {
     @EnvironmentObject var store: ReaderStore
     @FocusState.Binding var focusedField: ReaderView.Field?
     @Binding var isSequelMode: Bool
-    @Binding var currentScrollOffset: CGFloat
     @Binding var scrollViewHeight: CGFloat
-    
-    let startScrollOffsetTimer: () -> Void
     
     var body: some View {
         switch store.state.contentState {
@@ -27,9 +24,7 @@ struct ContentStateView: View {
                 story: story,
                 focusedField: $focusedField,
                 isSequelMode: $isSequelMode,
-                currentScrollOffset: $currentScrollOffset,
-                scrollViewHeight: $scrollViewHeight,
-                startScrollOffsetTimer: startScrollOffsetTimer
+                scrollViewHeight: $scrollViewHeight
             )
         }
     }

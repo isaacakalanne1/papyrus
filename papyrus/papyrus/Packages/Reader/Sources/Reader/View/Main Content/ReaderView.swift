@@ -16,8 +16,6 @@ struct ReaderView: View {
     @State private var dragOffset: CGFloat = 0
     @FocusState private var focusedField: Field?
     @State private var isSequelMode: Bool = false
-    @State private var currentScrollOffset: CGFloat = 0
-    @State private var scrollOffsetTimer: Timer?
     @State private var scrollViewHeight: CGFloat = 0
     
     enum MenuStatus {
@@ -60,9 +58,7 @@ struct ReaderView: View {
                 ContentStateView(
                     focusedField: $focusedField,
                     isSequelMode: $isSequelMode,
-                    currentScrollOffset: $currentScrollOffset,
-                    scrollViewHeight: $scrollViewHeight,
-                    startScrollOffsetTimer: startScrollOffsetTimer
+                    scrollViewHeight: $scrollViewHeight
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(
@@ -159,18 +155,6 @@ struct ReaderView: View {
         .onAppear {
             store.dispatch(.loadAllStories)
             store.dispatch(.loadSubscriptions)
-        }
-    }
-    
-    private func startScrollOffsetTimer() {
-        scrollOffsetTimer?.invalidate()
-        scrollOffsetTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
-            DispatchQueue.main.async {
-                if let story = store.state.story,
-                   abs(currentScrollOffset - story.scrollOffset) > 1 {
-                    store.dispatch(.updateScrollOffset(currentScrollOffset))
-                }
-            }
         }
     }
     
