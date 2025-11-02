@@ -11,6 +11,7 @@ import Network
 import Foundation
 import Network
 
+@available(macOS 13, iOS 16.0, *)
 public struct DefaultNetworkAvailabilityWaiter: NetworkAvailabilityWaiting, Sendable {
 
     private let requiredInterfaceType: NWInterface.InterfaceType?

@@ -11,6 +11,7 @@ import NetworkOperationPerformerMocks
 
 // Note: You can run this code via the DemoNetworkOperationPerformer target
 
+@available(macOS 13, iOS 16.0, *)
 @main
 struct DemoNetworkOperationPerformer {
     static func main() async {
@@ -29,6 +30,7 @@ struct DemoNetworkOperationPerformer {
 
 // MARK: - Demo Scenarios (using a mock waiter)
 
+@available(macOS 13, iOS 16.0, *)
 private func demo_availableImmediately() async {
     print("[Scenario A] Available immediately:")
     let performer = NetworkOperationPerformer(waiter: MockWaiter(.availableImmediately))
@@ -41,6 +43,7 @@ private func demo_availableImmediately() async {
     print("Result:", result, "\n")
 }
 
+@available(macOS 13, iOS 16.0, *)
 private func demo_availableWithinTimeout() async {
     print("[Scenario B] Becomes available within timeout:")
     let performer = NetworkOperationPerformer(waiter: MockWaiter(.availableAfter(.seconds(1))))
@@ -52,6 +55,7 @@ private func demo_availableWithinTimeout() async {
     print("Result:", result, "\n")
 }
 
+@available(macOS 13, iOS 16.0, *)
 private func demo_timesOutBeforeAvailable() async {
     print("[Scenario C] Times out before availability:")
     let performer = NetworkOperationPerformer(waiter: MockWaiter(.never))
@@ -64,6 +68,7 @@ private func demo_timesOutBeforeAvailable() async {
 
 // MARK: - Real NWPathMonitor-backed demo
 
+@available(macOS 13, iOS 16.0, *)
 private func demo_realNetwork(waitSeconds: Int) async {
     print("[Scenario D] Real network (NWPathMonitor), timeout \(waitSeconds)s:")
     let performer = NetworkOperationPerformer(waiter: DefaultNetworkAvailabilityWaiter(/* requiredInterfaceType: .wifi */))

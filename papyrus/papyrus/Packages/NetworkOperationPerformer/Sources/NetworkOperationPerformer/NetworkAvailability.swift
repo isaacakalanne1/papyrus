@@ -6,6 +6,7 @@
 //
 
 /// Abstraction that can be faked in tests (so you don't need real network state).
+@available(macOS 13, iOS 16.0, *)
 public protocol NetworkAvailabilityWaiting: Sendable {
     /// Returns `.available` if network access is observed before `timeout`,
     /// otherwise `.timedOut`. Should respect cooperative cancellation.

@@ -8,6 +8,7 @@
 import Foundation
 @testable import NetworkOperationPerformer
 
+@available(macOS 13, iOS 16.0, *)
 public struct MockWaiter: NetworkAvailabilityWaiting {
     public enum Script: Sendable {
         case availableImmediately

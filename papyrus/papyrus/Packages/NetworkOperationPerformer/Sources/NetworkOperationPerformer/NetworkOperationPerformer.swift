@@ -7,6 +7,7 @@
 
 /// A reusable, thread-safe performer that executes work *only when* network access is available
 /// either immediately or within a specified timeout. Uses structured concurrency & actors.
+@available(macOS 13, iOS 16.0, *)
 public actor NetworkOperationPerformer {
 
     private let waiter: NetworkAvailabilityWaiting
