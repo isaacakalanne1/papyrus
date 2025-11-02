@@ -410,7 +410,7 @@ class ReaderEnvironmentTests {
     // MARK: - Subscription Methods Tests
     
     @Test
-    func loadSubscriptions_callsSubscriptionEnvironment() async {
+    func loadSubscriptions_success_returnsTrue() async throws {
         let mockTextGeneration = MockTextGenerationEnvironment()
         let mockSettings = MockSettingsEnvironment()
         let mockSubscription = MockSubscriptionEnvironment()
@@ -423,9 +423,60 @@ class ReaderEnvironmentTests {
             subscriptionEnvironment: mockSubscription
         )
         
-        await environment.loadSubscriptions()
+        // Configure mock to return subscribed status
+        mockSubscription.getCompleteSubscriptionStatusReturnValue = (isSubscribed: true, status: nil)
         
-        #expect(mockSubscription.loadSubscriptionOnInitCalled)
+        let result = try await environment.loadSubscriptions()
+        
+        #expect(mockSubscription.getCompleteSubscriptionStatusCalled)
+        #expect(result == true)
+    }
+    
+    @Test
+    func loadSubscriptions_success_returnsFalse() async throws {
+        let mockTextGeneration = MockTextGenerationEnvironment()
+        let mockSettings = MockSettingsEnvironment()
+        let mockSubscription = MockSubscriptionEnvironment()
+        let mockDataStore = MockReaderDataStore()
+        
+        let environment = ReaderEnvironment(
+            dataStore: mockDataStore,
+            textGenerationEnvironment: mockTextGeneration,
+            settingsEnvironment: mockSettings,
+            subscriptionEnvironment: mockSubscription
+        )
+        
+        // Configure mock to return unsubscribed status
+        mockSubscription.getCompleteSubscriptionStatusReturnValue = (isSubscribed: false, status: nil)
+        
+        let result = try await environment.loadSubscriptions()
+        
+        #expect(mockSubscription.getCompleteSubscriptionStatusCalled)
+        #expect(result == false)
+    }
+    
+    @Test
+    func loadSubscriptions_failure_throwsError() async {
+        let mockTextGeneration = MockTextGenerationEnvironment()
+        let mockSettings = MockSettingsEnvironment()
+        let mockSubscription = MockSubscriptionEnvironment()
+        let mockDataStore = MockReaderDataStore()
+        
+        let environment = ReaderEnvironment(
+            dataStore: mockDataStore,
+            textGenerationEnvironment: mockTextGeneration,
+            settingsEnvironment: mockSettings,
+            subscriptionEnvironment: mockSubscription
+        )
+        
+        // Configure mock to throw error
+        mockSubscription.getCompleteSubscriptionStatusError = SubscriptionTestError("Load failed")
+        
+        await #expect(throws: SubscriptionTestError.self) {
+            try await environment.loadSubscriptions()
+        }
+        
+        #expect(mockSubscription.getCompleteSubscriptionStatusCalled)
     }
     
     // MARK: - Environment Properties Tests

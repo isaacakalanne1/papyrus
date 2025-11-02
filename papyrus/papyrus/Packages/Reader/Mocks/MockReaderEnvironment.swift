@@ -51,6 +51,9 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     
     var loadSubscriptionsCalled = false
     
+    var createStoryThemeCalled = false
+    var createStoryThemeCalledWith: Story?
+    
     // MARK: - Return Values and Error Configuration
     var createPlotOutlineReturnValue: Story?
     var createPlotOutlineError: Error?
@@ -82,6 +85,12 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     
     var loadAllStoriesReturnValue: [Story] = []
     var loadAllStoriesError: Error?
+    
+    var loadSubscriptionsReturnValue: Bool = false
+    var loadSubscriptionsError: Error?
+    
+    var createStoryThemeReturnValue: Story?
+    var createStoryThemeError: Error?
     
     // MARK: - Environment Properties
     public var settingsEnvironment: SettingsEnvironmentProtocol
@@ -215,8 +224,25 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return loadAllStoriesReturnValue
     }
     
-    public func loadSubscriptions() async {
+    public func loadSubscriptions() async throws -> Bool {
         loadSubscriptionsCalled = true
+        
+        if let error = loadSubscriptionsError {
+            throw error
+        }
+        
+        return loadSubscriptionsReturnValue
+    }
+    
+    public func createStoryTheme(story: Story) async throws -> Story {
+        createStoryThemeCalled = true
+        createStoryThemeCalledWith = story
+        
+        if let error = createStoryThemeError {
+            throw error
+        }
+        
+        return createStoryThemeReturnValue ?? story
     }
 }
 

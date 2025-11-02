@@ -99,7 +99,10 @@ struct ReaderStateTests {
         // Given
         var settingsState = SettingsState()
         settingsState.isSubscribed = false
-        let story = Story.arrange(chapters: [Chapter.arrange]) // 1 chapter
+        let story = Story.arrange(
+            maxNumberOfFreeChapters: 2,
+            chapters: [Chapter.arrange] // 1 chapter, under limit
+        )
         let state = ReaderState(
             story: story,
             settingsState: settingsState
@@ -109,15 +112,18 @@ struct ReaderStateTests {
         #expect(state.canCreateChapter)
     }
     
-    @Test("Cannot create chapter without subscription over limit")
-    func cannotCreateChapterWithoutSubscriptionOverLimit() {
+    @Test("Cannot create chapter without subscription at limit")
+    func cannotCreateChapterWithoutSubscriptionAtLimit() {
         // Given
         var settingsState = SettingsState()
         settingsState.isSubscribed = false
-        let story = Story.arrange(chapters: [
-            Chapter.arrange,
-            Chapter.arrange // 2 chapters (at limit)
-        ])
+        let story = Story.arrange(
+            maxNumberOfFreeChapters: 2,
+            chapters: [
+                Chapter.arrange,
+                Chapter.arrange // 2 chapters (at limit)
+            ]
+        )
         let state = ReaderState(
             story: story,
             settingsState: settingsState
@@ -125,6 +131,131 @@ struct ReaderStateTests {
         
         // When & Then
         #expect(!state.canCreateChapter)
+    }
+    
+    @Test("Cannot create chapter without subscription over limit")
+    func cannotCreateChapterWithoutSubscriptionOverLimit() {
+        // Given
+        var settingsState = SettingsState()
+        settingsState.isSubscribed = false
+        let story = Story.arrange(
+            maxNumberOfFreeChapters: 2,
+            chapters: [
+                Chapter.arrange,
+                Chapter.arrange,
+                Chapter.arrange // 3 chapters (over limit)
+            ]
+        )
+        let state = ReaderState(
+            story: story,
+            settingsState: settingsState
+        )
+        
+        // When & Then
+        #expect(!state.canCreateChapter)
+    }
+    
+    // MARK: - canAutoCreateChapter Computed Property Tests
+    
+    @Test("Can auto create chapter - subscribed user at latest chapter")
+    func canAutoCreateChapter_subscribedAtLatest() {
+        // Given
+        var settingsState = SettingsState()
+        settingsState.isSubscribed = true
+        let story = Story.arrange(
+            chapterIndex: 1,
+            maxNumberOfChapters: 5,
+            chapters: [
+                Chapter.arrange,
+                Chapter.arrange // User is at chapter 2 (index 1), which is the latest
+            ]
+        )
+        let state = ReaderState(
+            story: story,
+            settingsState: settingsState
+        )
+        
+        // When & Then
+        #expect(state.canAutoCreateChapter)
+    }
+    
+    @Test("Cannot auto create chapter - no story")
+    func cannotAutoCreateChapter_noStory() {
+        // Given
+        var settingsState = SettingsState()
+        settingsState.isSubscribed = true
+        let state = ReaderState(
+            story: nil,
+            settingsState: settingsState
+        )
+        
+        // When & Then
+        #expect(!state.canAutoCreateChapter)
+    }
+    
+    @Test("Cannot auto create chapter - not at latest chapter")
+    func cannotAutoCreateChapter_notAtLatest() {
+        // Given
+        var settingsState = SettingsState()
+        settingsState.isSubscribed = true
+        let story = Story.arrange(
+            chapterIndex: 0, // Not at latest chapter
+            chapters: [
+                Chapter.arrange,
+                Chapter.arrange
+            ]
+        )
+        let state = ReaderState(
+            story: story,
+            settingsState: settingsState
+        )
+        
+        // When & Then
+        #expect(!state.canAutoCreateChapter)
+    }
+    
+    @Test("Cannot auto create chapter - at free limit without subscription")
+    func cannotAutoCreateChapter_atFreeLimitUnsubscribed() {
+        // Given
+        var settingsState = SettingsState()
+        settingsState.isSubscribed = false
+        let story = Story.arrange(
+            chapterIndex: 1,
+            maxNumberOfFreeChapters: 2,
+            chapters: [
+                Chapter.arrange,
+                Chapter.arrange // At free limit
+            ]
+        )
+        let state = ReaderState(
+            story: story,
+            settingsState: settingsState
+        )
+        
+        // When & Then
+        #expect(!state.canAutoCreateChapter)
+    }
+    
+    @Test("Can auto create chapter - subscribed at free limit")
+    func canAutoCreateChapter_subscribedAtFreeLimit() {
+        // Given
+        var settingsState = SettingsState()
+        settingsState.isSubscribed = true
+        let story = Story.arrange(
+            chapterIndex: 1,
+            maxNumberOfFreeChapters: 2,
+            chapters: [
+                Chapter.arrange,
+                Chapter.arrange // At free limit but subscribed
+            ]
+        )
+        let state = ReaderState(
+            story: story,
+            settingsState: settingsState
+        )
+        
+        // When & Then
+        #expect(state.canAutoCreateChapter)
     }
     
     @Test("Content state should be welcome for empty state")
@@ -199,7 +330,7 @@ struct ReaderStateTests {
     
     @Test("Loading step enum should be equatable", 
           arguments: [LoadingStep.idle, .creatingPlotOutline, .creatingChapterBreakdown, 
-                     .analyzingStructure, .preparingNarrative, .writingChapter])
+                     .analyzingStructure, .preparingNarrative, .writingChapter(.visible)])
     func loadingStepEnum(step: LoadingStep) {
         // Test that all loading steps are equatable
         #expect(step == step)
@@ -208,7 +339,15 @@ struct ReaderStateTests {
     @Test("Different loading steps should not be equal")
     func loadingStepInequality() {
         #expect(LoadingStep.idle != LoadingStep.creatingPlotOutline)
-        #expect(LoadingStep.writingChapter != LoadingStep.idle)
+        #expect(LoadingStep.writingChapter(.visible) != LoadingStep.idle)
+        #expect(LoadingStep.writingChapter(.visible) != LoadingStep.writingChapter(.hidden))
+    }
+    
+    @Test("WritingChapterStatus enum should be equatable")
+    func writingChapterStatusEnum() {
+        #expect(WritingChapterStatus.visible == WritingChapterStatus.visible)
+        #expect(WritingChapterStatus.hidden == WritingChapterStatus.hidden)
+        #expect(WritingChapterStatus.visible != WritingChapterStatus.hidden)
     }
     
     @Test("State equality should work correctly")

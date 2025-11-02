@@ -31,10 +31,6 @@ Plot outline: \(story.plotOutline)
 
 Chapters so far: \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
 
-Chapters so far: \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
-
-Chapters so far: \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
-
 Write chapter \(currentChapterNumber) based on the above story details
 """
             )

@@ -214,14 +214,27 @@ class ReaderReducerTests {
     }
     
     @Test
-    func beginCreateChapter() {
+    func beginCreateChapter_visibleStatus() {
         let initialState = ReaderState.arrange
         
         var expectedState = initialState
         expectedState.isLoading = true
-        expectedState.loadingStep = .writingChapter
+        expectedState.loadingStep = .writingChapter(.visible)
         
-        let newState = readerReducer(initialState, .beginCreateChapter(Story()))
+        let newState = readerReducer(initialState, .beginCreateChapter(Story(), .visible))
+        
+        #expect(newState == expectedState)
+    }
+    
+    @Test
+    func beginCreateChapter_hiddenStatus() {
+        let initialState = ReaderState.arrange
+        
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.loadingStep = .writingChapter(.hidden)
+        
+        let newState = readerReducer(initialState, .beginCreateChapter(Story(), .hidden))
         
         #expect(newState == expectedState)
     }
@@ -235,7 +248,7 @@ class ReaderReducerTests {
         let initialState = ReaderState.arrange(
             story: existingStory,
             isLoading: true,
-            loadingStep: .writingChapter
+            loadingStep: .writingChapter(.visible)
         )
         
         var expectedState = initialState
@@ -259,7 +272,7 @@ class ReaderReducerTests {
         let initialState = ReaderState.arrange(
             story: currentStory,
             isLoading: true,
-            loadingStep: .writingChapter
+            loadingStep: .writingChapter(.visible)
         )
         
         var expectedState = initialState
@@ -314,7 +327,7 @@ class ReaderReducerTests {
             Story(title: "Story 1"),
             Story(title: "Story 2")
         ]
-        let initialState = ReaderState.arrange(isLoading: true, loadingStep: .writingChapter)
+        let initialState = ReaderState.arrange(isLoading: true, loadingStep: .writingChapter(.visible))
         
         var expectedState = initialState
         expectedState.loadedStories = stories
@@ -581,7 +594,7 @@ class ReaderReducerTests {
     func failedToCreateChapter() {
         let initialState = ReaderState.arrange(
             isLoading: true,
-            loadingStep: .writingChapter
+            loadingStep: .writingChapter(.visible)
         )
         
         var expectedState = initialState
@@ -653,6 +666,36 @@ class ReaderReducerTests {
         #expect(newState == expectedState)
     }
     
+    // MARK: - onLoadedSubscriptions Tests
+    
+    @Test
+    func onLoadedSubscriptions_updatesSettingsState() {
+        let initialState = ReaderState.arrange(
+            settingsState: SettingsState(isSubscribed: false)
+        )
+        
+        var expectedState = initialState
+        expectedState.settingsState.isSubscribed = true
+        
+        let newState = readerReducer(initialState, .onLoadedSubscriptions(true))
+        
+        #expect(newState == expectedState)
+    }
+    
+    @Test
+    func onLoadedSubscriptions_false_updatesSettingsState() {
+        let initialState = ReaderState.arrange(
+            settingsState: SettingsState(isSubscribed: true)
+        )
+        
+        var expectedState = initialState
+        expectedState.settingsState.isSubscribed = false
+        
+        let newState = readerReducer(initialState, .onLoadedSubscriptions(false))
+        
+        #expect(newState == expectedState)
+    }
+    
     // MARK: - canCreateChapter Computed Property Tests
     
     @Test
@@ -688,11 +731,14 @@ class ReaderReducerTests {
     }
     
     @Test
-    func canCreateChapter_unsubscribedUser_exactly2Chapters_returnsFalse() {
-        let story = Story(chapters: [
-            Chapter(content: ""),
-            Chapter(content: "")
-        ])
+    func canCreateChapter_unsubscribedUser_atFreeLimit_returnsFalse() {
+        let story = Story(
+            maxNumberOfFreeChapters: 2,
+            chapters: [
+                Chapter(content: ""),
+                Chapter(content: "")
+            ]
+        )
         let state = ReaderState.arrange(
             story: story,
             settingsState: SettingsState(isSubscribed: false)
@@ -701,13 +747,16 @@ class ReaderReducerTests {
     }
     
     @Test
-    func canCreateChapter_unsubscribedUser_moreThan2Chapters_returnsFalse() {
-        let story = Story(chapters: [
-            Chapter(content: ""),
-            Chapter(content: ""),
-            Chapter(content: ""),
-            Chapter(content: "")
-        ])
+    func canCreateChapter_unsubscribedUser_overFreeLimit_returnsFalse() {
+        let story = Story(
+            maxNumberOfFreeChapters: 2,
+            chapters: [
+                Chapter(content: ""),
+                Chapter(content: ""),
+                Chapter(content: ""),
+                Chapter(content: "")
+            ]
+        )
         let state = ReaderState.arrange(
             story: story,
             settingsState: SettingsState(isSubscribed: false)
@@ -718,28 +767,21 @@ class ReaderReducerTests {
     // MARK: - Middleware-handled Actions
     
     @Test
-    func deleteStory_noStateChange() {
+    func middlewareHandledActions_noStateChange() {
         let initialState = ReaderState.arrange
-        let storyId = UUID()
         
-        var expectedState = initialState
-        // No change expected as deleteStory is handled by middleware
+        let middlewareActions: [ReaderAction] = [
+            .saveStory(Story()),
+            .deleteStory(UUID()),
+            .loadSubscriptions,
+            .createStory,
+            .createSequel,
+            .createChapter(Story())
+        ]
         
-        let newState = readerReducer(initialState, .deleteStory(storyId))
-        
-        #expect(newState == expectedState)
-    }
-    
-    @Test
-    func saveStory_noStateChange() {
-        let story = Story(title: "Test Story")
-        let initialState = ReaderState.arrange(story: story)
-        
-        var expectedState = initialState
-        // No change expected as saveStory is handled by middleware
-        
-        let newState = readerReducer(initialState, .saveStory(story))
-        
-        #expect(newState == expectedState)
+        for action in middlewareActions {
+            let newState = readerReducer(initialState, action)
+            #expect(newState == initialState, "Action \(action) should not change state")
+        }
     }
 }
