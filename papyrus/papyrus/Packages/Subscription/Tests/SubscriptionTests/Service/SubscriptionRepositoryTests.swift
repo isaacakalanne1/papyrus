@@ -274,6 +274,40 @@ class SubscriptionRepositoryTests {
         #expect(mockService.currentSubscriptionCallCount == 1)
     }
     
+    // MARK: - getCompleteSubscriptionStatus Tests
+    
+    @Test
+    func getCompleteSubscriptionStatus_subscribed() async throws {
+        // Given
+        let expectedResult = (isSubscribed: true, status: nil as Product.SubscriptionInfo.Status?)
+        mockService.getCompleteSubscriptionStatusReturnValue = expectedResult
+        
+        // When
+        let result = await repository.getCompleteSubscriptionStatus()
+        
+        // Then
+        #expect(result.isSubscribed == true)
+        #expect(result.status == nil)
+        #expect(mockService.getCompleteSubscriptionStatusCalled)
+        #expect(mockService.getCompleteSubscriptionStatusCallCount == 1)
+    }
+    
+    @Test
+    func getCompleteSubscriptionStatus_notSubscribed() async throws {
+        // Given
+        let expectedResult = (isSubscribed: false, status: nil as Product.SubscriptionInfo.Status?)
+        mockService.getCompleteSubscriptionStatusReturnValue = expectedResult
+        
+        // When
+        let result = await repository.getCompleteSubscriptionStatus()
+        
+        // Then
+        #expect(result.isSubscribed == false)
+        #expect(result.status == nil)
+        #expect(mockService.getCompleteSubscriptionStatusCalled)
+        #expect(mockService.getCompleteSubscriptionStatusCallCount == 1)
+    }
+    
     // MARK: - startTransactionListener Tests
     
     @Test

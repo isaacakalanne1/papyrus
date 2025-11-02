@@ -58,7 +58,7 @@ class CreatePlotOutlineEndpointTests {
         #expect(json != nil)
         
         // Verify basic structure
-        #expect(json?["model"] as? String == "x-ai/grok-4-fast")
+        #expect(json?["model"] as? String == "deepseek/deepseek-chat-v3.1")
         
         let messages = json?["messages"] as? [[String: Any]]
         #expect(messages?.count == 2)
@@ -167,10 +167,9 @@ class CreatePlotOutlineEndpointTests {
         
         let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
         
-        // Verify reasoning is included
-        let reasoning = json?["reasoning"] as? [String: Any]
-        #expect(reasoning != nil)
-        #expect(reasoning?["max_tokens"] as? Int == 5000)
+        // Verify temperature and max_tokens are included
+        #expect(json?["temperature"] as? Float == 0.9)
+        #expect(json?["max_tokens"] as? Int == 10_000)
     }
     
     // MARK: - Response Type Tests

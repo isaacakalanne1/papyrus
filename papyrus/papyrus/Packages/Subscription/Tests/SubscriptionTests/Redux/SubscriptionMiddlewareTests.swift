@@ -90,28 +90,26 @@ class SubscriptionMiddlewareTests {
     // These would need to be tested in integration tests with real StoreKit products
     
     @Test
-    func checkSubscriptionStatus_checkFailure_returnsStatusUpdatedFalse() async {
+    func checkSubscriptionStatus_success_returnsStatusUpdated() async {
         let state = SubscriptionState.arrange
         let environment = MockSubscriptionEnvironment()
-        environment.checkSubscriptionStatusError = SubscriptionTestError("Check failed")
+        environment.getCompleteSubscriptionStatusReturnValue = (isSubscribed: true, status: nil)
         
         let result = await subscriptionMiddleware(state, .checkSubscriptionStatus, environment)
         
-        #expect(environment.checkSubscriptionStatusCalled)
-        #expect(result == .subscriptionStatusUpdated(isSubscribed: false, status: nil))
+        #expect(environment.getCompleteSubscriptionStatusCalled)
+        #expect(result == .subscriptionStatusUpdated(isSubscribed: true, status: nil))
     }
     
     @Test
-    func checkSubscriptionStatus_fetchProductFailure_returnsStatusUpdatedFalse() async {
+    func checkSubscriptionStatus_failure_returnsStatusUpdatedFalse() async {
         let state = SubscriptionState.arrange
         let environment = MockSubscriptionEnvironment()
-        environment.checkSubscriptionStatusReturnValue = true
-        environment.fetchSubscriptionProductError = SubscriptionTestError("Fetch failed")
+        environment.getCompleteSubscriptionStatusError = SubscriptionTestError("Check failed")
         
         let result = await subscriptionMiddleware(state, .checkSubscriptionStatus, environment)
         
-        #expect(environment.checkSubscriptionStatusCalled)
-        #expect(environment.fetchSubscriptionProductCalled)
+        #expect(environment.getCompleteSubscriptionStatusCalled)
         #expect(result == .subscriptionStatusUpdated(isSubscribed: false, status: nil))
     }
     

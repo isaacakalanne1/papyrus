@@ -157,6 +157,62 @@ class SubscriptionEnvironmentTests {
         #expect(!mockSettingsEnvironment.saveSettingsCalled)
     }
     
+    // MARK: - getCompleteSubscriptionStatus Tests
+    
+    @Test
+    func getCompleteSubscriptionStatus_success() async throws {
+        // Given
+        let expectedResult = (isSubscribed: true, status: nil as Product.SubscriptionInfo.Status?)
+        mockRepository.getCompleteSubscriptionStatusReturnValue = expectedResult
+        let mockSettings = SettingsState()
+        mockSettingsEnvironment.loadSettingsReturnValue = mockSettings
+        
+        // When
+        let result = try await subscriptionEnvironment.getCompleteSubscriptionStatus()
+        
+        // Then
+        #expect(result.isSubscribed == true)
+        #expect(result.status == nil)
+        #expect(mockRepository.getCompleteSubscriptionStatusCalled)
+        #expect(mockSettingsEnvironment.loadSettingsCalled)
+        #expect(mockSettingsEnvironment.saveSettingsCalled)
+    }
+    
+    @Test
+    func getCompleteSubscriptionStatus_notSubscribed() async throws {
+        // Given
+        let expectedResult = (isSubscribed: false, status: nil as Product.SubscriptionInfo.Status?)
+        mockRepository.getCompleteSubscriptionStatusReturnValue = expectedResult
+        let mockSettings = SettingsState()
+        mockSettingsEnvironment.loadSettingsReturnValue = mockSettings
+        
+        // When
+        let result = try await subscriptionEnvironment.getCompleteSubscriptionStatus()
+        
+        // Then
+        #expect(result.isSubscribed == false)
+        #expect(result.status == nil)
+        #expect(mockRepository.getCompleteSubscriptionStatusCalled)
+        #expect(mockSettingsEnvironment.loadSettingsCalled)
+        #expect(mockSettingsEnvironment.saveSettingsCalled)
+    }
+    
+    @Test
+    func getCompleteSubscriptionStatus_failure() async throws {
+        // Given
+        let expectedError = SubscriptionError.unknown
+        mockRepository.getCompleteSubscriptionStatusError = expectedError
+        
+        // When & Then
+        await #expect(throws: SubscriptionError.self) {
+            try await subscriptionEnvironment.getCompleteSubscriptionStatus()
+        }
+        
+        #expect(mockRepository.getCompleteSubscriptionStatusCalled)
+        // Settings should not be updated on failure
+        #expect(!mockSettingsEnvironment.saveSettingsCalled)
+    }
+    
     // MARK: - loadSubscriptionOnInit Tests
     
     @Test

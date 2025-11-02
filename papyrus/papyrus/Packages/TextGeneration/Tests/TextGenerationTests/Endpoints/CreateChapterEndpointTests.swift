@@ -62,7 +62,7 @@ class CreateChapterEndpointTests {
         #expect(json != nil)
         
         // Verify basic structure
-        #expect(json?["model"] as? String == "x-ai/grok-4-fast")
+        #expect(json?["model"] as? String == "deepseek/deepseek-chat-v3.1")
         
         let messages = json?["messages"] as? [[String: Any]]
         #expect(messages?.count == 2)
@@ -259,7 +259,7 @@ class CreateChapterEndpointTests {
     }
     
     @Test
-    func body_includesReasoning() throws {
+    func body_includesTemperatureAndMaxTokens() throws {
         let story = Story()
         let endpoint = CreateChapterEndpoint(story: story)
         
@@ -268,10 +268,9 @@ class CreateChapterEndpointTests {
         
         let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
         
-        // Verify reasoning is included
-        let reasoning = json?["reasoning"] as? [String: Any]
-        #expect(reasoning != nil)
-        #expect(reasoning?["max_tokens"] as? Int == 5000)
+        // Verify temperature and max_tokens are included
+        #expect(json?["temperature"] == nil) // No temperature specified for CreateChapterEndpoint
+        #expect(json?["max_tokens"] as? Int == 10_000)
     }
     
     // MARK: - Response Type Tests

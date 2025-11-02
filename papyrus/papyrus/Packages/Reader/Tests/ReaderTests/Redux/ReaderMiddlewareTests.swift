@@ -155,7 +155,7 @@ class ReaderMiddlewareTests {
         
         let result = await readerMiddleware(state, .onCreatedChapterBreakdown(story), environment)
         
-        #expect(result == .beginCreateChapter(story))
+        #expect(result == .beginCreateChapter(story, .visible))
     }
     
     @Test
@@ -250,7 +250,7 @@ class ReaderMiddlewareTests {
         
         let result = await readerMiddleware(state, .onGetChapterTitle(story), environment)
         
-        #expect(result == .beginCreateChapter(story))
+        #expect(result == .beginCreateChapter(story, .visible))
     }
     
     // MARK: - Create Chapter Tests
@@ -266,7 +266,7 @@ class ReaderMiddlewareTests {
         
         let result = await readerMiddleware(state, .createChapter(story), environment)
         
-        #expect(result == .beginCreateChapter(story))
+        #expect(result == .beginCreateChapter(story, .visible))
     }
     
     @Test
@@ -345,11 +345,28 @@ class ReaderMiddlewareTests {
     // MARK: - Chapter Creation and Navigation Tests
     
     @Test
-    func onCreatedChapter_returnsUpdateChapterIndex() async {
+    func onCreatedChapter_firstChapter_returnsUpdateChapterIndex() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let story = Story(
             title: "Test Story",
+            chapters: [
+                Chapter(content: "")
+            ]
+        )
+        
+        let result = await readerMiddleware(state, .onCreatedChapter(story), environment)
+        
+        #expect(result == .updateChapterIndex(story, 0)) // Index of last chapter
+    }
+    
+    @Test
+    func onCreatedChapter_lastChapter_returnsUpdateChapterIndex() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        let story = Story(
+            title: "Test Story",
+            maxNumberOfChapters: 3,
             chapters: [
                 Chapter(content: ""),
                 Chapter(content: ""),
@@ -363,14 +380,65 @@ class ReaderMiddlewareTests {
     }
     
     @Test
-    func updateChapterIndex_returnsSaveStory() async {
+    func onCreatedChapter_middleChapter_returnsNil() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
-        let story = Story(title: "Test Story")
+        let story = Story(
+            title: "Test Story",
+            maxNumberOfChapters: 5,
+            chapters: [
+                Chapter(content: ""),
+                Chapter(content: ""),
+                Chapter(content: "")
+            ]
+        )
+        
+        let result = await readerMiddleware(state, .onCreatedChapter(story), environment)
+        
+        #expect(result == nil)
+    }
+    
+    @Test
+    func updateChapterIndex_cannotAutoCreate_returnsSaveStory() async {
+        let state = ReaderState(
+            settingsState: SettingsState(isSubscribed: false)
+        )
+        let environment = MockReaderEnvironment()
+        let story = Story(
+            chapterIndex: 0,
+            maxNumberOfChapters: 5,
+            maxNumberOfFreeChapters: 2,
+            title: "Test Story",
+            chapters: [
+                Chapter(content: "Chapter 1"),
+                Chapter(content: "Chapter 2")
+            ]
+        )
         
         let result = await readerMiddleware(state, .updateChapterIndex(story, 1), environment)
         
         #expect(result == .saveStory(story))
+    }
+    
+    @Test
+    func updateChapterIndex_canAutoCreate_returnsBeginCreateChapter() async {
+        let state = ReaderState(
+            settingsState: SettingsState(isSubscribed: true)
+        )
+        let environment = MockReaderEnvironment()
+        let story = Story(
+            chapterIndex: 1,
+            maxNumberOfChapters: 5,
+            title: "Test Story",
+            chapters: [
+                Chapter(content: "Chapter 1"),
+                Chapter(content: "Chapter 2")
+            ]
+        )
+        
+        let result = await readerMiddleware(state, .updateChapterIndex(story, 1), environment)
+        
+        #expect(result == .beginCreateChapter(story, .hidden))
     }
     
     // MARK: - Save Story Tests
@@ -492,14 +560,27 @@ class ReaderMiddlewareTests {
     // MARK: - Subscription Tests
     
     @Test
-    func loadSubscriptions_callsEnvironment() async {
+    func loadSubscriptions_success_returnsOnLoadedSubscriptions() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
+        environment.loadSubscriptionsReturnValue = true
         
         let result = await readerMiddleware(state, .loadSubscriptions, environment)
         
         #expect(environment.loadSubscriptionsCalled)
-        #expect(result == nil)
+        #expect(result == .onLoadedSubscriptions(true))
+    }
+    
+    @Test
+    func loadSubscriptions_failure_returnsOnLoadedSubscriptionsFalse() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        environment.loadSubscriptionsError = ReaderTestError("Load failed")
+        
+        let result = await readerMiddleware(state, .loadSubscriptions, environment)
+        
+        #expect(environment.loadSubscriptionsCalled)
+        #expect(result == .onLoadedSubscriptions(false))
     }
     
     // MARK: - Begin Create Story Tests
@@ -622,7 +703,7 @@ class ReaderMiddlewareTests {
         )
         environment.createChapterReturnValue = outputStory
         
-        let result = await readerMiddleware(state, .beginCreateChapter(inputStory), environment)
+        let result = await readerMiddleware(state, .beginCreateChapter(inputStory, .visible), environment)
         
         #expect(environment.createChapterCalled)
         #expect(environment.createChapterCalledWith?.id == inputStory.id)
@@ -636,10 +717,41 @@ class ReaderMiddlewareTests {
         let inputStory = Story(title: "Input Story")
         environment.createChapterError = ReaderTestError("Chapter creation failed")
         
-        let result = await readerMiddleware(state, .beginCreateChapter(inputStory), environment)
+        let result = await readerMiddleware(state, .beginCreateChapter(inputStory, .visible), environment)
         
         #expect(environment.createChapterCalled)
         #expect(result == .failedToCreateChapter)
+    }
+    
+    // MARK: - setStory Tests
+    
+    @Test
+    func setStory_withStory_returnsUpdateChapterIndex() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        let story = Story(
+            chapterIndex: 2,
+            title: "Test Story",
+            chapters: [
+                Chapter(content: "Chapter 1"),
+                Chapter(content: "Chapter 2"),
+                Chapter(content: "Chapter 3")
+            ]
+        )
+        
+        let result = await readerMiddleware(state, .setStory(story), environment)
+        
+        #expect(result == .updateChapterIndex(story, 2))
+    }
+    
+    @Test
+    func setStory_withNil_returnsNil() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        
+        let result = await readerMiddleware(state, .setStory(nil), environment)
+        
+        #expect(result == nil)
     }
     
     // MARK: - Selected Story for Details Tests
@@ -678,11 +790,11 @@ class ReaderMiddlewareTests {
             .updateMainCharacter("Test Character"),
             .onLoadedStories([]),
             .failedToLoadStories,
-            .setStory(Story()),
             .onDeletedStory(UUID()),
             .refreshSettings(SettingsState()),
             .setShowStoryForm(true),
             .setShowSubscriptionSheet(true),
+            .onLoadedSubscriptions(true),
             .setSelectedStoryForDetails(Story())
         ]
         
