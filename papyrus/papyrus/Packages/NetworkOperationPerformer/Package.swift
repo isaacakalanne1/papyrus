@@ -6,7 +6,8 @@ import PackageDescription
 let package = Package(
     name: "NetworkOperationPerformer",
     platforms: [
-        .iOS("17.4")
+        .iOS(.v16),
+        .macOS(.v13)
     ],
     products: [
         .library(

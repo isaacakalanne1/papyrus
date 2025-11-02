@@ -9,9 +9,10 @@ import Foundation
 import NetworkOperationPerformer
 import NetworkOperationPerformerMocks
 
+// Note: You can run this code via the DemoNetworkOperationPerformer target
+
 @main
 struct DemoNetworkOperationPerformer {
-    // Note: You can run this code via the DemoNetworkOperationPerformer target
     static func main() async {
         print("=== NetworkOperationPerformer Demo ===\n")
 
