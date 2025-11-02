@@ -184,7 +184,8 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             .setShowStoryForm,
             .setShowSubscriptionSheet,
             .onLoadedSubscriptions,
-            .setSelectedStoryForDetails:
+            .setSelectedStoryForDetails,
+            .setAutoCreatingChapter:
         return nil
     }
 }
