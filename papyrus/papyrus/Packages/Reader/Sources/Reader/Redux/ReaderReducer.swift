@@ -150,7 +150,8 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             .loadSubscriptions,
             .createStory,
             .createSequel,
-            .createChapter:
+            .createChapter,
+            .setAutoCreatingChapter:
         break
     }
     return newState
