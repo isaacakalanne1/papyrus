@@ -41,7 +41,6 @@
 		11F5860C2E87127A00084AEC /* Exceptions for "papyrus" folder in "papyrus" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				Packages/NetworkOperationPerformer,
 				Packages/PapyrusStyleKit,
 				Packages/SDIconsKit,
 				Packages/SDNetworkCore,
