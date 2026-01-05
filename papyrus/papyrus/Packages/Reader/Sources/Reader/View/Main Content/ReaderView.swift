@@ -150,7 +150,6 @@ struct ReaderView: View {
             )
             .environmentObject(store)
             .presentationBackground(.clear)
-            .presentationDragIndicator(.hidden)
         }
         .sheet(isPresented: showSubscriptionSheet) {
             SubscriptionRootView(environment: store.environment.subscriptionEnvironment)

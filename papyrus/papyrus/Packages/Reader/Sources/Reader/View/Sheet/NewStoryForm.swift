@@ -85,11 +85,8 @@ struct NewStoryForm: View {
                     }
                 }
             }
-            
-            Spacer()
         }
         .padding(24)
-        .contentShape(Rectangle())
         .onTapGesture {
             focusedField = nil
         }

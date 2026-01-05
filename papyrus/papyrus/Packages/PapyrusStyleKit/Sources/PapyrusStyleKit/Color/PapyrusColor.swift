@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-public enum PapyrusColor: Sendable {
+public enum PapyrusColor: String, CaseIterable, Sendable {
     /// Background
     case background
     case backgroundSecondary
@@ -59,4 +59,37 @@ public enum PapyrusColor: Sendable {
             Color(red: 0.6, green: 0.3, blue: 0.2)
         }
     }
+}
+
+#Preview {
+    ScrollView {
+        VStack(spacing: 16) {
+            ForEach(PapyrusColor.allCases, id: \.self) { papyrusColor in
+                HStack(spacing: 12) {
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(papyrusColor.color)
+                        .frame(width: 44, height: 44)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color.gray.opacity(0.2), lineWidth: 1)
+                        )
+                    
+                    VStack(alignment: .leading) {
+                        Text(papyrusColor.rawValue)
+                            .font(.system(.body, design: .monospaced))
+                            .fontWeight(.medium)
+                        
+                        Text(String(describing: papyrusColor.color))
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                    }
+                    
+                    Spacer()
+                }
+                .padding(.horizontal)
+            }
+        }
+        .padding(.vertical)
+    }
+    .background(PapyrusColor.background.color)
 }
