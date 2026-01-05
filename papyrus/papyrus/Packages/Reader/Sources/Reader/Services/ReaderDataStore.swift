@@ -16,6 +16,7 @@ public protocol ReaderDataStoreProtocol {
 }
 
 public class ReaderDataStore: ReaderDataStoreProtocol {
+
     private let fileManager = FileManager.default
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()
