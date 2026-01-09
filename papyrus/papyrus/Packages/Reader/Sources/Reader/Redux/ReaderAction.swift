@@ -47,4 +47,11 @@ enum ReaderAction: Equatable, Sendable {
     case loadSubscriptions
     case setSelectedStoryForDetails(Story?)
     case setFocusedField(ReaderField?)
+    
+    // UI State Actions
+    case setMenuStatus(MenuStatus)
+    case setDragOffset(CGFloat)
+    case setIsSequelMode(Bool)
+    case setCurrentScrollOffset(CGFloat)
+    case setScrollViewHeight(CGFloat)
 }

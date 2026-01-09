@@ -11,7 +11,6 @@ import PapyrusStyleKit
 
 struct WelcomeView: View {
     @EnvironmentObject var store: ReaderStore
-    @Binding var isSequelMode: Bool
     
     var body: some View {
         ZStack {

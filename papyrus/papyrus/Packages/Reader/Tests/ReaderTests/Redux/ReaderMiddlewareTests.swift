@@ -683,7 +683,12 @@ class ReaderMiddlewareTests {
             .refreshSettings(SettingsState()),
             .setShowStoryForm(true),
             .setShowSubscriptionSheet(true),
-            .setSelectedStoryForDetails(Story())
+            .setSelectedStoryForDetails(Story()),
+            .setMenuStatus(.storyOpen),
+            .setDragOffset(100),
+            .setIsSequelMode(true),
+            .setCurrentScrollOffset(200),
+            .setScrollViewHeight(300)
         ]
         
         for action in noOpActions {

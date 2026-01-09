@@ -34,7 +34,8 @@ class ReaderReducerTests {
     func beginCreateStory() {
         let initialState = ReaderState.arrange(
             mainCharacter: "John Doe",
-            setting: "Modern City"
+            setting: "Modern City",
+            isSequelMode: true // Set to true to verify it's reset
         )
         
         let newState = readerReducer(initialState, .beginCreateStory)
@@ -43,6 +44,7 @@ class ReaderReducerTests {
         expectedState.isLoading = true
         expectedState.showStoryForm = false
         expectedState.loadingStep = .identifyingTheme
+        expectedState.isSequelMode = false
         expectedState.story = newState.story // Use the actual created story with its generated UUID
         
         #expect(newState == expectedState)
@@ -85,7 +87,8 @@ class ReaderReducerTests {
         let initialState = ReaderState.arrange(
             mainCharacter: "Sequel Character",
             setting: "Sequel Setting",
-            story: originalStory
+            story: originalStory,
+            isSequelMode: false // Set to false to verify it's updated
         )
         
         let newState = readerReducer(initialState, .beginCreateSequel)
@@ -94,6 +97,7 @@ class ReaderReducerTests {
         expectedState.isLoading = true
         expectedState.showStoryForm = false
         expectedState.loadingStep = .identifyingTheme
+        expectedState.isSequelMode = true
         expectedState.sequelStory = newState.sequelStory // Use the actual created sequel story with its generated UUID
         
         #expect(newState == expectedState)
@@ -718,6 +722,77 @@ class ReaderReducerTests {
         
         let newState = readerReducer(initialState, .setSelectedStoryForDetails(nil))
         
+        #expect(newState == expectedState)
+    }
+    
+    // MARK: - UI State Tests
+    
+    @Test(arguments: [
+        MenuStatus.closed,
+        MenuStatus.storyOpen,
+        MenuStatus.settingsOpen
+    ])
+    func setMenuStatus(status: MenuStatus) {
+        let initialState = ReaderState.arrange
+        var expectedState = initialState
+        expectedState.menuStatus = status
+        
+        let newState = readerReducer(
+            initialState,
+            .setMenuStatus(status)
+        )
+        #expect(newState == expectedState)
+    }
+    
+    @Test
+    func setDragOffset() {
+        let initialState = ReaderState.arrange
+        var expectedState = initialState
+        expectedState.dragOffset = 150.5
+        
+        let newState = readerReducer(
+            initialState,
+            .setDragOffset(150.5)
+        )
+        #expect(newState == expectedState)
+    }
+    
+    @Test(arguments: [true, false])
+    func setIsSequelMode(value: Bool) {
+        let initialState = ReaderState.arrange
+        var expectedState = initialState
+        expectedState.isSequelMode = value
+        
+        let newState = readerReducer(
+            initialState,
+            .setIsSequelMode(value)
+        )
+        #expect(newState == expectedState)
+    }
+    
+    @Test
+    func setCurrentScrollOffset() {
+        let initialState = ReaderState.arrange
+        var expectedState = initialState
+        expectedState.currentScrollOffset = 500.0
+        
+        let newState = readerReducer(
+            initialState,
+            .setCurrentScrollOffset(500.0)
+        )
+        #expect(newState == expectedState)
+    }
+    
+    @Test
+    func setScrollViewHeight() {
+        let initialState = ReaderState.arrange
+        var expectedState = initialState
+        expectedState.scrollViewHeight = 800.0
+        
+        let newState = readerReducer(
+            initialState,
+            .setScrollViewHeight(800.0)
+        )
         #expect(newState == expectedState)
     }
     

@@ -8,96 +8,99 @@
 import SwiftUI
 
 struct MenuGestureHandler: ViewModifier {
-    @Binding var menuStatus: ReaderView.MenuStatus
-    @Binding var dragOffset: CGFloat
+    @EnvironmentObject var store: ReaderStore
     
     // Configuration
     let openThreshold: CGFloat
     let closeThreshold: CGFloat
     let isForClosing: Bool
+    let isEnabled: Bool
     
     init(
-        menuStatus: Binding<ReaderView.MenuStatus>,
-        dragOffset: Binding<CGFloat>,
         openThreshold: CGFloat,
         closeThreshold: CGFloat,
-        isForClosing: Bool
+        isForClosing: Bool,
+        isEnabled: Bool
     ) {
-        self._menuStatus = menuStatus
-        self._dragOffset = dragOffset
         self.openThreshold = openThreshold
         self.closeThreshold = closeThreshold
         self.isForClosing = isForClosing
+        self.isEnabled = isEnabled
     }
     
     func body(content: Content) -> some View {
-        content
-            .gesture(
-                DragGesture(minimumDistance: 5)
-                    .onChanged { value in
-                        handleDragChange(value)
-                    }
-                    .onEnded { value in
-                        handleDragEnd(value)
-                    }
-            )
+        if isEnabled {
+            content
+                .gesture(
+                    DragGesture(minimumDistance: 5)
+                        .onChanged { value in
+                            handleDragChange(value)
+                        }
+                        .onEnded { value in
+                            handleDragEnd(value)
+                        }
+                )
+        } else {
+            content
+        }
     }
     
     private func handleDragChange(_ value: DragGesture.Value) {
-        dragOffset = value.translation.width
+        store.dispatch(.setDragOffset(value.translation.width))
     }
     
     private func handleDragEnd(_ value: DragGesture.Value) {
+        let dragOffset = value.translation.width
+        let menuStatus = store.state.menuStatus
+        
         if isForClosing {
             // Close menu if dragged enough to the left
             if menuStatus == .storyOpen && dragOffset < -closeThreshold {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    menuStatus = .closed
+                    store.dispatch(.setMenuStatus(.closed))
                 }
             }
             // Close settings if dragged enough to the right
             else if menuStatus == .settingsOpen && dragOffset > closeThreshold {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    menuStatus = .closed
+                    store.dispatch(.setMenuStatus(.closed))
                 }
             }
         } else {
             // Open menu if dragged enough from left
             if menuStatus == .closed && dragOffset > openThreshold {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    menuStatus = .storyOpen
+                    store.dispatch(.setMenuStatus(.storyOpen))
                 }
             }
             // Open settings if dragged enough from right
             else if menuStatus == .closed && dragOffset < -openThreshold {
                 withAnimation(.easeInOut(duration: 0.3)) {
-                    menuStatus = .settingsOpen
+                    store.dispatch(.setMenuStatus(.settingsOpen))
                 }
             }
         }
         
-        // Reset offsets
+        // Reset offsets always
         withAnimation(.easeInOut(duration: 0.3)) {
-            dragOffset = 0
+            store.dispatch(.setDragOffset(0))
         }
     }
 }
 
 extension View {
     func menuGestures(
-        menuStatus: Binding<ReaderView.MenuStatus>,
-        dragOffset: Binding<CGFloat>,
         openThreshold: CGFloat = 50,
         closeThreshold: CGFloat = 50,
-        isForClosing: Bool = false
+        isForClosing: Bool = false,
+        isEnabled: Bool = true
     ) -> some View {
         self.modifier(
             MenuGestureHandler(
-                menuStatus: menuStatus,
-                dragOffset: dragOffset,
                 openThreshold: openThreshold,
                 closeThreshold: closeThreshold,
-                isForClosing: isForClosing
+                isForClosing: isForClosing,
+                isEnabled: isEnabled
             )
         )
     }

@@ -11,7 +11,6 @@ import PapyrusStyleKit
 struct NewStoryForm: View {
     @EnvironmentObject var store: ReaderStore
     @FocusState private var focusedField: ReaderField?
-    @Binding var isSequelMode: Bool
     @State var mainCharacter: String = ""
     @State var settingDetails: String = ""
     @State private var showMainCharacterHint = false
@@ -22,15 +21,16 @@ struct NewStoryForm: View {
         VStack(spacing: 20) {
             // Header
             HStack {
-                Text(isSequelMode ? "Create Sequel" : "New Story")
+                Text(store.state.isSequelMode ? "Create Sequel" : "New Story")
                     .font(.custom("Georgia", size: 20))
                     .foregroundColor(PapyrusColor.textPrimary.color)
                 
                 Spacer()
                 
+                // Close button
                 MenuButton(type: .close) {
                     store.dispatch(.setShowStoryForm(false))
-                    isSequelMode = false
+                    store.dispatch(.setIsSequelMode(false))
                     store.dispatch(.setFocusedField(nil))
                 }
             }
@@ -59,7 +59,7 @@ struct NewStoryForm: View {
 
             // Write chapter button
             PrimaryButton(
-                type: isSequelMode ? .createSequel : .createStory,
+                type: store.state.isSequelMode ? .createSequel : .createStory,
                 size: .medium,
                 isDisabled: false,
                 isLoading: store.state.isLoading
@@ -76,7 +76,7 @@ struct NewStoryForm: View {
                     }
                 } else {
                     // Proceed with creation
-                    if isSequelMode {
+                    if store.state.isSequelMode {
                         store.dispatch(.createSequel)
                     } else {
                         store.dispatch(.createStory)

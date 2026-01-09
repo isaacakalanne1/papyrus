@@ -168,7 +168,12 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             .setShowStoryForm,
             .setShowSubscriptionSheet,
             .setSelectedStoryForDetails,
-            .setFocusedField:
+            .setFocusedField,
+            .setMenuStatus,
+            .setDragOffset,
+            .setIsSequelMode,
+            .setCurrentScrollOffset,
+            .setScrollViewHeight:
         return nil
     }
 }

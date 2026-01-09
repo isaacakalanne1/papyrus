@@ -12,20 +12,17 @@ import Settings
 struct StoryContentView: View {
     let story: Story
     @EnvironmentObject var store: ReaderStore
-    @Binding var isSequelMode: Bool
-    @Binding var currentScrollOffset: CGFloat
-    @Binding var scrollViewHeight: CGFloat
     
     let startScrollOffsetTimer: () -> Void
     
     private func setupStoryView(with proxy: ScrollViewProxy, scrollGeometry: GeometryProxy) {
-        scrollViewHeight = scrollGeometry.size.height
+        store.dispatch(.setScrollViewHeight(scrollGeometry.size.height))
         startScrollOffsetTimer()
         // Scroll to saved position
         if story.scrollOffset > 0 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 // To scroll down by X points, we position the top anchor at -X/scrollViewHeight
-                let actualScrollHeight = scrollViewHeight > 0 ? scrollViewHeight : UIScreen.main.bounds.height
+                let actualScrollHeight = store.state.scrollViewHeight > 0 ? store.state.scrollViewHeight : UIScreen.main.bounds.height
                 let anchorY = -(story.scrollOffset / actualScrollHeight)
                 proxy.scrollTo("topAnchor", anchor: UnitPoint(x: 0, y: anchorY))
             }
@@ -79,7 +76,7 @@ struct StoryContentView: View {
                                             isDisabled: store.state.isLoading,
                                             isLoading: store.state.isLoading
                                         ) {
-                                            isSequelMode = true
+                                            store.dispatch(.setIsSequelMode(true))
                                             store.dispatch(.updateMainCharacter(story.mainCharacter))
                                             store.dispatch(.updateSetting(""))
                                             store.dispatch(.setShowStoryForm(true))
@@ -94,13 +91,13 @@ struct StoryContentView: View {
                         .coordinateSpace(name: "scroll")
                         .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
                             DispatchQueue.main.async {
-                                currentScrollOffset = value
+                                store.dispatch(.setCurrentScrollOffset(value))
                             }
                         }
                         .onChange(of: story.chapterIndex) { oldValue, newValue in
                             if oldValue != newValue {
                                 proxy.scrollTo("content", anchor: .top)
-                                currentScrollOffset = 0
+                                store.dispatch(.setCurrentScrollOffset(0))
                                 
                                 // Autogenerate next chapter if subscribed
                                 if store.state.settingsState.isSubscribed && newValue >= story.chapters.count - 1 && newValue < story.maxNumberOfChapters - 1 && !store.state.isLoading {

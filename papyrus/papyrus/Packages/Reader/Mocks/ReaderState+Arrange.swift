@@ -26,7 +26,12 @@ public extension ReaderState {
         showStoryForm: Bool = false,
         showSubscriptionSheet: Bool = false,
         selectedStoryForDetails: Story? = nil,
-        focusedField: ReaderField? = nil
+        focusedField: ReaderField? = nil,
+        menuStatus: MenuStatus = .closed,
+        dragOffset: CGFloat = 0,
+        isSequelMode: Bool = false,
+        currentScrollOffset: CGFloat = 0,
+        scrollViewHeight: CGFloat = 0
     ) -> ReaderState {
         .init(
             mainCharacter: mainCharacter,
@@ -40,7 +45,12 @@ public extension ReaderState {
             showStoryForm: showStoryForm,
             showSubscriptionSheet: showSubscriptionSheet,
             selectedStoryForDetails: selectedStoryForDetails,
-            focusedField: focusedField
+            focusedField: focusedField,
+            menuStatus: menuStatus,
+            dragOffset: dragOffset,
+            isSequelMode: isSequelMode,
+            currentScrollOffset: currentScrollOffset,
+            scrollViewHeight: scrollViewHeight
         )
     }
 }

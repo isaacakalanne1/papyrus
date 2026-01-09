@@ -5,12 +5,19 @@
 //  Created by Isaac Akalanne on 27/09/2025.
 //
 
+import Foundation
 import TextGeneration
 import Settings
 
 public enum ReaderField: Equatable, Sendable {
     case mainCharacter
     case settingDetails
+}
+
+public enum MenuStatus: Equatable, Sendable {
+    case closed
+    case storyOpen
+    case settingsOpen
 }
 
 public struct ReaderState: Equatable {
@@ -26,6 +33,13 @@ public struct ReaderState: Equatable {
     var showSubscriptionSheet: Bool
     var selectedStoryForDetails: Story?
     var focusedField: ReaderField?
+    
+    // UI State moved from ReaderView
+    var menuStatus: MenuStatus
+    var dragOffset: CGFloat
+    var isSequelMode: Bool
+    var currentScrollOffset: CGFloat
+    var scrollViewHeight: CGFloat
 
     public init(
         mainCharacter: String = "",
@@ -39,7 +53,12 @@ public struct ReaderState: Equatable {
         showStoryForm: Bool = false,
         showSubscriptionSheet: Bool = false,
         selectedStoryForDetails: Story? = nil,
-        focusedField: ReaderField? = nil
+        focusedField: ReaderField? = nil,
+        menuStatus: MenuStatus = .closed,
+        dragOffset: CGFloat = 0,
+        isSequelMode: Bool = false,
+        currentScrollOffset: CGFloat = 0,
+        scrollViewHeight: CGFloat = 0
     ) {
         self.mainCharacter = mainCharacter
         self.setting = setting
@@ -53,6 +72,11 @@ public struct ReaderState: Equatable {
         self.showSubscriptionSheet = showSubscriptionSheet
         self.selectedStoryForDetails = selectedStoryForDetails
         self.focusedField = focusedField
+        self.menuStatus = menuStatus
+        self.dragOffset = dragOffset
+        self.isSequelMode = isSequelMode
+        self.currentScrollOffset = currentScrollOffset
+        self.scrollViewHeight = scrollViewHeight
     }
     
     // Computed property to check if user can create more chapters

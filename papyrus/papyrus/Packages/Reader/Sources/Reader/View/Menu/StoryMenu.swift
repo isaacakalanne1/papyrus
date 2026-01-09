@@ -11,10 +11,6 @@ import PapyrusStyleKit
 
 struct StoryMenu: View {
     @EnvironmentObject var store: ReaderStore
-    @Binding var isMenuOpen: Bool
-    let dragOffset: CGFloat
-    let menuStatus: ReaderView.MenuStatus
-    @State private var isSequelMode = false
     
     var body: some View {
         let showStoryForm: Binding<Bool> = .init {
@@ -38,7 +34,7 @@ struct StoryMenu: View {
                                 onTap: {
                                     store.dispatch(.setStory(story))
                                     withAnimation(.easeInOut(duration: 0.3)) {
-                                        isMenuOpen = false
+                                        store.dispatch(.setMenuStatus(.closed))
                                     }
                                 }
                             )
@@ -75,6 +71,7 @@ struct StoryMenu: View {
                 )
             )
             .offset(x: calculateOffset())
+            .animation(.easeInOut(duration: 0.3), value: store.state.menuStatus == .storyOpen)
             
             Spacer()
         }
@@ -90,14 +87,15 @@ struct StoryMenu: View {
             .presentationDragIndicator(.hidden)
         }
         .sheet(isPresented: showStoryForm) {
-            NewStoryForm(
-                isSequelMode: $isSequelMode
-            )
+            NewStoryForm()
             .environmentObject(store)
         }
     }
     
     private func calculateOffset() -> CGFloat {
+        let dragOffset = store.state.dragOffset
+        let menuStatus = store.state.menuStatus
+        
         switch menuStatus {
         case .storyOpen:
             // Menu is open, allow closing gesture

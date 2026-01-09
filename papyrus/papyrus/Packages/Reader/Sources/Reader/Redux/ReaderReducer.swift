@@ -16,6 +16,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.isLoading = true
         newState.showStoryForm = false
         newState.loadingStep = .identifyingTheme
+        newState.isSequelMode = false
         newState.story = .init(
             mainCharacter: newState.mainCharacter,
             setting: newState.setting
@@ -24,6 +25,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.isLoading = true
         newState.showStoryForm = false
         newState.loadingStep = .identifyingTheme
+        newState.isSequelMode = true
 
         newState.sequelStory = newState.story
         newState.sequelStory?.id = UUID()
@@ -145,6 +147,16 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.selectedStoryForDetails = story
     case .setFocusedField(let field):
         newState.focusedField = field
+    case .setMenuStatus(let status):
+        newState.menuStatus = status
+    case .setDragOffset(let offset):
+        newState.dragOffset = offset
+    case .setIsSequelMode(let isSequelMode):
+        newState.isSequelMode = isSequelMode
+    case .setCurrentScrollOffset(let offset):
+        newState.currentScrollOffset = offset
+    case .setScrollViewHeight(let height):
+        newState.scrollViewHeight = height
     case .saveStory,
             .deleteStory,
             .loadSubscriptions,
