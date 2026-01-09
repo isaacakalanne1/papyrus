@@ -8,6 +8,11 @@
 import TextGeneration
 import Settings
 
+public enum ReaderField: Equatable, Sendable {
+    case mainCharacter
+    case settingDetails
+}
+
 public struct ReaderState: Equatable {
     var mainCharacter: String
     var setting: String
@@ -20,6 +25,7 @@ public struct ReaderState: Equatable {
     var showStoryForm: Bool
     var showSubscriptionSheet: Bool
     var selectedStoryForDetails: Story?
+    var focusedField: ReaderField?
 
     public init(
         mainCharacter: String = "",
@@ -32,7 +38,8 @@ public struct ReaderState: Equatable {
         settingsState: SettingsState = SettingsState(),
         showStoryForm: Bool = false,
         showSubscriptionSheet: Bool = false,
-        selectedStoryForDetails: Story? = nil
+        selectedStoryForDetails: Story? = nil,
+        focusedField: ReaderField? = nil
     ) {
         self.mainCharacter = mainCharacter
         self.setting = setting
@@ -45,6 +52,7 @@ public struct ReaderState: Equatable {
         self.showStoryForm = showStoryForm
         self.showSubscriptionSheet = showSubscriptionSheet
         self.selectedStoryForDetails = selectedStoryForDetails
+        self.focusedField = focusedField
     }
     
     // Computed property to check if user can create more chapters

@@ -9,7 +9,6 @@ import SwiftUI
 
 struct ContentStateView: View {
     @EnvironmentObject var store: ReaderStore
-    @FocusState.Binding var focusedField: ReaderView.Field?
     @Binding var isSequelMode: Bool
     @Binding var currentScrollOffset: CGFloat
     @Binding var scrollViewHeight: CGFloat
@@ -25,7 +24,6 @@ struct ContentStateView: View {
         case .story(let story):
             StoryContentView(
                 story: story,
-                focusedField: $focusedField,
                 isSequelMode: $isSequelMode,
                 currentScrollOffset: $currentScrollOffset,
                 scrollViewHeight: $scrollViewHeight,

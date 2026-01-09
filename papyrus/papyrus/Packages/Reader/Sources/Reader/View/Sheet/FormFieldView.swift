@@ -2,10 +2,11 @@ import SwiftUI
 import PapyrusStyleKit
 
 struct FormFieldView: View {
+    @Environment(\.readerFocusedField) var focusedField
     let label: String
     let placeholder: String
     @Binding var text: String
-    let focusedField: FocusState<ReaderView.Field?>.Binding
+    let equals: ReaderField
     let showHint: Bool
     let hintText: String?
     let onSubmit: (() -> Void)?
@@ -15,7 +16,7 @@ struct FormFieldView: View {
         label: String,
         placeholder: String,
         text: Binding<String>,
-        focusedField: FocusState<ReaderView.Field?>.Binding,
+        equals: ReaderField,
         showHint: Bool = false,
         hintText: String? = nil,
         onSubmit: (() -> Void)? = nil
@@ -23,7 +24,7 @@ struct FormFieldView: View {
         self.label = label
         self.placeholder = placeholder
         self._text = text
-        self.focusedField = focusedField
+        self.equals = equals
         self.showHint = showHint
         self.hintText = hintText
         self.onSubmit = onSubmit
@@ -40,6 +41,9 @@ struct FormFieldView: View {
                 text: $text,
                 axis: .vertical
             )
+            .ifLet(focusedField) { view, focusedField in
+                view.focused(focusedField, equals: equals)
+            }
             .font(.custom("Georgia", size: 16))
             .foregroundColor(PapyrusColor.textPrimary.color)
             .lineLimit(3, reservesSpace: true)

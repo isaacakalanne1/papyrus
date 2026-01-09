@@ -14,7 +14,7 @@ struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
     @State private var menuStatus: MenuStatus = .closed
     @State private var dragOffset: CGFloat = 0
-    @FocusState private var focusedField: Field?
+    @FocusState private var focusedField: ReaderField?
     @State private var isSequelMode: Bool = false
     @State private var currentScrollOffset: CGFloat = 0
     @State private var scrollOffsetTimer: Timer?
@@ -24,11 +24,6 @@ struct ReaderView: View {
         case closed
         case storyOpen
         case settingsOpen
-    }
-    
-    enum Field {
-        case mainCharacter
-        case settingDetails
     }
     
     init() {
@@ -52,13 +47,12 @@ struct ReaderView: View {
             VStack(spacing: 0) {
                 
                 // Loading bar (appears below top bar when loading)
-                if store.state.isLoading {
+                if store.state.isLoading && store.state.story == nil {
                     LoadingView(loadingStep: store.state.loadingStep, hasExistingStory: store.state.story != nil)
                         .transition(.move(edge: .top).combined(with: .opacity))
                 }
                 
                 ContentStateView(
-                    focusedField: $focusedField,
                     isSequelMode: $isSequelMode,
                     currentScrollOffset: $currentScrollOffset,
                     scrollViewHeight: $scrollViewHeight,
@@ -105,6 +99,7 @@ struct ReaderView: View {
                     )
                 )
             }
+            .environment(\.readerFocusedField, $focusedField)
             
             // Modal overlay for both menu and settings
             ModalOverlay(
@@ -144,8 +139,7 @@ struct ReaderView: View {
             )
         }
         .sheet(isPresented: showStoryForm) {
-            NewStoryFormSheet(
-                focusedField: $focusedField,
+            NewStoryForm(
                 isSequelMode: $isSequelMode
             )
             .environmentObject(store)
@@ -158,6 +152,14 @@ struct ReaderView: View {
         .onAppear {
             store.dispatch(.loadAllStories)
             store.dispatch(.loadSubscriptions)
+        }
+        .onChange(of: store.state.focusedField) { oldValue, newValue in
+            focusedField = newValue
+        }
+        .onChange(of: focusedField) { oldValue, newValue in
+            if store.state.focusedField != newValue {
+                store.dispatch(.setFocusedField(newValue))
+            }
         }
     }
     

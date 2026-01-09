@@ -168,7 +168,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             .setShowStoryForm,
             .setShowSubscriptionSheet,
             .setSelectedStoryForDetails,
-            .onCreatedThemeDescription:
+            .setFocusedField:
         return nil
     }
 }

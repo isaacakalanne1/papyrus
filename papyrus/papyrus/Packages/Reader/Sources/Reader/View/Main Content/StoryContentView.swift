@@ -12,7 +12,6 @@ import Settings
 struct StoryContentView: View {
     let story: Story
     @EnvironmentObject var store: ReaderStore
-    @FocusState.Binding var focusedField: ReaderView.Field?
     @Binding var isSequelMode: Bool
     @Binding var currentScrollOffset: CGFloat
     @Binding var scrollViewHeight: CGFloat
@@ -55,17 +54,22 @@ struct StoryContentView: View {
                                     .lineSpacing(8)
                                     .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
                                     .padding(.horizontal, 32)
-                                    .padding(.vertical, 40)
+                                    .padding(.top, 40)
+                                    .padding(.bottom, store.state.isLoading ? 0 : 40)
                                     .id("content")
+                                
+                                if store.state.isLoading && story.chapterIndex == story.chapters.count - 1 {
+                                    ChapterLoadingIndicator()
+                                }
                                 
                                 // Next Chapter or Create Sequel Button
                                 Group {
-                                    if story.chapterIndex < story.maxNumberOfChapters - 1 && story.chapterIndex >= story.chapters.count - 1 {
+                                    if !store.state.settingsState.isSubscribed && story.chapterIndex < story.maxNumberOfChapters - 1 && story.chapterIndex >= story.chapters.count - 1 {
                                         PrimaryButton(
                                             type: .nextChapter,
                                             isDisabled: store.state.isLoading,
                                             isLoading: store.state.isLoading
-                                        ) {
+                                         ) {
                                             store.dispatch(.createChapter(story))
                                         }
                                         .disabled(store.state.isLoading)
@@ -79,7 +83,7 @@ struct StoryContentView: View {
                                             store.dispatch(.updateMainCharacter(story.mainCharacter))
                                             store.dispatch(.updateSetting(""))
                                             store.dispatch(.setShowStoryForm(true))
-                                            focusedField = .settingDetails
+                                            store.dispatch(.setFocusedField(.settingDetails))
                                         }
                                         .disabled(store.state.isLoading)
                                     }
@@ -97,6 +101,11 @@ struct StoryContentView: View {
                             if oldValue != newValue {
                                 proxy.scrollTo("content", anchor: .top)
                                 currentScrollOffset = 0
+                                
+                                // Autogenerate next chapter if subscribed
+                                if store.state.settingsState.isSubscribed && newValue >= story.chapters.count - 1 && newValue < story.maxNumberOfChapters - 1 && !store.state.isLoading {
+                                    store.dispatch(.createChapter(story))
+                                }
                             }
                         }
                         .onChange(of: story.id, { oldValue, newValue in
@@ -104,6 +113,11 @@ struct StoryContentView: View {
                         })
                         .onAppear {
                             setupStoryView(with: proxy, scrollGeometry: scrollGeometry)
+                            
+                            // Autogenerate next chapter if subscribed and at the end
+                            if store.state.settingsState.isSubscribed && story.chapterIndex >= story.chapters.count - 1 && story.chapterIndex < story.maxNumberOfChapters - 1 && !store.state.isLoading {
+                                store.dispatch(.createChapter(story))
+                            }
                         }
                     }
                 }

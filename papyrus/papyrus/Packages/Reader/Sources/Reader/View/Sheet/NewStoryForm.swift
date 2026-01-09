@@ -10,7 +10,7 @@ import PapyrusStyleKit
 
 struct NewStoryForm: View {
     @EnvironmentObject var store: ReaderStore
-    @FocusState.Binding var focusedField: ReaderView.Field?
+    @FocusState private var focusedField: ReaderField?
     @Binding var isSequelMode: Bool
     @State var mainCharacter: String = ""
     @State var settingDetails: String = ""
@@ -31,7 +31,7 @@ struct NewStoryForm: View {
                 MenuButton(type: .close) {
                     store.dispatch(.setShowStoryForm(false))
                     isSequelMode = false
-                    focusedField = nil
+                    store.dispatch(.setFocusedField(nil))
                 }
             }
                 
@@ -39,25 +39,23 @@ struct NewStoryForm: View {
                 label: "Main Character",
                 placeholder: "E.g, Sherlock Holmes",
                 text: $mainCharacter,
-                focusedField: $focusedField,
+                equals: .mainCharacter,
                 showHint: showMainCharacterHint,
                 hintText: showMainCharacterHint ? "Please provide a main character for your story" : nil
             ) {
-                focusedField = .settingDetails
+                store.dispatch(.setFocusedField(.settingDetails))
             }
                 
             FormFieldView(
                 label: "Setting & Details",
                 placeholder: "E.g, Living in Los Angeles, has famous superheroes as clients",
                 text: $settingDetails,
-                focusedField: $focusedField,
+                equals: .settingDetails,
                 showHint: showSettingDetailsHint,
                 hintText: showSettingDetailsHint ? "Add some details about the setting" : nil
             ) {
-                focusedField = nil
+                store.dispatch(.setFocusedField(nil))
             }
-
-            Spacer()
 
             // Write chapter button
             PrimaryButton(
@@ -85,10 +83,47 @@ struct NewStoryForm: View {
                     }
                 }
             }
+            
+            Spacer()
         }
         .padding(24)
+        .environment(\.readerFocusedField, $focusedField)
+        .onChange(of: store.state.focusedField) { oldValue, newValue in
+            focusedField = newValue
+        }
+        .onChange(of: focusedField) { oldValue, newValue in
+            if store.state.focusedField != newValue {
+                store.dispatch(.setFocusedField(newValue))
+            }
+        }
+        .background(
+            RoundedRectangle(cornerRadius: 16)
+                .fill(
+                    LinearGradient(
+                        gradient: Gradient(colors: [
+                            PapyrusColor.background.color,
+                            PapyrusColor.backgroundSecondary.color
+                        ]),
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    )
+                )
+                .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
+        )
+        .toolbar {
+            ToolbarItem(placement: .keyboard) {
+                HStack {
+                    Spacer()
+                    Button("Done") {
+                        store.dispatch(.setFocusedField(nil))
+                    }
+                    .font(.custom("Georgia", size: 16))
+                    .foregroundColor(PapyrusColor.accent.color)
+                }
+            }
+        }
         .onTapGesture {
-            focusedField = nil
+            store.dispatch(.setFocusedField(nil))
         }
         .onChange(of: mainCharacter) { oldValue, newValue in
             store.dispatch(.updateMainCharacter(newValue))

@@ -32,12 +32,18 @@ struct ChapterNavigationView: View {
                 .frame(maxWidth: 200)
             
             // Next Chapter Button
-            MenuButton(
-                type: .next,
-                isEnabled: story.chapterIndex < story.chapters.count - 1
-            ) {
-                if story.chapterIndex < story.chapters.count - 1 {
-                    store.dispatch(.updateChapterIndex(story, story.chapterIndex + 1))
+            if store.state.isLoading && story.chapterIndex == story.chapters.count - 1 {
+                ProgressView()
+                    .tint(PapyrusColor.iconPrimary.color)
+                    .frame(width: 44, height: 44) // Match MenuButton frame
+            } else {
+                MenuButton(
+                    type: .next,
+                    isEnabled: story.chapterIndex < story.chapters.count - 1
+                ) {
+                    if story.chapterIndex < story.chapters.count - 1 {
+                        store.dispatch(.updateChapterIndex(story, story.chapterIndex + 1))
+                    }
                 }
             }
         }

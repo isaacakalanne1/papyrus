@@ -42,7 +42,7 @@ class ReaderReducerTests {
         var expectedState = initialState
         expectedState.isLoading = true
         expectedState.showStoryForm = false
-        expectedState.loadingStep = .creatingPlotOutline
+        expectedState.loadingStep = .identifyingTheme
         expectedState.story = newState.story // Use the actual created story with its generated UUID
         
         #expect(newState == expectedState)
@@ -93,7 +93,7 @@ class ReaderReducerTests {
         var expectedState = initialState
         expectedState.isLoading = true
         expectedState.showStoryForm = false
-        expectedState.loadingStep = .creatingPlotOutline
+        expectedState.loadingStep = .identifyingTheme
         expectedState.sequelStory = newState.sequelStory // Use the actual created sequel story with its generated UUID
         
         #expect(newState == expectedState)
@@ -101,6 +101,57 @@ class ReaderReducerTests {
     
     // MARK: - Plot and Chapter Creation Tests
     
+    @Test
+    func createStoryTheme() {
+        let initialState = ReaderState.arrange
+        
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.loadingStep = .identifyingTheme
+        
+        let newState = readerReducer(
+            initialState,
+            .createStoryTheme(Story())
+        )
+        #expect(newState == expectedState)
+    }
+    
+    @Test
+    func onCreatedThemeDescription_updatesCurrentStory() {
+        let storyId = UUID()
+        let initialStory = Story(id: storyId, title: "Initial")
+        let updatedStory = Story(id: storyId, title: "Themed")
+        
+        let initialState = ReaderState.arrange(story: initialStory, isLoading: true)
+        var expectedState = initialState
+        expectedState.story = updatedStory
+        expectedState.isLoading = true
+        
+        let newState = readerReducer(
+            initialState,
+            .onCreatedThemeDescription(updatedStory)
+        )
+        #expect(newState == expectedState)
+    }
+
+    @Test
+    func onCreatedThemeDescription_updatesSequelStory() {
+        let storyId = UUID()
+        let initialStory = Story(id: storyId, title: "Initial")
+        let updatedStory = Story(id: storyId, title: "Themed")
+        
+        let initialState = ReaderState.arrange(sequelStory: initialStory, isLoading: true)
+        var expectedState = initialState
+        expectedState.sequelStory = updatedStory
+        expectedState.isLoading = true
+        
+        let newState = readerReducer(
+            initialState,
+            .onCreatedThemeDescription(updatedStory)
+        )
+        #expect(newState == expectedState)
+    }
+
     @Test
     func createPlotOutline() {
         let initialState = ReaderState.arrange
@@ -571,6 +622,23 @@ class ReaderReducerTests {
         let newState = readerReducer(
             initialState,
             .setShowStoryForm(boolValue)
+        )
+        #expect(newState == expectedState)
+    }
+
+    @Test(arguments: [
+        ReaderField.mainCharacter,
+        ReaderField.settingDetails,
+        nil
+    ])
+    func setFocusedField(field: ReaderField?) {
+        let initialState = ReaderState.arrange
+        var expectedState = initialState
+        expectedState.focusedField = field
+        
+        let newState = readerReducer(
+            initialState,
+            .setFocusedField(field)
         )
         #expect(newState == expectedState)
     }

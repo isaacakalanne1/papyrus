@@ -29,6 +29,7 @@ struct ReaderStateTests {
         #expect(!state.showStoryForm)
         #expect(!state.showSubscriptionSheet)
         #expect(state.selectedStoryForDetails == nil)
+        #expect(state.focusedField == nil)
     }
     
     @Test("Custom initialization should set all properties")
@@ -48,9 +49,9 @@ struct ReaderStateTests {
             isLoading: true,
             loadingStep: .creatingPlotOutline,
             settingsState: settingsState,
-            showStoryForm: true,
             showSubscriptionSheet: true,
-            selectedStoryForDetails: story
+            selectedStoryForDetails: story,
+            focusedField: .mainCharacter
         )
         
         // Then
@@ -64,6 +65,7 @@ struct ReaderStateTests {
         #expect(state.showStoryForm)
         #expect(state.showSubscriptionSheet)
         #expect(state.selectedStoryForDetails != nil)
+        #expect(state.focusedField == .mainCharacter)
     }
     
     @Test("Can create chapter without story")
@@ -198,7 +200,7 @@ struct ReaderStateTests {
     }
     
     @Test("Loading step enum should be equatable", 
-          arguments: [LoadingStep.idle, .creatingPlotOutline, .creatingChapterBreakdown, 
+          arguments: [LoadingStep.idle, .identifyingTheme, .creatingPlotOutline, .creatingChapterBreakdown, 
                      .analyzingStructure, .preparingNarrative, .writingChapter])
     func loadingStepEnum(step: LoadingStep) {
         // Test that all loading steps are equatable
@@ -221,5 +223,16 @@ struct ReaderStateTests {
         // When & Then
         #expect(state1 == state2)
         #expect(state1 != state3)
+    }
+    
+    @Test("ReaderField enum should be equatable",
+          arguments: [ReaderField.mainCharacter, .settingDetails])
+    func readerFieldEnum(field: ReaderField) {
+        #expect(field == field)
+    }
+    
+    @Test("Different reader fields should not be equal")
+    func readerFieldInequality() {
+        #expect(ReaderField.mainCharacter != ReaderField.settingDetails)
     }
 }

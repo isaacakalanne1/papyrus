@@ -25,7 +25,8 @@ public extension ReaderState {
         settingsState: SettingsState = SettingsState(),
         showStoryForm: Bool = false,
         showSubscriptionSheet: Bool = false,
-        selectedStoryForDetails: Story? = nil
+        selectedStoryForDetails: Story? = nil,
+        focusedField: ReaderField? = nil
     ) -> ReaderState {
         .init(
             mainCharacter: mainCharacter,
@@ -38,7 +39,8 @@ public extension ReaderState {
             settingsState: settingsState,
             showStoryForm: showStoryForm,
             showSubscriptionSheet: showSubscriptionSheet,
-            selectedStoryForDetails: selectedStoryForDetails
+            selectedStoryForDetails: selectedStoryForDetails,
+            focusedField: focusedField
         )
     }
 }

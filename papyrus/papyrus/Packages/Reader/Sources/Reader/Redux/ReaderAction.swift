@@ -46,4 +46,5 @@ enum ReaderAction: Equatable, Sendable {
     case setShowSubscriptionSheet(Bool)
     case loadSubscriptions
     case setSelectedStoryForDetails(Story?)
+    case setFocusedField(ReaderField?)
 }

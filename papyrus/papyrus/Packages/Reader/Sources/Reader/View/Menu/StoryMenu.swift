@@ -15,7 +15,6 @@ struct StoryMenu: View {
     let dragOffset: CGFloat
     let menuStatus: ReaderView.MenuStatus
     @State private var isSequelMode = false
-    @FocusState private var focusedField: ReaderView.Field?
     
     var body: some View {
         let showStoryForm: Binding<Bool> = .init {
@@ -91,13 +90,10 @@ struct StoryMenu: View {
             .presentationDragIndicator(.hidden)
         }
         .sheet(isPresented: showStoryForm) {
-            NewStoryFormSheet(
-                focusedField: $focusedField,
+            NewStoryForm(
                 isSequelMode: $isSequelMode
             )
             .environmentObject(store)
-            .presentationBackground(.clear)
-            .presentationDragIndicator(.hidden)
         }
     }
     
