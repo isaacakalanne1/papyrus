@@ -10,24 +10,9 @@ import TextGeneration
 import Settings
 
 enum ReaderAction: Equatable, Sendable {
-    case createStory
-    case createSequel
-    case createChapter(Story)
-    case beginCreateStory
-    case beginCreateSequel
-    case beginCreateChapter(Story)
-    case createStoryTheme(Story)
-    case onCreatedThemeDescription(Story)
-    case createPlotOutline(Story)
-    case onCreatedPlotOutline(Story)
-    case createChapterBreakdown(Story)
-    case onCreatedChapterBreakdown(Story)
-    case getStoryDetails(Story)
-    case onGetStoryDetails(Story)
-    case getChapterTitle(Story)
-    case onGetChapterTitle(Story)
-    case onCreatedChapter(Story)
-    case failedToCreateChapter
+    case createStory(step: StoryCreationStep, story: Story? = nil)
+    case onCreatedStory(Story)
+    case failedToCreateStory
     
     case loadAllStories
     case onLoadedStories([Story])

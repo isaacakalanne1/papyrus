@@ -77,9 +77,9 @@ struct NewStoryForm: View {
                 } else {
                     // Proceed with creation
                     if store.state.isSequelMode {
-                        store.dispatch(.createSequel)
+                        store.dispatch(.createStory(step: .sequel))
                     } else {
-                        store.dispatch(.createStory)
+                        store.dispatch(.createStory(step: .initial))
                     }
                 }
             }

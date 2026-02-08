@@ -38,7 +38,7 @@ struct ReaderView: View {
                 // Loading bar (appears below top bar when loading)
                 if store.state.isLoading && !store.state.contentState.hasStory {
                     LoadingView(
-                        loadingStep: store.state.loadingStep,
+                        storyCreationStep: store.state.storyCreationStep,
                         hasExistingStory: store.state.story != nil
                     )
                     .transition(.move(edge: .top).combined(with: .opacity))
@@ -61,7 +61,7 @@ struct ReaderView: View {
                 .scrollBounceBehavior(.basedOnSize)
                 .animation(.easeInOut(duration: 0.4), value: store.state.isLoading)
                 .menuGestures(
-                    isEnabled: store.state.contentState.hasStory
+                    isEnabled: !store.state.contentState.hasStory
                 )
                 
                 UnifiedNavigationBar(
@@ -95,7 +95,7 @@ struct ReaderView: View {
             )
             .menuGestures(
                 isForClosing: true,
-                isEnabled: store.state.contentState.hasStory
+                isEnabled: !store.state.contentState.hasStory
             )
             
             // Side menu

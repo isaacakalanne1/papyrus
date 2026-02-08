@@ -27,7 +27,7 @@ public struct ReaderState: Equatable {
     var story: Story?
     var sequelStory: Story?
     var isLoading: Bool
-    var loadingStep: LoadingStep
+    var storyCreationStep: StoryCreationStep
     var settingsState: SettingsState
     var showStoryForm: Bool
     var showSubscriptionSheet: Bool
@@ -48,7 +48,7 @@ public struct ReaderState: Equatable {
         story: Story? = nil,
         sequelStory: Story? = nil,
         isLoading: Bool = false,
-        loadingStep: LoadingStep = .idle,
+        storyCreationStep: StoryCreationStep = .idle,
         settingsState: SettingsState = SettingsState(),
         showStoryForm: Bool = false,
         showSubscriptionSheet: Bool = false,
@@ -66,7 +66,7 @@ public struct ReaderState: Equatable {
         self.story = story
         self.sequelStory = sequelStory
         self.isLoading = isLoading
-        self.loadingStep = loadingStep
+        self.storyCreationStep = storyCreationStep
         self.settingsState = settingsState
         self.showStoryForm = showStoryForm
         self.showSubscriptionSheet = showSubscriptionSheet
@@ -83,7 +83,7 @@ public struct ReaderState: Equatable {
     var canCreateChapter: Bool {
         guard let story = story else { return true }
         // Allow creation if user is subscribed OR if story has fewer than 2 chapters
-        return settingsState.isSubscribed || story.chapters.count < 2
+        return settingsState.isSubscribed || (story.chapters.count < 2 && story.chapters.count < story.maxNumberOfChapters)
     }
     
     // Computed property for content state
@@ -98,12 +98,18 @@ public struct ReaderState: Equatable {
     }
 }
 
-public enum LoadingStep: Equatable, Sendable {
+public enum StoryCreationStep: Equatable, Sendable {
     case idle
-    case identifyingTheme       // Step 1: Identifying story theme
-    case creatingPlotOutline    // Step 2: Creating the overall story plot
-    case creatingChapterBreakdown // Step 3: Breaking down into chapters
-    case analyzingStructure     // Step 4: Analyzing story structure
-    case preparingNarrative     // Step 5: Preparing for narration
-    case writingChapter         // Separate state for writing individual chapters
+    case initial
+    case sequel
+    case identifyingTheme
+    case creatingPlotOutline
+    case creatingChapterBreakdown
+    case gettingStoryDetails
+    case gettingChapterTitle
+    case writingChapter
+    
+    // Legacy cases from LoadingStep (keeping for now to avoid compilation errors during refactor if used elsewhere)
+    case analyzingStructure
+    case preparingNarrative
 }

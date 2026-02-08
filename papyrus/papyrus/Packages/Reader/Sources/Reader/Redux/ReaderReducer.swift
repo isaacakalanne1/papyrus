@@ -12,97 +12,102 @@ import ReduxKit
 let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     var newState = state
     switch action {
-    case .beginCreateStory:
-        newState.isLoading = true
-        newState.showStoryForm = false
-        newState.loadingStep = .identifyingTheme
-        newState.isSequelMode = false
-        newState.story = .init(
-            mainCharacter: newState.mainCharacter,
-            setting: newState.setting
-        )
-    case .beginCreateSequel:
-        newState.isLoading = true
-        newState.showStoryForm = false
-        newState.loadingStep = .identifyingTheme
-        newState.isSequelMode = true
-
-        newState.sequelStory = newState.story
-        newState.sequelStory?.id = UUID()
-        newState.sequelStory?.mainCharacter = newState.mainCharacter
-        newState.sequelStory?.setting = newState.setting
-        newState.sequelStory?.chapters = []
-        newState.sequelStory?.chapterIndex = 0
-        if let prequelId = newState.story?.id {
-            newState.sequelStory?.prequelIds.append(prequelId)
+    case .createStory(let step, let story):
+        newState.storyCreationStep = step
+        
+        switch step {
+        case .idle:
+            newState.isLoading = false
+        case .initial:
+            newState.isLoading = true
+            newState.showStoryForm = false
+            newState.isSequelMode = false
+            newState.story = .init(
+                mainCharacter: newState.mainCharacter,
+                setting: newState.setting
+            )
+            newState.storyCreationStep = .identifyingTheme // Transition to first actual step
+        case .sequel:
+            newState.isLoading = true
+            newState.showStoryForm = false
+            newState.isSequelMode = true
+            
+            newState.sequelStory = newState.story
+            newState.sequelStory?.id = UUID()
+            newState.sequelStory?.mainCharacter = newState.mainCharacter
+            newState.sequelStory?.setting = newState.setting
+            newState.sequelStory?.chapters = []
+            newState.sequelStory?.chapterIndex = 0
+            if let prequelId = newState.story?.id {
+                newState.sequelStory?.prequelIds.append(prequelId)
+            }
+            newState.storyCreationStep = .identifyingTheme // Transition to first actual step
+        case .identifyingTheme, .creatingPlotOutline, .creatingChapterBreakdown:
+            newState.isLoading = true
+        case .gettingStoryDetails:
+            newState.isLoading = true
+            newState.storyCreationStep = .analyzingStructure // Mapping to legacy LoadingView step
+        case .gettingChapterTitle:
+            newState.isLoading = true
+            newState.storyCreationStep = .preparingNarrative // Mapping to legacy LoadingView step
+        case .writingChapter:
+            newState.isLoading = true
+        case .analyzingStructure, .preparingNarrative:
+            newState.isLoading = true
         }
-    case .createStoryTheme:
-        newState.isLoading = true
-        newState.loadingStep = .identifyingTheme
-    case .onCreatedThemeDescription(let story):
-        newState.isLoading = true // Keep loading for next step
-        // Update the story with theme
-        if newState.story?.id == story.id {
-            newState.story = story
-        } else if newState.sequelStory?.id == story.id {
-            newState.sequelStory = story
+        
+        // If a story was provided, update it in the state
+        if let story = story {
+            if newState.story?.id == story.id {
+                newState.story = story
+            } else if newState.sequelStory?.id == story.id {
+                newState.sequelStory = story
+            }
+            
+            // Update in loadedStories
+            if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
+                newState.loadedStories[existingIndex] = story
+            } else if step == .writingChapter {
+                // If it's a new story completion, add it
+                newState.loadedStories.append(story)
+            }
         }
-    case .createPlotOutline:
-        newState.isLoading = true
-        newState.loadingStep = .creatingPlotOutline
-    case .onCreatedPlotOutline:
-        newState.isLoading = true // Keep loading for next step
-    case .createChapterBreakdown:
-        newState.isLoading = true
-        newState.loadingStep = .creatingChapterBreakdown
-    case .onCreatedChapterBreakdown:
-        newState.isLoading = true // Keep loading for next step
-    case .getStoryDetails:
-        newState.isLoading = true
-        newState.loadingStep = .analyzingStructure
-    case .onGetStoryDetails:
-        newState.isLoading = true // Keep loading for next step
-    case .getChapterTitle:
-        newState.isLoading = true
-        newState.loadingStep = .preparingNarrative
-    case .onGetChapterTitle:
-        newState.isLoading = true // Keep loading for next step
-    case .onCreatedChapter(var story):
-        // Only update the story if current story is nil
-        if newState.story?.id == story.id {
-            newState.story = story
+        
+        if step == .idle {
+            newState.isLoading = false
         }
-        newState.isLoading = false
-        newState.loadingStep = .idle
-        // Update the story in loadedStories if it exists, or add it if not present
-        if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
-            // Update existing story
-            newState.loadedStories[existingIndex] = story
-        } else {
-            // Add new story if not present
-            newState.loadedStories.append(story)
-        }
+        
     case .updateMainCharacter(let mainCharacter):
         newState.mainCharacter = mainCharacter
     case .updateSetting(let setting):
         newState.setting = setting
-    case .beginCreateChapter:
-        newState.isLoading = true
-        newState.loadingStep = .writingChapter
-    case .failedToCreateChapter:
-        newState.isLoading = false
-        newState.loadingStep = .idle
     case .loadAllStories:
         newState.isLoading = true
     case .onLoadedStories(let stories):
         newState.loadedStories = stories
         newState.isLoading = false
-        newState.loadingStep = .idle
+        newState.storyCreationStep = .idle
     case .failedToLoadStories:
         newState.isLoading = false
-        newState.loadingStep = .idle
+        newState.storyCreationStep = .idle
     case .setStory(let story):
         newState.story = story
+    case .onCreatedStory(let story):
+        // Update the story if it matches
+        if newState.story?.id == story.id {
+            newState.story = story
+        }
+        newState.isLoading = false
+        newState.storyCreationStep = .idle
+        // Update in loadedStories
+        if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
+            newState.loadedStories[existingIndex] = story
+        } else {
+            newState.loadedStories.append(story)
+        }
+    case .failedToCreateStory:
+        newState.isLoading = false
+        newState.storyCreationStep = .idle
     case .onDeletedStory(let deletedStoryId):
         // Remove the deleted story from loadedStories
         newState.loadedStories.removeAll { $0.id == deletedStoryId }
@@ -143,6 +148,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.showStoryForm = show
     case .setShowSubscriptionSheet(let show):
         newState.showSubscriptionSheet = show
+        newState.isLoading = false
     case .setSelectedStoryForDetails(let story):
         newState.selectedStoryForDetails = story
     case .setFocusedField(let field):
@@ -159,12 +165,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.scrollViewHeight = height
     case .saveStory,
             .deleteStory,
-            .loadSubscriptions,
-            .createStory,
-            .createSequel,
-            .createChapter,
-            .createStoryTheme,
-            .onCreatedThemeDescription:
+            .loadSubscriptions:
         break
     }
     return newState

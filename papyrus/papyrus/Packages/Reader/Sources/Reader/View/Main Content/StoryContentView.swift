@@ -61,16 +61,7 @@ struct StoryContentView: View {
                                 
                                 // Next Chapter or Create Sequel Button
                                 Group {
-                                    if !store.state.settingsState.isSubscribed && story.chapterIndex < story.maxNumberOfChapters - 1 && story.chapterIndex >= story.chapters.count - 1 {
-                                        PrimaryButton(
-                                            type: .nextChapter,
-                                            isDisabled: store.state.isLoading,
-                                            isLoading: store.state.isLoading
-                                         ) {
-                                            store.dispatch(.createChapter(story))
-                                        }
-                                        .disabled(store.state.isLoading)
-                                    } else if story.chapterIndex == story.maxNumberOfChapters - 1 {
+                                    if story.chapterIndex == story.maxNumberOfChapters - 1 {
                                         PrimaryButton(
                                             type: .createSequel,
                                             isDisabled: store.state.isLoading,
@@ -81,6 +72,15 @@ struct StoryContentView: View {
                                             store.dispatch(.updateSetting(""))
                                             store.dispatch(.setShowStoryForm(true))
                                             store.dispatch(.setFocusedField(.settingDetails))
+                                        }
+                                        .disabled(store.state.isLoading)
+                                    } else {
+                                        PrimaryButton(
+                                            type: .nextChapter,
+                                            isDisabled: store.state.isLoading,
+                                            isLoading: store.state.isLoading
+                                         ) {
+                                            store.dispatch(.createStory(step: .writingChapter, story: story))
                                         }
                                         .disabled(store.state.isLoading)
                                     }
@@ -101,7 +101,7 @@ struct StoryContentView: View {
                                 
                                 // Autogenerate next chapter if subscribed
                                 if store.state.settingsState.isSubscribed && newValue >= story.chapters.count - 1 && newValue < story.maxNumberOfChapters - 1 && !store.state.isLoading {
-                                    store.dispatch(.createChapter(story))
+                                    store.dispatch(.createStory(step: .writingChapter, story: story))
                                 }
                             }
                         }
@@ -113,7 +113,7 @@ struct StoryContentView: View {
                             
                             // Autogenerate next chapter if subscribed and at the end
                             if store.state.settingsState.isSubscribed && story.chapterIndex >= story.chapters.count - 1 && story.chapterIndex < story.maxNumberOfChapters - 1 && !store.state.isLoading {
-                                store.dispatch(.createChapter(story))
+                                store.dispatch(.createStory(step: .writingChapter, story: story))
                             }
                         }
                     }

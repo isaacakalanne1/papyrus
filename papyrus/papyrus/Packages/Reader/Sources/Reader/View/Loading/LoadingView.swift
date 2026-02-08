@@ -9,18 +9,18 @@ import SwiftUI
 import PapyrusStyleKit
 
 struct LoadingView: View {
-    let loadingStep: LoadingStep
+    let storyCreationStep: StoryCreationStep
     let hasExistingStory: Bool
     @State private var progressAnimation: CGFloat = 0
     @State private var pulseScale: CGFloat = 1.0
     @State private var showChapterReady: Bool = false
     
-    private var storyCreationStages: [LoadingStep] {
+    private var storyCreationStages: [StoryCreationStep] {
         [.identifyingTheme, .creatingPlotOutline, .creatingChapterBreakdown, .analyzingStructure, .preparingNarrative]
     }
     
     private var currentStageIndex: Int {
-        storyCreationStages.firstIndex(of: loadingStep) ?? 0
+        storyCreationStages.firstIndex(of: storyCreationStep) ?? 0
     }
     
     private var stageProgress: CGFloat {
@@ -36,7 +36,7 @@ struct LoadingView: View {
     }
     
     private var stageTitle: String {
-        switch loadingStep {
+        switch storyCreationStep {
         case .idle:
             return "Preparing"
         case .identifyingTheme:
@@ -51,28 +51,30 @@ struct LoadingView: View {
             return "Preparing Narrative"
         case .writingChapter:
             return "Writing Chapter"
+        case .initial, .sequel, .gettingStoryDetails, .gettingChapterTitle:
+            return "Preparing"
         }
     }
     
     var body: some View {
         Group {
-            if loadingStep == .writingChapter {
+            if storyCreationStep == .writingChapter {
                 ChapterWritingLoadingView()
             } else if showChapterReady && hasExistingStory {
                 chapterReadyView
-            } else if storyCreationStages.contains(loadingStep) {
+            } else if storyCreationStages.contains(storyCreationStep) {
                 storyCreationLoadingView
             }
         }
         .onAppear {
-            if storyCreationStages.contains(loadingStep) {
+            if storyCreationStages.contains(storyCreationStep) {
                 withAnimation(.easeOut(duration: 1.0).delay(0.2)) {
                     progressAnimation = stageProgress
                 }
             }
             
             // Show chapter ready message if story exists and loading is complete
-            if hasExistingStory && loadingStep == .idle {
+            if hasExistingStory && storyCreationStep == .idle {
                 showChapterReady = true
                 // Hide the message after 5 seconds
                 DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
@@ -82,7 +84,7 @@ struct LoadingView: View {
                 }
             }
         }
-        .onChange(of: loadingStep) { oldStep, newStep in
+        .onChange(of: storyCreationStep) { oldStep, newStep in
             if storyCreationStages.contains(newStep) {
                 withAnimation(.easeOut(duration: 0.8)) {
                     progressAnimation = stageProgress
@@ -281,7 +283,7 @@ struct LoadingView: View {
 
 #Preview("Story Creation") {
     VStack(spacing: 0) {
-        LoadingView(loadingStep: .creatingPlotOutline, hasExistingStory: false)
+        LoadingView(storyCreationStep: .creatingPlotOutline, hasExistingStory: false)
         
         Rectangle()
             .fill(PapyrusColor.background.color)
@@ -291,7 +293,7 @@ struct LoadingView: View {
 
 #Preview("Chapter Writing") {
     VStack(spacing: 0) {
-        LoadingView(loadingStep: .writingChapter, hasExistingStory: true)
+        LoadingView(storyCreationStep: .writingChapter, hasExistingStory: true)
         
         Rectangle()
             .fill(PapyrusColor.background.color)
@@ -301,7 +303,7 @@ struct LoadingView: View {
 
 #Preview("Chapter Ready") {
     VStack(spacing: 0) {
-        LoadingView(loadingStep: .idle, hasExistingStory: true)
+        LoadingView(storyCreationStep: .idle, hasExistingStory: true)
         
         Rectangle()
             .fill(PapyrusColor.background.color)
