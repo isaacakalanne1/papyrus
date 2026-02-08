@@ -57,35 +57,35 @@ struct StoryContentView: View {
                                 
                                 if store.state.isLoading && story.chapterIndex == story.chapters.count - 1 {
                                     ChapterLoadingIndicator()
-                                }
-                                
-                                // Next Chapter or Create Sequel Button
-                                Group {
-                                    if story.chapterIndex == story.maxNumberOfChapters - 1 {
-                                        PrimaryButton(
-                                            type: .createSequel,
-                                            isDisabled: store.state.isLoading,
-                                            isLoading: store.state.isLoading
-                                        ) {
-                                            store.dispatch(.setIsSequelMode(true))
-                                            store.dispatch(.updateMainCharacter(story.mainCharacter))
-                                            store.dispatch(.updateSetting(""))
-                                            store.dispatch(.setShowStoryForm(true))
-                                            store.dispatch(.setFocusedField(.settingDetails))
+                                } else {
+                                    // Next Chapter or Create Sequel Button
+                                    Group {
+                                        if story.chapterIndex == story.maxNumberOfChapters - 1 {
+                                            PrimaryButton(
+                                                type: .createSequel,
+                                                isDisabled: store.state.isLoading,
+                                                isLoading: store.state.isLoading
+                                            ) {
+                                                store.dispatch(.setIsSequelMode(true))
+                                                store.dispatch(.updateMainCharacter(story.mainCharacter))
+                                                store.dispatch(.updateSetting(""))
+                                                store.dispatch(.setShowStoryForm(true))
+                                                store.dispatch(.setFocusedField(.settingDetails))
+                                            }
+                                            .disabled(store.state.isLoading)
+                                        } else {
+                                            PrimaryButton(
+                                                type: .nextChapter,
+                                                isDisabled: store.state.isLoading,
+                                                isLoading: store.state.isLoading
+                                             ) {
+                                                store.dispatch(.createStory(step: .writingChapter, story: story))
+                                            }
+                                            .disabled(store.state.isLoading)
                                         }
-                                        .disabled(store.state.isLoading)
-                                    } else {
-                                        PrimaryButton(
-                                            type: .nextChapter,
-                                            isDisabled: store.state.isLoading,
-                                            isLoading: store.state.isLoading
-                                         ) {
-                                            store.dispatch(.createStory(step: .writingChapter, story: story))
-                                        }
-                                        .disabled(store.state.isLoading)
                                     }
+                                    .padding(.bottom, 30)
                                 }
-                                .padding(.bottom, 30)
                             }
                         }
                         .coordinateSpace(name: "scroll")

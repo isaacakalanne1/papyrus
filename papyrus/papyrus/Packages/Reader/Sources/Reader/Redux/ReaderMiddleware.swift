@@ -92,9 +92,18 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             
         case .writingChapter:
             guard var story = story else { return nil }
-            if !state.canCreateChapter {
+            
+            // Check if user is at the free limit
+            let isAtFreeLimit = story.chapters.count >= 2
+            if !state.settingsState.isSubscribed && isAtFreeLimit {
                 return .setShowSubscriptionSheet(true)
             }
+            
+            // Check if story is at its technical max
+            if story.chapters.count >= story.maxNumberOfChapters {
+                return nil
+            }
+
             do {
                 story = try await environment.createChapter(story: story)
                 return .onCreatedStory(story)

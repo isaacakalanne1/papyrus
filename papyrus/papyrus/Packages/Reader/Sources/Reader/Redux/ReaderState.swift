@@ -79,13 +79,6 @@ public struct ReaderState: Equatable {
         self.scrollViewHeight = scrollViewHeight
     }
     
-    // Computed property to check if user can create more chapters
-    var canCreateChapter: Bool {
-        guard let story = story else { return true }
-        // Allow creation if user is subscribed OR if story has fewer than 2 chapters
-        return settingsState.isSubscribed || (story.chapters.count < 2 && story.chapters.count < story.maxNumberOfChapters)
-    }
-    
     // Computed property for content state
     var contentState: ContentState {
         if let story = story,

@@ -13,7 +13,9 @@ public let subscriptionReducer: Reducer<SubscriptionState, SubscriptionAction> =
     var newState = state
     
     switch action {
-    case .loadProduct:
+    case .loadProduct,
+            .purchaseSubscription,
+            .restorePurchases:
         newState.isLoading = true
         newState.error = nil
         
@@ -22,34 +24,20 @@ public let subscriptionReducer: Reducer<SubscriptionState, SubscriptionAction> =
         newState.product = product
         newState.error = nil
         
-    case .productLoadFailed(let error):
+    case .productLoadFailed(let error),
+            .purchaseFailed(let error),
+            .restoreFailed(let error):
         newState.isLoading = false
         newState.error = error
-        
-    case .purchaseSubscription:
-        newState.isLoading = true
-        newState.error = nil
         
     case .purchaseSucceeded:
         newState.isLoading = false
         newState.isSubscribed = true
         newState.error = nil
         
-    case .purchaseFailed(let error):
-        newState.isLoading = false
-        newState.error = error
-        
-    case .restorePurchases:
-        newState.isLoading = true
-        newState.error = nil
-        
     case .restoreSucceeded:
         newState.isLoading = false
         newState.error = nil
-        
-    case .restoreFailed(let error):
-        newState.isLoading = false
-        newState.error = error
         
     case .checkSubscriptionStatus:
         newState.isLoading = true
