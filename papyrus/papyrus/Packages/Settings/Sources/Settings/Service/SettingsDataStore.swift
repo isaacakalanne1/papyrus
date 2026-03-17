@@ -35,9 +35,9 @@ public class SettingsDataStore: SettingsDataStoreProtocol {
     
     public func loadSettings() async throws -> SettingsState {
         guard fileManager.fileExists(atPath: settingsFileURL.path) else {
-            throw SettingsDataStoreError.failedToFindFile
+            return SettingsState()
         }
-        
+
         let data = try Data(contentsOf: settingsFileURL)
         return try JSONDecoder().decode(SettingsState.self, from: data)
     }

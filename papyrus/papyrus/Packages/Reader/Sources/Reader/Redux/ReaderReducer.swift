@@ -92,6 +92,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.storyCreationStep = .idle
     case .setStory(let story):
         newState.story = story
+        newState.currentScrollOffset = story?.scrollOffset ?? 0
     case .onCreatedStory(let story):
         // Update the story if it matches
         if newState.story?.id == story.id {
@@ -99,6 +100,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         }
         newState.isLoading = false
         newState.storyCreationStep = .idle
+        newState.shouldNavigateAfterChapterCreation = false
         // Update in loadedStories
         if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
             newState.loadedStories[existingIndex] = story
@@ -119,6 +121,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         var updatedStory = story
         updatedStory.scrollOffset = 0
         updatedStory.chapterIndex = max(0, min(index, story.chapters.count - 1))
+        newState.currentScrollOffset = 0
         
         // Update the current story if it matches
         if newState.story?.id == story.id {
@@ -163,6 +166,8 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.currentScrollOffset = offset
     case .setScrollViewHeight(let height):
         newState.scrollViewHeight = height
+    case .setShouldNavigateAfterChapterCreation(let should):
+        newState.shouldNavigateAfterChapterCreation = should
     case .saveStory,
             .deleteStory,
             .loadSubscriptions:

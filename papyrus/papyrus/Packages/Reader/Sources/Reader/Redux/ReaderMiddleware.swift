@@ -95,7 +95,16 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             
             // Check if user is at the free limit
             let isAtFreeLimit = story.chapters.count >= 2
-            if !state.settingsState.isSubscribed && isAtFreeLimit {
+            
+            var isSubscribed = state.settingsState.isSubscribed
+            
+            // If the state says not subscribed, double check with the environment
+            // to avoid showing the sheet if the state is just stale.
+            if !isSubscribed, isAtFreeLimit {
+                isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
+            }
+            
+            if !isSubscribed, isAtFreeLimit {
                 return .setShowSubscriptionSheet(true)
             }
             
@@ -130,9 +139,16 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             return .failedToLoadStories
         }
     case .onCreatedStory(let story):
-        return .updateChapterIndex(story, story.chapters.count - 1)
-    case .updateChapterIndex(let story, _):
-        return .saveStory(story)
+        if state.shouldNavigateAfterChapterCreation {
+            return .updateChapterIndex(story, story.chapters.count - 1)
+        } else {
+            return .saveStory(story)
+        }
+        case .updateChapterIndex(let story, let index):
+            var updatedStory = story
+            updatedStory.chapterIndex = index
+            updatedStory.scrollOffset = 0
+            return .saveStory(updatedStory)
     case .saveStory(let story):
         do {
             // Save the current story first
@@ -152,9 +168,10 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
         } catch {
             return .failedToCreateStory
         }
-    case .updateScrollOffset:
+    case .updateScrollOffset(let offset):
         // Save the story after scroll offset is updated
-        if let story = state.story {
+        if var story = state.story {
+            story.scrollOffset = offset
             do {
                 try await environment.saveStory(story)
                 return nil
@@ -183,7 +200,8 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction,  ReaderEnvironmentPr
             .setDragOffset,
             .setIsSequelMode,
             .setCurrentScrollOffset,
-            .setScrollViewHeight:
+            .setScrollViewHeight,
+            .setShouldNavigateAfterChapterCreation:
         return nil
     }
 }

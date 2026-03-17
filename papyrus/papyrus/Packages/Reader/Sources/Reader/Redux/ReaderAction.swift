@@ -33,6 +33,8 @@ enum ReaderAction: Equatable, Sendable {
     case setSelectedStoryForDetails(Story?)
     case setFocusedField(ReaderField?)
     
+    case setShouldNavigateAfterChapterCreation(Bool)
+
     // UI State Actions
     case setMenuStatus(MenuStatus)
     case setDragOffset(CGFloat)

@@ -40,6 +40,7 @@ public struct ReaderState: Equatable {
     var isSequelMode: Bool
     var currentScrollOffset: CGFloat
     var scrollViewHeight: CGFloat
+    var shouldNavigateAfterChapterCreation: Bool
 
     public init(
         mainCharacter: String = "",
@@ -58,7 +59,8 @@ public struct ReaderState: Equatable {
         dragOffset: CGFloat = 0,
         isSequelMode: Bool = false,
         currentScrollOffset: CGFloat = 0,
-        scrollViewHeight: CGFloat = 0
+        scrollViewHeight: CGFloat = 0,
+        shouldNavigateAfterChapterCreation: Bool = false
     ) {
         self.mainCharacter = mainCharacter
         self.setting = setting
@@ -77,6 +79,7 @@ public struct ReaderState: Equatable {
         self.isSequelMode = isSequelMode
         self.currentScrollOffset = currentScrollOffset
         self.scrollViewHeight = scrollViewHeight
+        self.shouldNavigateAfterChapterCreation = shouldNavigateAfterChapterCreation
     }
     
     // Computed property for content state

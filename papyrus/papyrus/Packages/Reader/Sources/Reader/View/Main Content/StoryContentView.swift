@@ -16,13 +16,14 @@ struct StoryContentView: View {
     let startScrollOffsetTimer: () -> Void
     
     private func setupStoryView(with proxy: ScrollViewProxy, scrollGeometry: GeometryProxy) {
-        store.dispatch(.setScrollViewHeight(scrollGeometry.size.height))
+        let height = scrollGeometry.size.height
+        store.dispatch(.setScrollViewHeight(height))
         startScrollOffsetTimer()
+        
         // Scroll to saved position
         if story.scrollOffset > 0 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                // To scroll down by X points, we position the top anchor at -X/scrollViewHeight
-                let actualScrollHeight = store.state.scrollViewHeight > 0 ? store.state.scrollViewHeight : UIScreen.main.bounds.height
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                let actualScrollHeight = height > 0 ? height : UIScreen.main.bounds.height
                 let anchorY = -(story.scrollOffset / actualScrollHeight)
                 proxy.scrollTo("topAnchor", anchor: UnitPoint(x: 0, y: anchorY))
             }
@@ -79,7 +80,13 @@ struct StoryContentView: View {
                                                 isDisabled: store.state.isLoading,
                                                 isLoading: store.state.isLoading
                                              ) {
-                                                store.dispatch(.createStory(step: .writingChapter, story: story))
+                                                let nextIndex = story.chapterIndex + 1
+                                                if story.chapters.count > nextIndex {
+                                                    store.dispatch(.updateChapterIndex(story, nextIndex))
+                                                } else {
+                                                    store.dispatch(.setShouldNavigateAfterChapterCreation(true))
+                                                    store.dispatch(.createStory(step: .writingChapter, story: story))
+                                                }
                                             }
                                             .disabled(store.state.isLoading)
                                         }
