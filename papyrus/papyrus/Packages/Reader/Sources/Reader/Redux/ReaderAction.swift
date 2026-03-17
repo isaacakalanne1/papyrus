@@ -10,17 +10,18 @@ import TextGeneration
 import Settings
 
 enum ReaderAction: Equatable, Sendable {
-    case createStory(step: StoryCreationStep, story: Story? = nil)
-    case onCreatedStory(Story)
+    case createStory(step: StoryCreationStep, story: Story? = nil, navigateOnCompletion: Bool = false)
+    case onCreatedStory(Story, navigateOnCompletion: Bool)
     case failedToCreateStory
-    
+
     case loadAllStories
     case onLoadedStories([Story])
     case failedToLoadStories
     case setStory(Story?)
     case deleteStory(UUID)
     case onDeletedStory(UUID)
-    
+    case failedToDeleteStory(UUID)
+
     case updateMainCharacter(String)
     case updateSetting(String)
     case updateChapterIndex(Story, Int)
@@ -32,8 +33,6 @@ enum ReaderAction: Equatable, Sendable {
     case loadSubscriptions
     case setSelectedStoryForDetails(Story?)
     case setFocusedField(ReaderField?)
-    
-    case setShouldNavigateAfterChapterCreation(Bool)
 
     // UI State Actions
     case setMenuStatus(MenuStatus)

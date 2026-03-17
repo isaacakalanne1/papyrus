@@ -28,19 +28,19 @@ public struct ReaderState: Equatable {
     var sequelStory: Story?
     var isLoading: Bool
     var storyCreationStep: StoryCreationStep
+    var loadingDisplayStep: StoryLoadingDisplayStep
     var settingsState: SettingsState
     var showStoryForm: Bool
     var showSubscriptionSheet: Bool
     var selectedStoryForDetails: Story?
     var focusedField: ReaderField?
-    
+
     // UI State moved from ReaderView
     var menuStatus: MenuStatus
     var dragOffset: CGFloat
     var isSequelMode: Bool
     var currentScrollOffset: CGFloat
     var scrollViewHeight: CGFloat
-    var shouldNavigateAfterChapterCreation: Bool
 
     public init(
         mainCharacter: String = "",
@@ -50,6 +50,7 @@ public struct ReaderState: Equatable {
         sequelStory: Story? = nil,
         isLoading: Bool = false,
         storyCreationStep: StoryCreationStep = .idle,
+        loadingDisplayStep: StoryLoadingDisplayStep = .idle,
         settingsState: SettingsState = SettingsState(),
         showStoryForm: Bool = false,
         showSubscriptionSheet: Bool = false,
@@ -59,8 +60,7 @@ public struct ReaderState: Equatable {
         dragOffset: CGFloat = 0,
         isSequelMode: Bool = false,
         currentScrollOffset: CGFloat = 0,
-        scrollViewHeight: CGFloat = 0,
-        shouldNavigateAfterChapterCreation: Bool = false
+        scrollViewHeight: CGFloat = 0
     ) {
         self.mainCharacter = mainCharacter
         self.setting = setting
@@ -69,6 +69,7 @@ public struct ReaderState: Equatable {
         self.sequelStory = sequelStory
         self.isLoading = isLoading
         self.storyCreationStep = storyCreationStep
+        self.loadingDisplayStep = loadingDisplayStep
         self.settingsState = settingsState
         self.showStoryForm = showStoryForm
         self.showSubscriptionSheet = showSubscriptionSheet
@@ -79,9 +80,8 @@ public struct ReaderState: Equatable {
         self.isSequelMode = isSequelMode
         self.currentScrollOffset = currentScrollOffset
         self.scrollViewHeight = scrollViewHeight
-        self.shouldNavigateAfterChapterCreation = shouldNavigateAfterChapterCreation
     }
-    
+
     // Computed property for content state
     var contentState: ContentState {
         if let story = story,
@@ -104,8 +104,15 @@ public enum StoryCreationStep: Equatable, Sendable {
     case gettingStoryDetails
     case gettingChapterTitle
     case writingChapter
-    
-    // Legacy cases from LoadingStep (keeping for now to avoid compilation errors during refactor if used elsewhere)
+}
+
+public enum StoryLoadingDisplayStep: Equatable, Sendable {
+    case idle
+    case preparing
+    case identifyingTheme
+    case creatingPlotOutline
+    case creatingChapterBreakdown
     case analyzingStructure
     case preparingNarrative
+    case writingChapter
 }

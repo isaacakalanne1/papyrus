@@ -12,26 +12,29 @@ import ReduxKit
 let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     var newState = state
     switch action {
-    case .createStory(let step, let story):
+    case .createStory(let step, let story, _):
         newState.storyCreationStep = step
-        
+
         switch step {
         case .idle:
             newState.isLoading = false
+            newState.loadingDisplayStep = .idle
         case .initial:
             newState.isLoading = true
+            newState.loadingDisplayStep = .preparing
             newState.showStoryForm = false
             newState.isSequelMode = false
             newState.story = .init(
                 mainCharacter: newState.mainCharacter,
                 setting: newState.setting
             )
-            newState.storyCreationStep = .identifyingTheme // Transition to first actual step
+            newState.storyCreationStep = .identifyingTheme
         case .sequel:
             newState.isLoading = true
+            newState.loadingDisplayStep = .preparing
             newState.showStoryForm = false
             newState.isSequelMode = true
-            
+
             newState.sequelStory = newState.story
             newState.sequelStory?.id = UUID()
             newState.sequelStory?.mainCharacter = newState.mainCharacter
@@ -41,21 +44,27 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             if let prequelId = newState.story?.id {
                 newState.sequelStory?.prequelIds.append(prequelId)
             }
-            newState.storyCreationStep = .identifyingTheme // Transition to first actual step
-        case .identifyingTheme, .creatingPlotOutline, .creatingChapterBreakdown:
+            newState.storyCreationStep = .identifyingTheme
+        case .identifyingTheme:
             newState.isLoading = true
+            newState.loadingDisplayStep = .identifyingTheme
+        case .creatingPlotOutline:
+            newState.isLoading = true
+            newState.loadingDisplayStep = .creatingPlotOutline
+        case .creatingChapterBreakdown:
+            newState.isLoading = true
+            newState.loadingDisplayStep = .creatingChapterBreakdown
         case .gettingStoryDetails:
             newState.isLoading = true
-            newState.storyCreationStep = .analyzingStructure // Mapping to legacy LoadingView step
+            newState.loadingDisplayStep = .analyzingStructure
         case .gettingChapterTitle:
             newState.isLoading = true
-            newState.storyCreationStep = .preparingNarrative // Mapping to legacy LoadingView step
+            newState.loadingDisplayStep = .preparingNarrative
         case .writingChapter:
             newState.isLoading = true
-        case .analyzingStructure, .preparingNarrative:
-            newState.isLoading = true
+            newState.loadingDisplayStep = .writingChapter
         }
-        
+
         // If a story was provided, update it in the state
         if let story = story {
             if newState.story?.id == story.id {
@@ -63,20 +72,15 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             } else if newState.sequelStory?.id == story.id {
                 newState.sequelStory = story
             }
-            
+
             // Update in loadedStories
             if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
                 newState.loadedStories[existingIndex] = story
             } else if step == .writingChapter {
-                // If it's a new story completion, add it
                 newState.loadedStories.append(story)
             }
         }
-        
-        if step == .idle {
-            newState.isLoading = false
-        }
-        
+
     case .updateMainCharacter(let mainCharacter):
         newState.mainCharacter = mainCharacter
     case .updateSetting(let setting):
@@ -87,60 +91,63 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.loadedStories = stories
         newState.isLoading = false
         newState.storyCreationStep = .idle
+        newState.loadingDisplayStep = .idle
     case .failedToLoadStories:
         newState.isLoading = false
         newState.storyCreationStep = .idle
+        newState.loadingDisplayStep = .idle
     case .setStory(let story):
         newState.story = story
         newState.currentScrollOffset = story?.scrollOffset ?? 0
-    case .onCreatedStory(let story):
-        // Update the story if it matches
+    case .onCreatedStory(let story, let navigateOnCompletion):
+        var updatedStory = story
+        if navigateOnCompletion {
+            updatedStory.chapterIndex = story.chapters.count - 1
+            updatedStory.scrollOffset = 0
+            newState.currentScrollOffset = 0
+        }
         if newState.story?.id == story.id {
-            newState.story = story
+            newState.story = updatedStory
         }
         newState.isLoading = false
         newState.storyCreationStep = .idle
-        newState.shouldNavigateAfterChapterCreation = false
-        // Update in loadedStories
+        newState.loadingDisplayStep = .idle
         if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
-            newState.loadedStories[existingIndex] = story
+            newState.loadedStories[existingIndex] = updatedStory
         } else {
-            newState.loadedStories.append(story)
+            newState.loadedStories.append(updatedStory)
         }
     case .failedToCreateStory:
         newState.isLoading = false
         newState.storyCreationStep = .idle
+        newState.loadingDisplayStep = .idle
     case .onDeletedStory(let deletedStoryId):
-        // Remove the deleted story from loadedStories
         newState.loadedStories.removeAll { $0.id == deletedStoryId }
-        // If the currently viewed story was deleted, clear it
         if newState.story?.id == deletedStoryId {
             newState.story = nil
         }
+    case .failedToDeleteStory:
+        break
     case .updateChapterIndex(let story, let index):
         var updatedStory = story
         updatedStory.scrollOffset = 0
         updatedStory.chapterIndex = max(0, min(index, story.chapters.count - 1))
         newState.currentScrollOffset = 0
-        
-        // Update the current story if it matches
+
         if newState.story?.id == story.id {
             newState.story = updatedStory
         }
-        
-        // Update the story in loadedStories as well
+
         if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
             newState.loadedStories[existingIndex] = updatedStory
         } else {
-            // Add to loadedStories if not present
             newState.loadedStories.append(updatedStory)
         }
     case .updateScrollOffset(let offset):
         if var story = newState.story {
             story.scrollOffset = offset
             newState.story = story
-            
-            // Update the story in loadedStories as well
+
             if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
                 newState.loadedStories[existingIndex] = story
             }
@@ -152,6 +159,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .setShowSubscriptionSheet(let show):
         newState.showSubscriptionSheet = show
         newState.isLoading = false
+        newState.loadingDisplayStep = .idle
     case .setSelectedStoryForDetails(let story):
         newState.selectedStoryForDetails = story
     case .setFocusedField(let field):
@@ -166,8 +174,6 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.currentScrollOffset = offset
     case .setScrollViewHeight(let height):
         newState.scrollViewHeight = height
-    case .setShouldNavigateAfterChapterCreation(let should):
-        newState.shouldNavigateAfterChapterCreation = should
     case .saveStory,
             .deleteStory,
             .loadSubscriptions:

@@ -84,8 +84,7 @@ struct StoryContentView: View {
                                                 if story.chapters.count > nextIndex {
                                                     store.dispatch(.updateChapterIndex(story, nextIndex))
                                                 } else {
-                                                    store.dispatch(.setShouldNavigateAfterChapterCreation(true))
-                                                    store.dispatch(.createStory(step: .writingChapter, story: story))
+                                                    store.dispatch(.createStory(step: .writingChapter, story: story, navigateOnCompletion: true))
                                                 }
                                             }
                                             .disabled(store.state.isLoading)

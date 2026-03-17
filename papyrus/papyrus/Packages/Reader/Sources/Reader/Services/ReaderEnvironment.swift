@@ -19,6 +19,7 @@ public protocol ReaderEnvironmentProtocol {
     func getChapterTitle(story: Story) async throws -> Story
     func createChapter(story: Story) async throws -> Story
     func saveStory(_ story: Story) async throws
+    func saveStoryWithRelationships(_ story: Story) async throws
     func loadStory(withId id: UUID) async throws -> Story?
     func getAllSavedStoryIds() async throws -> [UUID]
     func deleteStory(withId id: UUID) async throws
@@ -76,6 +77,18 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
     
     public func saveStory(_ story: Story) async throws {
         try await dataStore.saveStory(story)
+    }
+
+    public func saveStoryWithRelationships(_ story: Story) async throws {
+        try await dataStore.saveStory(story)
+        for prequelId in story.prequelIds {
+            if var prequelStory = try await dataStore.loadStory(withId: prequelId) {
+                if !prequelStory.sequelIds.contains(story.id) {
+                    prequelStory.sequelIds.append(story.id)
+                    try await dataStore.saveStory(prequelStory)
+                }
+            }
+        }
     }
     
     public func loadStory(withId id: UUID) async throws -> Story? {

@@ -38,7 +38,7 @@ struct ReaderView: View {
                 // Loading bar (appears below top bar when loading)
                 if store.state.isLoading && !store.state.contentState.hasStory {
                     LoadingView(
-                        storyCreationStep: store.state.storyCreationStep,
+                        loadingDisplayStep: store.state.loadingDisplayStep,
                         hasExistingStory: store.state.story != nil
                     )
                     .transition(.move(edge: .top).combined(with: .opacity))
