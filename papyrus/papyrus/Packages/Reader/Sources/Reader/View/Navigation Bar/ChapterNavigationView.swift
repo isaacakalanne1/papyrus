@@ -25,11 +25,20 @@ struct ChapterNavigationView: View {
                 }
             }
             
-            // Chapter Indicator
-            Text("Chapter \(story.chapterIndex + 1) of \(story.maxNumberOfChapters > 0 ? story.maxNumberOfChapters : story.chapters.count)")
-                .font(.custom("Georgia", size: 12))
-                .foregroundColor(PapyrusColor.textSecondary.color)
-                .frame(maxWidth: 200)
+            // Story and Chapter Indicator
+            VStack(spacing: 2) {
+                if !story.title.isEmpty {
+                    Text(story.title)
+                        .font(.custom("Georgia", size: 13))
+                        .foregroundColor(PapyrusColor.textPrimary.color)
+                        .lineLimit(1)
+                        .truncationMode(.tail)
+                }
+                Text("Chapter \(story.chapterIndex + 1) of \(story.maxNumberOfChapters > 0 ? story.maxNumberOfChapters : story.chapters.count)")
+                    .font(.custom("Georgia", size: 11))
+                    .foregroundColor(PapyrusColor.textSecondary.color)
+            }
+            .frame(maxWidth: 200)
             
             // Next Chapter Button
             if store.state.isLoading && story.chapterIndex == story.chapters.count - 1 {
