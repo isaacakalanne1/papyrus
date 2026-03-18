@@ -9,11 +9,15 @@ import SwiftUI
 import TextGeneration
 import Settings
 
-/// Observes the enclosing UIScrollView's contentOffset via KVO and reports
-/// changes to a callback. This replaces the SwiftUI preference-key approach,
-/// which stops firing during scroll in iOS 17+ due to layout-pass decoupling.
+/// Observes the enclosing UIScrollView's contentOffset via KVO and restores
+/// a saved offset when the story changes. Uses UIKit directly because:
+/// - SwiftUI's onPreferenceChange stops firing during scroll in iOS 17+
+/// - SwiftUI's scrollTo anchor API uses a different coordinate system than
+///   UIScrollView.contentOffset, causing safe-area mismatches on restoration
 private struct ScrollOffsetObserverView: UIViewRepresentable {
     let onOffsetChange: (CGFloat) -> Void
+    let restoreOffset: CGFloat
+    let storyId: UUID
 
     func makeCoordinator() -> Coordinator { Coordinator(onOffsetChange: onOffsetChange) }
 
@@ -25,21 +29,34 @@ private struct ScrollOffsetObserverView: UIViewRepresentable {
     }
 
     func updateUIView(_ uiView: UIView, context: Context) {
-        guard context.coordinator.observedScrollView == nil else { return }
-        DispatchQueue.main.async {
-            var candidate = uiView.superview
-            while let current = candidate {
-                if let scrollView = current as? UIScrollView {
-                    context.coordinator.observe(scrollView)
-                    return
+        let coordinator = context.coordinator
+
+        if coordinator.observedScrollView == nil {
+            DispatchQueue.main.async {
+                var candidate = uiView.superview
+                while let current = candidate {
+                    if let scrollView = current as? UIScrollView {
+                        coordinator.observe(scrollView)
+                        break
+                    }
+                    candidate = current.superview
                 }
-                candidate = current.superview
+            }
+        }
+
+        if coordinator.restoredStoryId != storyId, restoreOffset > 0 {
+            coordinator.restoredStoryId = storyId
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                coordinator.observedScrollView?.setContentOffset(
+                    CGPoint(x: 0, y: restoreOffset), animated: false
+                )
             }
         }
     }
 
     final class Coordinator: NSObject {
         weak var observedScrollView: UIScrollView?
+        var restoredStoryId: UUID?
         let onOffsetChange: (CGFloat) -> Void
 
         init(onOffsetChange: @escaping (CGFloat) -> Void) {
@@ -67,17 +84,9 @@ struct StoryContentView: View {
 
     let startScrollOffsetTimer: () -> Void
 
-    private func setupStoryView(with proxy: ScrollViewProxy, scrollGeometry: GeometryProxy) {
+    private func setupStoryView(scrollGeometry: GeometryProxy) {
         store.dispatch(.setScrollViewHeight(scrollGeometry.size.height))
         startScrollOffsetTimer()
-
-        if story.scrollOffset > 0 {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                let actualScrollHeight = scrollGeometry.size.height > 0 ? scrollGeometry.size.height : UIScreen.main.bounds.height
-                let anchorY = -(story.scrollOffset / actualScrollHeight)
-                proxy.scrollTo("topAnchor", anchor: UnitPoint(x: 0, y: anchorY))
-            }
-        }
     }
 
     var body: some View {
@@ -87,11 +96,16 @@ struct StoryContentView: View {
                     ScrollViewReader { proxy in
                         ScrollView {
                             VStack(spacing: 0) {
-                                // KVO-based scroll offset observer — replaces the broken
-                                // preference-key approach which stops firing in iOS 17+.
-                                ScrollOffsetObserverView { offset in
-                                    store.dispatch(.setCurrentScrollOffset(offset))
-                                }
+                                // KVO-based scroll offset observer and restorer.
+                                // Replaces SwiftUI's preference-key (broken in iOS 17+)
+                                // and proxy.scrollTo (mismatches UIKit's coordinate system).
+                                ScrollOffsetObserverView(
+                                    onOffsetChange: { offset in
+                                        store.dispatch(.setCurrentScrollOffset(offset))
+                                    },
+                                    restoreOffset: story.scrollOffset,
+                                    storyId: story.id
+                                )
                                 .frame(height: 0)
                                 .id("topAnchor")
                                 
@@ -165,11 +179,11 @@ struct StoryContentView: View {
                                 }
                             }
                         }
-                        .onChange(of: story.id, { oldValue, newValue in
-                            setupStoryView(with: proxy, scrollGeometry: scrollGeometry)
+                        .onChange(of: story.id, { _, _ in
+                            setupStoryView(scrollGeometry: scrollGeometry)
                         })
                         .onAppear {
-                            setupStoryView(with: proxy, scrollGeometry: scrollGeometry)
+                            setupStoryView(scrollGeometry: scrollGeometry)
 
                             // Autogenerate next chapter if subscribed and at the end
                             if store.state.settingsState.isSubscribed && story.chapterIndex >= story.chapters.count - 1 && story.chapterIndex < story.maxNumberOfChapters - 1 && !store.state.isLoading {
