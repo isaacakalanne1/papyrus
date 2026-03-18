@@ -81,9 +81,27 @@ struct NewStoryForm: View {
                             .font(.custom("Georgia", size: 14))
                             .foregroundColor(PapyrusColor.textPrimary.color)
                         Spacer()
-                        HStack(spacing: 8) {
-                            perspectiveButton(label: "1st person", value: .firstPerson)
-                            perspectiveButton(label: "3rd person", value: .thirdPerson)
+                        Picker("Perspective", selection: Binding(
+                            get: { store.state.perspective },
+                            set: { store.dispatch(.updatePerspective($0)) }
+                        )) {
+                            Text("1st person").tag(StoryPerspective.firstPerson)
+                            Text("3rd person").tag(StoryPerspective.thirdPerson)
+                        }
+                        .pickerStyle(.segmented)
+                        .frame(width: 180)
+                        .onAppear {
+                            let appearance = UISegmentedControl.appearance()
+                            appearance.selectedSegmentTintColor = UIColor(PapyrusColor.buttonGradientTop.color)
+                            appearance.backgroundColor = UIColor(PapyrusColor.backgroundSecondary.color)
+                            appearance.setTitleTextAttributes(
+                                [.foregroundColor: UIColor(PapyrusColor.background.color)],
+                                for: .selected
+                            )
+                            appearance.setTitleTextAttributes(
+                                [.foregroundColor: UIColor(PapyrusColor.textSecondary.color)],
+                                for: .normal
+                            )
                         }
                     }
                     .transition(.opacity.combined(with: .move(edge: .top)))
@@ -166,13 +184,5 @@ struct NewStoryForm: View {
         .onTapGesture {
             store.dispatch(.setFocusedField(nil))
         }
-    }
-
-    private func perspectiveButton(label: String, value: StoryPerspective) -> some View {
-        Button(label) {
-            store.dispatch(.updatePerspective(value))
-        }
-        .font(.custom("Georgia", size: 14))
-        .foregroundColor(store.state.perspective == value ? PapyrusColor.accent.color : PapyrusColor.textSecondary.color)
     }
 }
