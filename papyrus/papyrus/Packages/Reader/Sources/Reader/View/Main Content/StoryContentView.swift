@@ -47,10 +47,10 @@ struct StoryContentView: View {
                                 .id("topAnchor")
                                 
                                 // Content
-                                Text(story.chapters[story.chapterIndex].content)
-                                    .font(.custom("Georgia", size: store.state.settingsState.selectedTextSize.fontSize))
-                                    .lineSpacing(8)
-                                    .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
+                                JustifiedTextView(
+                                    text: story.chapters[story.chapterIndex].content,
+                                    fontSize: store.state.settingsState.selectedTextSize.fontSize
+                                )
                                     .padding(.horizontal, 32)
                                     .padding(.top, 40)
                                     .padding(.bottom, store.state.isLoading ? 0 : 40)
