@@ -6,7 +6,13 @@
       "Bash(git commit:*)",
       "Bash(git add:*)",
       "Bash(xcodebuild -scheme papyrus -destination 'platform=iOS Simulator,name=iPhone 16' -quiet build)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "Bash(xcodebuild:*)",
+      "Bash(xcrun simctl:*)",
+      "Bash(for pkg:*)",
+      "Bash(do echo:*)",
+      "Bash(python3:*)",
+      "Bash(grep -v \"^$\")"
     ]
   }
 }
