@@ -9,7 +9,7 @@ import Foundation
 import TextGeneration
 import Settings
 
-enum ReaderAction: Equatable, Sendable {
+public indirect enum ReaderAction: Equatable, Sendable {
     // MARK: - Story Creation Entry Points (subscription gate lives here)
     case createStory
     case createSequel

@@ -5,6 +5,7 @@
 //  Created by Isaac Akalanne on 04/10/2025.
 //
 
+import CoreGraphics
 import Reader
 import Settings
 import TextGeneration

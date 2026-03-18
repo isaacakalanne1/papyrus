@@ -99,11 +99,11 @@ class ReaderMiddlewareTests {
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
         environment.createPlotOutlineError = ReaderTestError("Plot outline failed")
-        
+
         let result = await readerMiddleware(state, .createPlotOutline(inputStory), environment)
-        
+
         #expect(environment.createPlotOutlineCalled)
-        #expect(result == .failedToCreateChapter)
+        #expect(result == .failedToCreateChapter(.createPlotOutline(inputStory)))
     }
     
     @Test
@@ -140,11 +140,11 @@ class ReaderMiddlewareTests {
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
         environment.createChapterBreakdownError = ReaderTestError("Breakdown failed")
-        
+
         let result = await readerMiddleware(state, .createChapterBreakdown(inputStory), environment)
-        
+
         #expect(environment.createChapterBreakdownCalled)
-        #expect(result == .failedToCreateChapter)
+        #expect(result == .failedToCreateChapter(.createChapterBreakdown(inputStory)))
     }
     
     @Test
@@ -192,11 +192,11 @@ class ReaderMiddlewareTests {
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
         environment.getStoryDetailsError = ReaderTestError("Details failed")
-        
+
         let result = await readerMiddleware(state, .getStoryDetails(inputStory), environment)
-        
+
         #expect(environment.getStoryDetailsCalled)
-        #expect(result == .failedToCreateChapter)
+        #expect(result == .failedToCreateChapter(.getStoryDetails(inputStory)))
     }
     
     @Test
@@ -235,11 +235,11 @@ class ReaderMiddlewareTests {
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
         environment.getChapterTitleError = ReaderTestError("Title failed")
-        
+
         let result = await readerMiddleware(state, .getChapterTitle(inputStory), environment)
-        
+
         #expect(environment.getChapterTitleCalled)
-        #expect(result == .failedToCreateChapter)
+        #expect(result == .failedToCreateChapter(.getChapterTitle(inputStory)))
     }
     
     @Test
@@ -438,16 +438,16 @@ class ReaderMiddlewareTests {
     }
     
     @Test
-    func saveStory_failure_returnsFailedToCreateChapter() async {
+    func saveStory_failure_returnsNil() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let story = Story(title: "Test Story")
         environment.saveStoryError = ReaderTestError("Save failed")
-        
+
         let result = await readerMiddleware(state, .saveStory(story), environment)
-        
+
         #expect(environment.saveStoryCalled)
-        #expect(result == .failedToCreateChapter)
+        #expect(result == nil)
     }
     
     // MARK: - Scroll Offset Tests
@@ -477,16 +477,16 @@ class ReaderMiddlewareTests {
     }
     
     @Test
-    func updateScrollOffset_saveFailure_returnsFailedToCreateChapter() async {
+    func updateScrollOffset_saveFailure_returnsNil() async {
         let story = Story(title: "Test Story")
         let state = ReaderState(story: story)
         let environment = MockReaderEnvironment()
         environment.saveStoryError = ReaderTestError("Save failed")
-        
+
         let result = await readerMiddleware(state, .updateScrollOffset(0), environment)
-        
+
         #expect(environment.saveStoryCalled)
-        #expect(result == .failedToCreateChapter)
+        #expect(result == nil)
     }
     
     // MARK: - Subscription Tests
@@ -519,10 +519,10 @@ class ReaderMiddlewareTests {
     func beginCreateStory_noStory_returnsFailedToCreateChapter() async {
         let state = ReaderState(story: nil)
         let environment = MockReaderEnvironment()
-        
+
         let result = await readerMiddleware(state, .beginCreateStory, environment)
-        
-        #expect(result == .failedToCreateChapter)
+
+        #expect(result == .failedToCreateChapter(.beginCreateStory))
     }
     
     // MARK: - Begin Create Sequel Tests
@@ -556,12 +556,12 @@ class ReaderMiddlewareTests {
             sequelStory: Story(title: "Sequel Story")
         )
         let environment = MockReaderEnvironment()
-        
+
         let result = await readerMiddleware(state, .beginCreateSequel, environment)
-        
-        #expect(result == .failedToCreateChapter)
+
+        #expect(result == .failedToCreateChapter(.beginCreateSequel))
     }
-    
+
     @Test
     func beginCreateSequel_noSequelStory_returnsFailedToCreateChapter() async {
         let state = ReaderState(
@@ -569,12 +569,12 @@ class ReaderMiddlewareTests {
             sequelStory: nil
         )
         let environment = MockReaderEnvironment()
-        
+
         let result = await readerMiddleware(state, .beginCreateSequel, environment)
-        
-        #expect(result == .failedToCreateChapter)
+
+        #expect(result == .failedToCreateChapter(.beginCreateSequel))
     }
-    
+
     @Test
     func beginCreateSequel_saveFailure_returnsFailedToCreateChapter() async {
         let currentStory = Story(title: "Current Story")
@@ -585,13 +585,13 @@ class ReaderMiddlewareTests {
         )
         let environment = MockReaderEnvironment()
         environment.saveStoryError = ReaderTestError("Save failed")
-        
+
         let result = await readerMiddleware(state, .beginCreateSequel, environment)
-        
+
         #expect(environment.saveStoryCalled)
-        #expect(result == .failedToCreateChapter)
+        #expect(result == .failedToCreateChapter(.beginCreateSequel))
     }
-    
+
     @Test
     func beginCreateSequel_createSequelFailure_returnsFailedToCreateChapter() async {
         let currentStory = Story(title: "Current Story")
@@ -602,11 +602,11 @@ class ReaderMiddlewareTests {
         )
         let environment = MockReaderEnvironment()
         environment.createSequelPlotOutlineError = ReaderTestError("Create sequel failed")
-        
+
         let result = await readerMiddleware(state, .beginCreateSequel, environment)
-        
+
         #expect(environment.createSequelPlotOutlineCalled)
-        #expect(result == .failedToCreateChapter)
+        #expect(result == .failedToCreateChapter(.beginCreateSequel))
     }
     
     // MARK: - Begin Create Chapter Tests
@@ -635,11 +635,11 @@ class ReaderMiddlewareTests {
         let environment = MockReaderEnvironment()
         let inputStory = Story(title: "Input Story")
         environment.createChapterError = ReaderTestError("Chapter creation failed")
-        
+
         let result = await readerMiddleware(state, .beginCreateChapter(inputStory), environment)
-        
+
         #expect(environment.createChapterCalled)
-        #expect(result == .failedToCreateChapter)
+        #expect(result == .failedToCreateChapter(.beginCreateChapter(inputStory)))
     }
     
     // MARK: - Selected Story for Details Tests
@@ -673,7 +673,10 @@ class ReaderMiddlewareTests {
         let environment = MockReaderEnvironment()
         
         let noOpActions: [ReaderAction] = [
-            .failedToCreateChapter,
+            .failedToCreateChapter(.beginCreateStory),
+            .dismissGenerationError,
+            .confirmDeleteStory(Story()),
+            .cancelDeleteStory,
             .updateSetting("Test Setting"),
             .updateMainCharacter("Test Character"),
             .onLoadedStories([]),

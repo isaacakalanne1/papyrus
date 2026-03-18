@@ -49,6 +49,7 @@ struct ReaderStateTests {
             isLoading: true,
             loadingStep: .creatingPlotOutline,
             settingsState: settingsState,
+            showStoryForm: true,
             showSubscriptionSheet: true,
             selectedStoryForDetails: story,
             focusedField: .mainCharacter

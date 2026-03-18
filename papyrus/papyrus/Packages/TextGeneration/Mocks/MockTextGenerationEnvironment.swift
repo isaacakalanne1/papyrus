@@ -11,6 +11,10 @@ import TextGeneration
 public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     
     // MARK: - Spy Properties for Method Calls
+    public var createStoryThemeCalled = false
+    public var createStoryThemeCalledWith: Story?
+    public var createStoryThemeCallCount = 0
+
     public var createPlotOutlineCalled = false
     public var createPlotOutlineCalledWith: Story?
     public var createPlotOutlineCallCount = 0
@@ -36,6 +40,9 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     public var createChapterCallCount = 0
     
     // MARK: - Return Values and Error Configuration
+    public var createStoryThemeReturnValue: Story?
+    public var createStoryThemeError: Error?
+
     public var createPlotOutlineReturnValue: Story?
     public var createPlotOutlineError: Error?
     
@@ -58,7 +65,19 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     public init() {}
     
     // MARK: - TextGenerationEnvironmentProtocol Methods
-    
+
+    public func createStoryTheme(story: Story) async throws -> Story {
+        createStoryThemeCalled = true
+        createStoryThemeCalledWith = story
+        createStoryThemeCallCount += 1
+
+        if let error = createStoryThemeError {
+            throw error
+        }
+
+        return createStoryThemeReturnValue ?? story
+    }
+
     public func createPlotOutline(story: Story) async throws -> Story {
         createPlotOutlineCalled = true
         createPlotOutlineCalledWith = story
@@ -134,6 +153,10 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     // MARK: - Helper Methods
     
     public func reset() {
+        createStoryThemeCalled = false
+        createStoryThemeCalledWith = nil
+        createStoryThemeCallCount = 0
+
         createPlotOutlineCalled = false
         createPlotOutlineCalledWith = nil
         createPlotOutlineCallCount = 0
@@ -158,6 +181,9 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         createChapterCalledWith = nil
         createChapterCallCount = 0
         
+        createStoryThemeReturnValue = nil
+        createStoryThemeError = nil
+
         createPlotOutlineReturnValue = nil
         createPlotOutlineError = nil
         

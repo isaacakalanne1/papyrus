@@ -651,17 +651,19 @@ class ReaderReducerTests {
     
     @Test
     func failedToCreateChapter() {
+        let retryAction = ReaderAction.beginCreateChapter(Story(title: "Test"))
         let initialState = ReaderState.arrange(
             isLoading: true,
             loadingStep: .writingChapter
         )
-        
+
         var expectedState = initialState
         expectedState.isLoading = false
         expectedState.loadingStep = .idle
-        
-        let newState = readerReducer(initialState, .failedToCreateChapter)
-        
+        expectedState.failedGenerationAction = retryAction
+
+        let newState = readerReducer(initialState, .failedToCreateChapter(retryAction))
+
         #expect(newState == expectedState)
     }
     

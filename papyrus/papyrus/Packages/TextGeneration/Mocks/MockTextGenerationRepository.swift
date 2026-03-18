@@ -11,6 +11,10 @@ import Foundation
 public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
     
     // MARK: - Spy Properties for Method Calls
+    public var createStoryThemeCalled = false
+    public var createStoryThemeCalledWith: Story?
+    public var createStoryThemeCallCount = 0
+
     public var createPlotOutlineCalled = false
     public var createPlotOutlineCalledWith: Story?
     public var createPlotOutlineCallCount = 0
@@ -36,6 +40,9 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
     public var createChapterCallCount = 0
     
     // MARK: - Return Values and Error Configuration
+    public var createStoryThemeReturnValue: Story?
+    public var createStoryThemeError: Error?
+
     public var createPlotOutlineReturnValue: Story?
     public var createPlotOutlineError: Error?
     
@@ -58,7 +65,19 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
     public init() {}
     
     // MARK: - TextGenerationRepositoryProtocol Methods
-    
+
+    public func createStoryTheme(story originalStory: Story) async throws -> Story {
+        createStoryThemeCalled = true
+        createStoryThemeCalledWith = originalStory
+        createStoryThemeCallCount += 1
+
+        if let error = createStoryThemeError {
+            throw error
+        }
+
+        return createStoryThemeReturnValue ?? originalStory
+    }
+
     public func createPlotOutline(story originalStory: Story) async throws -> Story {
         createPlotOutlineCalled = true
         createPlotOutlineCalledWith = originalStory
@@ -134,6 +153,10 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
     // MARK: - Helper Methods
     
     public func reset() {
+        createStoryThemeCalled = false
+        createStoryThemeCalledWith = nil
+        createStoryThemeCallCount = 0
+
         createPlotOutlineCalled = false
         createPlotOutlineCalledWith = nil
         createPlotOutlineCallCount = 0
@@ -158,6 +181,9 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
         createChapterCalledWith = nil
         createChapterCallCount = 0
         
+        createStoryThemeReturnValue = nil
+        createStoryThemeError = nil
+
         createPlotOutlineReturnValue = nil
         createPlotOutlineError = nil
         

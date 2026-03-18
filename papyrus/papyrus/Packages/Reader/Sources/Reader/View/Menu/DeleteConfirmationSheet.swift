@@ -69,7 +69,7 @@ struct DeleteConfirmationSheet: View {
                 )
 
                 // Body copy
-                Text("Are you sure you want to permanently delete "\(storyTitle)"? All chapters will be lost.")
+                Text("Are you sure you want to permanently delete \'\(storyTitle)\'? All chapters will be lost.")
                     .font(.custom("Georgia", size: 15))
                     .foregroundColor(PapyrusColor.textSecondary.color)
                     .multilineTextAlignment(.leading)
