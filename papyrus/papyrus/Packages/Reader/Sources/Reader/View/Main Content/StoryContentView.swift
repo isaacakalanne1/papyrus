@@ -9,27 +9,77 @@ import SwiftUI
 import TextGeneration
 import Settings
 
+/// Observes the enclosing UIScrollView's contentOffset via KVO and reports
+/// changes to a callback. This replaces the SwiftUI preference-key approach,
+/// which stops firing during scroll in iOS 17+ due to layout-pass decoupling.
+private struct ScrollOffsetObserverView: UIViewRepresentable {
+    let onOffsetChange: (CGFloat) -> Void
+
+    func makeCoordinator() -> Coordinator { Coordinator(onOffsetChange: onOffsetChange) }
+
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        view.isHidden = true
+        view.isUserInteractionEnabled = false
+        return view
+    }
+
+    func updateUIView(_ uiView: UIView, context: Context) {
+        guard context.coordinator.observedScrollView == nil else { return }
+        DispatchQueue.main.async {
+            var candidate = uiView.superview
+            while let current = candidate {
+                if let scrollView = current as? UIScrollView {
+                    context.coordinator.observe(scrollView)
+                    return
+                }
+                candidate = current.superview
+            }
+        }
+    }
+
+    final class Coordinator: NSObject {
+        weak var observedScrollView: UIScrollView?
+        let onOffsetChange: (CGFloat) -> Void
+
+        init(onOffsetChange: @escaping (CGFloat) -> Void) {
+            self.onOffsetChange = onOffsetChange
+        }
+
+        func observe(_ scrollView: UIScrollView) {
+            observedScrollView = scrollView
+            scrollView.addObserver(self, forKeyPath: "contentOffset", options: [.new], context: nil)
+        }
+
+        override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+            guard keyPath == "contentOffset",
+                  let point = change?[.newKey] as? CGPoint else { return }
+            onOffsetChange(point.y)
+        }
+
+        deinit { observedScrollView?.removeObserver(self, forKeyPath: "contentOffset") }
+    }
+}
+
 struct StoryContentView: View {
     let story: Story
     @EnvironmentObject var store: ReaderStore
-    
+
     let startScrollOffsetTimer: () -> Void
-    
+
     private func setupStoryView(with proxy: ScrollViewProxy, scrollGeometry: GeometryProxy) {
-        let height = scrollGeometry.size.height
-        store.dispatch(.setScrollViewHeight(height))
+        store.dispatch(.setScrollViewHeight(scrollGeometry.size.height))
         startScrollOffsetTimer()
-        
-        // Scroll to saved position
+
         if story.scrollOffset > 0 {
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-                let actualScrollHeight = height > 0 ? height : UIScreen.main.bounds.height
+                let actualScrollHeight = scrollGeometry.size.height > 0 ? scrollGeometry.size.height : UIScreen.main.bounds.height
                 let anchorY = -(story.scrollOffset / actualScrollHeight)
                 proxy.scrollTo("topAnchor", anchor: UnitPoint(x: 0, y: anchorY))
             }
         }
     }
-    
+
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             VStack(spacing: 0) {
@@ -37,11 +87,10 @@ struct StoryContentView: View {
                     ScrollViewReader { proxy in
                         ScrollView {
                             VStack(spacing: 0) {
-                                // Geometry reader at the very top to track scroll offset
-                                GeometryReader { geometry in
-                                    Color.clear
-                                        .preference(key: ScrollOffsetPreferenceKey.self,
-                                                    value: -geometry.frame(in: .named("scroll")).minY)
+                                // KVO-based scroll offset observer — replaces the broken
+                                // preference-key approach which stops firing in iOS 17+.
+                                ScrollOffsetObserverView { offset in
+                                    store.dispatch(.setCurrentScrollOffset(offset))
                                 }
                                 .frame(height: 0)
                                 .id("topAnchor")
@@ -103,12 +152,6 @@ struct StoryContentView: View {
                                     }
                                     .padding(.bottom, 30)
                                 }
-                            }
-                        }
-                        .coordinateSpace(name: "scroll")
-                        .onPreferenceChange(ScrollOffsetPreferenceKey.self) { value in
-                            DispatchQueue.main.async {
-                                store.dispatch(.setCurrentScrollOffset(value))
                             }
                         }
                         .onChange(of: story.chapterIndex) { oldValue, newValue in
