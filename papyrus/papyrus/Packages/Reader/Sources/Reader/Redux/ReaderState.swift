@@ -20,6 +20,17 @@ public enum MenuStatus: Equatable, Sendable {
     case settingsOpen
 }
 
+public enum LoadingStep: Equatable, Sendable {
+    case idle
+    case preparing
+    case identifyingTheme
+    case creatingPlotOutline
+    case creatingChapterBreakdown
+    case analyzingStructure
+    case preparingNarrative
+    case writingChapter
+}
+
 public struct ReaderState: Equatable {
     var mainCharacter: String
     var setting: String
@@ -27,15 +38,14 @@ public struct ReaderState: Equatable {
     var story: Story?
     var sequelStory: Story?
     var isLoading: Bool
-    var storyCreationStep: StoryCreationStep
-    var loadingDisplayStep: StoryLoadingDisplayStep
+    var loadingStep: LoadingStep
     var settingsState: SettingsState
     var showStoryForm: Bool
     var showSubscriptionSheet: Bool
     var selectedStoryForDetails: Story?
     var focusedField: ReaderField?
 
-    // UI State moved from ReaderView
+    // UI State
     var menuStatus: MenuStatus
     var dragOffset: CGFloat
     var isSequelMode: Bool
@@ -49,8 +59,7 @@ public struct ReaderState: Equatable {
         story: Story? = nil,
         sequelStory: Story? = nil,
         isLoading: Bool = false,
-        storyCreationStep: StoryCreationStep = .idle,
-        loadingDisplayStep: StoryLoadingDisplayStep = .idle,
+        loadingStep: LoadingStep = .idle,
         settingsState: SettingsState = SettingsState(),
         showStoryForm: Bool = false,
         showSubscriptionSheet: Bool = false,
@@ -68,8 +77,7 @@ public struct ReaderState: Equatable {
         self.story = story
         self.sequelStory = sequelStory
         self.isLoading = isLoading
-        self.storyCreationStep = storyCreationStep
-        self.loadingDisplayStep = loadingDisplayStep
+        self.loadingStep = loadingStep
         self.settingsState = settingsState
         self.showStoryForm = showStoryForm
         self.showSubscriptionSheet = showSubscriptionSheet
@@ -82,7 +90,8 @@ public struct ReaderState: Equatable {
         self.scrollViewHeight = scrollViewHeight
     }
 
-    // Computed property for content state
+    // MARK: - Computed Properties
+
     var contentState: ContentState {
         if let story = story,
            !story.chapters.isEmpty,
@@ -92,27 +101,9 @@ public struct ReaderState: Equatable {
             return .welcome
         }
     }
-}
 
-public enum StoryCreationStep: Equatable, Sendable {
-    case idle
-    case initial
-    case sequel
-    case identifyingTheme
-    case creatingPlotOutline
-    case creatingChapterBreakdown
-    case gettingStoryDetails
-    case gettingChapterTitle
-    case writingChapter
-}
-
-public enum StoryLoadingDisplayStep: Equatable, Sendable {
-    case idle
-    case preparing
-    case identifyingTheme
-    case creatingPlotOutline
-    case creatingChapterBreakdown
-    case analyzingStructure
-    case preparingNarrative
-    case writingChapter
+    var canCreateChapter: Bool {
+        let isAtFreeLimit = (story?.chapters.count ?? 0) >= 2
+        return settingsState.isSubscribed || !isAtFreeLimit
+    }
 }

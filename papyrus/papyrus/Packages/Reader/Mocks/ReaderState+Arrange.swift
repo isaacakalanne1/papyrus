@@ -13,7 +13,7 @@ public extension ReaderState {
     static var arrange: ReaderState {
         arrange()
     }
-    
+
     static func arrange(
         mainCharacter: String = "",
         setting: String = "",

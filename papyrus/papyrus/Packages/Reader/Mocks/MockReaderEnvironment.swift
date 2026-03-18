@@ -16,6 +16,9 @@ import SubscriptionMocks
 public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     
     // MARK: - Spy Properties for Method Calls
+    var createStoryThemeCalled = false
+    var createStoryThemeCalledWith: Story?
+
     var createPlotOutlineCalled = false
     var createPlotOutlineCalledWith: Story?
     
@@ -52,6 +55,9 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     var loadSubscriptionsCalled = false
     
     // MARK: - Return Values and Error Configuration
+    var createStoryThemeReturnValue: Story?
+    var createStoryThemeError: Error?
+
     var createPlotOutlineReturnValue: Story?
     var createPlotOutlineError: Error?
     
@@ -97,7 +103,18 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     }
     
     // MARK: - ReaderEnvironmentProtocol Methods
-    
+
+    public func createStoryTheme(story: Story) async throws -> Story {
+        createStoryThemeCalled = true
+        createStoryThemeCalledWith = story
+
+        if let error = createStoryThemeError {
+            throw error
+        }
+
+        return createStoryThemeReturnValue ?? story
+    }
+
     public func createPlotOutline(story: Story) async throws -> Story {
         createPlotOutlineCalled = true
         createPlotOutlineCalledWith = story
@@ -164,6 +181,10 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return createChapterReturnValue ?? story
     }
     
+    public func saveStoryWithRelationships(_ story: Story) async throws {
+        try await saveStory(story)
+    }
+
     public func saveStory(_ story: Story) async throws {
         saveStoryCalled = true
         saveStoryCalledWith = story

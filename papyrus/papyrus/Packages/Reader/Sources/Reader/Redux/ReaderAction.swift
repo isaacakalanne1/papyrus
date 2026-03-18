@@ -10,10 +10,29 @@ import TextGeneration
 import Settings
 
 enum ReaderAction: Equatable, Sendable {
-    case createStory(step: StoryCreationStep, story: Story? = nil, navigateOnCompletion: Bool = false)
-    case onCreatedStory(Story, navigateOnCompletion: Bool)
-    case failedToCreateStory
+    // MARK: - Story Creation Entry Points (subscription gate lives here)
+    case createStory
+    case createSequel
+    case createChapter(Story)
 
+    // MARK: - Story Creation Pipeline Steps
+    case beginCreateStory
+    case beginCreateSequel
+    case createStoryTheme(Story)
+    case onCreatedThemeDescription(Story)
+    case createPlotOutline(Story)
+    case onCreatedPlotOutline(Story)
+    case createChapterBreakdown(Story)
+    case onCreatedChapterBreakdown(Story)
+    case getStoryDetails(Story)
+    case onGetStoryDetails(Story)
+    case getChapterTitle(Story)
+    case onGetChapterTitle(Story)
+    case beginCreateChapter(Story)
+    case onCreatedChapter(Story)
+    case failedToCreateChapter
+
+    // MARK: - Story Management
     case loadAllStories
     case onLoadedStories([Story])
     case failedToLoadStories
@@ -22,6 +41,7 @@ enum ReaderAction: Equatable, Sendable {
     case onDeletedStory(UUID)
     case failedToDeleteStory(UUID)
 
+    // MARK: - Story Properties
     case updateMainCharacter(String)
     case updateSetting(String)
     case updateChapterIndex(Story, Int)
@@ -34,7 +54,7 @@ enum ReaderAction: Equatable, Sendable {
     case setSelectedStoryForDetails(Story?)
     case setFocusedField(ReaderField?)
 
-    // UI State Actions
+    // MARK: - UI State Actions
     case setMenuStatus(MenuStatus)
     case setDragOffset(CGFloat)
     case setIsSequelMode(Bool)

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(swift build:*)",
+      "Bash(find /Users/isaacakalanne/Documents/Apps/papyrus/papyrus -name *.xcodeproj -o -name *.xcworkspace)"
+    ]
+  }
+}

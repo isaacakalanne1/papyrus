@@ -84,7 +84,7 @@ struct StoryContentView: View {
                                                 if story.chapters.count > nextIndex {
                                                     store.dispatch(.updateChapterIndex(story, nextIndex))
                                                 } else {
-                                                    store.dispatch(.createStory(step: .writingChapter, story: story, navigateOnCompletion: true))
+                                                    store.dispatch(.createChapter(story))
                                                 }
                                             }
                                             .disabled(store.state.isLoading)
@@ -107,7 +107,7 @@ struct StoryContentView: View {
                                 
                                 // Autogenerate next chapter if subscribed
                                 if store.state.settingsState.isSubscribed && newValue >= story.chapters.count - 1 && newValue < story.maxNumberOfChapters - 1 && !store.state.isLoading {
-                                    store.dispatch(.createStory(step: .writingChapter, story: story))
+                                    store.dispatch(.createChapter(story))
                                 }
                             }
                         }
@@ -116,10 +116,10 @@ struct StoryContentView: View {
                         })
                         .onAppear {
                             setupStoryView(with: proxy, scrollGeometry: scrollGeometry)
-                            
+
                             // Autogenerate next chapter if subscribed and at the end
                             if store.state.settingsState.isSubscribed && story.chapterIndex >= story.chapters.count - 1 && story.chapterIndex < story.maxNumberOfChapters - 1 && !store.state.isLoading {
-                                store.dispatch(.createStory(step: .writingChapter, story: story))
+                                store.dispatch(.createChapter(story))
                             }
                         }
                     }

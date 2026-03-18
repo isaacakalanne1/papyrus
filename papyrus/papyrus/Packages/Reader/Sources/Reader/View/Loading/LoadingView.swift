@@ -9,13 +9,13 @@ import SwiftUI
 import PapyrusStyleKit
 
 struct LoadingView: View {
-    let loadingDisplayStep: StoryLoadingDisplayStep
+    let loadingDisplayStep: LoadingStep
     let hasExistingStory: Bool
     @State private var progressAnimation: CGFloat = 0
     @State private var pulseScale: CGFloat = 1.0
     @State private var showChapterReady: Bool = false
 
-    private var storyCreationStages: [StoryLoadingDisplayStep] {
+    private var storyCreationStages: [LoadingStep] {
         [.identifyingTheme, .creatingPlotOutline, .creatingChapterBreakdown, .analyzingStructure, .preparingNarrative]
     }
 

@@ -11,114 +11,121 @@ import ReduxKit
 @MainActor
 let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentProtocol> = { state, action, environment in
     switch action {
-    case .createStory(let step, var story, let navigateOnCompletion):
-        switch step {
-        case .idle:
-            return nil
 
-        case .initial:
-            guard let initialStory = state.story else { return nil }
-            return .createStory(step: .identifyingTheme, story: initialStory, navigateOnCompletion: navigateOnCompletion)
+    // MARK: - Entry Points (subscription gate lives here)
 
-        case .sequel:
-            guard let currentStory = state.story,
-                  let sequelStory = state.sequelStory else {
-                return nil
-            }
-            do {
-                try await environment.saveStory(currentStory)
-                let themedSequelStory = try await environment.createStoryTheme(story: sequelStory)
-                let sequelWithPlot = try await environment.createSequelPlotOutline(
-                    story: themedSequelStory,
-                    previousStory: currentStory
-                )
-                return .createStory(step: .creatingChapterBreakdown, story: sequelWithPlot, navigateOnCompletion: navigateOnCompletion)
-            } catch {
-                return .failedToCreateStory
-            }
+    case .createStory:
+        if !state.canCreateChapter {
+            let isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
+            if !isSubscribed { return .setShowSubscriptionSheet(true) }
+        }
+        return .beginCreateStory
 
-        case .identifyingTheme:
-            guard var story = story else { return .failedToCreateStory }
-            do {
-                story = try await environment.createStoryTheme(story: story)
-                return .createStory(step: .creatingPlotOutline, story: story, navigateOnCompletion: navigateOnCompletion)
-            } catch {
-                return .failedToCreateStory
-            }
+    case .createSequel:
+        if !state.canCreateChapter {
+            let isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
+            if !isSubscribed { return .setShowSubscriptionSheet(true) }
+        }
+        return .beginCreateSequel
 
-        case .creatingPlotOutline:
-            guard var story = story else { return .failedToCreateStory }
-            do {
-                story = try await environment.createPlotOutline(story: story)
-                return .createStory(step: .creatingChapterBreakdown, story: story, navigateOnCompletion: navigateOnCompletion)
-            } catch {
-                return .failedToCreateStory
-            }
+    case .createChapter(let story):
+        if !state.canCreateChapter {
+            let isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
+            if !isSubscribed { return .setShowSubscriptionSheet(true) }
+        }
+        return .beginCreateChapter(story)
 
-        case .creatingChapterBreakdown:
-            guard var story = story else { return .failedToCreateStory }
-            do {
-                story = try await environment.createChapterBreakdown(story: story)
-                if story.maxNumberOfChapters > 0 {
-                    return .createStory(step: .writingChapter, story: story, navigateOnCompletion: navigateOnCompletion)
-                } else {
-                    return .createStory(step: .gettingStoryDetails, story: story, navigateOnCompletion: navigateOnCompletion)
-                }
-            } catch {
-                return .failedToCreateStory
-            }
+    // MARK: - Story Creation Pipeline
 
-        case .gettingStoryDetails:
-            guard var story = story else { return .failedToCreateStory }
-            do {
-                story = try await environment.getStoryDetails(story: story)
-                return .createStory(step: .gettingChapterTitle, story: story, navigateOnCompletion: navigateOnCompletion)
-            } catch {
-                return .failedToCreateStory
-            }
+    case .beginCreateStory:
+        guard let story = state.story else { return .failedToCreateChapter }
+        return .createPlotOutline(story)
 
-        case .gettingChapterTitle:
-            guard var story = story else { return .failedToCreateStory }
-            do {
-                story = try await environment.getChapterTitle(story: story)
-                return .createStory(step: .writingChapter, story: story, navigateOnCompletion: navigateOnCompletion)
-            } catch {
-                return .failedToCreateStory
-            }
-
-        case .writingChapter:
-            guard var story = story else { return .failedToCreateStory }
-
-            let isAtFreeLimit = story.chapters.count >= 2
-            var isSubscribed = state.settingsState.isSubscribed
-
-            if !isSubscribed, isAtFreeLimit {
-                isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
-            }
-
-            if !isSubscribed, isAtFreeLimit {
-                return .setShowSubscriptionSheet(true)
-            }
-
-            if story.chapters.count >= story.maxNumberOfChapters {
-                return nil
-            }
-
-            do {
-                story = try await environment.createChapter(story: story)
-                return .onCreatedStory(story, navigateOnCompletion: navigateOnCompletion)
-            } catch {
-                return .failedToCreateStory
-            }
+    case .beginCreateSequel:
+        guard let currentStory = state.story,
+              let sequelStory = state.sequelStory else { return .failedToCreateChapter }
+        do {
+            try await environment.saveStory(currentStory)
+            let sequelWithPlot = try await environment.createSequelPlotOutline(
+                story: sequelStory,
+                previousStory: currentStory
+            )
+            return .onCreatedPlotOutline(sequelWithPlot)
+        } catch {
+            return .failedToCreateChapter
         }
 
-    case .onCreatedStory(let story, let navigateOnCompletion):
-        var storyToSave = story
-        if navigateOnCompletion {
-            storyToSave.chapterIndex = story.chapters.count - 1
-            storyToSave.scrollOffset = 0
+    case .createStoryTheme(let story):
+        do {
+            let themedStory = try await environment.createStoryTheme(story: story)
+            return .onCreatedThemeDescription(themedStory)
+        } catch {
+            return .failedToCreateChapter
         }
-        return .saveStory(storyToSave)
+
+    case .onCreatedThemeDescription(let story):
+        return .createPlotOutline(story)
+
+    case .createPlotOutline(let story):
+        do {
+            let storyWithPlot = try await environment.createPlotOutline(story: story)
+            return .onCreatedPlotOutline(storyWithPlot)
+        } catch {
+            return .failedToCreateChapter
+        }
+
+    case .onCreatedPlotOutline(let story):
+        return .createChapterBreakdown(story)
+
+    case .createChapterBreakdown(let story):
+        do {
+            let storyWithBreakdown = try await environment.createChapterBreakdown(story: story)
+            return .onCreatedChapterBreakdown(storyWithBreakdown)
+        } catch {
+            return .failedToCreateChapter
+        }
+
+    case .onCreatedChapterBreakdown(let story):
+        if story.maxNumberOfChapters > 0 {
+            return .beginCreateChapter(story)
+        } else {
+            return .getStoryDetails(story)
+        }
+
+    case .getStoryDetails(let story):
+        do {
+            let storyWithDetails = try await environment.getStoryDetails(story: story)
+            return .onGetStoryDetails(storyWithDetails)
+        } catch {
+            return .failedToCreateChapter
+        }
+
+    case .onGetStoryDetails(let story):
+        return .getChapterTitle(story)
+
+    case .getChapterTitle(let story):
+        do {
+            let storyWithTitle = try await environment.getChapterTitle(story: story)
+            return .onGetChapterTitle(storyWithTitle)
+        } catch {
+            return .failedToCreateChapter
+        }
+
+    case .onGetChapterTitle(let story):
+        return .beginCreateChapter(story)
+
+    case .beginCreateChapter(let story):
+        do {
+            let storyWithChapter = try await environment.createChapter(story: story)
+            return .onCreatedChapter(storyWithChapter)
+        } catch {
+            return .failedToCreateChapter
+        }
+
+    case .onCreatedChapter(let story):
+        return .updateChapterIndex(story, story.chapters.count - 1)
+
+    // MARK: - Story Management
 
     case .loadAllStories:
         do {
@@ -133,7 +140,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             try await environment.deleteStory(withId: id)
             return .onDeletedStory(id)
         } catch {
-            return .failedToDeleteStory(id)
+            return .failedToLoadStories
         }
 
     case .updateChapterIndex(let story, let index):
@@ -144,10 +151,18 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
 
     case .saveStory(let story):
         do {
-            try await environment.saveStoryWithRelationships(story)
+            try await environment.saveStory(story)
+            for prequelId in story.prequelIds {
+                if var prequelStory = try await environment.loadStory(withId: prequelId) {
+                    if !prequelStory.sequelIds.contains(story.id) {
+                        prequelStory.sequelIds.append(story.id)
+                        try await environment.saveStory(prequelStory)
+                    }
+                }
+            }
             return nil
         } catch {
-            return .failedToCreateStory
+            return .failedToCreateChapter
         }
 
     case .updateScrollOffset(let offset):
@@ -157,7 +172,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
                 try await environment.saveStory(story)
                 return nil
             } catch {
-                return .failedToCreateStory
+                return .failedToCreateChapter
             }
         }
         return nil
@@ -166,24 +181,24 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         await environment.loadSubscriptions()
         return nil
 
-    case .updateSetting,
-            .failedToCreateStory,
-            .failedToDeleteStory,
-            .updateMainCharacter,
-            .onLoadedStories,
-            .failedToLoadStories,
-            .setStory,
-            .onDeletedStory,
-            .refreshSettings,
-            .setShowStoryForm,
-            .setShowSubscriptionSheet,
-            .setSelectedStoryForDetails,
-            .setFocusedField,
-            .setMenuStatus,
-            .setDragOffset,
-            .setIsSequelMode,
-            .setCurrentScrollOffset,
-            .setScrollViewHeight:
+    case .failedToCreateChapter,
+         .failedToLoadStories,
+         .updateSetting,
+         .updateMainCharacter,
+         .onLoadedStories,
+         .setStory,
+         .onDeletedStory,
+         .failedToDeleteStory,
+         .refreshSettings,
+         .setShowStoryForm,
+         .setShowSubscriptionSheet,
+         .setSelectedStoryForDetails,
+         .setFocusedField,
+         .setMenuStatus,
+         .setDragOffset,
+         .setIsSequelMode,
+         .setCurrentScrollOffset,
+         .setScrollViewHeight:
         return nil
     }
 }
