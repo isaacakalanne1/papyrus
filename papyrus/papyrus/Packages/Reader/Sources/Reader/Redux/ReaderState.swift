@@ -34,6 +34,7 @@ public enum LoadingStep: Equatable, Sendable {
 public struct ReaderState: Equatable {
     var mainCharacter: String
     var setting: String
+    var perspective: StoryPerspective
     var loadedStories: [Story]
     var story: Story?
     var sequelStory: Story?
@@ -61,6 +62,7 @@ public struct ReaderState: Equatable {
     public init(
         mainCharacter: String = "",
         setting: String = "",
+        perspective: StoryPerspective = .thirdPerson,
         loadedStories: [Story] = [],
         story: Story? = nil,
         sequelStory: Story? = nil,
@@ -81,6 +83,7 @@ public struct ReaderState: Equatable {
     ) {
         self.mainCharacter = mainCharacter
         self.setting = setting
+        self.perspective = perspective
         self.loadedStories = loadedStories
         self.story = story
         self.sequelStory = sequelStory

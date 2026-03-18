@@ -208,6 +208,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
          .setDragOffset,
          .setIsSequelMode,
          .setCurrentScrollOffset,
+         .updatePerspective,
          .setScrollViewHeight:
         return nil
     }

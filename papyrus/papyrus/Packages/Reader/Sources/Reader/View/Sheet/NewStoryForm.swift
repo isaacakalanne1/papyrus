@@ -7,6 +7,7 @@
 
 import SwiftUI
 import PapyrusStyleKit
+import TextGeneration
 
 struct NewStoryForm: View {
     @EnvironmentObject var store: ReaderStore
@@ -15,26 +16,25 @@ struct NewStoryForm: View {
     @State var settingDetails: String = ""
     @State private var showMainCharacterHint = false
     @State private var showSettingDetailsHint = false
-    
-    var body: some View {
+    @State private var showMoreOptions = false
 
+    var body: some View {
         VStack(spacing: 20) {
             // Header
             HStack {
                 Text(store.state.isSequelMode ? "Create Sequel" : "New Story")
                     .font(.custom("Georgia", size: 20))
                     .foregroundColor(PapyrusColor.textPrimary.color)
-                
+
                 Spacer()
-                
-                // Close button
+
                 MenuButton(type: .close) {
                     store.dispatch(.setShowStoryForm(false))
                     store.dispatch(.setIsSequelMode(false))
                     store.dispatch(.setFocusedField(nil))
                 }
             }
-                
+
             FormFieldView(
                 label: "Main Character",
                 placeholder: "E.g, Sherlock Holmes",
@@ -45,7 +45,7 @@ struct NewStoryForm: View {
             ) {
                 store.dispatch(.setFocusedField(.settingDetails))
             }
-                
+
             FormFieldView(
                 label: "Setting & Details",
                 placeholder: "E.g, Living in Los Angeles, has famous superheroes as clients",
@@ -57,43 +57,84 @@ struct NewStoryForm: View {
                 store.dispatch(.setFocusedField(nil))
             }
 
-            // Write chapter button
+            // More options collapsible section
+            VStack(spacing: 12) {
+                HStack {
+                    Text("More options")
+                        .font(.custom("Georgia", size: 14))
+                        .foregroundColor(PapyrusColor.textSecondary.color)
+                    Spacer()
+                    Image(systemName: showMoreOptions ? "chevron.up" : "chevron.down")
+                        .font(.system(size: 12, weight: .medium))
+                        .foregroundColor(PapyrusColor.textSecondary.color)
+                }
+                .contentShape(Rectangle())
+                .onTapGesture {
+                    withAnimation(.easeInOut(duration: 0.2)) {
+                        showMoreOptions.toggle()
+                    }
+                }
+
+                if showMoreOptions {
+                    HStack {
+                        Text("Perspective")
+                            .font(.custom("Georgia", size: 14))
+                            .foregroundColor(PapyrusColor.textPrimary.color)
+                        Spacer()
+                        HStack(spacing: 8) {
+                            perspectiveButton(label: "1st person", value: .firstPerson)
+                            perspectiveButton(label: "3rd person", value: .thirdPerson)
+                        }
+                    }
+                    .transition(.opacity.combined(with: .move(edge: .top)))
+                }
+            }
+
             PrimaryButton(
                 type: store.state.isSequelMode ? .createSequel : .createStory,
                 size: .medium,
                 isDisabled: false,
                 isLoading: store.state.isLoading
             ) {
-                // Check if fields are filled
                 let isMainCharacterEmpty = mainCharacter.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                 let isSettingDetailsEmpty = settingDetails.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                
+
                 if isMainCharacterEmpty || isSettingDetailsEmpty {
-                    // Show hints for empty fields
                     withAnimation(.easeInOut(duration: 0.3)) {
                         showMainCharacterHint = isMainCharacterEmpty
                         showSettingDetailsHint = isSettingDetailsEmpty
                     }
                 } else {
-                    // Proceed with creation
-                    if store.state.isSequelMode {
-                        store.dispatch(.createSequel)
-                    } else {
-                        store.dispatch(.createStory)
-                    }
+                    store.dispatch(store.state.isSequelMode ? .createSequel : .createStory)
                 }
             }
-            
+
             Spacer()
         }
         .padding(24)
         .environment(\.readerFocusedField, $focusedField)
-        .onChange(of: store.state.focusedField) { oldValue, newValue in
+        .onChange(of: store.state.focusedField) { _, newValue in
             focusedField = newValue
         }
-        .onChange(of: focusedField) { oldValue, newValue in
+        .onChange(of: focusedField) { _, newValue in
             if store.state.focusedField != newValue {
                 store.dispatch(.setFocusedField(newValue))
+            }
+        }
+        .onChange(of: mainCharacter) { _, newValue in
+            store.dispatch(.updateMainCharacter(newValue))
+            if showMainCharacterHint && !newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    showMainCharacterHint = false
+                }
+            }
+        }
+        .onChange(of: settingDetails) { _, newValue in
+            store.dispatch(.updateSetting(newValue))
+            if showSettingDetailsHint && !newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                withAnimation(.easeInOut(duration: 0.3)) {
+                    showSettingDetailsHint = false
+                }
             }
         }
         .background(
@@ -125,31 +166,13 @@ struct NewStoryForm: View {
         .onTapGesture {
             store.dispatch(.setFocusedField(nil))
         }
-        .onChange(of: mainCharacter) { oldValue, newValue in
-            store.dispatch(.updateMainCharacter(newValue))
+    }
+
+    private func perspectiveButton(label: String, value: StoryPerspective) -> some View {
+        Button(label) {
+            store.dispatch(.updatePerspective(value))
         }
-        .onChange(of: settingDetails) { oldValue, newValue in
-            store.dispatch(.updateSetting(newValue))
-        }
-        .onChange(of: mainCharacter) { oldValue, newValue in
-            if showMainCharacterHint && !newValue
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .trimmingCharacters(in: .punctuationCharacters)
-                .isEmpty {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    showMainCharacterHint = false
-                }
-            }
-        }
-        .onChange(of: settingDetails) { oldValue, newValue in
-            if showSettingDetailsHint && !newValue
-                .trimmingCharacters(in: .whitespacesAndNewlines)
-                .trimmingCharacters(in: .punctuationCharacters)
-                .isEmpty {
-                withAnimation(.easeInOut(duration: 0.3)) {
-                    showSettingDetailsHint = false
-                }
-            }
-        }
+        .font(.custom("Georgia", size: 14))
+        .foregroundColor(store.state.perspective == value ? PapyrusColor.accent.color : PapyrusColor.textSecondary.color)
     }
 }

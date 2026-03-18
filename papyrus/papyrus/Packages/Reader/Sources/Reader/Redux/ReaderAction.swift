@@ -48,6 +48,7 @@ public indirect enum ReaderAction: Equatable, Sendable {
     // MARK: - Story Properties
     case updateMainCharacter(String)
     case updateSetting(String)
+    case updatePerspective(StoryPerspective)
     case updateChapterIndex(Story, Int)
     case updateScrollOffset(CGFloat)
     case saveStory(Story)

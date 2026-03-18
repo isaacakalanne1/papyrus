@@ -24,6 +24,7 @@ You are an expert in narrative themes and genres. Your task is to analyze the pr
 **Context Provided:**
 - **Main Character:** \(story.mainCharacter)
 - **Setting:** \(story.setting)
+- **Perspective:** \(story.perspective.promptDescription)
 
 **Task:**
 Based on these elements, provide a concise description of the story's theme and genre. Consider:

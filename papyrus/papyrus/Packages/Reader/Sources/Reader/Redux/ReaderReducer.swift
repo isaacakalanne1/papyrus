@@ -29,7 +29,8 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.loadingStep = .identifyingTheme
         newState.story = .init(
             mainCharacter: newState.mainCharacter,
-            setting: newState.setting
+            setting: newState.setting,
+            perspective: newState.perspective
         )
 
     case .beginCreateSequel:
@@ -44,6 +45,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.sequelStory?.setting = newState.setting
         newState.sequelStory?.chapters = []
         newState.sequelStory?.chapterIndex = 0
+        newState.sequelStory?.perspective = newState.perspective
         if let prequelId = newState.story?.id {
             newState.sequelStory?.prequelIds.append(prequelId)
         }
@@ -131,6 +133,9 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
 
     case .updateSetting(let setting):
         newState.setting = setting
+
+    case .updatePerspective(let p):
+        newState.perspective = p
 
     case .loadAllStories:
         newState.isLoading = true
