@@ -7,6 +7,7 @@
 
 import Foundation
 import ReduxKit
+import TextGeneration
 
 @MainActor
 let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
