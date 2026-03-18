@@ -45,6 +45,12 @@ public struct ReaderState: Equatable {
     var selectedStoryForDetails: Story?
     var focusedField: ReaderField?
 
+    // Error state: the pipeline action that should be retried on "Try Again"
+    var failedGenerationAction: ReaderAction?
+
+    // Deletion confirmation: the story awaiting user confirmation before deletion
+    var storyPendingDeletion: Story?
+
     // UI State
     var menuStatus: MenuStatus
     var dragOffset: CGFloat
@@ -65,6 +71,8 @@ public struct ReaderState: Equatable {
         showSubscriptionSheet: Bool = false,
         selectedStoryForDetails: Story? = nil,
         focusedField: ReaderField? = nil,
+        failedGenerationAction: ReaderAction? = nil,
+        storyPendingDeletion: Story? = nil,
         menuStatus: MenuStatus = .closed,
         dragOffset: CGFloat = 0,
         isSequelMode: Bool = false,
@@ -83,6 +91,8 @@ public struct ReaderState: Equatable {
         self.showSubscriptionSheet = showSubscriptionSheet
         self.selectedStoryForDetails = selectedStoryForDetails
         self.focusedField = focusedField
+        self.failedGenerationAction = failedGenerationAction
+        self.storyPendingDeletion = storyPendingDeletion
         self.menuStatus = menuStatus
         self.dragOffset = dragOffset
         self.isSequelMode = isSequelMode

@@ -101,6 +101,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .onCreatedChapter(let story):
         newState.isLoading = false
         newState.loadingStep = .idle
+        newState.failedGenerationAction = nil
         if newState.story?.id == story.id {
             newState.story = story
         }
@@ -110,9 +111,18 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             newState.loadedStories.append(story)
         }
 
-    case .failedToCreateChapter:
+    case .failedToCreateChapter(let retryAction):
         newState.isLoading = false
         newState.loadingStep = .idle
+        newState.failedGenerationAction = retryAction
+
+    case .dismissGenerationError:
+        newState.failedGenerationAction = nil
+
+    case .retryGeneration(_):
+        newState.failedGenerationAction = nil
+        newState.isLoading = true
+        newState.loadingStep = .preparing
 
     // MARK: - Story Management
 
@@ -138,11 +148,18 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.story = story
         newState.currentScrollOffset = story?.scrollOffset ?? 0
 
+    case .confirmDeleteStory(let story):
+        newState.storyPendingDeletion = story
+
+    case .cancelDeleteStory:
+        newState.storyPendingDeletion = nil
+
     case .onDeletedStory(let deletedStoryId):
         newState.loadedStories.removeAll { $0.id == deletedStoryId }
         if newState.story?.id == deletedStoryId {
             newState.story = nil
         }
+        newState.storyPendingDeletion = nil
 
     case .failedToDeleteStory:
         break

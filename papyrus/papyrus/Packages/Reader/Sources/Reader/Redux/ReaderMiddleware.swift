@@ -38,12 +38,12 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
     // MARK: - Story Creation Pipeline
 
     case .beginCreateStory:
-        guard let story = state.story else { return .failedToCreateChapter }
+        guard let story = state.story else { return .failedToCreateChapter(.beginCreateStory) }
         return .createPlotOutline(story)
 
     case .beginCreateSequel:
         guard let currentStory = state.story,
-              let sequelStory = state.sequelStory else { return .failedToCreateChapter }
+              let sequelStory = state.sequelStory else { return .failedToCreateChapter(.beginCreateSequel) }
         do {
             try await environment.saveStory(currentStory)
             let sequelWithPlot = try await environment.createSequelPlotOutline(
@@ -52,7 +52,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             )
             return .onCreatedPlotOutline(sequelWithPlot)
         } catch {
-            return .failedToCreateChapter
+            return .failedToCreateChapter(.beginCreateSequel)
         }
 
     case .createStoryTheme(let story):
@@ -60,7 +60,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             let themedStory = try await environment.createStoryTheme(story: story)
             return .onCreatedThemeDescription(themedStory)
         } catch {
-            return .failedToCreateChapter
+            return .failedToCreateChapter(.createStoryTheme(story))
         }
 
     case .onCreatedThemeDescription(let story):
@@ -71,7 +71,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             let storyWithPlot = try await environment.createPlotOutline(story: story)
             return .onCreatedPlotOutline(storyWithPlot)
         } catch {
-            return .failedToCreateChapter
+            return .failedToCreateChapter(.createPlotOutline(story))
         }
 
     case .onCreatedPlotOutline(let story):
@@ -82,7 +82,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             let storyWithBreakdown = try await environment.createChapterBreakdown(story: story)
             return .onCreatedChapterBreakdown(storyWithBreakdown)
         } catch {
-            return .failedToCreateChapter
+            return .failedToCreateChapter(.createChapterBreakdown(story))
         }
 
     case .onCreatedChapterBreakdown(let story):
@@ -97,7 +97,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             let storyWithDetails = try await environment.getStoryDetails(story: story)
             return .onGetStoryDetails(storyWithDetails)
         } catch {
-            return .failedToCreateChapter
+            return .failedToCreateChapter(.getStoryDetails(story))
         }
 
     case .onGetStoryDetails(let story):
@@ -108,7 +108,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             let storyWithTitle = try await environment.getChapterTitle(story: story)
             return .onGetChapterTitle(storyWithTitle)
         } catch {
-            return .failedToCreateChapter
+            return .failedToCreateChapter(.getChapterTitle(story))
         }
 
     case .onGetChapterTitle(let story):
@@ -119,7 +119,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             let storyWithChapter = try await environment.createChapter(story: story)
             return .onCreatedChapter(storyWithChapter)
         } catch {
-            return .failedToCreateChapter
+            return .failedToCreateChapter(.beginCreateChapter(story))
         }
 
     case .onCreatedChapter(let story):
@@ -162,7 +162,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             }
             return nil
         } catch {
-            return .failedToCreateChapter
+            return nil
         }
 
     case .updateScrollOffset(let offset):
@@ -172,16 +172,26 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
                 try await environment.saveStory(story)
                 return nil
             } catch {
-                return .failedToCreateChapter
+                return nil
             }
         }
+        return nil
+
+    case .retryGeneration(let retryAction):
+        return retryAction
+
+    case .confirmDeleteStory:
+        return nil
+
+    case .cancelDeleteStory:
         return nil
 
     case .loadSubscriptions:
         await environment.loadSubscriptions()
         return nil
 
-    case .failedToCreateChapter,
+    case .failedToCreateChapter(_),
+         .dismissGenerationError,
          .failedToLoadStories,
          .updateSetting,
          .updateMainCharacter,

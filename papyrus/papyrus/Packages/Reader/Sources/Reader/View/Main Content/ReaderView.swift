@@ -35,6 +35,19 @@ struct ReaderView: View {
             // Main content
             VStack(spacing: 0) {
                 
+                // Generation error banner (shown when a pipeline step fails)
+                if let failedAction = store.state.failedGenerationAction {
+                    GenerationErrorView(
+                        onRetry: {
+                            store.dispatch(.retryGeneration(failedAction))
+                        },
+                        onDismiss: {
+                            store.dispatch(.dismissGenerationError)
+                        }
+                    )
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                }
+
                 // Loading bar (appears below top bar when loading)
                 if store.state.isLoading && !store.state.contentState.hasStory {
                     LoadingView(

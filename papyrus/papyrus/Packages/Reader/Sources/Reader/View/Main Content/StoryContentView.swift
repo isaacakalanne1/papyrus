@@ -56,7 +56,18 @@ struct StoryContentView: View {
                                     .padding(.bottom, store.state.isLoading ? 0 : 40)
                                     .id("content")
                                 
-                                if store.state.isLoading && story.chapterIndex == story.chapters.count - 1 {
+                                if let failedAction = store.state.failedGenerationAction,
+                                   story.chapterIndex == story.chapters.count - 1 {
+                                    GenerationErrorView(
+                                        onRetry: {
+                                            store.dispatch(.retryGeneration(failedAction))
+                                        },
+                                        onDismiss: {
+                                            store.dispatch(.dismissGenerationError)
+                                        }
+                                    )
+                                    .padding(.bottom, 30)
+                                } else if store.state.isLoading && story.chapterIndex == story.chapters.count - 1 {
                                     ChapterLoadingIndicator()
                                 } else {
                                     // Next Chapter or Create Sequel Button

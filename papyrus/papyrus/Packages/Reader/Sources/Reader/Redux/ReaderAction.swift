@@ -30,13 +30,17 @@ enum ReaderAction: Equatable, Sendable {
     case onGetChapterTitle(Story)
     case beginCreateChapter(Story)
     case onCreatedChapter(Story)
-    case failedToCreateChapter
+    case failedToCreateChapter(ReaderAction)
+    case dismissGenerationError
+    case retryGeneration(ReaderAction)
 
     // MARK: - Story Management
     case loadAllStories
     case onLoadedStories([Story])
     case failedToLoadStories
     case setStory(Story?)
+    case confirmDeleteStory(Story)
+    case cancelDeleteStory
     case deleteStory(UUID)
     case onDeletedStory(UUID)
     case failedToDeleteStory(UUID)

@@ -86,6 +86,22 @@ struct StoryMenu: View {
             .presentationBackground(.clear)
             .presentationDragIndicator(.hidden)
         }
+        .sheet(item: Binding(
+            get: { store.state.storyPendingDeletion },
+            set: { if $0 == nil { store.dispatch(.cancelDeleteStory) } }
+        )) { story in
+            DeleteConfirmationSheet(
+                story: story,
+                onDelete: {
+                    store.dispatch(.deleteStory(story.id))
+                },
+                onCancel: {
+                    store.dispatch(.cancelDeleteStory)
+                }
+            )
+            .presentationBackground(.clear)
+            .presentationDragIndicator(.hidden)
+        }
         .sheet(isPresented: showStoryForm) {
             NewStoryForm()
             .environmentObject(store)

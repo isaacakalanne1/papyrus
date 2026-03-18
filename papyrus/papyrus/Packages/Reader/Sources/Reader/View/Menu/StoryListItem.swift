@@ -54,7 +54,7 @@ struct StoryListItem: View {
         )
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(role: .destructive) {
-                store.dispatch(.deleteStory(story.id))
+                store.dispatch(.confirmDeleteStory(story))
             } label: {
                 Label("Delete", systemImage: "trash")
             }

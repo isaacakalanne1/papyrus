@@ -4,7 +4,9 @@
       "Bash(swift build:*)",
       "Bash(find /Users/isaacakalanne/Documents/Apps/papyrus/papyrus -name *.xcodeproj -o -name *.xcworkspace)",
       "Bash(git commit:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(xcodebuild -scheme papyrus -destination 'platform=iOS Simulator,name=iPhone 16' -quiet build)",
+      "Bash(git restore:*)"
     ]
   }
 }
