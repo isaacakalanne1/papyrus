@@ -36,7 +36,7 @@ struct GenerationErrorView: View {
                                 .stroke(PapyrusColor.error.color.opacity(0.4), lineWidth: 1)
                         )
 
-                    Image(systemName: "exclamationmark.quill")
+                    Image(systemName: "exclamationmark.circle")
                         .font(.system(size: 18, weight: .medium))
                         .foregroundColor(PapyrusColor.error.color)
                 }
@@ -80,7 +80,7 @@ struct GenerationErrorView: View {
                 // Vertical separator between buttons
                 Rectangle()
                     .fill(PapyrusColor.iconPrimary.color.opacity(0.12))
-                    .frame(width: 0.5)
+                    .frame(width: 0.5, height: 44)
                     .padding(.vertical, 8)
 
                 // Try Again — the primary action
