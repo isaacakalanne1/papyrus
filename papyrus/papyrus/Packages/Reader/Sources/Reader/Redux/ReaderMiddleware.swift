@@ -39,7 +39,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
 
     case .beginCreateStory:
         guard let story = state.story else { return .failedToCreateChapter(.beginCreateStory) }
-        return .createPlotOutline(story)
+        return .createStoryTheme(story)
 
     case .beginCreateSequel:
         guard let currentStory = state.story,
