@@ -23,19 +23,22 @@ struct ColorSchemePickerSheet: View {
                 Divider()
                     .background(PapyrusColor.borderSecondary.color(in: colorScheme))
                 selectedSchemeRow
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
                 Divider()
                     .background(PapyrusColor.borderSecondary.color(in: colorScheme))
+                    .padding(.top, 12)
                 ScrollView {
-                    VStack(spacing: 0) {
+                    VStack(spacing: 10) {
                         if selectedSchemeName != defaultSchemeName {
                             defaultSchemeRow
-                            Divider()
-                                .background(PapyrusColor.borderSecondary.color(in: colorScheme))
-                                .padding(.horizontal, 20)
+                                .padding(.horizontal, 16)
                         }
                         otherSchemesList
                     }
+                    .padding(.top, 12)
                 }
+
             }
             closeButton
         }
@@ -69,56 +72,55 @@ struct ColorSchemePickerSheet: View {
     }
 
     private var otherSchemesList: some View {
-        VStack(spacing: 0) {
+        VStack(spacing: 10) {
             ForEach(otherSchemes, id: \.self) { schemeName in
                 schemeRow(schemeName: schemeName, subtitle: nil)
-                Divider()
-                    .background(PapyrusColor.borderSecondary.color(in: colorScheme))
-                    .padding(.horizontal, 20)
             }
         }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
     }
 
     private func schemeRow(schemeName: PapyrusColorSchemeName, subtitle: String?) -> some View {
         let isSelected = schemeName == selectedSchemeName
+        let rowScheme = schemeName.scheme
         return Button(action: {
             store.dispatch(.selectColorScheme(schemeName))
             isPresented = false
         }) {
             HStack {
                 RoundedRectangle(cornerRadius: 6)
-                    .fill(schemeName.scheme.background)
+                    .fill(rowScheme.accent)
                     .frame(width: 28, height: 28)
                     .overlay(
                         RoundedRectangle(cornerRadius: 6)
-                            .stroke(schemeName.scheme.borderPrimary, lineWidth: 1)
+                            .stroke(rowScheme.borderPrimary, lineWidth: 1)
                     )
 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(schemeName.displayName)
                         .font(.custom(store.state.selectedFontName, size: 18))
-                        .foregroundColor(isSelected ?
-                            PapyrusColor.accent.color(in: colorScheme) :
-                            PapyrusColor.textPrimary.color(in: colorScheme))
+                        .foregroundColor(rowScheme.textPrimary)
                     if let subtitle {
                         Text(subtitle)
                             .font(.system(size: 11))
-                            .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+                            .foregroundColor(rowScheme.textSecondary)
                     }
                 }
                 Spacer()
                 if isSelected {
                     Image(systemName: "checkmark")
-                        .foregroundColor(PapyrusColor.accent.color(in: colorScheme))
+                        .foregroundColor(rowScheme.accent)
                 }
             }
             .contentShape(Rectangle())
             .frame(maxWidth: .infinity, minHeight: 56)
-            .padding(.horizontal, 20)
-            .background(
-                isSelected
-                    ? PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.8)
-                    : Color.clear
+            .padding(.horizontal, 16)
+            .background(isSelected ? rowScheme.backgroundSecondary : rowScheme.background)
+            .clipShape(RoundedRectangle(cornerRadius: 12))
+            .overlay(
+                RoundedRectangle(cornerRadius: 12)
+                    .stroke(rowScheme.borderSecondary, lineWidth: 1)
             )
         }
         .buttonStyle(PlainButtonStyle())
