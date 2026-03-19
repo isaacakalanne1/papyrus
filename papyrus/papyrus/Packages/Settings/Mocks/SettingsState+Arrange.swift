@@ -14,11 +14,13 @@ public extension SettingsState {
     
     static func arrange(
         selectedTextSize: TextSize = .medium,
-        isSubscribed: Bool = false
+        isSubscribed: Bool = false,
+        selectedFont: ReaderFont = .georgia
     ) -> SettingsState {
         .init(
             selectedTextSize: selectedTextSize,
-            isSubscribed: isSubscribed
+            isSubscribed: isSubscribed,
+            selectedFont: selectedFont
         )
     }
 }

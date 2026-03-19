@@ -11,7 +11,8 @@ import ReduxKit
 @MainActor
 public let settingsMiddleware: Middleware<SettingsState, SettingsAction, SettingsEnvironmentProtocol> = { state, action, environment in
     switch action {
-    case .selectTextSize:
+    case .selectTextSize,
+         .selectFont:
         return .saveSettings
     case .loadSettings:
         do {

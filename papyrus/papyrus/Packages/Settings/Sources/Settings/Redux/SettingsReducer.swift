@@ -8,6 +8,8 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction> = { state, ac
     switch action {
     case .selectTextSize(let size):
         newState.selectedTextSize = size
+    case .selectFont(let font):
+        newState.selectedFont = font
     case .onLoadedSettings(let settings):
         newState = settings
     case .loadSettings,

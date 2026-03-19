@@ -111,7 +111,7 @@ struct StoryContentView: View {
                                 
                                 // Content
                                 Text(story.chapters[story.chapterIndex].content)
-                                    .font(.custom("Georgia", size: store.state.settingsState.selectedTextSize.fontSize))
+                                    .font(.custom(store.state.settingsState.selectedFont.fontName, size: store.state.settingsState.selectedTextSize.fontSize))
                                     .lineSpacing(8)
                                     .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
                                     .padding(.horizontal, 32)
