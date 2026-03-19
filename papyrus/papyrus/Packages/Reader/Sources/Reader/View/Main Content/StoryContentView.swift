@@ -138,7 +138,6 @@ struct StoryContentView: View {
                                         if story.chapterIndex == story.maxNumberOfChapters - 1 {
                                             PrimaryButton(
                                                 type: .createSequel,
-                                                isDisabled: store.state.isLoading,
                                                 isLoading: store.state.isLoading
                                             ) {
                                                 store.dispatch(.setIsSequelMode(true))
@@ -147,13 +146,11 @@ struct StoryContentView: View {
                                                 store.dispatch(.setShowStoryForm(true))
                                                 store.dispatch(.setFocusedField(.settingDetails))
                                             }
-                                            .disabled(store.state.isLoading)
                                         } else {
                                             PrimaryButton(
                                                 type: .nextChapter,
-                                                isDisabled: store.state.isLoading,
                                                 isLoading: store.state.isLoading
-                                             ) {
+                                            ) {
                                                 let nextIndex = story.chapterIndex + 1
                                                 if story.chapters.count > nextIndex {
                                                     store.dispatch(.updateChapterIndex(story, nextIndex))

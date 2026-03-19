@@ -123,7 +123,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         }
 
     case .onCreatedChapter(let story):
-        return .updateChapterIndex(story, story.chapters.count - 1)
+        return .saveStory(story)
 
     // MARK: - Story Management
 

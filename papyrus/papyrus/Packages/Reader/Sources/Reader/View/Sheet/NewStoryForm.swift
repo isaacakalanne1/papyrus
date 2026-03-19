@@ -112,7 +112,6 @@ struct NewStoryForm: View {
             PrimaryButton(
                 type: store.state.isSequelMode ? .createSequel : .createStory,
                 size: .medium,
-                isDisabled: false,
                 isLoading: store.state.isLoading
             ) {
                 let isMainCharacterEmpty = mainCharacter.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty

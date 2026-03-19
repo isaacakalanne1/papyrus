@@ -65,20 +65,17 @@ enum PrimaryButtonSize {
 struct PrimaryButton: View {
     let type: PrimaryButtonType
     let size: PrimaryButtonSize
-    let isDisabled: Bool
     let isLoading: Bool
     let action: () -> Void
-    
+
     init(
-        type: PrimaryButtonType,
+        type: PrimaryButtonType = .newStory,
         size: PrimaryButtonSize = .large,
-        isDisabled: Bool = false,
         isLoading: Bool = false,
         action: @escaping () -> Void
     ) {
         self.type = type
         self.size = size
-        self.isDisabled = isDisabled
         self.isLoading = isLoading
         self.action = action
     }
@@ -116,7 +113,7 @@ struct PrimaryButton: View {
                             endPoint: .bottomTrailing
                         )
                     )
-                    .opacity(isDisabled || isLoading ? 0.6 : 1.0)
+                    .opacity(isLoading ? 0.6 : 1.0)
                     .shadow(
                         color: Color.black.opacity(0.2),
                         radius: size.shadowRadius,
@@ -125,8 +122,8 @@ struct PrimaryButton: View {
                     )
             )
         }
-        .disabled(isDisabled || isLoading)
-        .scaleEffect(isDisabled || isLoading ? 0.98 : 1.0)
-        .animation(.easeInOut(duration: 0.15), value: isDisabled || isLoading)
+        .disabled(isLoading)
+        .scaleEffect(isLoading ? 0.98 : 1.0)
+        .animation(.easeInOut(duration: 0.15), value: isLoading)
     }
 }

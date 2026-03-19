@@ -24,11 +24,7 @@ struct WelcomeView: View {
                 Spacer()
                 
                 // Initial "New Story" button
-                PrimaryButton(
-                    type: .newStory,
-                    isDisabled: false,
-                    isLoading: store.state.isLoading
-                ) {
+                PrimaryButton(isLoading: store.state.isLoading) {
                     withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                         store.dispatch(.setShowStoryForm(true))
                     }
