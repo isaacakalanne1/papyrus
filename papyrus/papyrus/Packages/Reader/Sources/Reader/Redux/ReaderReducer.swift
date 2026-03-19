@@ -105,10 +105,10 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.loadingStep = .idle
         newState.failedGenerationAction = nil
         if newState.story?.id == story.id {
-            newState.story = story
+            newState.story?.chapters = story.chapters
         }
         if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
-            newState.loadedStories[existingIndex] = story
+            newState.loadedStories[existingIndex].chapters = story.chapters
         } else {
             newState.loadedStories.append(story)
         }

@@ -123,7 +123,8 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         }
 
     case .onCreatedChapter(let story):
-        return .saveStory(story)
+        guard state.story?.id == story.id, let storyToSave = state.story else { return nil }
+        return .saveStory(storyToSave)
 
     // MARK: - Story Management
 
