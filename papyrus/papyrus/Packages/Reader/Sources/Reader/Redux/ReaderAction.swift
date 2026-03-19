@@ -12,11 +12,21 @@ import Settings
 public indirect enum ReaderAction: Equatable, Sendable {
     // MARK: - Story Creation Entry Points (subscription gate lives here)
     case createStory
+    case createInteractiveStory
     case createSequel
     case createChapter(Story)
 
     // MARK: - Story Creation Pipeline Steps
     case beginCreateStory
+    case beginCreateInteractiveStory
+    case generateFirstParagraph(Story)
+    case onGeneratedFirstParagraph(Story)
+    case submitInteractiveAction(Story, ChapterAction)
+    case beginGenerateParagraph(Story)
+    case onGeneratedParagraph(Story)
+    case setInteractiveMode(StoryMode)
+    case setInteractiveInputText(String)
+    case setSelectedActionMode(InteractiveActionMode)
     case beginCreateSequel
     case createStoryTheme(Story)
     case onCreatedThemeDescription(Story)

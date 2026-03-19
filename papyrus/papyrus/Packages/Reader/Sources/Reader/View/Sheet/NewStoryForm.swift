@@ -113,6 +113,23 @@ struct NewStoryForm: View {
                         }
                     }
                     .transition(.opacity.combined(with: .move(edge: .top)))
+
+                    HStack {
+                        Text("Story Mode")
+                            .font(.custom(store.state.settingsState.selectedFontName, size: 14))
+                            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+                        Spacer()
+                        Picker("Story Mode", selection: Binding(
+                            get: { store.state.storyMode },
+                            set: { store.dispatch(.setInteractiveMode($0)) }
+                        )) {
+                            Text("Story").tag(StoryMode.story)
+                            Text("Interactive").tag(StoryMode.interactive)
+                        }
+                        .pickerStyle(.segmented)
+                        .frame(width: 180)
+                    }
+                    .transition(.opacity.combined(with: .move(edge: .top)))
                 }
             }
 
@@ -130,8 +147,12 @@ struct NewStoryForm: View {
                         showMainCharacterHint = isMainCharacterEmpty
                         showSettingDetailsHint = isSettingDetailsEmpty
                     }
+                } else if store.state.isSequelMode {
+                    store.dispatch(.createSequel)
+                } else if store.state.storyMode == .interactive {
+                    store.dispatch(.createInteractiveStory)
                 } else {
-                    store.dispatch(store.state.isSequelMode ? .createSequel : .createStory)
+                    store.dispatch(.createStory)
                 }
             }
 

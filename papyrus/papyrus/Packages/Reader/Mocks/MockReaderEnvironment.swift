@@ -36,7 +36,10 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     
     var createChapterCalled = false
     var createChapterCalledWith: Story?
-    
+
+    var generateParagraphCalled = false
+    var generateParagraphCalledWith: Story?
+
     var saveStoryCalled = false
     var saveStoryCalledWith: Story?
     var saveStoryCallCount = 0
@@ -75,7 +78,10 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     
     var createChapterReturnValue: Story?
     var createChapterError: Error?
-    
+
+    var generateParagraphReturnValue: Story?
+    var generateParagraphError: Error?
+
     var saveStoryError: Error?
     
     var loadStoryWithIdReturnValue: Story?
@@ -173,14 +179,25 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     public func createChapter(story: Story) async throws -> Story {
         createChapterCalled = true
         createChapterCalledWith = story
-        
+
         if let error = createChapterError {
             throw error
         }
-        
+
         return createChapterReturnValue ?? story
     }
-    
+
+    public func generateParagraph(story: Story) async throws -> Story {
+        generateParagraphCalled = true
+        generateParagraphCalledWith = story
+
+        if let error = generateParagraphError {
+            throw error
+        }
+
+        return generateParagraphReturnValue ?? story
+    }
+
     public func saveStoryWithRelationships(_ story: Story) async throws {
         try await saveStory(story)
     }

@@ -21,6 +21,13 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         }
         return .beginCreateStory
 
+    case .createInteractiveStory:
+        if !state.canCreateChapter {
+            let isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
+            if !isSubscribed { return .setShowSubscriptionSheet(true) }
+        }
+        return .beginCreateInteractiveStory
+
     case .createSequel:
         if !state.canCreateChapter {
             let isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
@@ -40,6 +47,41 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
     case .beginCreateStory:
         guard let story = state.story else { return .failedToCreateChapter(.beginCreateStory) }
         return .createStoryTheme(story)
+
+    case .beginCreateInteractiveStory:
+        guard let story = state.story else { return .failedToCreateChapter(.beginCreateInteractiveStory) }
+        return .generateFirstParagraph(story)
+
+    case .generateFirstParagraph(let story):
+        do {
+            let storyWithParagraph = try await environment.generateParagraph(story: story)
+            return .onGeneratedFirstParagraph(storyWithParagraph)
+        } catch {
+            return .failedToCreateChapter(.generateFirstParagraph(story))
+        }
+
+    case .onGeneratedFirstParagraph(let story):
+        return .saveStory(story)
+
+    case .submitInteractiveAction(let story, let action):
+        // Cap at 10 user inputs (count chapters with an action, excluding nil-action continuations)
+        let inputCount = story.chapters.filter { $0.action != nil }.count
+        guard inputCount < 10 else { return nil }
+
+        var pendingStory = story
+        pendingStory.chapters.append(.init(content: "", action: action))
+        return .beginGenerateParagraph(pendingStory)
+
+    case .beginGenerateParagraph(let story):
+        do {
+            let storyWithParagraph = try await environment.generateParagraph(story: story)
+            return .onGeneratedParagraph(storyWithParagraph)
+        } catch {
+            return .failedToCreateChapter(.beginGenerateParagraph(story))
+        }
+
+    case .onGeneratedParagraph(let story):
+        return .saveStory(story)
 
     case .beginCreateSequel:
         guard let currentStory = state.story,
@@ -216,7 +258,10 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
          .setIsSequelMode,
          .setCurrentScrollOffset,
          .reuseStoryDetails,
-         .setScrollViewHeight:
+         .setScrollViewHeight,
+         .setInteractiveMode,
+         .setInteractiveInputText,
+         .setSelectedActionMode:
         return nil
     }
 }

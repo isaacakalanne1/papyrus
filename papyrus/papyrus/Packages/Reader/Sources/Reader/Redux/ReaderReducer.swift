@@ -16,6 +16,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
 
     // MARK: - Story Creation Entry Points (no state change; handled by middleware)
     case .createStory,
+         .createInteractiveStory,
          .createSequel,
          .createChapter:
         break
@@ -32,6 +33,63 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
             setting: newState.setting,
             perspective: newState.settingsState.perspective
         )
+
+    case .beginCreateInteractiveStory:
+        newState.isLoading = true
+        newState.showStoryForm = false
+        newState.isSequelMode = false
+        newState.loadingStep = .writingChapter
+        newState.story = .init(
+            mainCharacter: newState.mainCharacter,
+            setting: newState.setting,
+            perspective: newState.settingsState.perspective,
+            mode: .interactive
+        )
+
+    case .onGeneratedFirstParagraph(let story):
+        newState.isLoading = false
+        newState.loadingStep = .idle
+        if newState.story?.id == story.id {
+            newState.story?.chapters = story.chapters
+        }
+        if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
+            newState.loadedStories[existingIndex].chapters = story.chapters
+        } else {
+            newState.loadedStories.append(story)
+        }
+
+    case .submitInteractiveAction:
+        newState.isLoading = true
+        newState.interactiveInputText = ""
+
+    case .beginGenerateParagraph(let story):
+        newState.isLoading = true
+        newState.loadingStep = .writingChapter
+        newState = updateStoryInState(newState, story: story)
+
+    case .onGeneratedParagraph(let story):
+        newState.isLoading = false
+        newState.loadingStep = .idle
+        if newState.story?.id == story.id {
+            newState.story?.chapters = story.chapters
+        }
+        if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
+            newState.loadedStories[existingIndex].chapters = story.chapters
+        } else {
+            newState.loadedStories.append(story)
+        }
+
+    case .setInteractiveMode(let mode):
+        newState.storyMode = mode
+
+    case .setInteractiveInputText(let text):
+        newState.interactiveInputText = text
+
+    case .setSelectedActionMode(let mode):
+        newState.selectedActionMode = mode
+
+    case .generateFirstParagraph:
+        break
 
     case .beginCreateSequel:
         newState.isLoading = true
@@ -239,6 +297,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
          .loadSubscriptions:
         break
     }
+
     return newState
 }
 

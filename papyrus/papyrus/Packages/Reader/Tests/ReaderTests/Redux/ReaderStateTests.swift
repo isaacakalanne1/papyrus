@@ -134,33 +134,33 @@ struct ReaderStateTests {
     func contentStateWelcome() {
         // Given
         let state = ReaderState()
-        
+
         // When & Then
         switch state.contentState {
         case .welcome:
             // Expected
             break
-        case .story:
+        case .story, .interactiveStory:
             Issue.record("Expected welcome state")
         }
     }
-    
+
     @Test("Content state should be welcome for story with empty chapters")
     func contentStateWelcomeWithEmptyStory() {
         // Given
         let emptyStory = Story.arrange(chapters: [])
         let state = ReaderState(story: emptyStory)
-        
+
         // When & Then
         switch state.contentState {
         case .welcome:
             // Expected
             break
-        case .story:
+        case .story, .interactiveStory:
             Issue.record("Expected welcome state for story with no chapters")
         }
     }
-    
+
     @Test("Content state should be welcome for invalid chapter index")
     func contentStateWelcomeWithInvalidChapterIndex() {
         // Given
@@ -169,17 +169,17 @@ struct ReaderStateTests {
             chapters: [Chapter.arrange] // Index out of bounds
         )
         let state = ReaderState(story: story)
-        
+
         // When & Then
         switch state.contentState {
         case .welcome:
             // Expected
             break
-        case .story:
+        case .story, .interactiveStory:
             Issue.record("Expected welcome state for invalid chapter index")
         }
     }
-    
+
     @Test("Content state should be story for valid story")
     func contentStateStory() {
         // Given
@@ -188,7 +188,7 @@ struct ReaderStateTests {
             chapters: [Chapter.arrange, Chapter.arrange]
         )
         let state = ReaderState(story: story)
-        
+
         // When & Then
         switch state.contentState {
         case .welcome:
@@ -197,6 +197,8 @@ struct ReaderStateTests {
             #expect(extractedStory.id == story.id)
             #expect(extractedStory.chapters.count == 2)
             #expect(extractedStory.chapterIndex == 0)
+        case .interactiveStory:
+            Issue.record("Expected story state, got interactiveStory")
         }
     }
     

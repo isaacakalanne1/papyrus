@@ -21,6 +21,8 @@ struct ContentStateView: View {
                 story: story,
                 startScrollOffsetTimer: startScrollOffsetTimer
             )
+        case .interactiveStory(let story):
+            InteractiveContentView(story: story)
         }
     }
 }

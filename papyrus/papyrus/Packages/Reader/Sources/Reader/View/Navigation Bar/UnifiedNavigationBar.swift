@@ -25,8 +25,9 @@ struct UnifiedNavigationBar: View {
                     }
                 }
 
-                // Chapter navigation (center) - only show when story exists
+                // Chapter navigation (center) - only show for non-interactive stories
                 if let story = store.state.story,
+                   story.mode != .interactive,
                    !story.chapters.isEmpty,
                    story.chapterIndex < story.chapters.count {
                     Spacer()

@@ -61,6 +61,8 @@ struct ContentStateTests {
             #expect(extractedStory.id == id)
             #expect(extractedStory.title == "Test Story")
             #expect(extractedStory.mainCharacter == "Test Character")
+        case .interactiveStory:
+            Issue.record("Expected story state, got interactiveStory")
         }
     }
     

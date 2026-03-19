@@ -9,6 +9,7 @@ public protocol TextGenerationRepositoryProtocol {
     func getStoryDetails(story originalStory: Story) async throws -> Story
     func getChapterTitle(story originalStory: Story) async throws -> Story
     func createChapter(story originalStory: Story) async throws -> Story
+    func generateParagraph(story originalStory: Story) async throws -> Story
 }
 
 public class TextGenerationRepository: TextGenerationRepositoryProtocol {
@@ -87,8 +88,22 @@ public class TextGenerationRepository: TextGenerationRepositoryProtocol {
         var story = originalStory
         let endpoint = CreateChapterEndpoint(story: story)
         let content = try await networkCore.requestContent(endpoint)
-        
+
         story.chapters.append(.init(content: content))
+        return story
+    }
+
+    public func generateParagraph(story originalStory: Story) async throws -> Story {
+        var story = originalStory
+        let endpoint = GenerateParagraphEndpoint(story: story)
+        let content = try await networkCore.requestContent(endpoint)
+
+        // The last chapter is the "pending" chapter — fill its content in place
+        if !story.chapters.isEmpty {
+            story.chapters[story.chapters.count - 1].content = content
+        } else {
+            story.chapters.append(.init(content: content))
+        }
         return story
     }
 }

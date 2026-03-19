@@ -14,6 +14,10 @@ public enum ReaderField: Equatable, Sendable {
     case settingDetails
 }
 
+public enum InteractiveActionMode: Equatable, Sendable {
+    case `do`, say, event
+}
+
 public enum MenuStatus: Equatable, Sendable {
     case closed
     case storyOpen
@@ -51,6 +55,11 @@ public struct ReaderState: Equatable {
     // Deletion confirmation: the story awaiting user confirmation before deletion
     var storyPendingDeletion: Story?
 
+    // Interactive story mode
+    var storyMode: StoryMode
+    var interactiveInputText: String
+    var selectedActionMode: InteractiveActionMode
+
     // UI State
     var menuStatus: MenuStatus
     var dragOffset: CGFloat
@@ -73,6 +82,9 @@ public struct ReaderState: Equatable {
         focusedField: ReaderField? = nil,
         failedGenerationAction: ReaderAction? = nil,
         storyPendingDeletion: Story? = nil,
+        storyMode: StoryMode = .story,
+        interactiveInputText: String = "",
+        selectedActionMode: InteractiveActionMode = .do,
         menuStatus: MenuStatus = .closed,
         dragOffset: CGFloat = 0,
         isSequelMode: Bool = false,
@@ -93,6 +105,9 @@ public struct ReaderState: Equatable {
         self.focusedField = focusedField
         self.failedGenerationAction = failedGenerationAction
         self.storyPendingDeletion = storyPendingDeletion
+        self.storyMode = storyMode
+        self.interactiveInputText = interactiveInputText
+        self.selectedActionMode = selectedActionMode
         self.menuStatus = menuStatus
         self.dragOffset = dragOffset
         self.isSequelMode = isSequelMode
@@ -103,13 +118,15 @@ public struct ReaderState: Equatable {
     // MARK: - Computed Properties
 
     var contentState: ContentState {
-        if let story = story,
-           !story.chapters.isEmpty,
-           story.chapterIndex < story.chapters.count {
-            return .story(story)
-        } else {
-            return .welcome
+        if let story = story {
+            if story.mode == .interactive {
+                return .interactiveStory(story)
+            } else if !story.chapters.isEmpty,
+                      story.chapterIndex < story.chapters.count {
+                return .story(story)
+            }
         }
+        return .welcome
     }
 
     var canCreateChapter: Bool {

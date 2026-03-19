@@ -38,7 +38,11 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     public var createChapterCalled = false
     public var createChapterCalledWith: Story?
     public var createChapterCallCount = 0
-    
+
+    public var generateParagraphCalled = false
+    public var generateParagraphCalledWith: Story?
+    public var generateParagraphCallCount = 0
+
     // MARK: - Return Values and Error Configuration
     public var createStoryThemeReturnValue: Story?
     public var createStoryThemeError: Error?
@@ -60,7 +64,10 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     
     public var createChapterReturnValue: Story?
     public var createChapterError: Error?
-    
+
+    public var generateParagraphReturnValue: Story?
+    public var generateParagraphError: Error?
+
     // MARK: - Initialization
     public init() {}
     
@@ -142,14 +149,26 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         createChapterCalled = true
         createChapterCalledWith = story
         createChapterCallCount += 1
-        
+
         if let error = createChapterError {
             throw error
         }
-        
+
         return createChapterReturnValue ?? story
     }
-    
+
+    public func generateParagraph(story: Story) async throws -> Story {
+        generateParagraphCalled = true
+        generateParagraphCalledWith = story
+        generateParagraphCallCount += 1
+
+        if let error = generateParagraphError {
+            throw error
+        }
+
+        return generateParagraphReturnValue ?? story
+    }
+
     // MARK: - Helper Methods
     
     public func reset() {
@@ -201,6 +220,12 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         
         createChapterReturnValue = nil
         createChapterError = nil
+
+        generateParagraphCalled = false
+        generateParagraphCalledWith = nil
+        generateParagraphCallCount = 0
+        generateParagraphReturnValue = nil
+        generateParagraphError = nil
     }
 }
 

@@ -138,7 +138,8 @@ struct StoryContentView: View {
                                 } else {
                                     // Next Chapter or Create Sequel Button
                                     Group {
-                                        if story.chapterIndex == story.maxNumberOfChapters - 1 {
+                                        if story.chapterIndex == story.maxNumberOfChapters - 1,
+                                           story.mode != .interactive {
                                             PrimaryButton(
                                                 type: .createSequel,
                                                 isLoading: store.state.isLoading,

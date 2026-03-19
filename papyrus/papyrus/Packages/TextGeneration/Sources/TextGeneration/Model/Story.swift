@@ -24,6 +24,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
     public var title: String
     public var chapters: [Chapter]
     public var perspective: StoryPerspective
+    public var mode: StoryMode
 
     public init(
         id: UUID = UUID(),
@@ -39,7 +40,8 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         sequelIds: [UUID] = [],
         title: String = "",
         chapters: [Chapter] = [],
-        perspective: StoryPerspective = .thirdPerson
+        perspective: StoryPerspective = .thirdPerson,
+        mode: StoryMode = .story
     ) {
         self.id = id
         self.mainCharacter = mainCharacter
@@ -55,6 +57,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         self.title = title
         self.chapters = chapters
         self.perspective = perspective
+        self.mode = mode
     }
     
     public init(
@@ -75,5 +78,6 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         self.title = try container.decode(String.self, forKey: .title)
         self.chapters = try container.decode([Chapter].self, forKey: .chapters)
         self.perspective = try container.decodeIfPresent(StoryPerspective.self, forKey: .perspective) ?? .thirdPerson
+        self.mode = try container.decodeIfPresent(StoryMode.self, forKey: .mode) ?? .story
     }
 }

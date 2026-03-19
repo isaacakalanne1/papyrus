@@ -10,9 +10,12 @@ import TextGeneration
 public enum ContentState {
     case welcome
     case story(Story)
-    
+    case interactiveStory(Story)
+
     var hasStory: Bool {
-        if case .story = self { return true }
-        return false
+        switch self {
+        case .story, .interactiveStory: return true
+        case .welcome: return false
+        }
     }
 }
