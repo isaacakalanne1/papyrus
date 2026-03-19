@@ -215,6 +215,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
          .setDragOffset,
          .setIsSequelMode,
          .setCurrentScrollOffset,
+         .reuseStoryDetails,
          .setScrollViewHeight:
         return nil
     }

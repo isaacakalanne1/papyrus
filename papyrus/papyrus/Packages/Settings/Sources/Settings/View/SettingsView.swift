@@ -77,6 +77,7 @@ public struct SettingsView: View {
                     PapyrusColor.textSecondary.color(in: colorScheme))
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
+                .contentShape(Rectangle())
                 .background(
                     Group {
                         if size == selectedTextSize {

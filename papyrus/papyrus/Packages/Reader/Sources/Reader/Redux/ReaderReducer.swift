@@ -212,6 +212,13 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .setFocusedField(let field):
         newState.focusedField = field
 
+    case .reuseStoryDetails(let story):
+        newState.mainCharacter = story.mainCharacter
+        newState.setting = story.setting
+        newState.settingsState.perspective = story.perspective
+        newState.selectedStoryForDetails = nil
+        newState.showStoryForm = true
+
     case .setMenuStatus(let status):
         newState.menuStatus = status
 

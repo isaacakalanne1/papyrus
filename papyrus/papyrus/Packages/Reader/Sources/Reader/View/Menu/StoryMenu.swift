@@ -84,6 +84,7 @@ struct StoryMenu: View {
                 ),
                 fontName: store.state.settingsState.selectedFontName
             )
+            .environmentObject(store)
             .presentationBackground(.clear)
             .presentationDragIndicator(.hidden)
         }

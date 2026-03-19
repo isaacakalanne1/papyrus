@@ -14,8 +14,6 @@ struct NewStoryForm: View {
     @EnvironmentObject var store: ReaderStore
     @Environment(\.papyrusColorScheme) private var colorScheme
     @FocusState private var focusedField: ReaderField?
-    @State var mainCharacter: String = ""
-    @State var settingDetails: String = ""
     @State private var showMainCharacterHint = false
     @State private var showSettingDetailsHint = false
     @State private var showMoreOptions = false
@@ -40,7 +38,10 @@ struct NewStoryForm: View {
             FormFieldView(
                 label: "Main Character",
                 placeholder: "E.g, Sherlock Holmes",
-                text: $mainCharacter,
+                text: Binding(
+                    get: { store.state.mainCharacter },
+                    set: { store.dispatch(.updateMainCharacter($0)) }
+                ),
                 equals: .mainCharacter,
                 showHint: showMainCharacterHint,
                 hintText: showMainCharacterHint ? "Please provide a main character for your story" : nil,
@@ -52,7 +53,10 @@ struct NewStoryForm: View {
             FormFieldView(
                 label: "Setting & Details",
                 placeholder: "E.g, Living in Los Angeles, has famous superheroes as clients",
-                text: $settingDetails,
+                text: Binding(
+                    get: { store.state.setting },
+                    set: { store.dispatch(.updateSetting($0)) }
+                ),
                 equals: .settingDetails,
                 showHint: showSettingDetailsHint,
                 hintText: showSettingDetailsHint ? "Add some details about the setting" : nil,
@@ -118,8 +122,8 @@ struct NewStoryForm: View {
                 isLoading: store.state.isLoading,
                 fontName: store.state.settingsState.selectedFontName
             ) {
-                let isMainCharacterEmpty = mainCharacter.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                let isSettingDetailsEmpty = settingDetails.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                let isMainCharacterEmpty = store.state.mainCharacter.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                let isSettingDetailsEmpty = store.state.setting.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
 
                 if isMainCharacterEmpty || isSettingDetailsEmpty {
                     withAnimation(.easeInOut(duration: 0.3)) {
@@ -143,16 +147,14 @@ struct NewStoryForm: View {
                 store.dispatch(.setFocusedField(newValue))
             }
         }
-        .onChange(of: mainCharacter) { _, newValue in
-            store.dispatch(.updateMainCharacter(newValue))
+        .onChange(of: store.state.mainCharacter) { _, newValue in
             if showMainCharacterHint && !newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     showMainCharacterHint = false
                 }
             }
         }
-        .onChange(of: settingDetails) { _, newValue in
-            store.dispatch(.updateSetting(newValue))
+        .onChange(of: store.state.setting) { _, newValue in
             if showSettingDetailsHint && !newValue.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
                 withAnimation(.easeInOut(duration: 0.3)) {
                     showSettingDetailsHint = false

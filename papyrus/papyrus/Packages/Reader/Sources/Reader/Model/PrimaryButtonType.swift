@@ -12,22 +12,25 @@ enum PrimaryButtonType {
     case nextChapter
     case createSequel
     case createStory
-    
+    case reuseDetails
+
     var title: String {
         switch self {
         case .newStory: return "New Story"
         case .nextChapter: return "Next Chapter"
         case .createSequel: return "Create Sequel"
         case .createStory: return "Create Story"
+        case .reuseDetails: return "Use These Details"
         }
     }
-    
+
     var icon: String {
         switch self {
         case .newStory: return "plus.circle.fill"
         case .nextChapter: return "book.pages"
         case .createSequel: return "book.closed"
         case .createStory: return "pencil.and.ruler"
+        case .reuseDetails: return "arrow.right.circle.fill"
         }
     }
 }

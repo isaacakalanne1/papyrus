@@ -58,6 +58,7 @@ public indirect enum ReaderAction: Equatable, Sendable {
     case loadSubscriptions
     case setSelectedStoryForDetails(Story?)
     case setFocusedField(ReaderField?)
+    case reuseStoryDetails(Story)
 
     // MARK: - UI State Actions
     case setMenuStatus(MenuStatus)
