@@ -138,7 +138,7 @@ public struct SettingsView: View {
         }) {
             HStack {
                 RoundedRectangle(cornerRadius: 5)
-                    .fill(selectedColorSchemeName.scheme.backgroundSecondary)
+                    .fill(selectedColorSchemeName.scheme.accent)
                     .frame(width: 24, height: 24)
                     .overlay(
                         RoundedRectangle(cornerRadius: 5)
@@ -147,7 +147,7 @@ public struct SettingsView: View {
 
                 Text(selectedColorSchemeName.displayName)
                     .font(.custom(selectedFontName, size: selectedTextSize.fontSize))
-                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+                    .foregroundColor(selectedColorSchemeName.scheme.textPrimary)
                 Spacer()
                 Image(systemName: "chevron.right")
                     .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
