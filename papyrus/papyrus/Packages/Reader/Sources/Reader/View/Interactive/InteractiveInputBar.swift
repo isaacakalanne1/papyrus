@@ -13,7 +13,7 @@ struct InteractiveInputBar: View {
     @Environment(\.papyrusColorScheme) private var colorScheme
 
     private var isDisabled: Bool {
-        store.state.isLoading || story.chapters.filter { $0.action != nil }.count >= 10
+        store.state.isLoading
     }
 
     private var selectedActionMode: InteractiveActionMode {
@@ -49,7 +49,7 @@ struct InteractiveInputBar: View {
                     Image(systemName: "arrow.up.circle.fill")
                         .font(.system(size: 28))
                         .foregroundStyle(
-                            isDisabled || store.state.interactiveInputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                            isDisabled
                                 ? AnyShapeStyle(PapyrusColor.iconSecondary.color(in: colorScheme))
                                 : AnyShapeStyle(
                                     LinearGradient(
@@ -63,7 +63,7 @@ struct InteractiveInputBar: View {
                                 )
                         )
                 }
-                .disabled(isDisabled || store.state.interactiveInputText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
+                .disabled(isDisabled)
             }
             .padding(.horizontal, 12)
             .padding(.vertical, 8)
@@ -132,17 +132,14 @@ struct InteractiveInputBar: View {
 
     private func submitAction() {
         let text = store.state.interactiveInputText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !text.isEmpty else { return }
 
-        let action: ChapterAction
-        switch store.state.selectedActionMode {
-        case .do:
-            action = .do(text)
-        case .say:
-            action = .say(text)
-        case .event:
-            action = .event(text)
-        }
+        let action: ChapterAction? = text.isEmpty ? nil : {
+            switch store.state.selectedActionMode {
+            case .do: return .do(text)
+            case .say: return .say(text)
+            case .event: return .event(text)
+            }
+        }()
 
         store.dispatch(.submitInteractiveAction(story, action))
     }

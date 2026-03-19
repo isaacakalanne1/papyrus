@@ -130,4 +130,9 @@ public struct ReaderState: Equatable {
         let isAtFreeLimit = (story?.chapters.count ?? 0) >= 2
         return settingsState.isSubscribed || !isAtFreeLimit
     }
+
+    var canGenerateParagraph: Bool {
+        let isAtFreeLimit = (story?.chapters.count ?? 0) >= 20
+        return settingsState.isSubscribed || !isAtFreeLimit
+    }
 }

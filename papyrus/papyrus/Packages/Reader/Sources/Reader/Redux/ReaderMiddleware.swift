@@ -64,12 +64,13 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         return .saveStory(story)
 
     case .submitInteractiveAction(let story, let action):
-        // Cap at 10 user inputs (count chapters with an action, excluding nil-action continuations)
-        let inputCount = story.chapters.filter { $0.action != nil }.count
-        guard inputCount < 10 else { return nil }
+        if !state.canGenerateParagraph {
+            let isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
+            if !isSubscribed { return .setShowSubscriptionSheet(true) }
+        }
 
         var pendingStory = story
-        pendingStory.chapters.append(.init(content: "", action: action))
+        pendingStory.chapters.append(.init(content: "", action: action ?? nil))
         return .beginGenerateParagraph(pendingStory)
 
     case .beginGenerateParagraph(let story):

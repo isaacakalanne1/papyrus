@@ -21,7 +21,7 @@ public indirect enum ReaderAction: Equatable, Sendable {
     case beginCreateInteractiveStory
     case generateFirstParagraph(Story)
     case onGeneratedFirstParagraph(Story)
-    case submitInteractiveAction(Story, ChapterAction)
+    case submitInteractiveAction(Story, ChapterAction?)
     case beginGenerateParagraph(Story)
     case onGeneratedParagraph(Story)
     case setInteractiveMode(StoryMode)

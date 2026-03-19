@@ -20,7 +20,7 @@ struct StoryListItem: View {
     var body: some View {
         Button(action: onTap) {
             HStack {
-                Image(systemName: "book.closed")
+                Image(systemName: story.mode == .interactive ? "pencil" : "book.closed")
                     .font(.system(size: 16))
                     .foregroundColor(PapyrusColor.iconPrimary.color(in: colorScheme))
 
@@ -31,7 +31,9 @@ struct StoryListItem: View {
                         .lineLimit(1)
 
                     if !story.chapters.isEmpty {
-                        Text("\(story.chapters.count) chapter\(story.chapters.count == 1 ? "" : "s")")
+                        let count = story.chapters.count
+                        let label = story.mode == .interactive ? "entr\(count == 1 ? "y" : "ies")" : "chapter\(count == 1 ? "" : "s")"
+                        Text("\(count) \(label)")
                             .font(.custom(store.state.settingsState.selectedFontName, size: 12))
                             .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                     }

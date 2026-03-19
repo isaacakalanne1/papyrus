@@ -60,7 +60,6 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
 
     case .submitInteractiveAction:
         newState.isLoading = true
-        newState.interactiveInputText = ""
 
     case .beginGenerateParagraph(let story):
         newState.isLoading = true
@@ -70,6 +69,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .onGeneratedParagraph(let story):
         newState.isLoading = false
         newState.loadingStep = .idle
+        newState.interactiveInputText = ""
         if newState.story?.id == story.id {
             newState.story?.chapters = story.chapters
         }

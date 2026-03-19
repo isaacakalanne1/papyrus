@@ -26,17 +26,23 @@ struct InteractiveContentView: View {
                                 ChapterLoadingIndicator(
                                     fontName: store.state.settingsState.selectedFontName
                                 )
-                                .id("loadingIndicator")
                             }
+
+                            Color.clear
+                                .frame(height: 1)
+                                .id("bottom")
                         }
                         .padding(.horizontal, 32)
                         .padding(.top, 60)
                         .padding(.bottom, 20)
                         .id("content")
                     }
+                    .onAppear {
+                        proxy.scrollTo("bottom", anchor: .top)
+                    }
                     .onChange(of: story.chapters.count) { _, _ in
                         withAnimation {
-                            proxy.scrollTo("loadingIndicator", anchor: .bottom)
+                            proxy.scrollTo("bottom", anchor: .top)
                         }
                     }
                 }

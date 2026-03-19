@@ -36,7 +36,7 @@ You are writing an interactive fiction story.
         let messages = [
             OpenRouterMessage(
                 role: "system",
-                content: "You are an acclaimed interactive fiction author with a gift for immersive, concise prose. Your job is to continue a story in response to the player's action, writing exactly a short paragraph (2–3 sentences) of narrative. Do not include chapter headings, labels, or meta-commentary. Write only the a short paragraph (2–3 sentences)."
+                content: "You are an acclaimed interactive fiction author with a gift for immersive, concise prose. Your job is to continue a story in response to the player's action, writing exactly a short paragraph (2–3 sentences) of narrative. Do not include chapter headings, labels, or meta-commentary. Write only the paragraph."
             ),
             OpenRouterMessage(
                 role: "user",
