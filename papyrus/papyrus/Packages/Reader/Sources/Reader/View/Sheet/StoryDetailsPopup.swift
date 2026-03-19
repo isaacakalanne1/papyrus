@@ -29,15 +29,7 @@ struct StoryDetailsPopup: View {
     }
 
     var body: some View {
-        ZStack {
-            // Invisible background to catch taps
-            Color.clear
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    isPresented = false
-                }
-
-            VStack(spacing: 20) {
+        VStack(spacing: 20) {
             // Header
             HStack {
                 Text("Story Details")
@@ -151,6 +143,23 @@ struct StoryDetailsPopup: View {
                 }
             }
 
+            // Perspective section
+            VStack(alignment: .leading, spacing: 8) {
+                Text("Perspective")
+                    .font(.custom(fontName, size: 14))
+                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+
+                Text(story.perspective == .firstPerson ? "First Person" : "Third Person")
+                    .font(.custom(fontName, size: 16))
+                    .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(12)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.1))
+                    )
+            }
+
             // Setting details section with scrollview
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
@@ -201,25 +210,10 @@ struct StoryDetailsPopup: View {
                 }
             }
 
-                Spacer()
-            }
-            .padding(24)
-            .frame(width: 350, height: 450)
-            .background(
-                RoundedRectangle(cornerRadius: 16)
-                    .fill(
-                        LinearGradient(
-                            gradient: Gradient(colors: [
-                                PapyrusColor.background.color(in: colorScheme),
-                                PapyrusColor.backgroundSecondary.color(in: colorScheme)
-                            ]),
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
-            )
-            .onTapGesture { } // Prevent tap from propagating to background
+            Spacer()
         }
+        .padding(24)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(PapyrusColor.background.color(in: colorScheme))
     }
 }
