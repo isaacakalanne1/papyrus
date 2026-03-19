@@ -41,10 +41,11 @@ struct FormFieldView: View {
                 .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
 
             TextField(
-                placeholder,
                 text: $text,
+                prompt: Text(placeholder)
+                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme)),
                 axis: .vertical
-            )
+            ) { EmptyView() }
             .ifLet(focusedField) { view, focusedField in
                 view.focused(focusedField, equals: equals)
             }

@@ -10,18 +10,12 @@ import Foundation
 // MARK: - ChapterAction
 
 public enum ChapterAction: Equatable, Sendable {
-    case `do`(String)
-    case say(String)
-    case event(String)
+    case next(String)
 
     public var promptDescription: String {
         switch self {
-        case .do(let text):
-            return "The user has specified this action: \(text)"
-        case .say(let text):
-            return "The user's character says: \"\(text)\""
-        case .event(let text):
-            return "The following event occurs in the story: \(text)"
+        case .next(let text):
+            return "This is what the user specifies happens next: \(text)"
         }
     }
 }
@@ -34,31 +28,15 @@ extension ChapterAction: Codable {
 
     public init(from decoder: any Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let type = try container.decode(String.self, forKey: .type)
         let value = try container.decode(String.self, forKey: .value)
-        switch type {
-        case "do":
-            self = .do(value)
-        case "say":
-            self = .say(value)
-        case "event":
-            self = .event(value)
-        default:
-            self = .do(value)
-        }
+        self = .next(value)
     }
 
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         switch self {
-        case .do(let value):
-            try container.encode("do", forKey: .type)
-            try container.encode(value, forKey: .value)
-        case .say(let value):
-            try container.encode("say", forKey: .type)
-            try container.encode(value, forKey: .value)
-        case .event(let value):
-            try container.encode("event", forKey: .type)
+        case .next(let value):
+            try container.encode("next", forKey: .type)
             try container.encode(value, forKey: .value)
         }
     }

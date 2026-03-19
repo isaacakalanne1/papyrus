@@ -14,10 +14,6 @@ public enum ReaderField: Equatable, Sendable {
     case settingDetails
 }
 
-public enum InteractiveActionMode: Equatable, Sendable {
-    case `do`, say, event
-}
-
 public enum MenuStatus: Equatable, Sendable {
     case closed
     case storyOpen
@@ -57,7 +53,6 @@ public struct ReaderState: Equatable {
 
     // Interactive story mode
     var interactiveInputText: String
-    var selectedActionMode: InteractiveActionMode
 
     // UI State
     var menuStatus: MenuStatus
@@ -82,7 +77,6 @@ public struct ReaderState: Equatable {
         failedGenerationAction: ReaderAction? = nil,
         storyPendingDeletion: Story? = nil,
         interactiveInputText: String = "",
-        selectedActionMode: InteractiveActionMode = .do,
         menuStatus: MenuStatus = .closed,
         dragOffset: CGFloat = 0,
         isSequelMode: Bool = false,
@@ -104,7 +98,6 @@ public struct ReaderState: Equatable {
         self.failedGenerationAction = failedGenerationAction
         self.storyPendingDeletion = storyPendingDeletion
         self.interactiveInputText = interactiveInputText
-        self.selectedActionMode = selectedActionMode
         self.menuStatus = menuStatus
         self.dragOffset = dragOffset
         self.isSequelMode = isSequelMode

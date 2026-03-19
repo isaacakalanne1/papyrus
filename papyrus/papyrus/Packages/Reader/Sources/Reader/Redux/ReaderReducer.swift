@@ -85,8 +85,6 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .setInteractiveInputText(let text):
         newState.interactiveInputText = text
 
-    case .setSelectedActionMode(let mode):
-        newState.selectedActionMode = mode
 
     case .generateFirstParagraph:
         break

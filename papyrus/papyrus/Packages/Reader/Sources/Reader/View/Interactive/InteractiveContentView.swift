@@ -91,20 +91,8 @@ private struct InteractiveActionView: View {
 
     var body: some View {
         switch action {
-        case .do(let text):
-            Text("— \(text)")
-                .font(.custom(fontName, size: 14))
-                .italic()
-                .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
-
-        case .say(let text):
-            Text("\"\(text)\"")
-                .font(.custom(fontName, size: 14))
-                .italic()
-                .foregroundColor(PapyrusColor.accent.color(in: colorScheme))
-
-        case .event(let text):
-            Text("✦ \(text)")
+        case .next(let text):
+            Text(text)
                 .font(.custom(fontName, size: 14))
                 .italic()
                 .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
