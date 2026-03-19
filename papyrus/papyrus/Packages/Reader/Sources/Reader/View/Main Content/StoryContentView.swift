@@ -122,6 +122,7 @@ struct StoryContentView: View {
                                 if let failedAction = store.state.failedGenerationAction,
                                    story.chapterIndex == story.chapters.count - 1 {
                                     GenerationErrorView(
+                                        fontName: store.state.settingsState.selectedFont.fontName,
                                         onRetry: {
                                             store.dispatch(.retryGeneration(failedAction))
                                         },
@@ -131,14 +132,15 @@ struct StoryContentView: View {
                                     )
                                     .padding(.bottom, 30)
                                 } else if store.state.isLoading && story.chapterIndex == story.chapters.count - 1 {
-                                    ChapterLoadingIndicator()
+                                    ChapterLoadingIndicator(fontName: store.state.settingsState.selectedFont.fontName)
                                 } else {
                                     // Next Chapter or Create Sequel Button
                                     Group {
                                         if story.chapterIndex == story.maxNumberOfChapters - 1 {
                                             PrimaryButton(
                                                 type: .createSequel,
-                                                isLoading: store.state.isLoading
+                                                isLoading: store.state.isLoading,
+                                                fontName: store.state.settingsState.selectedFont.fontName
                                             ) {
                                                 store.dispatch(.setIsSequelMode(true))
                                                 store.dispatch(.updateMainCharacter(story.mainCharacter))
@@ -149,7 +151,8 @@ struct StoryContentView: View {
                                         } else {
                                             PrimaryButton(
                                                 type: .nextChapter,
-                                                isLoading: store.state.isLoading
+                                                isLoading: store.state.isLoading,
+                                                fontName: store.state.settingsState.selectedFont.fontName
                                             ) {
                                                 let nextIndex = story.chapterIndex + 1
                                                 if story.chapters.count > nextIndex {

@@ -11,9 +11,16 @@ import PapyrusStyleKit
 struct LoadingView: View {
     let loadingDisplayStep: LoadingStep
     let hasExistingStory: Bool
+    let fontName: String
     @State private var progressAnimation: CGFloat = 0
     @State private var pulseScale: CGFloat = 1.0
     @State private var showChapterReady: Bool = false
+
+    init(loadingDisplayStep: LoadingStep, hasExistingStory: Bool, fontName: String = "Georgia") {
+        self.loadingDisplayStep = loadingDisplayStep
+        self.hasExistingStory = hasExistingStory
+        self.fontName = fontName
+    }
 
     private var storyCreationStages: [LoadingStep] {
         [.identifyingTheme, .creatingPlotOutline, .creatingChapterBreakdown, .analyzingStructure, .preparingNarrative]
@@ -57,7 +64,7 @@ struct LoadingView: View {
     var body: some View {
         Group {
             if loadingDisplayStep == .writingChapter {
-                ChapterWritingLoadingView()
+                ChapterWritingLoadingView(fontName: fontName)
             } else if showChapterReady && hasExistingStory {
                 chapterReadyView
             } else if storyCreationStages.contains(loadingDisplayStep) {
@@ -140,14 +147,14 @@ struct LoadingView: View {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         Text(stageTitle)
-                            .font(.custom("Georgia", size: 15))
+                            .font(.custom(fontName, size: 15))
                             .fontWeight(.semibold)
                             .foregroundColor(PapyrusColor.textPrimary.color)
                         
                         Spacer()
                         
                         Text("Step \(currentStageIndex + 1) of \(storyCreationStages.count + 1)")
-                            .font(.custom("Georgia", size: 12))
+                            .font(.custom(fontName, size: 12))
                             .fontWeight(.medium)
                             .foregroundColor(PapyrusColor.iconSecondary.color)
                     }
@@ -183,7 +190,7 @@ struct LoadingView: View {
             // Subtitle
             HStack {
                 Text("Crafting your unique story foundation")
-                    .font(.custom("Georgia", size: 13))
+                    .font(.custom(fontName, size: 13))
                     .italic()
                     .foregroundColor(PapyrusColor.textSecondary.color)
                 
@@ -228,12 +235,12 @@ struct LoadingView: View {
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Chapter Ready!")
-                        .font(.custom("Georgia", size: 15))
+                        .font(.custom(fontName, size: 15))
                         .fontWeight(.semibold)
                         .foregroundColor(Color(red: 0.2, green: 0.6, blue: 0.3))
                     
                     Text("Your new chapter awaits")
-                        .font(.custom("Georgia", size: 12))
+                        .font(.custom(fontName, size: 12))
                         .foregroundColor(PapyrusColor.iconSecondary.color)
                 }
                 
@@ -243,7 +250,7 @@ struct LoadingView: View {
             // Subtitle
             HStack {
                 Text("Your story continues to unfold...")
-                    .font(.custom("Georgia", size: 13))
+                    .font(.custom(fontName, size: 13))
                     .italic()
                     .foregroundColor(PapyrusColor.textSecondary.color)
                 

@@ -27,7 +27,7 @@ struct ChapterNavigationView: View {
             
             // Story and Chapter Indicator
             Text("Chapter \(story.chapterIndex + 1) of \(story.maxNumberOfChapters > 0 ? story.maxNumberOfChapters : story.chapters.count)")
-                .font(.custom("Georgia", size: 12))
+                .font(.custom(store.state.settingsState.selectedFont.fontName, size: 12))
                 .foregroundColor(PapyrusColor.textSecondary.color)
                 .frame(maxWidth: 200)
             

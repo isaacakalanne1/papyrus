@@ -66,17 +66,20 @@ struct PrimaryButton: View {
     let type: PrimaryButtonType
     let size: PrimaryButtonSize
     let isLoading: Bool
+    let fontName: String
     let action: () -> Void
 
     init(
         type: PrimaryButtonType = .newStory,
         size: PrimaryButtonSize = .large,
         isLoading: Bool = false,
+        fontName: String = "Georgia",
         action: @escaping () -> Void
     ) {
         self.type = type
         self.size = size
         self.isLoading = isLoading
+        self.fontName = fontName
         self.action = action
     }
     
@@ -87,7 +90,7 @@ struct PrimaryButton: View {
                     Image(systemName: type.icon)
                         .font(.system(size: size.iconSize))
                     Text(type.title)
-                        .font(.custom("Georgia", size: size.fontSize))
+                        .font(.custom(fontName, size: size.fontSize))
                         .fontWeight(.medium)
                 }
                 .opacity(isLoading ? 0 : 1)

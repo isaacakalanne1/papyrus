@@ -15,6 +15,14 @@ struct DeleteConfirmationSheet: View {
     let story: Story
     let onDelete: () -> Void
     let onCancel: () -> Void
+    let fontName: String
+
+    init(story: Story, fontName: String = "Georgia", onDelete: @escaping () -> Void, onCancel: @escaping () -> Void) {
+        self.story = story
+        self.fontName = fontName
+        self.onDelete = onDelete
+        self.onCancel = onCancel
+    }
 
     private var storyTitle: String {
         story.title.isEmpty ? "Untitled Story" : story.title
@@ -32,11 +40,11 @@ struct DeleteConfirmationSheet: View {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Delete Story")
-                            .font(.custom("Georgia", size: 20))
+                            .font(.custom(fontName, size: 20))
                             .foregroundColor(PapyrusColor.textPrimary.color)
 
                         Text("This cannot be undone")
-                            .font(.custom("Georgia", size: 13))
+                            .font(.custom(fontName, size: 13))
                             .italic()
                             .foregroundColor(PapyrusColor.textSecondary.color)
                     }
@@ -53,7 +61,7 @@ struct DeleteConfirmationSheet: View {
                         .foregroundColor(PapyrusColor.iconPrimary.color)
 
                     Text(storyTitle)
-                        .font(.custom("Georgia", size: 16))
+                        .font(.custom(fontName, size: 16))
                         .foregroundColor(PapyrusColor.textPrimary.color)
                         .lineLimit(2)
                         .frame(maxWidth: .infinity, alignment: .leading)
@@ -70,7 +78,7 @@ struct DeleteConfirmationSheet: View {
 
                 // Body copy
                 Text("Are you sure you want to permanently delete \'\(storyTitle)\'? All chapters will be lost.")
-                    .font(.custom("Georgia", size: 15))
+                    .font(.custom(fontName, size: 15))
                     .foregroundColor(PapyrusColor.textSecondary.color)
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
@@ -86,7 +94,7 @@ struct DeleteConfirmationSheet: View {
                             Image(systemName: "trash")
                                 .font(.system(size: 16, weight: .medium))
                             Text("Delete Story")
-                                .font(.custom("Georgia", size: 17))
+                                .font(.custom(fontName, size: 17))
                                 .fontWeight(.medium)
                         }
                         .foregroundColor(.white)
@@ -112,7 +120,7 @@ struct DeleteConfirmationSheet: View {
                     // used elsewhere in the app for non-primary actions.
                     Button(action: onCancel) {
                         Text("Cancel")
-                            .font(.custom("Georgia", size: 17))
+                            .font(.custom(fontName, size: 17))
                             .foregroundColor(PapyrusColor.textSecondary.color)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)

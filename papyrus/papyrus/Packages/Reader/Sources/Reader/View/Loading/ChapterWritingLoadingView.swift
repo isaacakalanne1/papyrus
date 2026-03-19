@@ -9,10 +9,11 @@ import SwiftUI
 import PapyrusStyleKit
 
 struct ChapterWritingLoadingView: View {
+    let fontName: String
     @State private var pulseScale: CGFloat = 1.0
     @State private var dotCount: Int = 0
     @State private var showingQuote: Bool = false
-    
+
     private let writingQuotes = [
         "Every chapter is a new beginning",
         "The story unfolds, one word at a time",
@@ -20,9 +21,13 @@ struct ChapterWritingLoadingView: View {
         "Your characters await their next adventure",
         "Weaving narrative threads together"
     ]
-    
+
     @State private var currentQuote: String = ""
-    
+
+    init(fontName: String = "Georgia") {
+        self.fontName = fontName
+    }
+
     var body: some View {
         VStack(spacing: 16) {
             HStack(spacing: 16) {
@@ -45,37 +50,37 @@ struct ChapterWritingLoadingView: View {
                             Circle()
                                 .stroke(Color(red: 0.5, green: 0.35, blue: 0.2).opacity(0.3), lineWidth: 1)
                         )
-                    
+
                     Image(systemName: "pencil.and.outline")
                         .font(.system(size: 18, weight: .medium))
                         .foregroundColor(.white)
                 }
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 0) {
                         Text("Writing Chapter")
-                            .font(.custom("Georgia", size: 18))
+                            .font(.custom(fontName, size: 18))
                             .fontWeight(.semibold)
                             .foregroundColor(PapyrusColor.textPrimary.color)
-                        
+
                         ForEach(0..<3, id: \.self) { index in
                             Text(".")
-                                .font(.custom("Georgia", size: 18))
+                                .font(.custom(fontName, size: 18))
                                 .fontWeight(.semibold)
                                 .foregroundColor(PapyrusColor.textPrimary.color)
                                 .opacity(index < dotCount ? 1 : 0)
                         }
                     }
-                    
+
                     if showingQuote {
                         Text(currentQuote)
-                            .font(.custom("Georgia", size: 13))
+                            .font(.custom(fontName, size: 13))
                             .italic()
                             .foregroundColor(PapyrusColor.textSecondary.color)
                             .transition(.opacity.combined(with: .move(edge: .bottom)))
                     }
                 }
-                
+
                 Spacer()
             }
         }
@@ -107,7 +112,7 @@ struct ChapterWritingLoadingView: View {
             ) {
                 pulseScale = 1.15
             }
-            
+
             // Start dots animation
             Timer.scheduledTimer(withTimeInterval: 0.6, repeats: true) { _ in
                 Task { @MainActor in
@@ -116,7 +121,7 @@ struct ChapterWritingLoadingView: View {
                     }
                 }
             }
-            
+
             // Show quote after a delay
             currentQuote = writingQuotes.randomElement() ?? writingQuotes[0]
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
@@ -147,10 +152,10 @@ struct ChapterWritingLoadingView: View {
                 .padding()
         }
         .background(PapyrusColor.background.color.opacity(0.95))
-        
+
         // Chapter writing loading view
         ChapterWritingLoadingView()
-        
+
         // Simulated content
         Rectangle()
             .fill(PapyrusColor.background.color)

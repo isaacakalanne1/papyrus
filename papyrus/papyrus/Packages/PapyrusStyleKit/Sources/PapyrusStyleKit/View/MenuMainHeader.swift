@@ -10,16 +10,18 @@ import SwiftUI
 public struct MenuMainHeader: View {
     let title: String
     let showDivider: Bool
-    
-    public init(_ title: String, showDivider: Bool = true) {
+    let fontName: String
+
+    public init(_ title: String, showDivider: Bool = true, fontName: String = "Georgia") {
         self.title = title
         self.showDivider = showDivider
+        self.fontName = fontName
     }
-    
+
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
-                .font(.custom("Georgia", size: 24))
+                .font(.custom(fontName, size: 24))
                 .foregroundColor(PapyrusColor.textPrimary.color)
             
             if showDivider {

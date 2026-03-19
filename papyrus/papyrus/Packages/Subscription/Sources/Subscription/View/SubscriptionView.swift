@@ -12,12 +12,15 @@ import PapyrusStyleKit
 
 public struct SubscriptionView: View {
     @EnvironmentObject var store: SubscriptionStore
-    
+    let fontName: String
+
     private var state: SubscriptionState {
         store.state
     }
-    
-    public init() {}
+
+    public init(fontName: String = "Georgia") {
+        self.fontName = fontName
+    }
     
     public var body: some View {
         VStack(spacing: 0) {
@@ -46,7 +49,7 @@ public struct SubscriptionView: View {
     private var headerSection: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text("Premium")
-                .font(.custom("Georgia", size: 24))
+                .font(.custom(fontName, size: 24))
                 .foregroundColor(PapyrusColor.textPrimary.color)
             
             Divider()
@@ -64,7 +67,7 @@ public struct SubscriptionView: View {
                 .scaleEffect(1.2)
             
             Text("Loading subscription details...")
-                .font(.custom("Georgia", size: 16))
+                .font(.custom(fontName, size: 16))
                 .foregroundColor(PapyrusColor.textSecondary.color)
         }
         .frame(maxWidth: .infinity, minHeight: 200)
@@ -78,11 +81,11 @@ public struct SubscriptionView: View {
                     .foregroundColor(Color(red: 0.4, green: 0.6, blue: 0.4))
                 
                 Text("You're subscribed!")
-                    .font(.custom("Georgia", size: 20))
+                    .font(.custom(fontName, size: 20))
                     .foregroundColor(PapyrusColor.textPrimary.color)
                 
                 Text("Enjoy unlimited chapter creation")
-                    .font(.custom("Georgia", size: 16))
+                    .font(.custom(fontName, size: 16))
                     .foregroundColor(PapyrusColor.textSecondary.color)
             }
             .padding(24)
@@ -98,11 +101,11 @@ public struct SubscriptionView: View {
             
             VStack(spacing: 8) {
                 Text("Subscription Status")
-                    .font(.custom("Georgia", size: 14))
+                    .font(.custom(fontName, size: 14))
                     .foregroundColor(PapyrusColor.textSecondary.color)
                 
                 Text(state.isSubscribed ? "Active" : "Inactive")
-                    .font(.custom("Georgia", size: 16))
+                    .font(.custom(fontName, size: 16))
                     .foregroundColor(PapyrusColor.textPrimary.color)
             }
             
@@ -110,7 +113,7 @@ public struct SubscriptionView: View {
                 store.dispatch(SubscriptionAction.restorePurchases)
             }) {
                 Text("Restore Purchases")
-                    .font(.custom("Georgia", size: 14))
+                    .font(.custom(fontName, size: 14))
                     .foregroundColor(PapyrusColor.textSecondary.color)
                     .underline()
             }
@@ -123,13 +126,13 @@ public struct SubscriptionView: View {
         VStack(spacing: 24) {
             VStack(spacing: 16) {
                 Text("Unlock Your\nCreative Potential")
-                    .font(.custom("Georgia", size: 24))
+                    .font(.custom(fontName, size: 24))
                     .foregroundColor(PapyrusColor.textPrimary.color)
                     .multilineTextAlignment(.center)
                     .lineSpacing(4)
                 
                 Text("Create unlimited chapters and bring your stories to life")
-                    .font(.custom("Georgia", size: 16))
+                    .font(.custom(fontName, size: 16))
                     .foregroundColor(PapyrusColor.textSecondary.color)
                     .multilineTextAlignment(.center)
             }
@@ -149,11 +152,11 @@ public struct SubscriptionView: View {
                 VStack(spacing: 16) {
                     VStack(spacing: 4) {
                         Text(product.displayPrice)
-                            .font(.custom("Georgia", size: 28))
+                            .font(.custom(fontName, size: 28))
                             .foregroundColor(PapyrusColor.accent.color)
                         
                         Text("per month")
-                            .font(.custom("Georgia", size: 14))
+                            .font(.custom(fontName, size: 14))
                             .foregroundColor(PapyrusColor.textSecondary.color)
                     }
                     
@@ -161,7 +164,7 @@ public struct SubscriptionView: View {
                         store.dispatch(.purchaseSubscription)
                     }) {
                         Text("Subscribe Now")
-                            .font(.custom("Georgia", size: 18))
+                            .font(.custom(fontName, size: 18))
                             .fontWeight(.medium)
                             .foregroundColor(.white)
                             .frame(maxWidth: .infinity)
@@ -179,7 +182,7 @@ public struct SubscriptionView: View {
                             store.dispatch(.restorePurchases)
                         }) {
                             Text("Restore Purchases")
-                                .font(.custom("Georgia", size: 14))
+                                .font(.custom(fontName, size: 14))
                                 .foregroundColor(PapyrusColor.textSecondary.color)
                                 .underline()
                         }
@@ -190,14 +193,14 @@ public struct SubscriptionView: View {
                     HStack(spacing: 16) {
                         Link(destination: URL(string: "https://www.smileydude.co.uk/post/papyrus-privacy-policy")!) {
                             Text("Privacy Policy")
-                                .font(.custom("Georgia", size: 12))
+                                .font(.custom(fontName, size: 12))
                                 .foregroundColor(PapyrusColor.textSecondary.color)
                                 .underline()
                         }
                         
                         Link(destination: URL(string: "https://www.smileydude.co.uk/post/papyrus-terms-of-use-eula")!) {
                             Text("Terms of Use (EULA)")
-                                .font(.custom("Georgia", size: 12))
+                                .font(.custom(fontName, size: 12))
                                 .foregroundColor(PapyrusColor.textSecondary.color)
                                 .underline()
                         }
@@ -215,7 +218,7 @@ public struct SubscriptionView: View {
                 .frame(width: 28)
             
             Text(text)
-                .font(.custom("Georgia", size: 16))
+                .font(.custom(fontName, size: 16))
                 .foregroundColor(PapyrusColor.textPrimary.color)
             
             Spacer()
@@ -228,7 +231,7 @@ public struct SubscriptionView: View {
                 .foregroundColor(Color(red: 0.8, green: 0.4, blue: 0.3))
             
             Text(error)
-                .font(.custom("Georgia", size: 14))
+                .font(.custom(fontName, size: 14))
                 .foregroundColor(PapyrusColor.error.color)
             
             Spacer()

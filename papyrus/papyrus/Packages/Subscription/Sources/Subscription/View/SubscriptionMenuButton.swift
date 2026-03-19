@@ -10,8 +10,10 @@ import PapyrusStyleKit
 
 public struct SubscriptionMenuButton: View {
     let action: () -> Void
-    
-    public init(action: @escaping () -> Void) {
+    let fontName: String
+
+    public init(fontName: String = "Georgia", action: @escaping () -> Void) {
+        self.fontName = fontName
         self.action = action
     }
     
@@ -20,7 +22,7 @@ public struct SubscriptionMenuButton: View {
             MenuSectionDivider()
             
             VStack(alignment: .leading, spacing: 12) {
-                MenuSubheader("Subscription")
+                MenuSubheader("Subscription", fontName: fontName)
                     .padding(.top, 20)
                 
                 Button(action: action) {
@@ -30,7 +32,7 @@ public struct SubscriptionMenuButton: View {
                             .foregroundColor(PapyrusColor.accent.color)
                         
                         Text("Premium")
-                            .font(.custom("Georgia", size: 18))
+                            .font(.custom(fontName, size: 18))
                             .foregroundColor(PapyrusColor.textPrimary.color)
                         
                         Spacer()

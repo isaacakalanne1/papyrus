@@ -12,7 +12,14 @@ import PapyrusStyleKit
 struct StoryDetailsPopup: View {
     let story: Story
     @Binding var isPresented: Bool
+    let fontName: String
     @State private var copiedField: CopiedField? = nil
+
+    init(story: Story, isPresented: Binding<Bool>, fontName: String = "Georgia") {
+        self.story = story
+        self._isPresented = isPresented
+        self.fontName = fontName
+    }
     
     enum CopiedField {
         case title
@@ -33,7 +40,7 @@ struct StoryDetailsPopup: View {
             // Header
             HStack {
                 Text("Story Details")
-                    .font(.custom("Georgia", size: 20))
+                    .font(.custom(fontName, size: 20))
                     .foregroundColor(PapyrusColor.textPrimary.color)
                 
                 Spacer()
@@ -47,7 +54,7 @@ struct StoryDetailsPopup: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Title")
-                        .font(.custom("Georgia", size: 14))
+                        .font(.custom(fontName, size: 14))
                         .foregroundColor(PapyrusColor.textSecondary.color)
                     
                     Spacer()
@@ -69,7 +76,7 @@ struct StoryDetailsPopup: View {
                             Image(systemName: copiedField == .title ? "checkmark" : "doc.on.doc")
                                 .font(.system(size: 12))
                             Text(copiedField == .title ? "Copied" : "Copy")
-                                .font(.custom("Georgia", size: 12))
+                                .font(.custom(fontName, size: 12))
                         }
                         .foregroundColor(copiedField == .title ? Color.green : PapyrusColor.iconPrimary.color)
                     }
@@ -78,7 +85,7 @@ struct StoryDetailsPopup: View {
                 ScrollViewReader { proxy in
                     ScrollView {
                         Text(story.title.isEmpty ? "Untitled Story" : story.title)
-                            .font(.custom("Georgia", size: 16))
+                            .font(.custom(fontName, size: 16))
                             .foregroundColor(PapyrusColor.textPrimary.color)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(12)
@@ -97,7 +104,7 @@ struct StoryDetailsPopup: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Main Character")
-                        .font(.custom("Georgia", size: 14))
+                        .font(.custom(fontName, size: 14))
                         .foregroundColor(PapyrusColor.textSecondary.color)
                     
                     Spacer()
@@ -119,7 +126,7 @@ struct StoryDetailsPopup: View {
                             Image(systemName: copiedField == .mainCharacter ? "checkmark" : "doc.on.doc")
                                 .font(.system(size: 12))
                             Text(copiedField == .mainCharacter ? "Copied" : "Copy")
-                                .font(.custom("Georgia", size: 12))
+                                .font(.custom(fontName, size: 12))
                         }
                         .foregroundColor(copiedField == .mainCharacter ? Color.green : PapyrusColor.iconPrimary.color)
                     }
@@ -128,7 +135,7 @@ struct StoryDetailsPopup: View {
                 ScrollViewReader { proxy in
                     ScrollView {
                         Text(story.mainCharacter.isEmpty ? "Not specified" : story.mainCharacter)
-                            .font(.custom("Georgia", size: 16))
+                            .font(.custom(fontName, size: 16))
                             .foregroundColor(PapyrusColor.textPrimary.color)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(12)
@@ -147,7 +154,7 @@ struct StoryDetailsPopup: View {
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Story Details")
-                        .font(.custom("Georgia", size: 14))
+                        .font(.custom(fontName, size: 14))
                         .foregroundColor(PapyrusColor.textSecondary.color)
                     
                     Spacer()
@@ -169,7 +176,7 @@ struct StoryDetailsPopup: View {
                             Image(systemName: copiedField == .storyDetails ? "checkmark" : "doc.on.doc")
                                 .font(.system(size: 12))
                             Text(copiedField == .storyDetails ? "Copied" : "Copy")
-                                .font(.custom("Georgia", size: 12))
+                                .font(.custom(fontName, size: 12))
                         }
                         .foregroundColor(copiedField == .storyDetails ? Color.green : PapyrusColor.iconPrimary.color)
                     }
@@ -178,7 +185,7 @@ struct StoryDetailsPopup: View {
                 ScrollViewReader { proxy in
                     ScrollView {
                         Text(story.setting.isEmpty ? "Not specified" : story.setting)
-                            .font(.custom("Georgia", size: 16))
+                            .font(.custom(fontName, size: 16))
                             .foregroundColor(PapyrusColor.textPrimary.color)
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(12)

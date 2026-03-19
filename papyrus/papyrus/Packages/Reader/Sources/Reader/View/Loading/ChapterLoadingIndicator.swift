@@ -9,8 +9,13 @@ import SwiftUI
 import PapyrusStyleKit
 
 struct ChapterLoadingIndicator: View {
+    let fontName: String
     @State private var pulseOpacity: Double = 0.4
     @State private var moveOffset: CGFloat = -5
+
+    init(fontName: String = "Georgia") {
+        self.fontName = fontName
+    }
     
     var body: some View {
         VStack(spacing: 16) {
@@ -51,7 +56,7 @@ struct ChapterLoadingIndicator: View {
             .padding(.horizontal, 40)
             
             Text("The next chapter is being crafted...")
-                .font(.custom("Georgia", size: 16))
+                .font(.custom(fontName, size: 16))
                 .italic()
                 .foregroundColor(PapyrusColor.textSecondary.color)
                 .multilineTextAlignment(.center)

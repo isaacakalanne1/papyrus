@@ -10,8 +10,9 @@ struct FormFieldView: View {
     let showHint: Bool
     let hintText: String?
     let onSubmit: (() -> Void)?
+    let fontName: String
     @State private var pulseAnimation = false
-    
+
     init(
         label: String,
         placeholder: String,
@@ -19,7 +20,8 @@ struct FormFieldView: View {
         equals: ReaderField,
         showHint: Bool = false,
         hintText: String? = nil,
-        onSubmit: (() -> Void)? = nil
+        onSubmit: (() -> Void)? = nil,
+        fontName: String = "Georgia"
     ) {
         self.label = label
         self.placeholder = placeholder
@@ -28,12 +30,13 @@ struct FormFieldView: View {
         self.showHint = showHint
         self.hintText = hintText
         self.onSubmit = onSubmit
+        self.fontName = fontName
     }
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(label)
-                .font(.custom("Georgia", size: 14))
+                .font(.custom(fontName, size: 14))
                 .foregroundColor(PapyrusColor.textSecondary.color)
             
             TextField(
@@ -44,7 +47,7 @@ struct FormFieldView: View {
             .ifLet(focusedField) { view, focusedField in
                 view.focused(focusedField, equals: equals)
             }
-            .font(.custom("Georgia", size: 16))
+            .font(.custom(fontName, size: 16))
             .foregroundColor(PapyrusColor.textPrimary.color)
             .lineLimit(3, reservesSpace: true)
             .padding(12)
@@ -85,7 +88,7 @@ struct FormFieldView: View {
             // Hint text
             if showHint, let hintText = hintText {
                 Text(hintText)
-                    .font(.custom("Georgia", size: 13))
+                    .font(.custom(fontName, size: 13))
                     .foregroundColor(PapyrusColor.textSecondary.color.opacity(0.8))
                     .transition(.asymmetric(
                         insertion: .opacity.combined(with: .move(edge: .top)),

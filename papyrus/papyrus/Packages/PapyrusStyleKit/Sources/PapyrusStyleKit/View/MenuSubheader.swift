@@ -9,15 +9,17 @@ import SwiftUI
 
 public struct MenuSubheader: View {
     let title: String
-    
-    public init(_ title: String) {
+    let fontName: String
+
+    public init(_ title: String, fontName: String = "Georgia") {
         self.title = title
+        self.fontName = fontName
     }
-    
+
     public var body: some View {
         HStack {
             Text(title)
-                .font(.custom("Georgia", size: 18))
+                .font(.custom(fontName, size: 18))
                 .foregroundColor(Color(red: 0.45, green: 0.4, blue: 0.35))
                 .tracking(0.5)
             

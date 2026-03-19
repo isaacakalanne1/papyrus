@@ -12,6 +12,13 @@ import PapyrusStyleKit
 struct GenerationErrorView: View {
     let onRetry: () -> Void
     let onDismiss: () -> Void
+    let fontName: String
+
+    init(fontName: String = "Georgia", onRetry: @escaping () -> Void, onDismiss: @escaping () -> Void) {
+        self.fontName = fontName
+        self.onRetry = onRetry
+        self.onDismiss = onDismiss
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -43,12 +50,12 @@ struct GenerationErrorView: View {
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("The chapter could not be written")
-                        .font(.custom("Georgia", size: 15))
+                        .font(.custom(fontName, size: 15))
                         .fontWeight(.semibold)
                         .foregroundColor(PapyrusColor.textPrimary.color)
 
                     Text("Something interrupted the quill. Shall we try once more?")
-                        .font(.custom("Georgia", size: 13))
+                        .font(.custom(fontName, size: 13))
                         .italic()
                         .foregroundColor(PapyrusColor.textSecondary.color)
                         .fixedSize(horizontal: false, vertical: true)
@@ -71,7 +78,7 @@ struct GenerationErrorView: View {
                 // Dismiss
                 Button(action: onDismiss) {
                     Text("Dismiss")
-                        .font(.custom("Georgia", size: 14))
+                        .font(.custom(fontName, size: 14))
                         .foregroundColor(PapyrusColor.textSecondary.color)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
@@ -89,7 +96,7 @@ struct GenerationErrorView: View {
                         Image(systemName: "arrow.counterclockwise")
                             .font(.system(size: 12, weight: .semibold))
                         Text("Try Again")
-                            .font(.custom("Georgia", size: 14))
+                            .font(.custom(fontName, size: 14))
                             .fontWeight(.semibold)
                     }
                     .foregroundColor(PapyrusColor.borderPrimary.color)

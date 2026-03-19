@@ -17,7 +17,7 @@ public struct SettingsView: View {
 
     public var body: some View {
         VStack(alignment: .leading, spacing: 0) {
-            MenuMainHeader("Settings")
+            MenuMainHeader("Settings", fontName: selectedFont.fontName)
 
             VStack(alignment: .leading, spacing: 20) {
                 textSizeSection
@@ -29,7 +29,7 @@ public struct SettingsView: View {
     
     private var textSizeSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            MenuSubheader("Text Size")
+            MenuSubheader("Text Size", fontName: selectedFont.fontName)
             
             textSizeSelector
         }
@@ -54,7 +54,7 @@ public struct SettingsView: View {
             store.dispatch(.selectTextSize(size))
         }) {
             Text("A")
-                .font(.custom("Georgia", size: size.fontSize * size.iconScale))
+                .font(.custom(selectedFont.fontName, size: size.fontSize * size.iconScale))
                 .foregroundColor(size == selectedTextSize ?
                     PapyrusColor.accent.color :
                     PapyrusColor.textSecondary.color)
@@ -75,7 +75,7 @@ public struct SettingsView: View {
 
     private var fontSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            MenuSubheader("Font")
+            MenuSubheader("Font", fontName: selectedFont.fontName)
 
             fontSelector
         }

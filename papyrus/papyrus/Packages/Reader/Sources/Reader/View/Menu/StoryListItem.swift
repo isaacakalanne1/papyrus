@@ -25,13 +25,13 @@ struct StoryListItem: View {
                 
                 VStack(alignment: .leading, spacing: 2) {
                     Text(story.title.isEmpty ? "Untitled Story" : story.title)
-                        .font(.custom("Georgia", size: 16))
+                        .font(.custom(store.state.settingsState.selectedFont.fontName, size: 16))
                         .foregroundColor(PapyrusColor.textPrimary.color)
                         .lineLimit(1)
-                    
+
                     if !story.chapters.isEmpty {
                         Text("\(story.chapters.count) chapter\(story.chapters.count == 1 ? "" : "s")")
-                            .font(.custom("Georgia", size: 12))
+                            .font(.custom(store.state.settingsState.selectedFont.fontName, size: 12))
                             .foregroundColor(PapyrusColor.textSecondary.color)
                     }
                 }

@@ -22,7 +22,7 @@ struct StoryMenu: View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 // Menu header
-                MenuMainHeader("Your Stories")
+                MenuMainHeader("Your Stories", fontName: store.state.settingsState.selectedFont.fontName)
                 
                 // Story list
                 if !store.state.loadedStories.isEmpty {
@@ -43,11 +43,11 @@ struct StoryMenu: View {
                     .listStyle(PlainListStyle())
                     .scrollContentBackground(.hidden)
                 } else {
-                    NoStoriesView()
+                    NoStoriesView(fontName: store.state.settingsState.selectedFont.fontName)
                 }
                 
                 // Create Story button at the bottom
-                PrimaryButton(isLoading: store.state.isLoading) {
+                PrimaryButton(isLoading: store.state.isLoading, fontName: store.state.settingsState.selectedFont.fontName) {
                     withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                         store.dispatch(.setShowStoryForm(true))
                     }
@@ -75,10 +75,14 @@ struct StoryMenu: View {
             get: { store.state.selectedStoryForDetails },
             set: { store.dispatch(.setSelectedStoryForDetails($0)) }
         )) { story in
-            StoryDetailsPopup(story: story, isPresented: Binding(
-                get: { store.state.selectedStoryForDetails != nil },
-                set: { if !$0 { store.dispatch(.setSelectedStoryForDetails(nil)) } }
-            ))
+            StoryDetailsPopup(
+                story: story,
+                isPresented: Binding(
+                    get: { store.state.selectedStoryForDetails != nil },
+                    set: { if !$0 { store.dispatch(.setSelectedStoryForDetails(nil)) } }
+                ),
+                fontName: store.state.settingsState.selectedFont.fontName
+            )
             .presentationBackground(.clear)
             .presentationDragIndicator(.hidden)
         }
@@ -88,6 +92,7 @@ struct StoryMenu: View {
         )) { story in
             DeleteConfirmationSheet(
                 story: story,
+                fontName: store.state.settingsState.selectedFont.fontName,
                 onDelete: {
                     store.dispatch(.deleteStory(story.id))
                 },

@@ -10,8 +10,9 @@ import ReduxKit
 
 public struct SubscriptionRootView: View {
     @StateObject private var store: SubscriptionStore
-    
-    public init(environment: SubscriptionEnvironmentProtocol) {
+    let fontName: String
+
+    public init(environment: SubscriptionEnvironmentProtocol, fontName: String = "Georgia") {
         self._store = StateObject(wrappedValue: {
             Store(
                 initial: SubscriptionState(),
@@ -21,10 +22,11 @@ public struct SubscriptionRootView: View {
                 subscriber: subscriptionSubscriber
             )
         }())
+        self.fontName = fontName
     }
-    
+
     public var body: some View {
-        SubscriptionView()
+        SubscriptionView(fontName: fontName)
             .environmentObject(store)
             .onAppear {
                 store.dispatch(.loadProduct)

@@ -38,6 +38,7 @@ struct ReaderView: View {
                 // Generation error banner (shown when a pipeline step fails)
                 if let failedAction = store.state.failedGenerationAction {
                     GenerationErrorView(
+                        fontName: store.state.settingsState.selectedFont.fontName,
                         onRetry: {
                             store.dispatch(.retryGeneration(failedAction))
                         },
@@ -52,7 +53,8 @@ struct ReaderView: View {
                 if store.state.isLoading && !store.state.contentState.hasStory {
                     LoadingView(
                         loadingDisplayStep: store.state.loadingStep,
-                        hasExistingStory: store.state.story != nil
+                        hasExistingStory: store.state.story != nil,
+                        fontName: store.state.settingsState.selectedFont.fontName
                     )
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }
@@ -122,7 +124,7 @@ struct ReaderView: View {
                 .environmentObject(store)
         }
         .sheet(isPresented: showSubscriptionSheet) {
-            SubscriptionRootView(environment: store.environment.subscriptionEnvironment)
+            SubscriptionRootView(environment: store.environment.subscriptionEnvironment, fontName: store.state.settingsState.selectedFont.fontName)
                 .presentationDragIndicator(.visible)
         }
         .onAppear {
