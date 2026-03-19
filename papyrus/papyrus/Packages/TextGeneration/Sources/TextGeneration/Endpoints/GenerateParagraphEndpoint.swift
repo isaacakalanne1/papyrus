@@ -31,12 +31,12 @@ You are writing an interactive fiction story.
             userContent += "\n\n**Player action:** \(action.promptDescription)"
         }
 
-        userContent += "\n\nContinue the story naturally with exactly two sentences. Do not include chapter headings."
+        userContent += "\n\nContinue the story naturally with exactly a short paragraph (2–3 sentences). Do not include chapter headings."
 
         let messages = [
             OpenRouterMessage(
                 role: "system",
-                content: "You are an acclaimed interactive fiction author with a gift for immersive, concise prose. Your job is to continue a story in response to the player's action, writing exactly two sentences of narrative. Do not include chapter headings, labels, or meta-commentary. Write only the two sentences."
+                content: "You are an acclaimed interactive fiction author with a gift for immersive, concise prose. Your job is to continue a story in response to the player's action, writing exactly a short paragraph (2–3 sentences) of narrative. Do not include chapter headings, labels, or meta-commentary. Write only the a short paragraph (2–3 sentences)."
             ),
             OpenRouterMessage(
                 role: "user",
@@ -44,7 +44,7 @@ You are writing an interactive fiction story.
             )
         ]
 
-        let request = OpenRouterRequest(messages: messages)
+        let request = OpenRouterRequest(model: "deepseek/deepseek-v3.2", messages: messages)
         return request.toData()
     }
 }

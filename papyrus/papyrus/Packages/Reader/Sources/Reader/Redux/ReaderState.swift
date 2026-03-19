@@ -56,7 +56,6 @@ public struct ReaderState: Equatable {
     var storyPendingDeletion: Story?
 
     // Interactive story mode
-    var storyMode: StoryMode
     var interactiveInputText: String
     var selectedActionMode: InteractiveActionMode
 
@@ -82,7 +81,6 @@ public struct ReaderState: Equatable {
         focusedField: ReaderField? = nil,
         failedGenerationAction: ReaderAction? = nil,
         storyPendingDeletion: Story? = nil,
-        storyMode: StoryMode = .story,
         interactiveInputText: String = "",
         selectedActionMode: InteractiveActionMode = .do,
         menuStatus: MenuStatus = .closed,
@@ -105,7 +103,6 @@ public struct ReaderState: Equatable {
         self.focusedField = focusedField
         self.failedGenerationAction = failedGenerationAction
         self.storyPendingDeletion = storyPendingDeletion
-        self.storyMode = storyMode
         self.interactiveInputText = interactiveInputText
         self.selectedActionMode = selectedActionMode
         self.menuStatus = menuStatus

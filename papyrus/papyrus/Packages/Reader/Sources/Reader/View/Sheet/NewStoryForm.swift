@@ -120,7 +120,7 @@ struct NewStoryForm: View {
                             .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
                         Spacer()
                         Picker("Story Mode", selection: Binding(
-                            get: { store.state.storyMode },
+                            get: { store.state.settingsState.storyMode },
                             set: { store.dispatch(.setInteractiveMode($0)) }
                         )) {
                             Text("Story").tag(StoryMode.story)
@@ -149,7 +149,7 @@ struct NewStoryForm: View {
                     }
                 } else if store.state.isSequelMode {
                     store.dispatch(.createSequel)
-                } else if store.state.storyMode == .interactive {
+                } else if store.state.settingsState.storyMode == .interactive {
                     store.dispatch(.createInteractiveStory)
                 } else {
                     store.dispatch(.createStory)

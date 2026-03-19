@@ -80,7 +80,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         }
 
     case .setInteractiveMode(let mode):
-        newState.storyMode = mode
+        newState.settingsState.storyMode = mode
 
     case .setInteractiveInputText(let text):
         newState.interactiveInputText = text
