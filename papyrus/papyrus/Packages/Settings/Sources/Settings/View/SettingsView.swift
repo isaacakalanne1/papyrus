@@ -98,6 +98,7 @@ public struct SettingsView: View {
                 Image(systemName: "chevron.right")
                     .foregroundColor(PapyrusColor.textSecondary.color)
             }
+            .contentShape(Rectangle())
             .frame(maxWidth: .infinity)
             .frame(height: 44)
             .padding(.horizontal, 16)

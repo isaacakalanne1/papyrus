@@ -17,24 +17,27 @@ struct FontPickerSheet: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            header
-            Divider()
-                .background(PapyrusColor.borderSecondary.color)
-            selectedFontRow
-            Divider()
-                .background(PapyrusColor.borderSecondary.color)
-            ScrollView {
-                VStack(spacing: 0) {
-                    if selectedFontName != defaultFontName {
-                        defaultFontRow
-                        Divider()
-                            .background(PapyrusColor.borderSecondary.color)
-                            .padding(.horizontal, 20)
+        ZStack(alignment: .bottomTrailing) {
+            VStack(spacing: 0) {
+                header
+                Divider()
+                    .background(PapyrusColor.borderSecondary.color)
+                selectedFontRow
+                Divider()
+                    .background(PapyrusColor.borderSecondary.color)
+                ScrollView {
+                    VStack(spacing: 0) {
+                        if selectedFontName != defaultFontName {
+                            defaultFontRow
+                            Divider()
+                                .background(PapyrusColor.borderSecondary.color)
+                                .padding(.horizontal, 20)
+                        }
+                        otherFontsList
                     }
-                    otherFontsList
                 }
             }
+            closeButton
         }
         .background(PapyrusColor.background.color)
     }
@@ -44,13 +47,16 @@ struct FontPickerSheet: View {
             Text("Font")
                 .font(.custom(selectedFontName, size: 20))
                 .foregroundColor(PapyrusColor.textPrimary.color)
-            Spacer()
-            MenuButton(type: .close) {
-                isPresented = false
-            }
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
+    }
+
+    private var closeButton: some View {
+        MenuButton(type: .close) {
+            isPresented = false
+        }
+        .padding(24)
     }
 
     private var selectedFontRow: some View {
@@ -65,6 +71,9 @@ struct FontPickerSheet: View {
         VStack(spacing: 0) {
             ForEach(otherFonts, id: \.self) { fontName in
                 fontRow(fontName: fontName, subtitle: nil)
+                Divider()
+                    .background(PapyrusColor.borderSecondary.color)
+                    .padding(.horizontal, 20)
             }
         }
     }
@@ -94,8 +103,8 @@ struct FontPickerSheet: View {
                         .foregroundColor(PapyrusColor.accent.color)
                 }
             }
-            .frame(maxWidth: .infinity)
-//            .padding(.vertical, 12)
+            .contentShape(Rectangle())
+            .frame(maxWidth: .infinity, minHeight: 56)
             .padding(.horizontal, 20)
             .background(
                 isSelected
