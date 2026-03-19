@@ -1,21 +1,18 @@
 //
 //  MenuButtonType.swift
-//  Reader
-//
-//  Created by Isaac Akalanne on 04/10/2025.
+//  PapyrusStyleKit
 //
 
 import SwiftUI
-import PapyrusStyleKit
 
-enum MenuButtonType {
+public enum MenuButtonType {
     case menu
     case settings
     case previous
     case next
     case close
-    
-    var icon: String {
+
+    public var icon: String {
         switch self {
         case .menu: return "text.alignleft"
         case .settings: return "gearshape"
@@ -24,32 +21,32 @@ enum MenuButtonType {
         case .close: return "xmark.circle.fill"
         }
     }
-    
-    var size: CGFloat {
+
+    public var size: CGFloat {
         switch self {
         case .menu, .settings: return 20
         case .previous, .next: return 16
         case .close: return 24
         }
     }
-    
-    var frameSize: CGFloat {
+
+    public var frameSize: CGFloat {
         switch self {
         case .menu, .settings: return 44
         case .previous, .next: return 32
         case .close: return 24
         }
     }
-    
-    var weight: Font.Weight {
+
+    public var weight: Font.Weight {
         switch self {
         case .menu, .settings: return .regular
         case .previous, .next: return .medium
         case .close: return .regular
         }
     }
-    
-    var color: Color {
+
+    public var color: Color {
         switch self {
         case .close: return PapyrusColor.iconPrimary.color
         default: return PapyrusColor.iconSecondary.color

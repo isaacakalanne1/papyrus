@@ -5,9 +5,10 @@
 //  Created by Isaac Akalanne on 29/09/2025.
 //
 
+import PapyrusStyleKit
+import Settings
 import SwiftUI
 import TextGeneration
-import Settings
 
 /// Observes the enclosing UIScrollView's contentOffset via KVO and restores
 /// a saved offset when the story changes. Uses UIKit directly because:
@@ -111,7 +112,7 @@ struct StoryContentView: View {
                                 
                                 // Content
                                 Text(story.chapters[story.chapterIndex].content)
-                                    .font(.custom(store.state.settingsState.selectedFont.fontName, size: store.state.settingsState.selectedTextSize.fontSize))
+                                    .font(.custom(store.state.settingsState.selectedFontName, size: store.state.settingsState.selectedTextSize.fontSize))
                                     .lineSpacing(8)
                                     .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
                                     .padding(.horizontal, 32)
@@ -122,7 +123,7 @@ struct StoryContentView: View {
                                 if let failedAction = store.state.failedGenerationAction,
                                    story.chapterIndex == story.chapters.count - 1 {
                                     GenerationErrorView(
-                                        fontName: store.state.settingsState.selectedFont.fontName,
+                                        fontName: store.state.settingsState.selectedFontName,
                                         onRetry: {
                                             store.dispatch(.retryGeneration(failedAction))
                                         },
@@ -132,7 +133,7 @@ struct StoryContentView: View {
                                     )
                                     .padding(.bottom, 30)
                                 } else if store.state.isLoading && story.chapterIndex == story.chapters.count - 1 {
-                                    ChapterLoadingIndicator(fontName: store.state.settingsState.selectedFont.fontName)
+                                    ChapterLoadingIndicator(fontName: store.state.settingsState.selectedFontName)
                                 } else {
                                     // Next Chapter or Create Sequel Button
                                     Group {
@@ -140,7 +141,7 @@ struct StoryContentView: View {
                                             PrimaryButton(
                                                 type: .createSequel,
                                                 isLoading: store.state.isLoading,
-                                                fontName: store.state.settingsState.selectedFont.fontName
+                                                fontName: store.state.settingsState.selectedFontName
                                             ) {
                                                 store.dispatch(.setIsSequelMode(true))
                                                 store.dispatch(.updateMainCharacter(story.mainCharacter))
@@ -152,7 +153,7 @@ struct StoryContentView: View {
                                             PrimaryButton(
                                                 type: .nextChapter,
                                                 isLoading: store.state.isLoading,
-                                                fontName: store.state.settingsState.selectedFont.fontName
+                                                fontName: store.state.settingsState.selectedFontName
                                             ) {
                                                 let nextIndex = story.chapterIndex + 1
                                                 if story.chapters.count > nextIndex {

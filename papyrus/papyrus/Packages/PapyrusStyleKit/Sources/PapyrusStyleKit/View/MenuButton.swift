@@ -1,19 +1,16 @@
 //
 //  MenuButton.swift
-//  Reader
-//
-//  Created by Isaac Akalanne on 04/10/2025.
+//  PapyrusStyleKit
 //
 
 import SwiftUI
-import PapyrusStyleKit
 
-struct MenuButton: View {
+public struct MenuButton: View {
     let type: MenuButtonType
     let isEnabled: Bool
     let action: () -> Void
-    
-    init(
+
+    public init(
         type: MenuButtonType,
         isEnabled: Bool = true,
         action: @escaping () -> Void
@@ -22,13 +19,13 @@ struct MenuButton: View {
         self.isEnabled = isEnabled
         self.action = action
     }
-    
-    var body: some View {
+
+    public var body: some View {
         Button(action: action) {
             Image(systemName: type.icon)
                 .font(.system(size: type.size, weight: type.weight))
                 .foregroundColor(
-                    isEnabled 
+                    isEnabled
                     ? type.color
                     : PapyrusColor.iconPrimary.color.opacity(0.3)
                 )

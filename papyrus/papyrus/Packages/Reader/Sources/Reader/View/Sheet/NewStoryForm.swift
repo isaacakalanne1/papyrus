@@ -24,7 +24,7 @@ struct NewStoryForm: View {
             // Header
             HStack {
                 Text(store.state.isSequelMode ? "Create Sequel" : "New Story")
-                    .font(.custom(store.state.settingsState.selectedFont.fontName, size: 20))
+                    .font(.custom(store.state.settingsState.selectedFontName, size: 20))
                     .foregroundColor(PapyrusColor.textPrimary.color)
 
                 Spacer()
@@ -43,7 +43,7 @@ struct NewStoryForm: View {
                 equals: .mainCharacter,
                 showHint: showMainCharacterHint,
                 hintText: showMainCharacterHint ? "Please provide a main character for your story" : nil,
-                fontName: store.state.settingsState.selectedFont.fontName
+                fontName: store.state.settingsState.selectedFontName
             ) {
                 store.dispatch(.setFocusedField(.settingDetails))
             }
@@ -55,7 +55,7 @@ struct NewStoryForm: View {
                 equals: .settingDetails,
                 showHint: showSettingDetailsHint,
                 hintText: showSettingDetailsHint ? "Add some details about the setting" : nil,
-                fontName: store.state.settingsState.selectedFont.fontName
+                fontName: store.state.settingsState.selectedFontName
             ) {
                 store.dispatch(.setFocusedField(nil))
             }
@@ -64,7 +64,7 @@ struct NewStoryForm: View {
             VStack(spacing: 12) {
                 HStack {
                     Text("More options")
-                        .font(.custom(store.state.settingsState.selectedFont.fontName, size: 14))
+                        .font(.custom(store.state.settingsState.selectedFontName, size: 14))
                         .foregroundColor(PapyrusColor.textSecondary.color)
                     Spacer()
                     Image(systemName: showMoreOptions ? "chevron.up" : "chevron.down")
@@ -81,7 +81,7 @@ struct NewStoryForm: View {
                 if showMoreOptions {
                     HStack {
                         Text("Perspective")
-                            .font(.custom(store.state.settingsState.selectedFont.fontName, size: 14))
+                            .font(.custom(store.state.settingsState.selectedFontName, size: 14))
                             .foregroundColor(PapyrusColor.textPrimary.color)
                         Spacer()
                         Picker("Perspective", selection: Binding(
@@ -115,7 +115,7 @@ struct NewStoryForm: View {
                 type: store.state.isSequelMode ? .createSequel : .createStory,
                 size: .medium,
                 isLoading: store.state.isLoading,
-                fontName: store.state.settingsState.selectedFont.fontName
+                fontName: store.state.settingsState.selectedFontName
             ) {
                 let isMainCharacterEmpty = mainCharacter.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                 let isSettingDetailsEmpty = settingDetails.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -179,7 +179,7 @@ struct NewStoryForm: View {
                     Button("Done") {
                         store.dispatch(.setFocusedField(nil))
                     }
-                    .font(.custom(store.state.settingsState.selectedFont.fontName, size: 16))
+                    .font(.custom(store.state.settingsState.selectedFontName, size: 16))
                     .foregroundColor(PapyrusColor.accent.color)
                 }
             }

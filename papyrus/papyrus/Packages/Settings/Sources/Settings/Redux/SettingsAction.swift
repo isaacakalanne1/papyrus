@@ -2,7 +2,7 @@ import Foundation
 
 public enum SettingsAction: Equatable, Sendable {
     case selectTextSize(TextSize)
-    case selectFont(ReaderFont)
+    case selectFont(String)
     case loadSettings
     case onLoadedSettings(SettingsState)
     case saveSettings

@@ -21,7 +21,7 @@ struct SettingsMenu: View {
                     environment: store.environment.settingsEnvironment
                 )
                 
-                SubscriptionMenuButton(fontName: store.state.settingsState.selectedFont.fontName, action: {
+                SubscriptionMenuButton(fontName: store.state.settingsState.selectedFontName, action: {
                     store.dispatch(.setShowSubscriptionSheet(true))
                 })
                 Spacer()

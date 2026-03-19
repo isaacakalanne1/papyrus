@@ -22,7 +22,7 @@ struct StoryMenu: View {
         HStack(spacing: 0) {
             VStack(alignment: .leading, spacing: 0) {
                 // Menu header
-                MenuMainHeader("Your Stories", fontName: store.state.settingsState.selectedFont.fontName)
+                MenuMainHeader("Your Stories", fontName: store.state.settingsState.selectedFontName)
                 
                 // Story list
                 if !store.state.loadedStories.isEmpty {
@@ -43,11 +43,11 @@ struct StoryMenu: View {
                     .listStyle(PlainListStyle())
                     .scrollContentBackground(.hidden)
                 } else {
-                    NoStoriesView(fontName: store.state.settingsState.selectedFont.fontName)
+                    NoStoriesView(fontName: store.state.settingsState.selectedFontName)
                 }
                 
                 // Create Story button at the bottom
-                PrimaryButton(isLoading: store.state.isLoading, fontName: store.state.settingsState.selectedFont.fontName) {
+                PrimaryButton(isLoading: store.state.isLoading, fontName: store.state.settingsState.selectedFontName) {
                     withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
                         store.dispatch(.setShowStoryForm(true))
                     }
@@ -81,7 +81,7 @@ struct StoryMenu: View {
                     get: { store.state.selectedStoryForDetails != nil },
                     set: { if !$0 { store.dispatch(.setSelectedStoryForDetails(nil)) } }
                 ),
-                fontName: store.state.settingsState.selectedFont.fontName
+                fontName: store.state.settingsState.selectedFontName
             )
             .presentationBackground(.clear)
             .presentationDragIndicator(.hidden)
@@ -92,7 +92,7 @@ struct StoryMenu: View {
         )) { story in
             DeleteConfirmationSheet(
                 story: story,
-                fontName: store.state.settingsState.selectedFont.fontName,
+                fontName: store.state.settingsState.selectedFontName,
                 onDelete: {
                     store.dispatch(.deleteStory(story.id))
                 },

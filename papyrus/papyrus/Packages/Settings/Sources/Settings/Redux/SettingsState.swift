@@ -4,18 +4,18 @@ public struct SettingsState: Equatable, Codable, Sendable {
     public var selectedTextSize: TextSize
     public var isSubscribed: Bool
     public var perspective: StoryPerspective
-    public var selectedFont: ReaderFont
+    public var selectedFontName: String
 
     public init(
         selectedTextSize: TextSize = .medium,
         isSubscribed: Bool = false,
         perspective: StoryPerspective = .thirdPerson,
-        selectedFont: ReaderFont = .georgia
+        selectedFontName: String = "Georgia"
     ) {
         self.selectedTextSize = selectedTextSize
         self.isSubscribed = isSubscribed
         self.perspective = perspective
-        self.selectedFont = selectedFont
+        self.selectedFontName = selectedFontName
     }
 
     public init(
@@ -25,6 +25,6 @@ public struct SettingsState: Equatable, Codable, Sendable {
         self.selectedTextSize = try container.decode(TextSize.self, forKey: .selectedTextSize)
         self.isSubscribed = try container.decode(Bool.self, forKey: .isSubscribed)
         self.perspective = try container.decodeIfPresent(StoryPerspective.self, forKey: .perspective) ?? .thirdPerson
-        self.selectedFont = try container.decodeIfPresent(ReaderFont.self, forKey: .selectedFont) ?? .georgia
+        self.selectedFontName = try container.decodeIfPresent(String.self, forKey: .selectedFontName) ?? "Georgia"
     }
 }
