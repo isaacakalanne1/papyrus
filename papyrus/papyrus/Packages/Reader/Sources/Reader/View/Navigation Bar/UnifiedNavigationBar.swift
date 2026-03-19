@@ -47,10 +47,10 @@ struct UnifiedNavigationBar: View {
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(PapyrusColor.background.color(in: colorScheme).opacity(0.95))
-
-            Divider()
-                .background(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.3))
         }
+        .background(
+            PapyrusColor.background.color(in: colorScheme)
+                .ignoresSafeArea(edges: .bottom)
+        )
     }
 }

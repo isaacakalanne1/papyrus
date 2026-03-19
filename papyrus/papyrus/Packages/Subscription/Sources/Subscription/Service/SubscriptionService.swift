@@ -102,7 +102,7 @@ public class SubscriptionService: SubscriptionServiceProtocol {
                     return true
                 }
             } catch {
-                return false
+                continue
             }
         }
         return false

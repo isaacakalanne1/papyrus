@@ -24,6 +24,7 @@ struct CreateChapterEndpoint: Endpoint {
 **Context Provided:**
 - **Full Plot Outline:** \(story.plotOutline)
 - **Full Chapter Breakdown:** \(story.chaptersBreakdown)
+- **Narrative Perspective:** \(story.perspective.promptDescription)
 - **Chapter Number to Write:** Chapter \(currentChapterNumber). Focus exclusively on this one chapter—do not write or summarize others.
 - **Previous Written Chapters:** \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
 
