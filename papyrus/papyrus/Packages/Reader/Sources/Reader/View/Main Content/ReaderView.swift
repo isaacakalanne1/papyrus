@@ -131,6 +131,7 @@ struct ReaderView: View {
         }
         .sheet(isPresented: showSubscriptionSheet) {
             SubscriptionRootView(environment: store.environment.subscriptionEnvironment, fontName: store.state.settingsState.selectedFontName)
+                .environment(\.papyrusColorScheme, activeColorScheme)
                 .presentationDragIndicator(.visible)
         }
         .onAppear {
