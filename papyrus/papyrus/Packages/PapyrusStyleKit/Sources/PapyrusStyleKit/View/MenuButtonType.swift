@@ -11,6 +11,7 @@ public enum MenuButtonType {
     case previous
     case next
     case close
+    case largeClose
 
     public var icon: String {
         switch self {
@@ -18,7 +19,7 @@ public enum MenuButtonType {
         case .settings: return "gearshape"
         case .previous: return "chevron.left"
         case .next: return "chevron.right"
-        case .close: return "xmark.circle.fill"
+        case .close, .largeClose: return "xmark.circle.fill"
         }
     }
 
@@ -27,6 +28,7 @@ public enum MenuButtonType {
         case .menu, .settings: return 20
         case .previous, .next: return 16
         case .close: return 24
+        case .largeClose: return 40
         }
     }
 
@@ -35,6 +37,7 @@ public enum MenuButtonType {
         case .menu, .settings: return 44
         case .previous, .next: return 32
         case .close: return 24
+        case .largeClose: return 40
         }
     }
 
@@ -42,13 +45,13 @@ public enum MenuButtonType {
         switch self {
         case .menu, .settings: return .regular
         case .previous, .next: return .medium
-        case .close: return .regular
+        case .close, .largeClose: return .regular
         }
     }
 
     public var color: Color {
         switch self {
-        case .close: return PapyrusColor.iconPrimary.color
+        case .close, .largeClose: return PapyrusColor.iconPrimary.color
         default: return PapyrusColor.iconSecondary.color
         }
     }

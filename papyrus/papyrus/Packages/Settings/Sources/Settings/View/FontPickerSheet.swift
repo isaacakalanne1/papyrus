@@ -47,13 +47,14 @@ struct FontPickerSheet: View {
             Text("Font")
                 .font(.custom(selectedFontName, size: 20))
                 .foregroundColor(PapyrusColor.textPrimary.color)
+            Spacer()
         }
         .padding(.horizontal, 20)
         .padding(.vertical, 16)
     }
 
     private var closeButton: some View {
-        MenuButton(type: .close) {
+        MenuButton(type: .largeClose) {
             isPresented = false
         }
         .padding(24)
