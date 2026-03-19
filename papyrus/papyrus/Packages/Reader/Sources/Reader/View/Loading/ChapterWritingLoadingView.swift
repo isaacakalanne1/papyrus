@@ -13,6 +13,7 @@ struct ChapterWritingLoadingView: View {
     @State private var pulseScale: CGFloat = 1.0
     @State private var dotCount: Int = 0
     @State private var showingQuote: Bool = false
+    @Environment(\.papyrusColorScheme) private var colorScheme
 
     private let writingQuotes = [
         "Every chapter is a new beginning",
@@ -37,7 +38,7 @@ struct ChapterWritingLoadingView: View {
                         .fill(
                             LinearGradient(
                                 gradient: Gradient(colors: [
-                                    PapyrusColor.accent.color,
+                                    PapyrusColor.accent.color(in: colorScheme),
                                     Color(red: 0.7, green: 0.55, blue: 0.3)
                                 ]),
                                 startPoint: .topLeading,
@@ -61,13 +62,13 @@ struct ChapterWritingLoadingView: View {
                         Text("Writing Chapter")
                             .font(.custom(fontName, size: 18))
                             .fontWeight(.semibold)
-                            .foregroundColor(PapyrusColor.textPrimary.color)
+                            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
 
                         ForEach(0..<3, id: \.self) { index in
                             Text(".")
                                 .font(.custom(fontName, size: 18))
                                 .fontWeight(.semibold)
-                                .foregroundColor(PapyrusColor.textPrimary.color)
+                                .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
                                 .opacity(index < dotCount ? 1 : 0)
                         }
                     }
@@ -76,7 +77,7 @@ struct ChapterWritingLoadingView: View {
                         Text(currentQuote)
                             .font(.custom(fontName, size: 13))
                             .italic()
-                            .foregroundColor(PapyrusColor.textSecondary.color)
+                            .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                             .transition(.opacity.combined(with: .move(edge: .bottom)))
                     }
                 }
@@ -91,8 +92,8 @@ struct ChapterWritingLoadingView: View {
                 .fill(
                     LinearGradient(
                         gradient: Gradient(colors: [
-                            PapyrusColor.background.color.opacity(0.95),
-                            PapyrusColor.backgroundSecondary.color.opacity(0.95)
+                            PapyrusColor.background.color(in: colorScheme).opacity(0.95),
+                            PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.95)
                         ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -100,7 +101,7 @@ struct ChapterWritingLoadingView: View {
                 )
                 .overlay(
                     Rectangle()
-                        .stroke(PapyrusColor.iconPrimary.color.opacity(0.1), lineWidth: 0.5)
+                        .stroke(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.1), lineWidth: 0.5)
                         .blur(radius: 0.5)
                 )
         )
@@ -139,26 +140,26 @@ struct ChapterWritingLoadingView: View {
         HStack {
             Image(systemName: "text.alignleft")
                 .font(.system(size: 20))
-                .foregroundColor(PapyrusColor.iconSecondary.color)
+                .foregroundColor(PapyrusColor.iconSecondary.color(in: .parchment))
                 .padding()
             Spacer()
             Text("Chapter 5 of 12")
                 .font(.custom("Georgia", size: 14))
-                .foregroundColor(PapyrusColor.textSecondary.color)
+                .foregroundColor(PapyrusColor.textSecondary.color(in: .parchment))
             Spacer()
             Image(systemName: "gearshape")
                 .font(.system(size: 20))
-                .foregroundColor(PapyrusColor.iconSecondary.color)
+                .foregroundColor(PapyrusColor.iconSecondary.color(in: .parchment))
                 .padding()
         }
-        .background(PapyrusColor.background.color.opacity(0.95))
+        .background(PapyrusColor.background.color(in: .parchment).opacity(0.95))
 
         // Chapter writing loading view
         ChapterWritingLoadingView()
 
         // Simulated content
         Rectangle()
-            .fill(PapyrusColor.background.color)
+            .fill(PapyrusColor.background.color(in: .parchment))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

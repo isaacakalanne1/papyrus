@@ -12,6 +12,7 @@ import Settings
 
 struct NewStoryForm: View {
     @EnvironmentObject var store: ReaderStore
+    @Environment(\.papyrusColorScheme) private var colorScheme
     @FocusState private var focusedField: ReaderField?
     @State var mainCharacter: String = ""
     @State var settingDetails: String = ""
@@ -25,7 +26,7 @@ struct NewStoryForm: View {
             HStack {
                 Text(store.state.isSequelMode ? "Create Sequel" : "New Story")
                     .font(.custom(store.state.settingsState.selectedFontName, size: 20))
-                    .foregroundColor(PapyrusColor.textPrimary.color)
+                    .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
 
                 Spacer()
 
@@ -65,11 +66,11 @@ struct NewStoryForm: View {
                 HStack {
                     Text("More options")
                         .font(.custom(store.state.settingsState.selectedFontName, size: 14))
-                        .foregroundColor(PapyrusColor.textSecondary.color)
+                        .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                     Spacer()
                     Image(systemName: showMoreOptions ? "chevron.up" : "chevron.down")
                         .font(.system(size: 12, weight: .medium))
-                        .foregroundColor(PapyrusColor.textSecondary.color)
+                        .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                 }
                 .contentShape(Rectangle())
                 .onTapGesture {
@@ -82,7 +83,7 @@ struct NewStoryForm: View {
                     HStack {
                         Text("Perspective")
                             .font(.custom(store.state.settingsState.selectedFontName, size: 14))
-                            .foregroundColor(PapyrusColor.textPrimary.color)
+                            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
                         Spacer()
                         Picker("Perspective", selection: Binding(
                             get: { store.state.settingsState.perspective },
@@ -95,14 +96,14 @@ struct NewStoryForm: View {
                         .frame(width: 180)
                         .onAppear {
                             let appearance = UISegmentedControl.appearance()
-                            appearance.selectedSegmentTintColor = UIColor(PapyrusColor.buttonGradientTop.color)
-                            appearance.backgroundColor = UIColor(PapyrusColor.backgroundSecondary.color)
+                            appearance.selectedSegmentTintColor = UIColor(PapyrusColor.buttonGradientTop.color(in: colorScheme))
+                            appearance.backgroundColor = UIColor(PapyrusColor.backgroundSecondary.color(in: colorScheme))
                             appearance.setTitleTextAttributes(
-                                [.foregroundColor: UIColor(PapyrusColor.background.color)],
+                                [.foregroundColor: UIColor(PapyrusColor.background.color(in: colorScheme))],
                                 for: .selected
                             )
                             appearance.setTitleTextAttributes(
-                                [.foregroundColor: UIColor(PapyrusColor.textSecondary.color)],
+                                [.foregroundColor: UIColor(PapyrusColor.textSecondary.color(in: colorScheme))],
                                 for: .normal
                             )
                         }
@@ -163,8 +164,8 @@ struct NewStoryForm: View {
                 .fill(
                     LinearGradient(
                         gradient: Gradient(colors: [
-                            PapyrusColor.background.color,
-                            PapyrusColor.backgroundSecondary.color
+                            PapyrusColor.background.color(in: colorScheme),
+                            PapyrusColor.backgroundSecondary.color(in: colorScheme)
                         ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -180,7 +181,7 @@ struct NewStoryForm: View {
                         store.dispatch(.setFocusedField(nil))
                     }
                     .font(.custom(store.state.settingsState.selectedFontName, size: 16))
-                    .foregroundColor(PapyrusColor.accent.color)
+                    .foregroundColor(PapyrusColor.accent.color(in: colorScheme))
                 }
             }
         }

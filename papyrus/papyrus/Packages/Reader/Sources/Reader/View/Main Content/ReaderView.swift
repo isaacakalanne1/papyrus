@@ -12,20 +12,25 @@ import PapyrusStyleKit
 
 struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
+    @Environment(\.papyrusColorScheme) private var colorScheme
     @FocusState private var focusedField: ReaderField?
     @State private var scrollOffsetTimer: Timer?
-    
-    init() {
-        
+
+    private var activeColorScheme: PapyrusColorScheme {
+        store.state.settingsState.selectedColorSchemeName.scheme
     }
-    
+
+    init() {
+
+    }
+
     public var body: some View {
         let showStoryForm: Binding<Bool> = .init {
             store.state.showStoryForm
         } set: { newValue in
             store.dispatch(.setShowStoryForm(newValue))
         }
-        
+
         let showSubscriptionSheet: Binding<Bool> = .init {
             store.state.showSubscriptionSheet
         } set: { newValue in
@@ -34,7 +39,7 @@ struct ReaderView: View {
         ZStack(alignment: .leading) {
             // Main content
             VStack(spacing: 0) {
-                
+
                 // Generation error banner (shown when a pipeline step fails)
                 if let failedAction = store.state.failedGenerationAction {
                     GenerationErrorView(
@@ -58,7 +63,7 @@ struct ReaderView: View {
                     )
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }
-                
+
                 ContentStateView(
                     startScrollOffsetTimer: startScrollOffsetTimer
                 )
@@ -66,8 +71,8 @@ struct ReaderView: View {
                 .background(
                     LinearGradient(
                         gradient: Gradient(colors: [
-                            PapyrusColor.background.color,
-                            PapyrusColor.backgroundSecondary.color
+                            PapyrusColor.background.color(in: activeColorScheme),
+                            PapyrusColor.backgroundSecondary.color(in: activeColorScheme)
                         ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
@@ -78,7 +83,7 @@ struct ReaderView: View {
                 .menuGestures(
                     isEnabled: !store.state.contentState.hasStory
                 )
-                
+
                 UnifiedNavigationBar(
                     isMenuOpen: Binding(
                         get: { store.state.menuStatus == .storyOpen },
@@ -99,7 +104,7 @@ struct ReaderView: View {
                 )
             }
             .environment(\.readerFocusedField, $focusedField)
-            
+
             // Modal overlay for both menu and settings
             ModalOverlay(
                 isPresented: store.state.menuStatus != .closed,
@@ -112,13 +117,14 @@ struct ReaderView: View {
                 isForClosing: true,
                 isEnabled: !store.state.contentState.hasStory
             )
-            
+
             // Side menu
             StoryMenu()
-            
+
             // Settings menu (slides from right)
             SettingsMenu()
         }
+        .environment(\.papyrusColorScheme, activeColorScheme)
         .sheet(isPresented: showStoryForm) {
             NewStoryForm()
                 .environmentObject(store)
@@ -140,7 +146,7 @@ struct ReaderView: View {
             }
         }
     }
-    
+
     private func startScrollOffsetTimer() {
         scrollOffsetTimer?.invalidate()
         scrollOffsetTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
@@ -152,12 +158,12 @@ struct ReaderView: View {
             }
         }
     }
-    
+
     private func calculateOverlayOpacity() -> Double {
         var opacity: Double = 0
         let dragOffset = store.state.dragOffset
         let menuStatus = store.state.menuStatus
-        
+
         switch menuStatus {
         case .storyOpen:
             // When menu is open
@@ -167,7 +173,7 @@ struct ReaderView: View {
             } else {
                 opacity = 0.3
             }
-            
+
         case .settingsOpen:
             // When settings is open
             if dragOffset > 0 {
@@ -176,7 +182,7 @@ struct ReaderView: View {
             } else {
                 opacity = 0.3
             }
-            
+
         case .closed:
             // When both are closed, calculate based on drag direction
             if dragOffset > 0 {
@@ -187,7 +193,7 @@ struct ReaderView: View {
                 opacity = Double(abs(dragOffset) / 280.0) * 0.3
             }
         }
-        
+
         return max(0, min(opacity, 0.3))
     }
 }

@@ -12,7 +12,8 @@ import Subscription
 
 struct SettingsMenu: View {
     @EnvironmentObject var store: ReaderStore
-    
+    @Environment(\.papyrusColorScheme) private var colorScheme
+
     var body: some View {
         HStack {
             Spacer()
@@ -20,23 +21,23 @@ struct SettingsMenu: View {
                 SettingsRootView(
                     environment: store.environment.settingsEnvironment
                 )
-                
+
                 SubscriptionMenuButton(fontName: store.state.settingsState.selectedFontName, action: {
                     store.dispatch(.setShowSubscriptionSheet(true))
                 })
                 Spacer()
             }
             .frame(width: 280)
-            .background(PapyrusColor.background.color)
+            .background(PapyrusColor.background.color(in: colorScheme))
             .offset(x: calculateOffset())
             .animation(.easeInOut(duration: 0.3), value: store.state.menuStatus == .settingsOpen)
         }
     }
-    
+
     private func calculateOffset() -> CGFloat {
         let dragOffset = store.state.dragOffset
         let menuStatus = store.state.menuStatus
-        
+
         switch menuStatus {
         case .settingsOpen:
             // Settings is open, allow closing gesture

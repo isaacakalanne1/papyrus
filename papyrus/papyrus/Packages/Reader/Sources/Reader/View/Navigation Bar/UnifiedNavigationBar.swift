@@ -11,9 +11,10 @@ import PapyrusStyleKit
 
 struct UnifiedNavigationBar: View {
     @EnvironmentObject var store: ReaderStore
+    @Environment(\.papyrusColorScheme) private var colorScheme
     @Binding var isMenuOpen: Bool
     @Binding var isSettingsOpen: Bool
-    
+
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
@@ -23,20 +24,20 @@ struct UnifiedNavigationBar: View {
                         isMenuOpen.toggle()
                     }
                 }
-                
+
                 // Chapter navigation (center) - only show when story exists
                 if let story = store.state.story,
                    !story.chapters.isEmpty,
                    story.chapterIndex < story.chapters.count {
                     Spacer()
-                    
+
                     ChapterNavigationView(story: story)
-                    
+
                     Spacer()
                 } else {
                     Spacer()
                 }
-                
+
                 // Settings button (right)
                 MenuButton(type: .settings) {
                     withAnimation(.easeInOut(duration: 0.3)) {
@@ -46,10 +47,10 @@ struct UnifiedNavigationBar: View {
             }
             .padding(.horizontal, 8)
             .padding(.vertical, 4)
-            .background(PapyrusColor.background.color.opacity(0.95))
-            
+            .background(PapyrusColor.background.color(in: colorScheme).opacity(0.95))
+
             Divider()
-                .background(PapyrusColor.iconPrimary.color.opacity(0.3))
+                .background(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.3))
         }
     }
 }

@@ -14,19 +14,20 @@ struct StoryDetailsPopup: View {
     @Binding var isPresented: Bool
     let fontName: String
     @State private var copiedField: CopiedField? = nil
+    @Environment(\.papyrusColorScheme) private var colorScheme
 
     init(story: Story, isPresented: Binding<Bool>, fontName: String = "Georgia") {
         self.story = story
         self._isPresented = isPresented
         self.fontName = fontName
     }
-    
+
     enum CopiedField {
         case title
         case mainCharacter
         case storyDetails
     }
-    
+
     var body: some View {
         ZStack {
             // Invisible background to catch taps
@@ -35,30 +36,30 @@ struct StoryDetailsPopup: View {
                 .onTapGesture {
                     isPresented = false
                 }
-            
+
             VStack(spacing: 20) {
             // Header
             HStack {
                 Text("Story Details")
                     .font(.custom(fontName, size: 20))
-                    .foregroundColor(PapyrusColor.textPrimary.color)
-                
+                    .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+
                 Spacer()
-                
+
                 MenuButton(type: .close) {
                     isPresented = false
                 }
             }
-            
+
             // Title section
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Title")
                         .font(.custom(fontName, size: 14))
-                        .foregroundColor(PapyrusColor.textSecondary.color)
-                    
+                        .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+
                     Spacer()
-                    
+
                     Button(action: {
                         UIPasteboard.general.string = story.title.isEmpty ? "Untitled Story" : story.title
                         withAnimation(.easeInOut(duration: 0.2)) {
@@ -78,15 +79,15 @@ struct StoryDetailsPopup: View {
                             Text(copiedField == .title ? "Copied" : "Copy")
                                 .font(.custom(fontName, size: 12))
                         }
-                        .foregroundColor(copiedField == .title ? Color.green : PapyrusColor.iconPrimary.color)
+                        .foregroundColor(copiedField == .title ? Color.green : PapyrusColor.iconPrimary.color(in: colorScheme))
                     }
                 }
-                
+
                 ScrollViewReader { proxy in
                     ScrollView {
                         Text(story.title.isEmpty ? "Untitled Story" : story.title)
                             .font(.custom(fontName, size: 16))
-                            .foregroundColor(PapyrusColor.textPrimary.color)
+                            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(12)
                             .id("titleText")
@@ -94,21 +95,21 @@ struct StoryDetailsPopup: View {
                     .frame(height: 40)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(PapyrusColor.iconPrimary.color.opacity(0.1))
+                            .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.1))
                     )
                     .scrollBounceBehavior(.basedOnSize)
                 }
             }
-            
+
             // Main character section
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Main Character")
                         .font(.custom(fontName, size: 14))
-                        .foregroundColor(PapyrusColor.textSecondary.color)
-                    
+                        .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+
                     Spacer()
-                    
+
                     Button(action: {
                         UIPasteboard.general.string = story.mainCharacter.isEmpty ? "Not specified" : story.mainCharacter
                         withAnimation(.easeInOut(duration: 0.2)) {
@@ -128,15 +129,15 @@ struct StoryDetailsPopup: View {
                             Text(copiedField == .mainCharacter ? "Copied" : "Copy")
                                 .font(.custom(fontName, size: 12))
                         }
-                        .foregroundColor(copiedField == .mainCharacter ? Color.green : PapyrusColor.iconPrimary.color)
+                        .foregroundColor(copiedField == .mainCharacter ? Color.green : PapyrusColor.iconPrimary.color(in: colorScheme))
                     }
                 }
-                
+
                 ScrollViewReader { proxy in
                     ScrollView {
                         Text(story.mainCharacter.isEmpty ? "Not specified" : story.mainCharacter)
                             .font(.custom(fontName, size: 16))
-                            .foregroundColor(PapyrusColor.textPrimary.color)
+                            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(12)
                             .id("mainCharacterText")
@@ -144,21 +145,21 @@ struct StoryDetailsPopup: View {
                     .frame(height: 40)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(PapyrusColor.iconPrimary.color.opacity(0.1))
+                            .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.1))
                     )
                     .scrollBounceBehavior(.basedOnSize)
                 }
             }
-            
+
             // Setting details section with scrollview
             VStack(alignment: .leading, spacing: 8) {
                 HStack {
                     Text("Story Details")
                         .font(.custom(fontName, size: 14))
-                        .foregroundColor(PapyrusColor.textSecondary.color)
-                    
+                        .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+
                     Spacer()
-                    
+
                     Button(action: {
                         UIPasteboard.general.string = story.setting.isEmpty ? "Not specified" : story.setting
                         withAnimation(.easeInOut(duration: 0.2)) {
@@ -178,15 +179,15 @@ struct StoryDetailsPopup: View {
                             Text(copiedField == .storyDetails ? "Copied" : "Copy")
                                 .font(.custom(fontName, size: 12))
                         }
-                        .foregroundColor(copiedField == .storyDetails ? Color.green : PapyrusColor.iconPrimary.color)
+                        .foregroundColor(copiedField == .storyDetails ? Color.green : PapyrusColor.iconPrimary.color(in: colorScheme))
                     }
                 }
-                
+
                 ScrollViewReader { proxy in
                     ScrollView {
                         Text(story.setting.isEmpty ? "Not specified" : story.setting)
                             .font(.custom(fontName, size: 16))
-                            .foregroundColor(PapyrusColor.textPrimary.color)
+                            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
                             .frame(maxWidth: .infinity, alignment: .leading)
                             .padding(12)
                             .id("settingText")
@@ -194,12 +195,12 @@ struct StoryDetailsPopup: View {
                     .frame(height: 150)
                     .background(
                         RoundedRectangle(cornerRadius: 8)
-                            .fill(PapyrusColor.iconPrimary.color.opacity(0.1))
+                            .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.1))
                     )
                     .scrollBounceBehavior(.basedOnSize)
                 }
             }
-            
+
                 Spacer()
             }
             .padding(24)
@@ -209,8 +210,8 @@ struct StoryDetailsPopup: View {
                     .fill(
                         LinearGradient(
                             gradient: Gradient(colors: [
-                                PapyrusColor.background.color,
-                                PapyrusColor.backgroundSecondary.color
+                                PapyrusColor.background.color(in: colorScheme),
+                                PapyrusColor.backgroundSecondary.color(in: colorScheme)
                             ]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing

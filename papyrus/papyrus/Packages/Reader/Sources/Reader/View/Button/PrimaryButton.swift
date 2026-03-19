@@ -11,49 +11,49 @@ import PapyrusStyleKit
 enum PrimaryButtonSize {
     case large
     case medium
-    
+
     var fontSize: CGFloat {
         switch self {
         case .large: return 20
         case .medium: return 18
         }
     }
-    
+
     var iconSize: CGFloat {
         switch self {
         case .large: return 20
         case .medium: return 18
         }
     }
-    
+
     var horizontalPadding: CGFloat {
         switch self {
         case .large: return 40
         case .medium: return 36
         }
     }
-    
+
     var verticalPadding: CGFloat {
         switch self {
         case .large: return 20
         case .medium: return 18
         }
     }
-    
+
     var cornerRadius: CGFloat {
         switch self {
         case .large: return 14
         case .medium: return 12
         }
     }
-    
+
     var shadowRadius: CGFloat {
         switch self {
         case .large: return 6
         case .medium: return 4
         }
     }
-    
+
     var shadowOffset: (x: CGFloat, y: CGFloat) {
         switch self {
         case .large: return (0, 3)
@@ -69,6 +69,8 @@ struct PrimaryButton: View {
     let fontName: String
     let action: () -> Void
 
+    @Environment(\.papyrusColorScheme) private var colorScheme
+
     init(
         type: PrimaryButtonType = .newStory,
         size: PrimaryButtonSize = .large,
@@ -82,7 +84,7 @@ struct PrimaryButton: View {
         self.fontName = fontName
         self.action = action
     }
-    
+
     var body: some View {
         Button(action: action) {
             ZStack {
@@ -94,14 +96,14 @@ struct PrimaryButton: View {
                         .fontWeight(.medium)
                 }
                 .opacity(isLoading ? 0 : 1)
-                
+
                 if isLoading {
                     ProgressView()
-                        .progressViewStyle(CircularProgressViewStyle(tint: PapyrusColor.background.color))
+                        .progressViewStyle(CircularProgressViewStyle(tint: PapyrusColor.background.color(in: colorScheme)))
                         .scaleEffect(size == .large ? 1.0 : 0.9)
                 }
             }
-            .foregroundColor(PapyrusColor.background.color)
+            .foregroundColor(PapyrusColor.background.color(in: colorScheme))
             .padding(.horizontal, size.horizontalPadding)
             .padding(.vertical, size.verticalPadding)
             .background(
@@ -109,8 +111,8 @@ struct PrimaryButton: View {
                     .fill(
                         LinearGradient(
                             gradient: Gradient(colors: [
-                                PapyrusColor.buttonGradientTop.color,
-                                PapyrusColor.buttonGradientBottom.color
+                                PapyrusColor.buttonGradientTop.color(in: colorScheme),
+                                PapyrusColor.buttonGradientBottom.color(in: colorScheme)
                             ]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing

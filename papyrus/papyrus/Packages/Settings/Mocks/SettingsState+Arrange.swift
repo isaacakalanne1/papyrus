@@ -6,6 +6,7 @@
 //
 
 import Settings
+import PapyrusStyleKit
 
 public extension SettingsState {
     static var arrange: SettingsState {
@@ -15,12 +16,14 @@ public extension SettingsState {
     static func arrange(
         selectedTextSize: TextSize = .medium,
         isSubscribed: Bool = false,
-        selectedFontName: String = "Georgia"
+        selectedFontName: String = "Georgia",
+        selectedColorSchemeName: PapyrusColorSchemeName = .parchment
     ) -> SettingsState {
         .init(
             selectedTextSize: selectedTextSize,
             isSubscribed: isSubscribed,
-            selectedFontName: selectedFontName
+            selectedFontName: selectedFontName,
+            selectedColorSchemeName: selectedColorSchemeName
         )
     }
 }

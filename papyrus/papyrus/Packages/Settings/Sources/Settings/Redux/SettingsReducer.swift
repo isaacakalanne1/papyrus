@@ -10,6 +10,8 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction> = { state, ac
         newState.selectedTextSize = size
     case .selectFont(let fontName):
         newState.selectedFontName = fontName
+    case .selectColorScheme(let schemeName):
+        newState.selectedColorSchemeName = schemeName
     case .onLoadedSettings(let settings):
         newState = settings
     case .loadSettings,

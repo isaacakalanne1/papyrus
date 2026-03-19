@@ -4,7 +4,9 @@ import PapyrusStyleKit
 
 public struct SettingsView: View {
     @EnvironmentObject var store: SettingsStore
+    @Environment(\.papyrusColorScheme) private var colorScheme
     @State private var isFontPickerPresented = false
+    @State private var isColorSchemePickerPresented = false
 
     var selectedTextSize: TextSize {
         store.state.selectedTextSize
@@ -12,6 +14,10 @@ public struct SettingsView: View {
 
     var selectedFontName: String {
         store.state.selectedFontName
+    }
+
+    var selectedColorSchemeName: PapyrusColorSchemeName {
+        store.state.selectedColorSchemeName
     }
 
     public init() {}
@@ -23,12 +29,18 @@ public struct SettingsView: View {
             VStack(alignment: .leading, spacing: 20) {
                 textSizeSection
                 fontSection
+                colorSchemeSection
             }
         }
-        .background(PapyrusColor.background.color)
+        .background(PapyrusColor.background.color(in: colorScheme))
         .sheet(isPresented: $isFontPickerPresented) {
             FontPickerSheet(isPresented: $isFontPickerPresented)
                 .environmentObject(store)
+        }
+        .sheet(isPresented: $isColorSchemePickerPresented) {
+            ColorSchemePickerSheet(isPresented: $isColorSchemePickerPresented)
+                .environmentObject(store)
+                .environment(\.papyrusColorScheme, colorScheme)
         }
     }
 
@@ -48,7 +60,7 @@ public struct SettingsView: View {
         }
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(PapyrusColor.borderSecondary.color, lineWidth: 1)
+                .stroke(PapyrusColor.borderSecondary.color(in: colorScheme), lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal, 20)
@@ -61,14 +73,14 @@ public struct SettingsView: View {
             Text("A")
                 .font(.custom(selectedFontName, size: size.fontSize * size.iconScale))
                 .foregroundColor(size == selectedTextSize ?
-                    PapyrusColor.accent.color :
-                    PapyrusColor.textSecondary.color)
+                    PapyrusColor.accent.color(in: colorScheme) :
+                    PapyrusColor.textSecondary.color(in: colorScheme))
                 .frame(maxWidth: .infinity)
                 .frame(height: 44)
                 .background(
                     Group {
                         if size == selectedTextSize {
-                            PapyrusColor.backgroundSecondary.color.opacity(0.8)
+                            PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.8)
                         } else {
                             Color.clear
                         }
@@ -93,10 +105,10 @@ public struct SettingsView: View {
             HStack {
                 Text(selectedFontName)
                     .font(.custom(selectedFontName, size: selectedTextSize.fontSize))
-                    .foregroundColor(PapyrusColor.textSecondary.color)
+                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                 Spacer()
                 Image(systemName: "chevron.right")
-                    .foregroundColor(PapyrusColor.textSecondary.color)
+                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
             }
             .contentShape(Rectangle())
             .frame(maxWidth: .infinity)
@@ -106,7 +118,49 @@ public struct SettingsView: View {
         .buttonStyle(PlainButtonStyle())
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .stroke(PapyrusColor.borderSecondary.color, lineWidth: 1)
+                .stroke(PapyrusColor.borderSecondary.color(in: colorScheme), lineWidth: 1)
+        )
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .padding(.horizontal, 20)
+    }
+
+    private var colorSchemeSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            MenuSubheader("Colour Scheme", fontName: selectedFontName)
+
+            colorSchemeRow
+        }
+    }
+
+    private var colorSchemeRow: some View {
+        Button(action: {
+            isColorSchemePickerPresented = true
+        }) {
+            HStack {
+                RoundedRectangle(cornerRadius: 5)
+                    .fill(selectedColorSchemeName.scheme.backgroundSecondary)
+                    .frame(width: 24, height: 24)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 5)
+                            .stroke(selectedColorSchemeName.scheme.borderPrimary, lineWidth: 1)
+                    )
+
+                Text(selectedColorSchemeName.displayName)
+                    .font(.custom(selectedFontName, size: selectedTextSize.fontSize))
+                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+                Spacer()
+                Image(systemName: "chevron.right")
+                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+            }
+            .contentShape(Rectangle())
+            .frame(maxWidth: .infinity)
+            .frame(height: 44)
+            .padding(.horizontal, 16)
+        }
+        .buttonStyle(PlainButtonStyle())
+        .background(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(PapyrusColor.borderSecondary.color(in: colorScheme), lineWidth: 1)
         )
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .padding(.horizontal, 20)

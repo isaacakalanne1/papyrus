@@ -82,6 +82,7 @@ private struct ScrollOffsetObserverView: UIViewRepresentable {
 struct StoryContentView: View {
     let story: Story
     @EnvironmentObject var store: ReaderStore
+    @Environment(\.papyrusColorScheme) private var colorScheme
 
     let startScrollOffsetTimer: () -> Void
 
@@ -109,17 +110,17 @@ struct StoryContentView: View {
                                 )
                                 .frame(height: 0)
                                 .id("topAnchor")
-                                
+
                                 // Content
                                 Text(story.chapters[story.chapterIndex].content)
                                     .font(.custom(store.state.settingsState.selectedFontName, size: store.state.settingsState.selectedTextSize.fontSize))
                                     .lineSpacing(8)
-                                    .foregroundColor(Color(red: 0.2, green: 0.15, blue: 0.1))
+                                    .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
                                     .padding(.horizontal, 32)
                                     .padding(.top, 40)
                                     .padding(.bottom, store.state.isLoading ? 0 : 40)
                                     .id("content")
-                                
+
                                 if let failedAction = store.state.failedGenerationAction,
                                    story.chapterIndex == story.chapters.count - 1 {
                                     GenerationErrorView(
@@ -173,7 +174,7 @@ struct StoryContentView: View {
                             if oldValue != newValue {
                                 proxy.scrollTo("content", anchor: .top)
                                 store.dispatch(.setCurrentScrollOffset(0))
-                                
+
                                 // Autogenerate next chapter if subscribed
                                 if store.state.settingsState.isSubscribed && newValue >= story.chapters.count - 1 && newValue < story.maxNumberOfChapters - 1 && !store.state.isLoading {
                                     store.dispatch(.createChapter(story))
@@ -194,7 +195,7 @@ struct StoryContentView: View {
                     }
                 }
             }
-            
+
             // Close button positioned at top right
             MenuButton(type: .close) {
                 store.dispatch(.setStory(nil))

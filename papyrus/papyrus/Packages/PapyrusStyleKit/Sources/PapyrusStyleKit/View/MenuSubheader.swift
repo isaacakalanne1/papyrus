@@ -11,6 +11,8 @@ public struct MenuSubheader: View {
     let title: String
     let fontName: String
 
+    @Environment(\.papyrusColorScheme) private var colorScheme
+
     public init(_ title: String, fontName: String = "Georgia") {
         self.title = title
         self.fontName = fontName
@@ -20,9 +22,9 @@ public struct MenuSubheader: View {
         HStack {
             Text(title)
                 .font(.custom(fontName, size: 18))
-                .foregroundColor(Color(red: 0.45, green: 0.4, blue: 0.35))
+                .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                 .tracking(0.5)
-            
+
             Spacer()
         }
         .padding(.horizontal, 20)
@@ -36,5 +38,5 @@ public struct MenuSubheader: View {
         MenuSectionDivider()
         MenuSubheader("Subscription")
     }
-    .background(PapyrusColor.background.color)
+    .background(PapyrusColor.background.color(in: .parchment))
 }

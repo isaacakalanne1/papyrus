@@ -12,6 +12,8 @@ public struct MenuMainHeader: View {
     let showDivider: Bool
     let fontName: String
 
+    @Environment(\.papyrusColorScheme) private var colorScheme
+
     public init(_ title: String, showDivider: Bool = true, fontName: String = "Georgia") {
         self.title = title
         self.showDivider = showDivider
@@ -22,11 +24,11 @@ public struct MenuMainHeader: View {
         VStack(alignment: .leading, spacing: 8) {
             Text(title)
                 .font(.custom(fontName, size: 24))
-                .foregroundColor(PapyrusColor.textPrimary.color)
-            
+                .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+
             if showDivider {
                 Divider()
-                    .background(PapyrusColor.iconPrimary.color.opacity(0.5))
+                    .background(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.5))
             }
         }
         .padding()

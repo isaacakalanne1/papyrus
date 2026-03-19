@@ -10,6 +10,7 @@ import PapyrusStyleKit
 
 struct NoStoriesView: View {
     let fontName: String
+    @Environment(\.papyrusColorScheme) private var colorScheme
 
     init(fontName: String = "Georgia") {
         self.fontName = fontName
@@ -20,7 +21,7 @@ struct NoStoriesView: View {
             Spacer()
             Text("No saved stories yet")
                 .font(.custom(fontName, size: 16))
-                .foregroundColor(PapyrusColor.iconPrimary.color)
+                .foregroundColor(PapyrusColor.iconPrimary.color(in: colorScheme))
             Spacer()
         }
         .padding()

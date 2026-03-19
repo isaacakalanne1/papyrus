@@ -14,6 +14,8 @@ struct GenerationErrorView: View {
     let onDismiss: () -> Void
     let fontName: String
 
+    @Environment(\.papyrusColorScheme) private var colorScheme
+
     init(fontName: String = "Georgia", onRetry: @escaping () -> Void, onDismiss: @escaping () -> Void) {
         self.fontName = fontName
         self.onRetry = onRetry
@@ -30,8 +32,8 @@ struct GenerationErrorView: View {
                         .fill(
                             LinearGradient(
                                 gradient: Gradient(colors: [
-                                    PapyrusColor.background.color,
-                                    PapyrusColor.backgroundSecondary.color
+                                    PapyrusColor.background.color(in: colorScheme),
+                                    PapyrusColor.backgroundSecondary.color(in: colorScheme)
                                 ]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
@@ -40,24 +42,24 @@ struct GenerationErrorView: View {
                         .frame(width: 40, height: 40)
                         .overlay(
                             Circle()
-                                .stroke(PapyrusColor.error.color.opacity(0.4), lineWidth: 1)
+                                .stroke(PapyrusColor.error.color(in: colorScheme).opacity(0.4), lineWidth: 1)
                         )
 
                     Image(systemName: "exclamationmark.circle")
                         .font(.system(size: 18, weight: .medium))
-                        .foregroundColor(PapyrusColor.error.color)
+                        .foregroundColor(PapyrusColor.error.color(in: colorScheme))
                 }
 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("The chapter could not be written")
                         .font(.custom(fontName, size: 15))
                         .fontWeight(.semibold)
-                        .foregroundColor(PapyrusColor.textPrimary.color)
+                        .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
 
                     Text("Something interrupted the quill. Shall we try once more?")
                         .font(.custom(fontName, size: 13))
                         .italic()
-                        .foregroundColor(PapyrusColor.textSecondary.color)
+                        .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                         .fixedSize(horizontal: false, vertical: true)
                 }
 
@@ -69,7 +71,7 @@ struct GenerationErrorView: View {
 
             // Divider
             Rectangle()
-                .fill(PapyrusColor.iconPrimary.color.opacity(0.12))
+                .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.12))
                 .frame(height: 0.5)
                 .padding(.horizontal, 20)
 
@@ -79,14 +81,14 @@ struct GenerationErrorView: View {
                 Button(action: onDismiss) {
                     Text("Dismiss")
                         .font(.custom(fontName, size: 14))
-                        .foregroundColor(PapyrusColor.textSecondary.color)
+                        .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, 12)
                 }
 
                 // Vertical separator between buttons
                 Rectangle()
-                    .fill(PapyrusColor.iconPrimary.color.opacity(0.12))
+                    .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.12))
                     .frame(width: 0.5, height: 44)
                     .padding(.vertical, 8)
 
@@ -99,7 +101,7 @@ struct GenerationErrorView: View {
                             .font(.custom(fontName, size: 14))
                             .fontWeight(.semibold)
                     }
-                    .foregroundColor(PapyrusColor.borderPrimary.color)
+                    .foregroundColor(PapyrusColor.borderPrimary.color(in: colorScheme))
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 12)
                 }
@@ -113,8 +115,8 @@ struct GenerationErrorView: View {
             .fill(
                 LinearGradient(
                     gradient: Gradient(colors: [
-                        PapyrusColor.background.color.opacity(0.97),
-                        PapyrusColor.backgroundSecondary.color.opacity(0.97)
+                        PapyrusColor.background.color(in: colorScheme).opacity(0.97),
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.97)
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -122,7 +124,7 @@ struct GenerationErrorView: View {
             )
             .overlay(
                 Rectangle()
-                    .stroke(PapyrusColor.error.color.opacity(0.15), lineWidth: 0.5)
+                    .stroke(PapyrusColor.error.color(in: colorScheme).opacity(0.15), lineWidth: 0.5)
                     .blur(radius: 0.5)
             )
     }
@@ -133,7 +135,7 @@ struct GenerationErrorView: View {
         GenerationErrorView(onRetry: {}, onDismiss: {})
 
         Rectangle()
-            .fill(PapyrusColor.background.color)
+            .fill(PapyrusColor.background.color(in: .parchment))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

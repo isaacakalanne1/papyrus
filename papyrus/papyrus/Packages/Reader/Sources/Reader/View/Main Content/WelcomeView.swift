@@ -11,7 +11,8 @@ import PapyrusStyleKit
 
 struct WelcomeView: View {
     @EnvironmentObject var store: ReaderStore
-    
+    @Environment(\.papyrusColorScheme) private var colorScheme
+
     var body: some View {
         ZStack {
             // Bottom content (New Story button)
@@ -19,10 +20,10 @@ struct WelcomeView: View {
                 Spacer()
                 SDIcons.scroll.image
                     .frame(width: 64, height: 64)
-                    .foregroundColor(PapyrusColor.iconPrimary.color)
+                    .foregroundColor(PapyrusColor.iconPrimary.color(in: colorScheme))
                     .opacity(0.5)
                 Spacer()
-                
+
                 // Initial "New Story" button
                 PrimaryButton(isLoading: store.state.isLoading, fontName: store.state.settingsState.selectedFontName) {
                     withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {

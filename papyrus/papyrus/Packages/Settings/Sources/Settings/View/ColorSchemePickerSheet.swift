@@ -1,20 +1,19 @@
 import SwiftUI
-import UIKit
 import PapyrusStyleKit
 
-struct FontPickerSheet: View {
+struct ColorSchemePickerSheet: View {
     @EnvironmentObject var store: SettingsStore
     @Binding var isPresented: Bool
     @Environment(\.papyrusColorScheme) private var colorScheme
 
-    private let defaultFontName = "Georgia"
+    private let defaultSchemeName = PapyrusColorSchemeName.parchment
 
-    private var selectedFontName: String {
-        store.state.selectedFontName
+    private var selectedSchemeName: PapyrusColorSchemeName {
+        store.state.selectedColorSchemeName
     }
 
-    private var otherFonts: [String] {
-        UIFont.familyNames.sorted().filter { $0 != defaultFontName && $0 != selectedFontName }
+    private var otherSchemes: [PapyrusColorSchemeName] {
+        PapyrusColorSchemeName.allCases.filter { $0 != defaultSchemeName && $0 != selectedSchemeName }
     }
 
     var body: some View {
@@ -23,18 +22,18 @@ struct FontPickerSheet: View {
                 header
                 Divider()
                     .background(PapyrusColor.borderSecondary.color(in: colorScheme))
-                selectedFontRow
+                selectedSchemeRow
                 Divider()
                     .background(PapyrusColor.borderSecondary.color(in: colorScheme))
                 ScrollView {
                     VStack(spacing: 0) {
-                        if selectedFontName != defaultFontName {
-                            defaultFontRow
+                        if selectedSchemeName != defaultSchemeName {
+                            defaultSchemeRow
                             Divider()
                                 .background(PapyrusColor.borderSecondary.color(in: colorScheme))
                                 .padding(.horizontal, 20)
                         }
-                        otherFontsList
+                        otherSchemesList
                     }
                 }
             }
@@ -45,8 +44,8 @@ struct FontPickerSheet: View {
 
     private var header: some View {
         HStack {
-            Text("Font")
-                .font(.custom(selectedFontName, size: 20))
+            Text("Colour Scheme")
+                .font(.custom(store.state.selectedFontName, size: 20))
                 .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
             Spacer()
         }
@@ -61,18 +60,18 @@ struct FontPickerSheet: View {
         .padding(24)
     }
 
-    private var selectedFontRow: some View {
-        fontRow(fontName: selectedFontName, subtitle: "Selected")
+    private var selectedSchemeRow: some View {
+        schemeRow(schemeName: selectedSchemeName, subtitle: "Selected")
     }
 
-    private var defaultFontRow: some View {
-        fontRow(fontName: defaultFontName, subtitle: "Default")
+    private var defaultSchemeRow: some View {
+        schemeRow(schemeName: defaultSchemeName, subtitle: "Default")
     }
 
-    private var otherFontsList: some View {
+    private var otherSchemesList: some View {
         VStack(spacing: 0) {
-            ForEach(otherFonts, id: \.self) { fontName in
-                fontRow(fontName: fontName, subtitle: nil)
+            ForEach(otherSchemes, id: \.self) { schemeName in
+                schemeRow(schemeName: schemeName, subtitle: nil)
                 Divider()
                     .background(PapyrusColor.borderSecondary.color(in: colorScheme))
                     .padding(.horizontal, 20)
@@ -80,16 +79,24 @@ struct FontPickerSheet: View {
         }
     }
 
-    private func fontRow(fontName: String, subtitle: String?) -> some View {
-        let isSelected = fontName == selectedFontName
+    private func schemeRow(schemeName: PapyrusColorSchemeName, subtitle: String?) -> some View {
+        let isSelected = schemeName == selectedSchemeName
         return Button(action: {
-            store.dispatch(.selectFont(fontName))
+            store.dispatch(.selectColorScheme(schemeName))
             isPresented = false
         }) {
             HStack {
+                RoundedRectangle(cornerRadius: 6)
+                    .fill(schemeName.scheme.background)
+                    .frame(width: 28, height: 28)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(schemeName.scheme.borderPrimary, lineWidth: 1)
+                    )
+
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(fontName)
-                        .font(.custom(fontName, size: 18))
+                    Text(schemeName.displayName)
+                        .font(.custom(store.state.selectedFontName, size: 18))
                         .foregroundColor(isSelected ?
                             PapyrusColor.accent.color(in: colorScheme) :
                             PapyrusColor.textPrimary.color(in: colorScheme))

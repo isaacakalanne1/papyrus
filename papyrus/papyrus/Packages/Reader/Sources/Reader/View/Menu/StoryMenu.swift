@@ -11,7 +11,8 @@ import PapyrusStyleKit
 
 struct StoryMenu: View {
     @EnvironmentObject var store: ReaderStore
-    
+    @Environment(\.papyrusColorScheme) private var colorScheme
+
     var body: some View {
         let showStoryForm: Binding<Bool> = .init {
             store.state.showStoryForm
@@ -23,7 +24,7 @@ struct StoryMenu: View {
             VStack(alignment: .leading, spacing: 0) {
                 // Menu header
                 MenuMainHeader("Your Stories", fontName: store.state.settingsState.selectedFontName)
-                
+
                 // Story list
                 if !store.state.loadedStories.isEmpty {
                     List {
@@ -45,7 +46,7 @@ struct StoryMenu: View {
                 } else {
                     NoStoriesView(fontName: store.state.settingsState.selectedFontName)
                 }
-                
+
                 // Create Story button at the bottom
                 PrimaryButton(isLoading: store.state.isLoading, fontName: store.state.settingsState.selectedFontName) {
                     withAnimation(.spring(response: 0.6, dampingFraction: 0.8)) {
@@ -59,8 +60,8 @@ struct StoryMenu: View {
             .background(
                 LinearGradient(
                     gradient: Gradient(colors: [
-                        PapyrusColor.background.color,
-                        PapyrusColor.backgroundSecondary.color
+                        PapyrusColor.background.color(in: colorScheme),
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme)
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -68,7 +69,7 @@ struct StoryMenu: View {
             )
             .offset(x: calculateOffset())
             .animation(.easeInOut(duration: 0.3), value: store.state.menuStatus == .storyOpen)
-            
+
             Spacer()
         }
         .sheet(item: Binding(
@@ -108,11 +109,11 @@ struct StoryMenu: View {
             .environmentObject(store)
         }
     }
-    
+
     private func calculateOffset() -> CGFloat {
         let dragOffset = store.state.dragOffset
         let menuStatus = store.state.menuStatus
-        
+
         switch menuStatus {
         case .storyOpen:
             // Menu is open, allow closing gesture

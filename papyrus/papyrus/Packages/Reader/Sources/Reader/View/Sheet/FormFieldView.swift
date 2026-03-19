@@ -3,6 +3,7 @@ import PapyrusStyleKit
 
 struct FormFieldView: View {
     @Environment(\.readerFocusedField) var focusedField
+    @Environment(\.papyrusColorScheme) private var colorScheme
     let label: String
     let placeholder: String
     @Binding var text: String
@@ -32,13 +33,13 @@ struct FormFieldView: View {
         self.onSubmit = onSubmit
         self.fontName = fontName
     }
-    
+
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(label)
                 .font(.custom(fontName, size: 14))
-                .foregroundColor(PapyrusColor.textSecondary.color)
-            
+                .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+
             TextField(
                 placeholder,
                 text: $text,
@@ -48,23 +49,23 @@ struct FormFieldView: View {
                 view.focused(focusedField, equals: equals)
             }
             .font(.custom(fontName, size: 16))
-            .foregroundColor(PapyrusColor.textPrimary.color)
+            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
             .lineLimit(3, reservesSpace: true)
             .padding(12)
             .background {
                 ZStack {
                     // Normal background
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(PapyrusColor.iconPrimary.color.opacity(0.1))
-                    
+                        .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.1))
+
                     // Hint glow effect
                     if showHint {
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(
                                 LinearGradient(
                                     colors: [
-                                        PapyrusColor.textSecondary.color.opacity(0.4),
-                                        PapyrusColor.textSecondary.color.opacity(0.6)
+                                        PapyrusColor.textSecondary.color(in: colorScheme).opacity(0.4),
+                                        PapyrusColor.textSecondary.color(in: colorScheme).opacity(0.6)
                                     ],
                                     startPoint: .leading,
                                     endPoint: .trailing
@@ -84,12 +85,12 @@ struct FormFieldView: View {
             .onSubmit {
                 onSubmit?()
             }
-            
+
             // Hint text
             if showHint, let hintText = hintText {
                 Text(hintText)
                     .font(.custom(fontName, size: 13))
-                    .foregroundColor(PapyrusColor.textSecondary.color.opacity(0.8))
+                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme).opacity(0.8))
                     .transition(.asymmetric(
                         insertion: .opacity.combined(with: .move(edge: .top)),
                         removal: .opacity

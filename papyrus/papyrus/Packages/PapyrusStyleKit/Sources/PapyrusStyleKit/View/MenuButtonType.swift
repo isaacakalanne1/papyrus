@@ -49,10 +49,10 @@ public enum MenuButtonType {
         }
     }
 
-    public var color: Color {
+    public func color(in scheme: PapyrusColorScheme) -> Color {
         switch self {
-        case .close, .largeClose: return PapyrusColor.iconPrimary.color
-        default: return PapyrusColor.iconSecondary.color
+        case .close, .largeClose: return PapyrusColor.iconPrimary.color(in: scheme)
+        default: return PapyrusColor.iconSecondary.color(in: scheme)
         }
     }
 }

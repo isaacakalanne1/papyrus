@@ -12,44 +12,46 @@ public struct SubscriptionMenuButton: View {
     let action: () -> Void
     let fontName: String
 
+    @Environment(\.papyrusColorScheme) private var colorScheme
+
     public init(fontName: String = "Georgia", action: @escaping () -> Void) {
         self.fontName = fontName
         self.action = action
     }
-    
+
     public var body: some View {
         VStack(spacing: 0) {
             MenuSectionDivider()
-            
+
             VStack(alignment: .leading, spacing: 12) {
                 MenuSubheader("Subscription", fontName: fontName)
                     .padding(.top, 20)
-                
+
                 Button(action: action) {
                     HStack {
                         Image(systemName: "crown.fill")
                             .font(.system(size: 18))
-                            .foregroundColor(PapyrusColor.accent.color)
-                        
+                            .foregroundColor(PapyrusColor.accent.color(in: colorScheme))
+
                         Text("Premium")
                             .font(.custom(fontName, size: 18))
-                            .foregroundColor(PapyrusColor.textPrimary.color)
-                        
+                            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+
                         Spacer()
-                        
+
                         Image(systemName: "chevron.right")
                             .font(.system(size: 14))
-                            .foregroundColor(PapyrusColor.textSecondary.color)
+                            .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                     }
                     .padding(.horizontal, 20)
                     .padding(.vertical, 16)
                     .frame(maxWidth: .infinity)
                     .background(
                         RoundedRectangle(cornerRadius: 12)
-                            .stroke(PapyrusColor.borderSecondary.color, lineWidth: 1)
+                            .stroke(PapyrusColor.borderSecondary.color(in: colorScheme), lineWidth: 1)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .fill(PapyrusColor.backgroundSecondary.color.opacity(0.3))
+                                    .fill(PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.3))
                             )
                     )
                     .padding(.horizontal)

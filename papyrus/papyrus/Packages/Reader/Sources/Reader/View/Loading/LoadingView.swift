@@ -15,6 +15,7 @@ struct LoadingView: View {
     @State private var progressAnimation: CGFloat = 0
     @State private var pulseScale: CGFloat = 1.0
     @State private var showChapterReady: Bool = false
+    @Environment(\.papyrusColorScheme) private var colorScheme
 
     init(loadingDisplayStep: LoadingStep, hasExistingStory: Bool, fontName: String = "Georgia") {
         self.loadingDisplayStep = loadingDisplayStep
@@ -29,19 +30,19 @@ struct LoadingView: View {
     private var currentStageIndex: Int {
         storyCreationStages.firstIndex(of: loadingDisplayStep) ?? 0
     }
-    
+
     private var stageProgress: CGFloat {
         // Start at 15% for step 1, end at 85% for step 4
         // This leaves room for the "writing chapter" step visually
         let startProgress: CGFloat = 0.15
         let endProgress: CGFloat = 0.85
         let progressRange = endProgress - startProgress
-        
+
         guard storyCreationStages.count > 1 else { return startProgress }
         let stepProgress = CGFloat(currentStageIndex) / CGFloat(storyCreationStages.count - 1)
         return startProgress + (stepProgress * progressRange)
     }
-    
+
     private var stageTitle: String {
         switch loadingDisplayStep {
         case .idle, .preparing:
@@ -60,7 +61,7 @@ struct LoadingView: View {
             return "Writing Chapter"
         }
     }
-    
+
     var body: some View {
         Group {
             if loadingDisplayStep == .writingChapter {
@@ -107,7 +108,7 @@ struct LoadingView: View {
         }
         .animation(.easeInOut(duration: 0.5), value: stageTitle)
     }
-    
+
     private var storyCreationLoadingView: some View {
         VStack(spacing: 12) {
             HStack(spacing: 12) {
@@ -130,10 +131,10 @@ struct LoadingView: View {
                             Circle()
                                 .stroke(Color(red: 0.5, green: 0.35, blue: 0.2).opacity(0.3), lineWidth: 1)
                         )
-                    
+
                     Image(systemName: "book.pages")
                         .font(.system(size: 14, weight: .medium))
-                        .foregroundColor(PapyrusColor.borderPrimary.color)
+                        .foregroundColor(PapyrusColor.borderPrimary.color(in: colorScheme))
                 }
                 .onAppear {
                     withAnimation(
@@ -143,30 +144,30 @@ struct LoadingView: View {
                         pulseScale = 1.1
                     }
                 }
-                
+
                 VStack(alignment: .leading, spacing: 4) {
                     HStack {
                         Text(stageTitle)
                             .font(.custom(fontName, size: 15))
                             .fontWeight(.semibold)
-                            .foregroundColor(PapyrusColor.textPrimary.color)
-                        
+                            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+
                         Spacer()
-                        
+
                         Text("Step \(currentStageIndex + 1) of \(storyCreationStages.count + 1)")
                             .font(.custom(fontName, size: 12))
                             .fontWeight(.medium)
-                            .foregroundColor(PapyrusColor.iconSecondary.color)
+                            .foregroundColor(PapyrusColor.iconSecondary.color(in: colorScheme))
                     }
-                    
+
                     // Progress bar
                     GeometryReader { geometry in
                         ZStack(alignment: .leading) {
                             // Background track
                             RoundedRectangle(cornerRadius: 3)
-                                .fill(PapyrusColor.iconPrimary.color.opacity(0.2))
+                                .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.2))
                                 .frame(height: 3)
-                            
+
                             // Progress fill with subtle gradient
                             RoundedRectangle(cornerRadius: 3)
                                 .fill(
@@ -186,14 +187,14 @@ struct LoadingView: View {
                     .frame(height: 3)
                 }
             }
-            
+
             // Subtitle
             HStack {
                 Text("Crafting your unique story foundation")
                     .font(.custom(fontName, size: 13))
                     .italic()
-                    .foregroundColor(PapyrusColor.textSecondary.color)
-                
+                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+
                 Spacer()
             }
         }
@@ -201,7 +202,7 @@ struct LoadingView: View {
         .padding(.vertical, 16)
         .background(loadingBackground)
     }
-    
+
     private var chapterReadyView: some View {
         VStack(spacing: 12) {
             HStack(spacing: 12) {
@@ -219,7 +220,7 @@ struct LoadingView: View {
                         )
                         .frame(width: 32, height: 32)
                         .scaleEffect(pulseScale)
-                    
+
                     Image(systemName: "checkmark")
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(.white)
@@ -232,28 +233,28 @@ struct LoadingView: View {
                         pulseScale = 1.15
                     }
                 }
-                
+
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Chapter Ready!")
                         .font(.custom(fontName, size: 15))
                         .fontWeight(.semibold)
                         .foregroundColor(Color(red: 0.2, green: 0.6, blue: 0.3))
-                    
+
                     Text("Your new chapter awaits")
                         .font(.custom(fontName, size: 12))
-                        .foregroundColor(PapyrusColor.iconSecondary.color)
+                        .foregroundColor(PapyrusColor.iconSecondary.color(in: colorScheme))
                 }
-                
+
                 Spacer()
             }
-            
+
             // Subtitle
             HStack {
                 Text("Your story continues to unfold...")
                     .font(.custom(fontName, size: 13))
                     .italic()
-                    .foregroundColor(PapyrusColor.textSecondary.color)
-                
+                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+
                 Spacer()
             }
         }
@@ -261,14 +262,14 @@ struct LoadingView: View {
         .padding(.vertical, 16)
         .background(loadingBackground)
     }
-    
+
     private var loadingBackground: some View {
         Rectangle()
             .fill(
                 LinearGradient(
                     gradient: Gradient(colors: [
-                        PapyrusColor.background.color.opacity(0.95),
-                        PapyrusColor.backgroundSecondary.color.opacity(0.95)
+                        PapyrusColor.background.color(in: colorScheme).opacity(0.95),
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.95)
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -276,7 +277,7 @@ struct LoadingView: View {
             )
             .overlay(
                 Rectangle()
-                    .stroke(PapyrusColor.iconPrimary.color.opacity(0.1), lineWidth: 0.5)
+                    .stroke(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.1), lineWidth: 0.5)
                     .blur(radius: 0.5)
             )
     }
@@ -287,7 +288,7 @@ struct LoadingView: View {
         LoadingView(loadingDisplayStep: .creatingPlotOutline, hasExistingStory: false)
 
         Rectangle()
-            .fill(PapyrusColor.background.color)
+            .fill(PapyrusColor.background.color(in: .parchment))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
@@ -297,7 +298,7 @@ struct LoadingView: View {
         LoadingView(loadingDisplayStep: .writingChapter, hasExistingStory: true)
 
         Rectangle()
-            .fill(PapyrusColor.background.color)
+            .fill(PapyrusColor.background.color(in: .parchment))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }
@@ -307,7 +308,7 @@ struct LoadingView: View {
         LoadingView(loadingDisplayStep: .idle, hasExistingStory: true)
 
         Rectangle()
-            .fill(PapyrusColor.background.color)
+            .fill(PapyrusColor.background.color(in: .parchment))
             .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
 }

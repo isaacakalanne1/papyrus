@@ -17,6 +17,8 @@ struct DeleteConfirmationSheet: View {
     let onCancel: () -> Void
     let fontName: String
 
+    @Environment(\.papyrusColorScheme) private var colorScheme
+
     init(story: Story, fontName: String = "Georgia", onDelete: @escaping () -> Void, onCancel: @escaping () -> Void) {
         self.story = story
         self.fontName = fontName
@@ -41,12 +43,12 @@ struct DeleteConfirmationSheet: View {
                     VStack(alignment: .leading, spacing: 6) {
                         Text("Delete Story")
                             .font(.custom(fontName, size: 20))
-                            .foregroundColor(PapyrusColor.textPrimary.color)
+                            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
 
                         Text("This cannot be undone")
                             .font(.custom(fontName, size: 13))
                             .italic()
-                            .foregroundColor(PapyrusColor.textSecondary.color)
+                            .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                     }
 
                     Spacer()
@@ -58,28 +60,28 @@ struct DeleteConfirmationSheet: View {
                 HStack(spacing: 12) {
                     Image(systemName: "book.closed")
                         .font(.system(size: 16))
-                        .foregroundColor(PapyrusColor.iconPrimary.color)
+                        .foregroundColor(PapyrusColor.iconPrimary.color(in: colorScheme))
 
                     Text(storyTitle)
                         .font(.custom(fontName, size: 16))
-                        .foregroundColor(PapyrusColor.textPrimary.color)
+                        .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
                         .lineLimit(2)
                         .frame(maxWidth: .infinity, alignment: .leading)
                 }
                 .padding(14)
                 .background(
                     RoundedRectangle(cornerRadius: 10)
-                        .fill(PapyrusColor.iconPrimary.color.opacity(0.08))
+                        .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.08))
                         .overlay(
                             RoundedRectangle(cornerRadius: 10)
-                                .stroke(PapyrusColor.borderSecondary.color.opacity(0.5), lineWidth: 0.5)
+                                .stroke(PapyrusColor.borderSecondary.color(in: colorScheme).opacity(0.5), lineWidth: 0.5)
                         )
                 )
 
                 // Body copy
                 Text("Are you sure you want to permanently delete \'\(storyTitle)\'? All chapters will be lost.")
                     .font(.custom(fontName, size: 15))
-                    .foregroundColor(PapyrusColor.textSecondary.color)
+                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                     .multilineTextAlignment(.leading)
                     .frame(maxWidth: .infinity, alignment: .leading)
                     .fixedSize(horizontal: false, vertical: true)
@@ -105,8 +107,8 @@ struct DeleteConfirmationSheet: View {
                                 .fill(
                                     LinearGradient(
                                         gradient: Gradient(colors: [
-                                            PapyrusColor.error.color,
-                                            PapyrusColor.error.color.opacity(0.8)
+                                            PapyrusColor.error.color(in: colorScheme),
+                                            PapyrusColor.error.color(in: colorScheme).opacity(0.8)
                                         ]),
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
@@ -121,12 +123,12 @@ struct DeleteConfirmationSheet: View {
                     Button(action: onCancel) {
                         Text("Cancel")
                             .font(.custom(fontName, size: 17))
-                            .foregroundColor(PapyrusColor.textSecondary.color)
+                            .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, 14)
                             .background(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .stroke(PapyrusColor.borderSecondary.color, lineWidth: 1)
+                                    .stroke(PapyrusColor.borderSecondary.color(in: colorScheme), lineWidth: 1)
                             )
                     }
                 }
@@ -138,8 +140,8 @@ struct DeleteConfirmationSheet: View {
                     .fill(
                         LinearGradient(
                             gradient: Gradient(colors: [
-                                PapyrusColor.background.color,
-                                PapyrusColor.backgroundSecondary.color
+                                PapyrusColor.background.color(in: colorScheme),
+                                PapyrusColor.backgroundSecondary.color(in: colorScheme)
                             ]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing

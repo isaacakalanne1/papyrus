@@ -10,6 +10,8 @@ public struct MenuButton: View {
     let isEnabled: Bool
     let action: () -> Void
 
+    @Environment(\.papyrusColorScheme) private var colorScheme
+
     public init(
         type: MenuButtonType,
         isEnabled: Bool = true,
@@ -26,8 +28,8 @@ public struct MenuButton: View {
                 .font(.system(size: type.size, weight: type.weight))
                 .foregroundColor(
                     isEnabled
-                    ? type.color
-                    : PapyrusColor.iconPrimary.color.opacity(0.3)
+                    ? type.color(in: colorScheme)
+                    : PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.3)
                 )
                 .frame(width: type.frameSize, height: type.frameSize)
         }
