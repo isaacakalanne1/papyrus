@@ -9,8 +9,8 @@ struct FormFieldView: View {
     let equals: ReaderField
     let showHint: Bool
     let hintText: String?
-    let onSubmit: (() -> Void)?
     let fontName: String
+    let onSubmit: (() -> Void)?
     @State private var pulseAnimation = false
 
     init(
@@ -20,8 +20,8 @@ struct FormFieldView: View {
         equals: ReaderField,
         showHint: Bool = false,
         hintText: String? = nil,
-        onSubmit: (() -> Void)? = nil,
-        fontName: String = "Georgia"
+        fontName: String = "Georgia",
+        onSubmit: (() -> Void)? = nil
     ) {
         self.label = label
         self.placeholder = placeholder

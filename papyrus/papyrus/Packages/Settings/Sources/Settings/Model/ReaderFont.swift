@@ -2,23 +2,26 @@ import Foundation
 
 public enum ReaderFont: String, CaseIterable, Codable, Sendable, Equatable {
     case georgia
-    case palatino
-    case baskerville
-    case iowan
-    case charter
+    case futura
+    case optima
+    case americanTypewriter
+    case zapfino
+    case copperplate
 
     public var displayName: String {
         switch self {
         case .georgia:
             return "Georgia"
-        case .palatino:
-            return "Palatino"
-        case .baskerville:
-            return "Baskerville"
-        case .iowan:
-            return "Iowan Old Style"
-        case .charter:
-            return "Charter"
+        case .futura:
+            return "Futura"
+        case .optima:
+            return "Optima"
+        case .americanTypewriter:
+            return "American Typewriter"
+        case .zapfino:
+            return "Zapfino"
+        case .copperplate:
+            return "Copperplate"
         }
     }
 
@@ -26,14 +29,16 @@ public enum ReaderFont: String, CaseIterable, Codable, Sendable, Equatable {
         switch self {
         case .georgia:
             return "Georgia"
-        case .palatino:
-            return "Palatino-Roman"
-        case .baskerville:
-            return "Baskerville"
-        case .iowan:
-            return "IowanOldStyle-Roman"
-        case .charter:
-            return "Charter-Roman"
+        case .futura:
+            return "Futura-Medium"
+        case .optima:
+            return "Optima-Regular"
+        case .americanTypewriter:
+            return "AmericanTypewriter"
+        case .zapfino:
+            return "Zapfino"
+        case .copperplate:
+            return "Copperplate"
         }
     }
 }
