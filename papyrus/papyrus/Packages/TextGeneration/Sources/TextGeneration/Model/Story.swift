@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Settings
 
 public struct Story: Codable, Equatable, Sendable, Identifiable {
     public var id: UUID

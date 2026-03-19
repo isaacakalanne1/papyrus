@@ -12,7 +12,8 @@
       "Bash(for pkg:*)",
       "Bash(do echo:*)",
       "Bash(python3:*)",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "Bash(git:*)"
     ]
   }
 }

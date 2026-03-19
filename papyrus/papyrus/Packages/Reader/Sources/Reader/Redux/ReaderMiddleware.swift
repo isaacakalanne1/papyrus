@@ -190,6 +190,12 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         await environment.loadSubscriptions()
         return nil
 
+    case .updatePerspective(let p):
+        var updatedSettings = state.settingsState
+        updatedSettings.perspective = p
+        try? await environment.settingsEnvironment.saveSettings(updatedSettings)
+        return nil
+
     case .failedToCreateChapter(_),
          .dismissGenerationError,
          .failedToLoadStories,
@@ -208,7 +214,6 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
          .setDragOffset,
          .setIsSequelMode,
          .setCurrentScrollOffset,
-         .updatePerspective,
          .setScrollViewHeight:
         return nil
     }

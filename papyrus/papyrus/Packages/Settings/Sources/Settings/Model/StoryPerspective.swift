@@ -1,8 +1,3 @@
-//
-//  StoryPerspective.swift
-//  TextGeneration
-//
-
 import Foundation
 
 public enum StoryPerspective: String, Codable, Equatable, Sendable {

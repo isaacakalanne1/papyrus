@@ -8,6 +8,7 @@
 import SwiftUI
 import PapyrusStyleKit
 import TextGeneration
+import Settings
 
 struct NewStoryForm: View {
     @EnvironmentObject var store: ReaderStore
@@ -82,7 +83,7 @@ struct NewStoryForm: View {
                             .foregroundColor(PapyrusColor.textPrimary.color)
                         Spacer()
                         Picker("Perspective", selection: Binding(
-                            get: { store.state.perspective },
+                            get: { store.state.settingsState.perspective },
                             set: { store.dispatch(.updatePerspective($0)) }
                         )) {
                             Text("1st person").tag(StoryPerspective.firstPerson)

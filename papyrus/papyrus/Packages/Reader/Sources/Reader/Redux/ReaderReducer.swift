@@ -30,7 +30,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.story = .init(
             mainCharacter: newState.mainCharacter,
             setting: newState.setting,
-            perspective: newState.perspective
+            perspective: newState.settingsState.perspective
         )
 
     case .beginCreateSequel:
@@ -45,7 +45,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.sequelStory?.setting = newState.setting
         newState.sequelStory?.chapters = []
         newState.sequelStory?.chapterIndex = 0
-        newState.sequelStory?.perspective = newState.perspective
+        newState.sequelStory?.perspective = newState.settingsState.perspective
         if let prequelId = newState.story?.id {
             newState.sequelStory?.prequelIds.append(prequelId)
         }
@@ -135,7 +135,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.setting = setting
 
     case .updatePerspective(let p):
-        newState.perspective = p
+        newState.settingsState.perspective = p
 
     case .loadAllStories:
         newState.isLoading = true
