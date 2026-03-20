@@ -24,6 +24,7 @@ Based on the following story details, respond with the story title:
 **Main Character:** \(story.mainCharacter)
 **Setting:** \(story.setting)
 **Perspective:** \(story.perspective.promptDescription)
+**First paragraph:** \(story.chapters.first?.content ?? "")
 """
         }
     }

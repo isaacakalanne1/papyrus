@@ -14,13 +14,6 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     var newState = state
     switch action {
 
-    // MARK: - Story Creation Entry Points (no state change; handled by middleware)
-    case .createStory,
-         .createInteractiveStory,
-         .createSequel,
-         .createChapter:
-        break
-
     // MARK: - Story Creation Pipeline Steps
 
     case .beginCreateStory:
@@ -49,14 +42,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .onGeneratedFirstParagraph(let story):
         newState.isLoading = false
         newState.loadingStep = .idle
-        if newState.story?.id == story.id {
-            newState.story?.chapters = story.chapters
-        }
-        if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
-            newState.loadedStories[existingIndex].chapters = story.chapters
-        } else {
-            newState.loadedStories.append(story)
-        }
+        newState = updateStoryInState(newState, story: story)
 
     case .submitInteractiveAction:
         newState.isLoading = true
@@ -92,14 +78,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.isLoading = false
         newState.loadingStep = .idle
         newState.interactiveInputText = ""
-        if newState.story?.id == story.id {
-            newState.story?.chapters = story.chapters
-        }
-        if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
-            newState.loadedStories[existingIndex].chapters = story.chapters
-        } else {
-            newState.loadedStories.append(story)
-        }
+        newState = updateStoryInState(newState, story: story)
 
     case .setInteractiveMode(let mode):
         newState.settingsState.storyMode = mode
@@ -164,14 +143,18 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.isLoading = true
         newState = updateStoryInState(newState, story: story)
 
-    case .getChapterTitle(let story):
+    case .getChapterTitle:
         newState.isLoading = true
         newState.loadingStep = .preparingNarrative
-        newState = updateStoryInState(newState, story: story)
 
     case .onGetChapterTitle(let story):
-        newState.isLoading = true
         newState = updateStoryInState(newState, story: story)
+        if story.mode == .interactive {
+            newState.isLoading = false
+            newState.loadingStep = .idle
+        } else {
+            newState.isLoading = true
+        }
 
     case .beginCreateChapter(let story):
         newState.isLoading = true
@@ -182,14 +165,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.isLoading = false
         newState.loadingStep = .idle
         newState.failedGenerationAction = nil
-        if newState.story?.id == story.id {
-            newState.story?.chapters = story.chapters
-        }
-        if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
-            newState.loadedStories[existingIndex].chapters = story.chapters
-        } else {
-            newState.loadedStories.append(story)
-        }
+        newState = updateStoryInState(newState, story: story)
 
     case .failedToCreateChapter(let retryAction):
         newState.isLoading = false
@@ -256,33 +232,17 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         }
         newState.storyPendingDeletion = nil
 
-    case .failedToDeleteStory:
-        break
-
     case .updateChapterIndex(let story, let index):
         var updatedStory = story
         updatedStory.scrollOffset = 0
         updatedStory.chapterIndex = max(0, min(index, story.chapters.count - 1))
         newState.currentScrollOffset = 0
-
-        if newState.story?.id == story.id {
-            newState.story = updatedStory
-        }
-
-        if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
-            newState.loadedStories[existingIndex] = updatedStory
-        } else {
-            newState.loadedStories.append(updatedStory)
-        }
+        newState = updateStoryInState(newState, story: updatedStory)
 
     case .updateScrollOffset(let offset):
         if var story = newState.story {
             story.scrollOffset = offset
-            newState.story = story
-
-            if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
-                newState.loadedStories[existingIndex] = story
-            }
+            newState = updateStoryInState(newState, story: story)
         }
 
     case .refreshSettings(let settings):
@@ -326,6 +286,11 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
 
     case .saveStory,
          .deleteStory,
+         .createStory,
+         .createInteractiveStory,
+         .createSequel,
+         .createChapter,
+         .failedToDeleteStory,
          .loadSubscriptions:
         break
     }
@@ -341,6 +306,11 @@ private func updateStoryInState(_ state: ReaderState, story: Story) -> ReaderSta
         newState.story = story
     } else if newState.sequelStory?.id == story.id {
         newState.sequelStory = story
+    }
+    if let existingIndex = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
+        newState.loadedStories[existingIndex] = story
+    } else {
+        newState.loadedStories.append(story)
     }
     return newState
 }

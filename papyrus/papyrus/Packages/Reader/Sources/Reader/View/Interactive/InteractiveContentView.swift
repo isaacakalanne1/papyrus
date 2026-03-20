@@ -22,7 +22,7 @@ struct InteractiveContentView: View {
                                 paragraphView(for: story.chapters[index])
                             }
 
-                            if store.state.isLoading {
+                            if store.state.loadingStep == .writingChapter {
                                 ChapterLoadingIndicator(
                                     fontName: store.state.settingsState.selectedFontName
                                 )
