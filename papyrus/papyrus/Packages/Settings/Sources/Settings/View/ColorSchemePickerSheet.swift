@@ -47,7 +47,7 @@ struct ColorSchemePickerSheet: View {
 
     private var header: some View {
         HStack {
-            Text("Colour Scheme")
+            Text("Color Scheme")
                 .font(.custom(store.state.selectedFontName, size: 20))
                 .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
             Spacer()

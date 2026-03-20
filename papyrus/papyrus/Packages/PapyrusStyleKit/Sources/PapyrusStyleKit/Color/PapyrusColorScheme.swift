@@ -258,6 +258,21 @@ public extension PapyrusColorScheme {
         iconSecondary: Color(white: 0.55),
         error: Color(red: 0.75, green: 0.15, blue: 0.15)
     )
+
+    static let terminal = PapyrusColorScheme(
+        background: Color(red: 0.00, green: 0.00, blue: 0.00),
+        backgroundSecondary: Color(red: 0.04, green: 0.08, blue: 0.04),
+        buttonGradientTop: Color(red: 0.08, green: 0.55, blue: 0.12),
+        buttonGradientBottom: Color(red: 0.04, green: 0.38, blue: 0.08),
+        borderPrimary: Color(red: 0.06, green: 0.45, blue: 0.10),
+        borderSecondary: Color(red: 0.03, green: 0.25, blue: 0.06),
+        accent: Color(red: 0.10, green: 0.90, blue: 0.20),
+        textPrimary: Color(red: 0.15, green: 0.95, blue: 0.25),
+        textSecondary: Color(red: 0.08, green: 0.55, blue: 0.14),
+        iconPrimary: Color(red: 0.12, green: 0.80, blue: 0.20),
+        iconSecondary: Color(red: 0.06, green: 0.45, blue: 0.10),
+        error: Color(red: 0.85, green: 0.15, blue: 0.15)
+    )
 }
 
 public enum PapyrusColorSchemeName: String, CaseIterable, Codable, Equatable, Sendable {
@@ -275,6 +290,7 @@ public enum PapyrusColorSchemeName: String, CaseIterable, Codable, Equatable, Se
     case copper
     case obsidian
     case paper
+    case terminal
 
     public var displayName: String {
         switch self {
@@ -292,6 +308,7 @@ public enum PapyrusColorSchemeName: String, CaseIterable, Codable, Equatable, Se
         case .copper: return "Copper"
         case .obsidian: return "Obsidian"
         case .paper: return "Paper"
+        case .terminal: return "Terminal"
         }
     }
 
@@ -311,6 +328,7 @@ public enum PapyrusColorSchemeName: String, CaseIterable, Codable, Equatable, Se
         case .copper: return .copper
         case .obsidian: return .obsidian
         case .paper: return .paper
+        case .terminal: return .terminal
         }
     }
 }

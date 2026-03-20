@@ -127,7 +127,7 @@ public struct SettingsView: View {
 
     private var colorSchemeSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            MenuSubheader("Colour Scheme", fontName: selectedFontName)
+            MenuSubheader("Color Scheme", fontName: selectedFontName)
 
             colorSchemeRow
         }
