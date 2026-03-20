@@ -16,42 +16,78 @@ struct InteractiveInputBar: View {
         store.state.isLoading
     }
 
+    private var canUndo: Bool {
+        story.chapters.count > 1
+    }
+
+    private var canRedo: Bool {
+        !store.state.undoneChapters.isEmpty
+    }
+
     var body: some View {
-        HStack(spacing: 8) {
-            TextField(
-                text: Binding(
-                    get: { store.state.interactiveInputText },
-                    set: { store.dispatch(.setInteractiveInputText($0)) }
-                ),
-                prompt: Text("Write what happens next")
-                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
-            ) { EmptyView() }
-            .font(.custom(store.state.settingsState.selectedFontName, size: 15))
-            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
-            .disabled(isDisabled)
-            .onSubmit {
-                submitAction()
+        VStack(alignment: .leading, spacing: 6) {
+            HStack(spacing: 4) {
+                Button {
+                    store.dispatch(.undoInteractiveChapter)
+                } label: {
+                    Image(systemName: "arrow.uturn.backward")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundColor(
+                            PapyrusColor.textSecondary.color(in: colorScheme)
+                                .opacity(canUndo ? 1.0 : 0.3)
+                        )
+                }
+                .disabled(!canUndo || isDisabled)
+
+                Button {
+                    store.dispatch(.redoInteractiveChapter)
+                } label: {
+                    Image(systemName: "arrow.uturn.forward")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundColor(
+                            PapyrusColor.textSecondary.color(in: colorScheme)
+                                .opacity(canRedo ? 1.0 : 0.3)
+                        )
+                }
+                .disabled(!canRedo || isDisabled)
             }
 
-            Button(action: submitAction) {
-                Image(systemName: "arrow.up.circle.fill")
-                    .font(.system(size: 28))
-                    .foregroundStyle(
-                        isDisabled
-                            ? AnyShapeStyle(PapyrusColor.iconSecondary.color(in: colorScheme))
-                            : AnyShapeStyle(
-                                LinearGradient(
-                                    colors: [
-                                        PapyrusColor.buttonGradientTop.color(in: colorScheme),
-                                        PapyrusColor.buttonGradientBottom.color(in: colorScheme)
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
+            HStack(spacing: 8) {
+                TextField(
+                    text: Binding(
+                        get: { store.state.interactiveInputText },
+                        set: { store.dispatch(.setInteractiveInputText($0)) }
+                    ),
+                    prompt: Text("Write what happens next")
+                        .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+                ) { EmptyView() }
+                .font(.custom(store.state.settingsState.selectedFontName, size: 15))
+                .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+                .disabled(isDisabled)
+                .onSubmit {
+                    submitAction()
+                }
+
+                Button(action: submitAction) {
+                    Image(systemName: "arrow.up.circle.fill")
+                        .font(.system(size: 28))
+                        .foregroundStyle(
+                            isDisabled
+                                ? AnyShapeStyle(PapyrusColor.iconSecondary.color(in: colorScheme))
+                                : AnyShapeStyle(
+                                    LinearGradient(
+                                        colors: [
+                                            PapyrusColor.buttonGradientTop.color(in: colorScheme),
+                                            PapyrusColor.buttonGradientBottom.color(in: colorScheme)
+                                        ],
+                                        startPoint: .topLeading,
+                                        endPoint: .bottomTrailing
+                                    )
                                 )
-                            )
-                    )
+                        )
+                }
+                .disabled(isDisabled)
             }
-            .disabled(isDisabled)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)

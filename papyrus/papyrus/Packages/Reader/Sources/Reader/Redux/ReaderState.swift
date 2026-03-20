@@ -53,6 +53,7 @@ public struct ReaderState: Equatable {
 
     // Interactive story mode
     var interactiveInputText: String
+    var undoneChapters: [Chapter]
 
     // UI State
     var menuStatus: MenuStatus
@@ -77,6 +78,7 @@ public struct ReaderState: Equatable {
         failedGenerationAction: ReaderAction? = nil,
         storyPendingDeletion: Story? = nil,
         interactiveInputText: String = "",
+        undoneChapters: [Chapter] = [],
         menuStatus: MenuStatus = .closed,
         dragOffset: CGFloat = 0,
         isSequelMode: Bool = false,
@@ -98,6 +100,7 @@ public struct ReaderState: Equatable {
         self.failedGenerationAction = failedGenerationAction
         self.storyPendingDeletion = storyPendingDeletion
         self.interactiveInputText = interactiveInputText
+        self.undoneChapters = undoneChapters
         self.menuStatus = menuStatus
         self.dragOffset = dragOffset
         self.isSequelMode = isSequelMode

@@ -60,6 +60,28 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
 
     case .submitInteractiveAction:
         newState.isLoading = true
+        newState.undoneChapters = []
+
+    case .undoInteractiveChapter:
+        guard let last = newState.story?.chapters.last,
+              (newState.story?.chapters.count ?? 0) > 1 else { break }
+        newState.story?.chapters.removeLast()
+        newState.undoneChapters.append(last)
+        if case .next(let text) = last.action {
+            newState.interactiveInputText = text
+        } else {
+            newState.interactiveInputText = ""
+        }
+
+    case .redoInteractiveChapter:
+        guard let chapter = newState.undoneChapters.popLast() else { break }
+        newState.story?.chapters.append(chapter)
+        if let next = newState.undoneChapters.last,
+           case .next(let text) = next.action {
+            newState.interactiveInputText = text
+        } else {
+            newState.interactiveInputText = ""
+        }
 
     case .beginGenerateParagraph(let story):
         newState.isLoading = true
@@ -208,6 +230,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .setStory(let story):
         newState.story = story
         newState.currentScrollOffset = story?.scrollOffset ?? 0
+        newState.undoneChapters = []
 
     case .confirmDeleteStory(let story):
         newState.storyPendingDeletion = story

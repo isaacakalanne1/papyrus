@@ -261,7 +261,9 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
          .reuseStoryDetails,
          .setScrollViewHeight,
          .setInteractiveMode,
-         .setInteractiveInputText:
+         .setInteractiveInputText,
+         .undoInteractiveChapter,
+         .redoInteractiveChapter:
         return nil
     }
 }
