@@ -13,8 +13,8 @@ struct InteractiveContentView: View {
     @Environment(\.papyrusColorScheme) private var colorScheme
 
     var body: some View {
-        ZStack(alignment: .topTrailing) {
-            VStack(spacing: 0) {
+        VStack(spacing: 0) {
+            ZStack(alignment: .bottomTrailing) {
                 ScrollViewReader { proxy in
                     ScrollView {
                         LazyVStack(alignment: .leading, spacing: 0) {
@@ -47,14 +47,14 @@ struct InteractiveContentView: View {
                     }
                 }
 
-                InteractiveInputBar(story: story)
+                // Close button
+                MenuButton(type: .close) {
+                    store.dispatch(.setStory(nil))
+                }
+                .padding(16)
             }
 
-            // Close button
-            MenuButton(type: .close) {
-                store.dispatch(.setStory(nil))
-            }
-            .padding(16)
+            InteractiveInputBar(story: story)
         }
     }
 

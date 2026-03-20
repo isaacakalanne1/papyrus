@@ -215,6 +215,17 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .updatePerspective(let p):
         newState.settingsState.perspective = p
 
+    case .updateStoryTitle(let story, let title):
+        if newState.story?.id == story.id {
+            newState.story?.title = title
+        }
+        if let index = newState.loadedStories.firstIndex(where: { $0.id == story.id }) {
+            newState.loadedStories[index].title = title
+        }
+        if newState.selectedStoryForDetails?.id == story.id {
+            newState.selectedStoryForDetails?.title = title
+        }
+
     case .loadAllStories:
         newState.isLoading = true
 

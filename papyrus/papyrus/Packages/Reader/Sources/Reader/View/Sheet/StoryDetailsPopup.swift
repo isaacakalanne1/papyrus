@@ -15,11 +15,14 @@ struct StoryDetailsPopup: View {
     @Binding var isPresented: Bool
     let fontName: String
     @Environment(\.papyrusColorScheme) private var colorScheme
+    @State private var editableTitle: String
+    @FocusState private var isTitleFocused: Bool
 
     init(story: Story, isPresented: Binding<Bool>, fontName: String = "Georgia") {
         self.story = story
         self._isPresented = isPresented
         self.fontName = fontName
+        self._editableTitle = State(initialValue: story.title)
     }
 
     var body: some View {
@@ -43,19 +46,30 @@ struct StoryDetailsPopup: View {
                     .font(.custom(fontName, size: 14))
                     .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
 
-                ScrollView {
-                    Text(story.title.isEmpty ? "Untitled Story" : story.title)
-                        .font(.custom(fontName, size: 16))
-                        .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding(12)
+                HStack(spacing: 8) {
+                    TextField(
+                        text: $editableTitle,
+                        prompt: Text("Untitled Story")
+                            .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+                    ) { EmptyView() }
+                    .font(.custom(fontName, size: 16))
+                    .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+                    .focused($isTitleFocused)
+                    .onChange(of: editableTitle) { _, newTitle in
+                        store.dispatch(.updateStoryTitle(story, newTitle))
+                    }
+
+                    Image(systemName: "pencil")
+                        .font(.system(size: 14))
+                        .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+                        .onTapGesture { isTitleFocused = true }
                 }
+                .padding(12)
                 .frame(height: 40)
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.1))
                 )
-                .scrollBounceBehavior(.basedOnSize)
             }
 
             // Main character section

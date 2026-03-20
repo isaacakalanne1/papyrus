@@ -61,7 +61,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         }
 
     case .onGeneratedFirstParagraph(let story):
-        return .saveStory(story)
+        return .getChapterTitle(story)
 
     case .submitInteractiveAction(let story, let action):
         if !state.canGenerateParagraph {
@@ -155,7 +155,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         }
 
     case .onGetChapterTitle(let story):
-        return .beginCreateChapter(story)
+        return story.mode == .interactive ? .saveStory(story) : .beginCreateChapter(story)
 
     case .beginCreateChapter(let story):
         do {
@@ -239,6 +239,11 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         updatedSettings.perspective = p
         try? await environment.settingsEnvironment.saveSettings(updatedSettings)
         return nil
+
+    case .updateStoryTitle(let story, let title):
+        var updatedStory = story
+        updatedStory.title = title
+        return .saveStory(updatedStory)
 
     case .failedToCreateChapter(_),
          .dismissGenerationError,

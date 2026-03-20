@@ -10,6 +10,24 @@ struct GetChapterTitleEndpoint: Endpoint {
         "/api/v1/chat/completions"
     }
     
+    private var storyContext: String {
+        if !story.plotOutline.isEmpty {
+            return """
+Based on the following story details, respond with the story title:
+
+**Plot Outline:** \(story.plotOutline)
+"""
+        } else {
+            return """
+Based on the following story details, respond with the story title:
+
+**Main Character:** \(story.mainCharacter)
+**Setting:** \(story.setting)
+**Perspective:** \(story.perspective.promptDescription)
+"""
+        }
+    }
+
     var body: Data? {
         let messages = [
             OpenRouterMessage(
@@ -18,11 +36,7 @@ struct GetChapterTitleEndpoint: Endpoint {
             ),
             OpenRouterMessage(
                 role: "user",
-                content: """
-Based on the following story details, respond with the story title:
-
-**Plot Outline:** \(story.plotOutline)
-"""
+                content: storyContext
             )
         ]
         
