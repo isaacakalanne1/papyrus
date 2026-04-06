@@ -12,6 +12,7 @@ import PapyrusStyleKit
 struct WelcomeView: View {
     @EnvironmentObject var store: ReaderStore
     @Environment(\.papyrusColorScheme) private var colorScheme
+    @Environment(\.papyrusBackgroundImage) private var backgroundImage
 
     var body: some View {
         ZStack {
@@ -34,6 +35,24 @@ struct WelcomeView: View {
                     .padding(.bottom, 30)
             }
             .padding(.horizontal, 20)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            if backgroundImage.usage.contains(.home), let img = backgroundImage.image {
+                img
+                    .resizable()
+                    .scaledToFill()
+                    .clipped()
+            } else {
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        PapyrusColor.background.color(in: colorScheme),
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
         }
     }
 }

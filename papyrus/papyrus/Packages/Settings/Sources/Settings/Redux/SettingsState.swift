@@ -8,6 +8,8 @@ public struct SettingsState: Equatable, Codable, Sendable {
     public var selectedFontName: String
     public var selectedColorSchemeName: PapyrusColorSchemeName
     public var storyMode: StoryMode
+    public var backgroundImageData: Data?
+    public var backgroundImageUsage: Set<BackgroundImageContext>
 
     public init(
         selectedTextSize: TextSize = .medium,
@@ -15,7 +17,9 @@ public struct SettingsState: Equatable, Codable, Sendable {
         perspective: StoryPerspective = .thirdPerson,
         selectedFontName: String = "Georgia",
         selectedColorSchemeName: PapyrusColorSchemeName = .parchment,
-        storyMode: StoryMode = .story
+        storyMode: StoryMode = .story,
+        backgroundImageData: Data? = nil,
+        backgroundImageUsage: Set<BackgroundImageContext> = []
     ) {
         self.selectedTextSize = selectedTextSize
         self.isSubscribed = isSubscribed
@@ -23,6 +27,8 @@ public struct SettingsState: Equatable, Codable, Sendable {
         self.selectedFontName = selectedFontName
         self.selectedColorSchemeName = selectedColorSchemeName
         self.storyMode = storyMode
+        self.backgroundImageData = backgroundImageData
+        self.backgroundImageUsage = backgroundImageUsage
     }
 
     public init(
@@ -35,5 +41,7 @@ public struct SettingsState: Equatable, Codable, Sendable {
         self.selectedFontName = try container.decodeIfPresent(String.self, forKey: .selectedFontName) ?? "Georgia"
         self.selectedColorSchemeName = try container.decodeIfPresent(PapyrusColorSchemeName.self, forKey: .selectedColorSchemeName) ?? .parchment
         self.storyMode = try container.decodeIfPresent(StoryMode.self, forKey: .storyMode) ?? .story
+        self.backgroundImageData = try container.decodeIfPresent(Data.self, forKey: .backgroundImageData)
+        self.backgroundImageUsage = try container.decodeIfPresent(Set<BackgroundImageContext>.self, forKey: .backgroundImageUsage) ?? []
     }
 }

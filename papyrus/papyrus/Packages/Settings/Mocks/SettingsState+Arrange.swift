@@ -17,13 +17,17 @@ public extension SettingsState {
         selectedTextSize: TextSize = .medium,
         isSubscribed: Bool = false,
         selectedFontName: String = "Georgia",
-        selectedColorSchemeName: PapyrusColorSchemeName = .parchment
+        selectedColorSchemeName: PapyrusColorSchemeName = .parchment,
+        backgroundImageData: Data? = nil,
+        backgroundImageUsage: Set<BackgroundImageContext> = []
     ) -> SettingsState {
         .init(
             selectedTextSize: selectedTextSize,
             isSubscribed: isSubscribed,
             selectedFontName: selectedFontName,
-            selectedColorSchemeName: selectedColorSchemeName
+            selectedColorSchemeName: selectedColorSchemeName,
+            backgroundImageData: backgroundImageData,
+            backgroundImageUsage: backgroundImageUsage
         )
     }
 }

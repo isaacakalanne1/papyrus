@@ -76,8 +76,89 @@ class SettingsReducerTests {
         #expect(newState == expectedState)
     }
     
+    // MARK: - uploadBackgroundImage Tests
+
+    @Test
+    func uploadBackgroundImage_setsBackgroundImageData() {
+        let initialState = SettingsState.arrange
+        let imageData = Data("test-image-data".utf8)
+
+        let newState = settingsReducer(initialState, .uploadBackgroundImage(imageData))
+
+        var expectedState = initialState
+        expectedState.backgroundImageData = imageData
+        #expect(newState == expectedState)
+    }
+
+    @Test
+    func uploadBackgroundImage_preservesOtherProperties() {
+        let imageData = Data("existing-image".utf8)
+        let initialState = SettingsState.arrange(backgroundImageData: imageData, backgroundImageUsage: [.home])
+        let newImageData = Data("new-image-data".utf8)
+
+        let newState = settingsReducer(initialState, .uploadBackgroundImage(newImageData))
+
+        #expect(newState.backgroundImageData == newImageData)
+        #expect(newState.backgroundImageUsage == [.home])
+    }
+
+    // MARK: - setBackgroundImageUsage Tests
+
+    @Test
+    func setBackgroundImageUsage_updatesUsage() {
+        let initialState = SettingsState.arrange
+        let usage: Set<BackgroundImageContext> = [.home, .story]
+
+        let newState = settingsReducer(initialState, .setBackgroundImageUsage(usage))
+
+        var expectedState = initialState
+        expectedState.backgroundImageUsage = usage
+        #expect(newState == expectedState)
+    }
+
+    @Test(arguments: [
+        (Set<BackgroundImageContext>([.home])),
+        (Set<BackgroundImageContext>([.story])),
+        (Set<BackgroundImageContext>([.interactiveStory])),
+        (Set<BackgroundImageContext>([.home, .story, .interactiveStory])),
+        (Set<BackgroundImageContext>())
+    ])
+    func setBackgroundImageUsage_withVariousContexts(usage: Set<BackgroundImageContext>) {
+        let initialState = SettingsState.arrange
+
+        let newState = settingsReducer(initialState, .setBackgroundImageUsage(usage))
+
+        #expect(newState.backgroundImageUsage == usage)
+    }
+
+    // MARK: - confirmDeleteBackgroundImage Tests
+
+    @Test
+    func confirmDeleteBackgroundImage_clearsImageDataAndUsage() {
+        let imageData = Data("some-image".utf8)
+        let initialState = SettingsState.arrange(
+            backgroundImageData: imageData,
+            backgroundImageUsage: [.home, .story]
+        )
+
+        let newState = settingsReducer(initialState, .confirmDeleteBackgroundImage)
+
+        #expect(newState.backgroundImageData == nil)
+        #expect(newState.backgroundImageUsage == [])
+    }
+
+    @Test
+    func confirmDeleteBackgroundImage_whenAlreadyEmpty_remainsEmpty() {
+        let initialState = SettingsState.arrange
+
+        let newState = settingsReducer(initialState, .confirmDeleteBackgroundImage)
+
+        #expect(newState.backgroundImageData == nil)
+        #expect(newState.backgroundImageUsage == [])
+    }
+
     // MARK: - No-op Action Tests
-    
+
     @Test(arguments: [
         SettingsAction.loadSettings,
         SettingsAction.saveSettings,

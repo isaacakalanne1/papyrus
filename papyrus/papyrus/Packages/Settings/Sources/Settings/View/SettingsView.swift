@@ -7,6 +7,7 @@ public struct SettingsView: View {
     @Environment(\.papyrusColorScheme) private var colorScheme
     @State private var isFontPickerPresented = false
     @State private var isColorSchemePickerPresented = false
+    @State private var isContextPickerPresented = false
 
     var selectedTextSize: TextSize {
         store.state.selectedTextSize
@@ -30,6 +31,7 @@ public struct SettingsView: View {
                 textSizeSection
                 fontSection
                 colorSchemeSection
+                backgroundImageSection
             }
         }
         .background(PapyrusColor.background.color(in: colorScheme))
@@ -130,6 +132,14 @@ public struct SettingsView: View {
             MenuSubheader("Color Scheme", fontName: selectedFontName)
 
             colorSchemeRow
+        }
+    }
+
+    private var backgroundImageSection: some View {
+        VStack(alignment: .leading, spacing: 12) {
+            MenuSubheader("Background Image", fontName: selectedFontName)
+
+            BackgroundImagePickerRow()
         }
     }
 

@@ -20,6 +20,12 @@ struct ReaderView: View {
         store.state.settingsState.selectedColorSchemeName.scheme
     }
 
+    private var activeBackgroundImage: Image? {
+        guard let data = store.state.settingsState.backgroundImageData,
+              let uiImage = UIImage(data: data) else { return nil }
+        return Image(uiImage: uiImage)
+    }
+
     init() {
 
     }
@@ -68,16 +74,6 @@ struct ReaderView: View {
                     startScrollOffsetTimer: startScrollOffsetTimer
                 )
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(
-                    LinearGradient(
-                        gradient: Gradient(colors: [
-                            PapyrusColor.background.color(in: activeColorScheme),
-                            PapyrusColor.backgroundSecondary.color(in: activeColorScheme)
-                        ]),
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
                 .scrollBounceBehavior(.basedOnSize)
                 .animation(.easeInOut(duration: 0.4), value: store.state.isLoading)
                 .menuGestures(
@@ -125,6 +121,10 @@ struct ReaderView: View {
             SettingsMenu()
         }
         .environment(\.papyrusColorScheme, activeColorScheme)
+        .environment(\.papyrusBackgroundImage, (
+            image: activeBackgroundImage,
+            usage: store.state.settingsState.backgroundImageUsage
+        ))
         .sheet(isPresented: showStoryForm) {
             NewStoryForm()
                 .environmentObject(store)

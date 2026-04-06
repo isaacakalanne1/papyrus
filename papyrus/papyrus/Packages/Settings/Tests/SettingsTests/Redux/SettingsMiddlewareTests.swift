@@ -107,8 +107,52 @@ class SettingsMiddlewareTests {
         #expect(result == .onSavedSettings)
     }
     
+    // MARK: - uploadBackgroundImage Tests
+
+    @Test
+    func uploadBackgroundImage_returnsSaveSettings() async {
+        let state = SettingsState()
+        let environment = MockSettingsEnvironment()
+        let imageData = Data("test-image".utf8)
+
+        let result = await settingsMiddleware(state, .uploadBackgroundImage(imageData), environment)
+
+        #expect(result == .saveSettings)
+        #expect(!environment.loadSettingsCalled)
+        #expect(!environment.saveSettingsCalled)
+    }
+
+    // MARK: - setBackgroundImageUsage Tests
+
+    @Test
+    func setBackgroundImageUsage_returnsSaveSettings() async {
+        let state = SettingsState()
+        let environment = MockSettingsEnvironment()
+        let usage: Set<BackgroundImageContext> = [.home, .interactiveStory]
+
+        let result = await settingsMiddleware(state, .setBackgroundImageUsage(usage), environment)
+
+        #expect(result == .saveSettings)
+        #expect(!environment.loadSettingsCalled)
+        #expect(!environment.saveSettingsCalled)
+    }
+
+    // MARK: - confirmDeleteBackgroundImage Tests
+
+    @Test
+    func confirmDeleteBackgroundImage_returnsSaveSettings() async {
+        let state = SettingsState()
+        let environment = MockSettingsEnvironment()
+
+        let result = await settingsMiddleware(state, .confirmDeleteBackgroundImage, environment)
+
+        #expect(result == .saveSettings)
+        #expect(!environment.loadSettingsCalled)
+        #expect(!environment.saveSettingsCalled)
+    }
+
     // MARK: - No-op Action Tests
-    
+
     @Test(arguments: [
         SettingsAction.onLoadedSettings(SettingsState()),
         SettingsAction.onSavedSettings,

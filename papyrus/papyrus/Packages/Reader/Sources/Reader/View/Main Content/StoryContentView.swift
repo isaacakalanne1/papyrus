@@ -83,6 +83,7 @@ struct StoryContentView: View {
     let story: Story
     @EnvironmentObject var store: ReaderStore
     @Environment(\.papyrusColorScheme) private var colorScheme
+    @Environment(\.papyrusBackgroundImage) private var backgroundImage
 
     let startScrollOffsetTimer: () -> Void
 
@@ -202,6 +203,24 @@ struct StoryContentView: View {
                 store.dispatch(.setStory(nil))
             }
             .padding(16)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            if backgroundImage.usage.contains(.story), let img = backgroundImage.image {
+                img
+                    .resizable()
+                    .scaledToFill()
+                    .clipped()
+            } else {
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        PapyrusColor.background.color(in: colorScheme),
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
         }
     }
 }

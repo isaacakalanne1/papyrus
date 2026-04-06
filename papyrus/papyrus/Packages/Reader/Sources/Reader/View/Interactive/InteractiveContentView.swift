@@ -11,6 +11,7 @@ struct InteractiveContentView: View {
     let story: Story
     @EnvironmentObject var store: ReaderStore
     @Environment(\.papyrusColorScheme) private var colorScheme
+    @Environment(\.papyrusBackgroundImage) private var backgroundImage
 
     var body: some View {
         VStack(spacing: 0) {
@@ -55,6 +56,24 @@ struct InteractiveContentView: View {
             }
 
             InteractiveInputBar(story: story)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            if backgroundImage.usage.contains(.interactiveStory), let img = backgroundImage.image {
+                img
+                    .resizable()
+                    .scaledToFill()
+                    .clipped()
+            } else {
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        PapyrusColor.background.color(in: colorScheme),
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
         }
     }
 

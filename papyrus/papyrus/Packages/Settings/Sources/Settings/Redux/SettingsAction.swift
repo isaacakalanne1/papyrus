@@ -5,6 +5,9 @@ public enum SettingsAction: Equatable, Sendable {
     case selectTextSize(TextSize)
     case selectFont(String)
     case selectColorScheme(PapyrusColorSchemeName)
+    case uploadBackgroundImage(Data)
+    case setBackgroundImageUsage(Set<BackgroundImageContext>)
+    case confirmDeleteBackgroundImage
     case loadSettings
     case onLoadedSettings(SettingsState)
     case saveSettings
