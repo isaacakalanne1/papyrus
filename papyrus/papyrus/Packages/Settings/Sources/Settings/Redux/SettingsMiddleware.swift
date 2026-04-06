@@ -16,7 +16,8 @@ public let settingsMiddleware: Middleware<SettingsState, SettingsAction, Setting
          .selectColorScheme,
          .uploadBackgroundImage,
          .setBackgroundImageUsage,
-         .confirmDeleteBackgroundImage:
+         .confirmDeleteBackgroundImage,
+         .setSentenceCount:
         return .saveSettings
     case .loadSettings:
         do {

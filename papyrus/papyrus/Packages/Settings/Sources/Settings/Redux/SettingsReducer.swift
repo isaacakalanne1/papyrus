@@ -19,6 +19,8 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction> = { state, ac
     case .confirmDeleteBackgroundImage:
         newState.backgroundImageData = nil
         newState.backgroundImageUsage = []
+    case .setSentenceCount(let count):
+        newState.sentenceCount = count
     case .onLoadedSettings(let settings):
         newState = settings
     case .loadSettings,

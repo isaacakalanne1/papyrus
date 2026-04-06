@@ -10,6 +10,7 @@ public struct SettingsState: Equatable, Codable, Sendable {
     public var storyMode: StoryMode
     public var backgroundImageData: Data?
     public var backgroundImageUsage: Set<BackgroundImageContext>
+    public var sentenceCount: Int
 
     public init(
         selectedTextSize: TextSize = .medium,
@@ -19,7 +20,8 @@ public struct SettingsState: Equatable, Codable, Sendable {
         selectedColorSchemeName: PapyrusColorSchemeName = .parchment,
         storyMode: StoryMode = .story,
         backgroundImageData: Data? = nil,
-        backgroundImageUsage: Set<BackgroundImageContext> = []
+        backgroundImageUsage: Set<BackgroundImageContext> = [],
+        sentenceCount: Int = 3
     ) {
         self.selectedTextSize = selectedTextSize
         self.isSubscribed = isSubscribed
@@ -29,6 +31,7 @@ public struct SettingsState: Equatable, Codable, Sendable {
         self.storyMode = storyMode
         self.backgroundImageData = backgroundImageData
         self.backgroundImageUsage = backgroundImageUsage
+        self.sentenceCount = sentenceCount
     }
 
     public init(
@@ -43,5 +46,6 @@ public struct SettingsState: Equatable, Codable, Sendable {
         self.storyMode = try container.decodeIfPresent(StoryMode.self, forKey: .storyMode) ?? .story
         self.backgroundImageData = try container.decodeIfPresent(Data.self, forKey: .backgroundImageData)
         self.backgroundImageUsage = try container.decodeIfPresent(Set<BackgroundImageContext>.self, forKey: .backgroundImageUsage) ?? []
+        self.sentenceCount = try container.decodeIfPresent(Int.self, forKey: .sentenceCount) ?? 3
     }
 }

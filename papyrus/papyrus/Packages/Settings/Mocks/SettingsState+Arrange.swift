@@ -19,7 +19,8 @@ public extension SettingsState {
         selectedFontName: String = "Georgia",
         selectedColorSchemeName: PapyrusColorSchemeName = .parchment,
         backgroundImageData: Data? = nil,
-        backgroundImageUsage: Set<BackgroundImageContext> = []
+        backgroundImageUsage: Set<BackgroundImageContext> = [],
+        sentenceCount: Int = 3
     ) -> SettingsState {
         .init(
             selectedTextSize: selectedTextSize,
@@ -27,7 +28,8 @@ public extension SettingsState {
             selectedFontName: selectedFontName,
             selectedColorSchemeName: selectedColorSchemeName,
             backgroundImageData: backgroundImageData,
-            backgroundImageUsage: backgroundImageUsage
+            backgroundImageUsage: backgroundImageUsage,
+            sentenceCount: sentenceCount
         )
     }
 }

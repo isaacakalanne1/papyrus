@@ -157,6 +157,48 @@ class SettingsReducerTests {
         #expect(newState.backgroundImageUsage == [])
     }
 
+    // MARK: - setSentenceCount Action Tests
+
+    @Test(arguments: [1, 3, 5, 10])
+    func setSentenceCount_updatesValue(count: Int) {
+        let initialState = SettingsState.arrange
+
+        let newState = settingsReducer(initialState, .setSentenceCount(count))
+
+        var expectedState = initialState
+        expectedState.sentenceCount = count
+        #expect(newState == expectedState)
+    }
+
+    @Test
+    func setSentenceCount_preservesOtherProperties() {
+        let initialState = SettingsState.arrange(selectedTextSize: .large, isSubscribed: true, sentenceCount: 3)
+
+        let newState = settingsReducer(initialState, .setSentenceCount(7))
+
+        #expect(newState.sentenceCount == 7)
+        #expect(newState.selectedTextSize == .large)
+        #expect(newState.isSubscribed == true)
+    }
+
+    @Test
+    func setSentenceCount_boundary_one() {
+        let initialState = SettingsState.arrange
+
+        let newState = settingsReducer(initialState, .setSentenceCount(1))
+
+        #expect(newState.sentenceCount == 1)
+    }
+
+    @Test
+    func setSentenceCount_boundary_ten() {
+        let initialState = SettingsState.arrange
+
+        let newState = settingsReducer(initialState, .setSentenceCount(10))
+
+        #expect(newState.sentenceCount == 10)
+    }
+
     // MARK: - No-op Action Tests
 
     @Test(arguments: [

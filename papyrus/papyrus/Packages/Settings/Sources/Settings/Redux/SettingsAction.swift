@@ -8,6 +8,7 @@ public enum SettingsAction: Equatable, Sendable {
     case uploadBackgroundImage(Data)
     case setBackgroundImageUsage(Set<BackgroundImageContext>)
     case confirmDeleteBackgroundImage
+    case setSentenceCount(Int)
     case loadSettings
     case onLoadedSettings(SettingsState)
     case saveSettings
