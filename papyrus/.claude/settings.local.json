@@ -15,7 +15,9 @@
       "Bash(grep -v \"^$\")",
       "Bash(git:*)",
       "Bash(grep:*)",
-      "Bash(Trial\", price moved to a supporting line below the button, and:*)"
+      "Bash(Trial\", price moved to a supporting line below the button, and:*)",
+      "Bash(gh issue:*)",
+      "Bash(gh pr:*)"
     ]
   }
 }
