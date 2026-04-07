@@ -68,6 +68,7 @@ struct WelcomeView: View {
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
+                .ignoresSafeArea()
             }
         }
     }

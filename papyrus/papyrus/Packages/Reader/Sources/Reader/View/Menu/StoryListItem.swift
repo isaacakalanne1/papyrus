@@ -85,11 +85,15 @@ struct StoryListItem: View {
                     .transition(.opacity.combined(with: .move(edge: .top)))
                 }
             }
+            .padding(.vertical, 6)
+            .padding(.horizontal, 10)
+            .background(
+                RoundedRectangle(cornerRadius: 10)
+                    .fill(PapyrusColor.iconPrimary.color(in: colorScheme)
+                        .opacity(isSelected ? 0.15 : 0.07))
+            )
         }
-        .listRowBackground(
-            PapyrusColor.iconPrimary.color(in: colorScheme)
-                .opacity(isSelected ? 0.15 : 0)
-        )
+        .listRowBackground(Color.clear)
         .swipeActions(edge: .trailing, allowsFullSwipe: false) {
             Button(role: .destructive) {
                 store.dispatch(.confirmDeleteStory(story))
