@@ -14,9 +14,10 @@ public let settingsMiddleware: Middleware<SettingsState, SettingsAction, Setting
     case .selectTextSize,
          .selectFont,
          .selectColorScheme,
-         .uploadBackgroundImage,
+         .addBackgroundImage,
+         .selectBackgroundImage,
+         .deleteBackgroundImage,
          .setBackgroundImageUsage,
-         .confirmDeleteBackgroundImage,
          .setSentenceCount:
         return .saveSettings
     case .loadSettings:

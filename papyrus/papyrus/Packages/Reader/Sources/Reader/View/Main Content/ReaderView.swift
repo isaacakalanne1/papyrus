@@ -21,8 +21,9 @@ struct ReaderView: View {
     }
 
     private var activeBackgroundImage: Image? {
-        guard let data = store.state.settingsState.backgroundImageData,
-              let uiImage = UIImage(data: data) else { return nil }
+        guard let selectedId = store.state.settingsState.selectedBackgroundImageId,
+              let entry = store.state.settingsState.backgroundImages.first(where: { $0.id == selectedId }),
+              let uiImage = UIImage(data: entry.imageData) else { return nil }
         return Image(uiImage: uiImage)
     }
 

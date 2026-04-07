@@ -8,7 +8,8 @@ public struct SettingsState: Equatable, Codable, Sendable {
     public var selectedFontName: String
     public var selectedColorSchemeName: PapyrusColorSchemeName
     public var storyMode: StoryMode
-    public var backgroundImageData: Data?
+    public var backgroundImages: [BackgroundImageEntry]
+    public var selectedBackgroundImageId: UUID?
     public var backgroundImageUsage: Set<BackgroundImageContext>
     public var sentenceCount: Int
 
@@ -19,7 +20,8 @@ public struct SettingsState: Equatable, Codable, Sendable {
         selectedFontName: String = "Georgia",
         selectedColorSchemeName: PapyrusColorSchemeName = .parchment,
         storyMode: StoryMode = .story,
-        backgroundImageData: Data? = nil,
+        backgroundImages: [BackgroundImageEntry] = [],
+        selectedBackgroundImageId: UUID? = nil,
         backgroundImageUsage: Set<BackgroundImageContext> = [],
         sentenceCount: Int = 3
     ) {
@@ -29,7 +31,8 @@ public struct SettingsState: Equatable, Codable, Sendable {
         self.selectedFontName = selectedFontName
         self.selectedColorSchemeName = selectedColorSchemeName
         self.storyMode = storyMode
-        self.backgroundImageData = backgroundImageData
+        self.backgroundImages = backgroundImages
+        self.selectedBackgroundImageId = selectedBackgroundImageId
         self.backgroundImageUsage = backgroundImageUsage
         self.sentenceCount = sentenceCount
     }
@@ -44,7 +47,8 @@ public struct SettingsState: Equatable, Codable, Sendable {
         self.selectedFontName = try container.decodeIfPresent(String.self, forKey: .selectedFontName) ?? "Georgia"
         self.selectedColorSchemeName = try container.decodeIfPresent(PapyrusColorSchemeName.self, forKey: .selectedColorSchemeName) ?? .parchment
         self.storyMode = try container.decodeIfPresent(StoryMode.self, forKey: .storyMode) ?? .story
-        self.backgroundImageData = try container.decodeIfPresent(Data.self, forKey: .backgroundImageData)
+        self.backgroundImages = try container.decodeIfPresent([BackgroundImageEntry].self, forKey: .backgroundImages) ?? []
+        self.selectedBackgroundImageId = try container.decodeIfPresent(UUID.self, forKey: .selectedBackgroundImageId)
         self.backgroundImageUsage = try container.decodeIfPresent(Set<BackgroundImageContext>.self, forKey: .backgroundImageUsage) ?? []
         self.sentenceCount = try container.decodeIfPresent(Int.self, forKey: .sentenceCount) ?? 3
     }

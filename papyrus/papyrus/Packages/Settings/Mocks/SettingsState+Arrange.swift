@@ -18,7 +18,8 @@ public extension SettingsState {
         isSubscribed: Bool = false,
         selectedFontName: String = "Georgia",
         selectedColorSchemeName: PapyrusColorSchemeName = .parchment,
-        backgroundImageData: Data? = nil,
+        backgroundImages: [BackgroundImageEntry] = [],
+        selectedBackgroundImageId: UUID? = nil,
         backgroundImageUsage: Set<BackgroundImageContext> = [],
         sentenceCount: Int = 3
     ) -> SettingsState {
@@ -27,7 +28,8 @@ public extension SettingsState {
             isSubscribed: isSubscribed,
             selectedFontName: selectedFontName,
             selectedColorSchemeName: selectedColorSchemeName,
-            backgroundImageData: backgroundImageData,
+            backgroundImages: backgroundImages,
+            selectedBackgroundImageId: selectedBackgroundImageId,
             backgroundImageUsage: backgroundImageUsage,
             sentenceCount: sentenceCount
         )

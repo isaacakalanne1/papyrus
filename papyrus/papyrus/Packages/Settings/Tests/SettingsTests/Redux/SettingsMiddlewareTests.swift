@@ -107,15 +107,53 @@ class SettingsMiddlewareTests {
         #expect(result == .onSavedSettings)
     }
     
-    // MARK: - uploadBackgroundImage Tests
+    // MARK: - addBackgroundImage Tests
 
     @Test
-    func uploadBackgroundImage_returnsSaveSettings() async {
+    func addBackgroundImage_returnsSaveSettings() async {
         let state = SettingsState()
         let environment = MockSettingsEnvironment()
-        let imageData = Data("test-image".utf8)
+        let entry = BackgroundImageEntry(imageData: Data("test-image".utf8))
 
-        let result = await settingsMiddleware(state, .uploadBackgroundImage(imageData), environment)
+        let result = await settingsMiddleware(state, .addBackgroundImage(entry), environment)
+
+        #expect(result == .saveSettings)
+        #expect(!environment.loadSettingsCalled)
+        #expect(!environment.saveSettingsCalled)
+    }
+
+    // MARK: - selectBackgroundImage Tests
+
+    @Test
+    func selectBackgroundImage_returnsSaveSettings() async {
+        let state = SettingsState()
+        let environment = MockSettingsEnvironment()
+
+        let result = await settingsMiddleware(state, .selectBackgroundImage(UUID()), environment)
+
+        #expect(result == .saveSettings)
+        #expect(!environment.loadSettingsCalled)
+        #expect(!environment.saveSettingsCalled)
+    }
+
+    @Test
+    func selectBackgroundImage_nil_returnsSaveSettings() async {
+        let state = SettingsState()
+        let environment = MockSettingsEnvironment()
+
+        let result = await settingsMiddleware(state, .selectBackgroundImage(nil), environment)
+
+        #expect(result == .saveSettings)
+    }
+
+    // MARK: - deleteBackgroundImage Tests
+
+    @Test
+    func deleteBackgroundImage_returnsSaveSettings() async {
+        let state = SettingsState()
+        let environment = MockSettingsEnvironment()
+
+        let result = await settingsMiddleware(state, .deleteBackgroundImage(UUID()), environment)
 
         #expect(result == .saveSettings)
         #expect(!environment.loadSettingsCalled)
@@ -131,20 +169,6 @@ class SettingsMiddlewareTests {
         let usage: Set<BackgroundImageContext> = [.home, .interactiveStory]
 
         let result = await settingsMiddleware(state, .setBackgroundImageUsage(usage), environment)
-
-        #expect(result == .saveSettings)
-        #expect(!environment.loadSettingsCalled)
-        #expect(!environment.saveSettingsCalled)
-    }
-
-    // MARK: - confirmDeleteBackgroundImage Tests
-
-    @Test
-    func confirmDeleteBackgroundImage_returnsSaveSettings() async {
-        let state = SettingsState()
-        let environment = MockSettingsEnvironment()
-
-        let result = await settingsMiddleware(state, .confirmDeleteBackgroundImage, environment)
 
         #expect(result == .saveSettings)
         #expect(!environment.loadSettingsCalled)

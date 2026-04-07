@@ -2,6 +2,8 @@ import SwiftUI
 import PhotosUI
 import PapyrusStyleKit
 
+private let thumbnailSize: CGFloat = 76
+
 struct BackgroundImagePickerRow: View {
     @EnvironmentObject var store: SettingsStore
     @Environment(\.papyrusColorScheme) private var colorScheme
@@ -10,23 +12,22 @@ struct BackgroundImagePickerRow: View {
     @State private var pickedImage: UIImage? = nil
     @State private var isCropViewPresented = false
     @State private var isContextPickerPresented = false
-    @State private var showDeleteConfirmation = false
+    @State private var deletingId: UUID? = nil
 
     var selectedFontName: String { store.state.selectedFontName }
-    var selectedTextSize: TextSize { store.state.selectedTextSize }
-
-    var thumbnailImage: UIImage? {
-        guard let data = store.state.backgroundImageData else { return nil }
-        return UIImage(data: data)
-    }
+    var backgroundImages: [BackgroundImageEntry] { store.state.backgroundImages }
+    var selectedId: UUID? { store.state.selectedBackgroundImageId }
 
     var body: some View {
-        Group {
-            if let thumbnail = thumbnailImage {
-                existingImageRow(thumbnail: thumbnail)
-            } else {
-                uploadRow
+        ScrollView(.horizontal, showsIndicators: false) {
+            HStack(spacing: 10) {
+                ForEach(backgroundImages) { entry in
+                    thumbnailButton(for: entry)
+                }
+                uploadButton
             }
+            .padding(.horizontal, 20)
+            .padding(.vertical, 4)
         }
         .onChange(of: selectedItem) { _, newItem in
             Task {
@@ -41,7 +42,8 @@ struct BackgroundImagePickerRow: View {
         .sheet(isPresented: $isCropViewPresented) {
             if let image = pickedImage {
                 ImageCropView(image: image, isPresented: $isCropViewPresented) { croppedData in
-                    store.dispatch(.uploadBackgroundImage(croppedData))
+                    let entry = BackgroundImageEntry(imageData: croppedData)
+                    store.dispatch(.addBackgroundImage(entry))
                     isContextPickerPresented = true
                 }
             }
@@ -55,78 +57,86 @@ struct BackgroundImagePickerRow: View {
             .environment(\.papyrusColorScheme, colorScheme)
         }
         .confirmationDialog(
-            "Are you sure you want to delete the background image?",
-            isPresented: $showDeleteConfirmation,
+            "Are you sure you want to delete this background image?",
+            isPresented: Binding(
+                get: { deletingId != nil },
+                set: { if !$0 { deletingId = nil } }
+            ),
             titleVisibility: .visible
         ) {
             Button("Delete", role: .destructive) {
-                store.dispatch(.confirmDeleteBackgroundImage)
+                if let id = deletingId {
+                    store.dispatch(.deleteBackgroundImage(id))
+                }
+                deletingId = nil
             }
-            Button("Cancel", role: .cancel) {}
+            Button("Cancel", role: .cancel) { deletingId = nil }
         }
     }
 
-    private func existingImageRow(thumbnail: UIImage) -> some View {
-        HStack(spacing: 12) {
-            Image(uiImage: thumbnail)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 44, height: 44)
-                .clipShape(RoundedRectangle(cornerRadius: 8))
-                .overlay(
-                    RoundedRectangle(cornerRadius: 8)
-                        .stroke(PapyrusColor.borderSecondary.color(in: colorScheme), lineWidth: 1)
-                )
+    private func thumbnailButton(for entry: BackgroundImageEntry) -> some View {
+        let isSelected = selectedId == entry.id
+        let uiImage = UIImage(data: entry.imageData)
 
-            PhotosPicker(selection: $selectedItem, matching: .images) {
-                Text("Upload new image")
-                    .font(.custom(selectedFontName, size: selectedTextSize.fontSize))
-                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
-            }
-
-            Spacer()
-
+        return ZStack(alignment: .topTrailing) {
             Button {
-                showDeleteConfirmation = true
+                store.dispatch(.selectBackgroundImage(isSelected ? nil : entry.id))
             } label: {
-                Image(systemName: "xmark.circle.fill")
-                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
-                    .font(.system(size: 20))
+                Group {
+                    if let img = uiImage {
+                        Image(uiImage: img)
+                            .resizable()
+                            .scaledToFill()
+                    } else {
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                    }
+                }
+                .frame(width: thumbnailSize, height: thumbnailSize)
+                .clipShape(RoundedRectangle(cornerRadius: 10))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(
+                            isSelected
+                                ? PapyrusColor.accent.color(in: colorScheme)
+                                : PapyrusColor.borderSecondary.color(in: colorScheme),
+                            lineWidth: isSelected ? 2.5 : 1
+                        )
+                )
             }
+            .buttonStyle(PlainButtonStyle())
+
+            // Delete button (top-right)
+            Button {
+                deletingId = entry.id
+            } label: {
+                ZStack {
+                    Circle()
+                        .fill(Color.black.opacity(0.6))
+                        .frame(width: 22, height: 22)
+                    Image(systemName: "xmark")
+                        .font(.system(size: 9, weight: .bold))
+                        .foregroundColor(.white)
+                }
+            }
+            .buttonStyle(PlainButtonStyle())
+            .offset(x: 6, y: -6)
         }
-        .contentShape(Rectangle())
-        .frame(maxWidth: .infinity)
-        .frame(height: 44)
-        .padding(.horizontal, 16)
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(PapyrusColor.borderSecondary.color(in: colorScheme), lineWidth: 1)
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(.horizontal, 20)
     }
 
-    private var uploadRow: some View {
+    private var uploadButton: some View {
         PhotosPicker(selection: $selectedItem, matching: .images) {
-            HStack {
-                Image(systemName: "photo.badge.plus")
+            ZStack {
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(
+                        PapyrusColor.borderSecondary.color(in: colorScheme),
+                        style: StrokeStyle(lineWidth: 1, dash: [5, 3])
+                    )
+                Image(systemName: "plus")
+                    .font(.system(size: 22, weight: .light))
                     .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
-                Text("Upload Image")
-                    .font(.custom(selectedFontName, size: selectedTextSize.fontSize))
-                    .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
-                Spacer()
             }
-            .contentShape(Rectangle())
-            .frame(maxWidth: .infinity)
-            .frame(height: 44)
-            .padding(.horizontal, 16)
+            .frame(width: thumbnailSize, height: thumbnailSize)
         }
         .buttonStyle(PlainButtonStyle())
-        .background(
-            RoundedRectangle(cornerRadius: 12)
-                .stroke(PapyrusColor.borderSecondary.color(in: colorScheme), lineWidth: 1)
-        )
-        .clipShape(RoundedRectangle(cornerRadius: 12))
-        .padding(.horizontal, 20)
     }
 }
