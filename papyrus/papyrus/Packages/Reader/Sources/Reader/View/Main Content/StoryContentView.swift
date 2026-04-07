@@ -9,6 +9,7 @@ import PapyrusStyleKit
 import Settings
 import SwiftUI
 import TextGeneration
+import UIKit
 
 /// Observes the enclosing UIScrollView's contentOffset via KVO and restores
 /// a saved offset when the story changes. Uses UIKit directly because:
@@ -83,8 +84,22 @@ struct StoryContentView: View {
     let story: Story
     @EnvironmentObject var store: ReaderStore
     @Environment(\.papyrusColorScheme) private var colorScheme
+    @Environment(\.papyrusBackgroundImage) private var backgroundImage
 
     let startScrollOffsetTimer: () -> Void
+
+    private var isShowingBackgroundImage: Bool {
+        backgroundImage.usage.contains(.story) && backgroundImage.image != nil
+    }
+
+    /// Black overlay for dark themes (light text), white overlay for light themes (dark text).
+    private var backgroundOverlayColor: Color {
+        let uiColor = UIColor(PapyrusColor.background.color(in: colorScheme))
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
+        uiColor.getRed(&r, green: &g, blue: &b, alpha: nil)
+        let luminance = 0.299 * r + 0.587 * g + 0.114 * b
+        return luminance < 0.5 ? .black : .white
+    }
 
     private func setupStoryView(scrollGeometry: GeometryProxy) {
         store.dispatch(.setScrollViewHeight(scrollGeometry.size.height))
@@ -202,6 +217,27 @@ struct StoryContentView: View {
                 store.dispatch(.setStory(nil))
             }
             .padding(16)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            if backgroundImage.usage.contains(.story), let img = backgroundImage.image {
+                ZStack {
+                    img
+                        .resizable()
+                        .scaledToFill()
+                        .clipped()
+                    backgroundOverlayColor.opacity(0.55)
+                }
+            } else {
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        PapyrusColor.background.color(in: colorScheme),
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
         }
     }
 }

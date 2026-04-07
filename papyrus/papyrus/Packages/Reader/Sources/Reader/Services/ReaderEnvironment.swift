@@ -18,7 +18,7 @@ public protocol ReaderEnvironmentProtocol {
     func getStoryDetails(story: Story) async throws -> Story
     func getChapterTitle(story: Story) async throws -> Story
     func createChapter(story: Story) async throws -> Story
-    func generateParagraph(story: Story) async throws -> Story
+    func generateParagraph(story: Story, sentenceCount: Int) async throws -> Story
     func saveStory(_ story: Story) async throws
     func saveStoryWithRelationships(_ story: Story) async throws
     func loadStory(withId id: UUID) async throws -> Story?
@@ -76,8 +76,8 @@ public struct ReaderEnvironment: ReaderEnvironmentProtocol {
         try await textGenerationEnvironment.createChapter(story: story)
     }
 
-    public func generateParagraph(story: Story) async throws -> Story {
-        try await textGenerationEnvironment.generateParagraph(story: story)
+    public func generateParagraph(story: Story, sentenceCount: Int) async throws -> Story {
+        try await textGenerationEnvironment.generateParagraph(story: story, sentenceCount: sentenceCount)
     }
 
     public func saveStory(_ story: Story) async throws {

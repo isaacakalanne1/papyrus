@@ -61,6 +61,7 @@ public indirect enum ReaderAction: Equatable, Sendable {
     case updateMainCharacter(String)
     case updateSetting(String)
     case updatePerspective(StoryPerspective)
+    case setSentenceCount(Int)
     case updateStoryTitle(Story, String)
     case updateChapterIndex(Story, Int)
     case updateScrollOffset(CGFloat)

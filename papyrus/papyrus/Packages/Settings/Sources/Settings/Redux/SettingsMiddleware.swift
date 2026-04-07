@@ -13,7 +13,12 @@ public let settingsMiddleware: Middleware<SettingsState, SettingsAction, Setting
     switch action {
     case .selectTextSize,
          .selectFont,
-         .selectColorScheme:
+         .selectColorScheme,
+         .addBackgroundImage,
+         .selectBackgroundImage,
+         .deleteBackgroundImage,
+         .setBackgroundImageUsage,
+         .setSentenceCount:
         return .saveSettings
     case .loadSettings:
         do {

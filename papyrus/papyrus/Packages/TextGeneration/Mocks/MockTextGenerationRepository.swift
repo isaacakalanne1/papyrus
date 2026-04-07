@@ -157,7 +157,7 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
         return createChapterReturnValue ?? originalStory
     }
 
-    public func generateParagraph(story originalStory: Story) async throws -> Story {
+    public func generateParagraph(story originalStory: Story, sentenceCount: Int) async throws -> Story {
         generateParagraphCalled = true
         generateParagraphCalledWith = originalStory
         generateParagraphCallCount += 1

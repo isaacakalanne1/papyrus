@@ -54,7 +54,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
 
     case .generateFirstParagraph(let story):
         do {
-            let storyWithParagraph = try await environment.generateParagraph(story: story)
+            let storyWithParagraph = try await environment.generateParagraph(story: story, sentenceCount: state.settingsState.sentenceCount)
             return .onGeneratedFirstParagraph(storyWithParagraph)
         } catch {
             return .failedToCreateChapter(.generateFirstParagraph(story))
@@ -75,7 +75,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
 
     case .beginGenerateParagraph(let story):
         do {
-            let storyWithParagraph = try await environment.generateParagraph(story: story)
+            let storyWithParagraph = try await environment.generateParagraph(story: story, sentenceCount: state.settingsState.sentenceCount)
             return .onGeneratedParagraph(storyWithParagraph)
         } catch {
             return .failedToCreateChapter(.beginGenerateParagraph(story))
@@ -237,6 +237,12 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
     case .updatePerspective(let p):
         var updatedSettings = state.settingsState
         updatedSettings.perspective = p
+        try? await environment.settingsEnvironment.saveSettings(updatedSettings)
+        return nil
+
+    case .setSentenceCount(let count):
+        var updatedSettings = state.settingsState
+        updatedSettings.sentenceCount = count
         try? await environment.settingsEnvironment.saveSettings(updatedSettings)
         return nil
 

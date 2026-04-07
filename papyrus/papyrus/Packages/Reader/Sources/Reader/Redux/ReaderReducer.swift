@@ -191,6 +191,9 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
     case .updatePerspective(let p):
         newState.settingsState.perspective = p
 
+    case .setSentenceCount(let count):
+        newState.settingsState.sentenceCount = count
+
     case .updateStoryTitle(let story, let title):
         if newState.story?.id == story.id {
             newState.story?.title = title

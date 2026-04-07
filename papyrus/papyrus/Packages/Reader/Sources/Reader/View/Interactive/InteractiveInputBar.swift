@@ -11,6 +11,7 @@ struct InteractiveInputBar: View {
     let story: Story
     @EnvironmentObject var store: ReaderStore
     @Environment(\.papyrusColorScheme) private var colorScheme
+    @State private var isSettingsPresented = false
 
     private var isDisabled: Bool {
         store.state.isLoading
@@ -50,6 +51,22 @@ struct InteractiveInputBar: View {
                         )
                 }
                 .disabled(!canRedo || isDisabled)
+
+                Button {
+                    isSettingsPresented = true
+                } label: {
+                    Image(systemName: "gearshape")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+                }
+                .disabled(isDisabled)
+                .sheet(isPresented: $isSettingsPresented) {
+                    InteractiveSettingsSheet(
+                        isPresented: $isSettingsPresented,
+                        currentSentenceCount: store.state.settingsState.sentenceCount
+                    )
+                    .environmentObject(store)
+                }
             }
 
             HStack(spacing: 8) {

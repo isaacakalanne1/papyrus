@@ -5,9 +5,14 @@ struct GenerateParagraphEndpoint: Endpoint {
     typealias Response = OpenRouterResponse
 
     let story: Story
+    let sentenceCount: Int
 
     var path: String {
         "/api/v1/chat/completions"
+    }
+
+    private var sentenceLabel: String {
+        sentenceCount == 1 ? "1 sentence" : "\(sentenceCount) sentences"
     }
 
     var body: Data? {
@@ -31,12 +36,12 @@ You are writing an interactive fiction story.
             userContent += "\n\n**Player action:** \(action.promptDescription)"
         }
 
-        userContent += "\n\nContinue the story naturally with exactly a short paragraph (2–3 sentences). Do not include chapter headings."
+        userContent += "\n\nContinue the story naturally with exactly \(sentenceLabel). Do not include chapter headings."
 
         let messages = [
             OpenRouterMessage(
                 role: "system",
-                content: "You are an acclaimed interactive fiction author with a gift for immersive, concise prose. Your job is to continue a story in response to the player's action, writing exactly a short paragraph (2–3 sentences) of narrative. Do not include chapter headings, labels, or meta-commentary. Write only the paragraph."
+                content: "You are an acclaimed interactive fiction author with a gift for immersive, concise prose. Your job is to continue a story in response to the player's action, writing exactly \(sentenceLabel) of narrative. Do not include chapter headings, labels, or meta-commentary. Write only the paragraph."
             ),
             OpenRouterMessage(
                 role: "user",

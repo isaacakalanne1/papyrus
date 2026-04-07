@@ -76,8 +76,173 @@ class SettingsReducerTests {
         #expect(newState == expectedState)
     }
     
+    // MARK: - addBackgroundImage Tests
+
+    @Test
+    func addBackgroundImage_appendsEntryAndSelectsIt() {
+        let initialState = SettingsState.arrange
+        let entry = BackgroundImageEntry(imageData: Data("test-image".utf8))
+
+        let newState = settingsReducer(initialState, .addBackgroundImage(entry))
+
+        #expect(newState.backgroundImages.count == 1)
+        #expect(newState.backgroundImages.first?.id == entry.id)
+        #expect(newState.selectedBackgroundImageId == entry.id)
+    }
+
+    @Test
+    func addBackgroundImage_appendsToExistingImages() {
+        let first = BackgroundImageEntry(imageData: Data("first".utf8))
+        let initialState = SettingsState.arrange(
+            backgroundImages: [first],
+            selectedBackgroundImageId: first.id
+        )
+        let second = BackgroundImageEntry(imageData: Data("second".utf8))
+
+        let newState = settingsReducer(initialState, .addBackgroundImage(second))
+
+        #expect(newState.backgroundImages.count == 2)
+        #expect(newState.selectedBackgroundImageId == second.id)
+    }
+
+    // MARK: - selectBackgroundImage Tests
+
+    @Test
+    func selectBackgroundImage_updatesSelectedId() {
+        let entry = BackgroundImageEntry(imageData: Data("img".utf8))
+        let initialState = SettingsState.arrange(backgroundImages: [entry])
+
+        let newState = settingsReducer(initialState, .selectBackgroundImage(entry.id))
+
+        #expect(newState.selectedBackgroundImageId == entry.id)
+    }
+
+    @Test
+    func selectBackgroundImage_nil_deselects() {
+        let entry = BackgroundImageEntry(imageData: Data("img".utf8))
+        let initialState = SettingsState.arrange(
+            backgroundImages: [entry],
+            selectedBackgroundImageId: entry.id
+        )
+
+        let newState = settingsReducer(initialState, .selectBackgroundImage(nil))
+
+        #expect(newState.selectedBackgroundImageId == nil)
+    }
+
+    // MARK: - deleteBackgroundImage Tests
+
+    @Test
+    func deleteBackgroundImage_removesEntry() {
+        let entry = BackgroundImageEntry(imageData: Data("img".utf8))
+        let initialState = SettingsState.arrange(backgroundImages: [entry])
+
+        let newState = settingsReducer(initialState, .deleteBackgroundImage(entry.id))
+
+        #expect(newState.backgroundImages.isEmpty)
+    }
+
+    @Test
+    func deleteBackgroundImage_clearsSelectionIfDeleted() {
+        let entry = BackgroundImageEntry(imageData: Data("img".utf8))
+        let initialState = SettingsState.arrange(
+            backgroundImages: [entry],
+            selectedBackgroundImageId: entry.id
+        )
+
+        let newState = settingsReducer(initialState, .deleteBackgroundImage(entry.id))
+
+        #expect(newState.selectedBackgroundImageId == nil)
+    }
+
+    @Test
+    func deleteBackgroundImage_preservesSelectionOfOtherEntry() {
+        let first = BackgroundImageEntry(imageData: Data("first".utf8))
+        let second = BackgroundImageEntry(imageData: Data("second".utf8))
+        let initialState = SettingsState.arrange(
+            backgroundImages: [first, second],
+            selectedBackgroundImageId: second.id
+        )
+
+        let newState = settingsReducer(initialState, .deleteBackgroundImage(first.id))
+
+        #expect(newState.backgroundImages.count == 1)
+        #expect(newState.selectedBackgroundImageId == second.id)
+    }
+
+    // MARK: - setBackgroundImageUsage Tests
+
+    @Test
+    func setBackgroundImageUsage_updatesUsage() {
+        let initialState = SettingsState.arrange
+        let usage: Set<BackgroundImageContext> = [.home, .story]
+
+        let newState = settingsReducer(initialState, .setBackgroundImageUsage(usage))
+
+        var expectedState = initialState
+        expectedState.backgroundImageUsage = usage
+        #expect(newState == expectedState)
+    }
+
+    @Test(arguments: [
+        (Set<BackgroundImageContext>([.home])),
+        (Set<BackgroundImageContext>([.story])),
+        (Set<BackgroundImageContext>([.interactiveStory])),
+        (Set<BackgroundImageContext>([.home, .story, .interactiveStory])),
+        (Set<BackgroundImageContext>())
+    ])
+    func setBackgroundImageUsage_withVariousContexts(usage: Set<BackgroundImageContext>) {
+        let initialState = SettingsState.arrange
+
+        let newState = settingsReducer(initialState, .setBackgroundImageUsage(usage))
+
+        #expect(newState.backgroundImageUsage == usage)
+    }
+
+    // MARK: - setSentenceCount Action Tests
+
+    @Test(arguments: [1, 3, 5, 10])
+    func setSentenceCount_updatesValue(count: Int) {
+        let initialState = SettingsState.arrange
+
+        let newState = settingsReducer(initialState, .setSentenceCount(count))
+
+        var expectedState = initialState
+        expectedState.sentenceCount = count
+        #expect(newState == expectedState)
+    }
+
+    @Test
+    func setSentenceCount_preservesOtherProperties() {
+        let initialState = SettingsState.arrange(selectedTextSize: .large, isSubscribed: true, sentenceCount: 3)
+
+        let newState = settingsReducer(initialState, .setSentenceCount(7))
+
+        #expect(newState.sentenceCount == 7)
+        #expect(newState.selectedTextSize == .large)
+        #expect(newState.isSubscribed == true)
+    }
+
+    @Test
+    func setSentenceCount_boundary_one() {
+        let initialState = SettingsState.arrange
+
+        let newState = settingsReducer(initialState, .setSentenceCount(1))
+
+        #expect(newState.sentenceCount == 1)
+    }
+
+    @Test
+    func setSentenceCount_boundary_ten() {
+        let initialState = SettingsState.arrange
+
+        let newState = settingsReducer(initialState, .setSentenceCount(10))
+
+        #expect(newState.sentenceCount == 10)
+    }
+
     // MARK: - No-op Action Tests
-    
+
     @Test(arguments: [
         SettingsAction.loadSettings,
         SettingsAction.saveSettings,

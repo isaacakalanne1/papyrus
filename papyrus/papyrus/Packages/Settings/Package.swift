@@ -40,7 +40,7 @@ let package = Package(
         ),
         .testTarget(
             name: "SettingsTests",
-            dependencies: ["Settings", "SettingsMocks"]
+            dependencies: ["Settings", "SettingsMocks", "PapyrusStyleKit"]
         ),
     ]
 )

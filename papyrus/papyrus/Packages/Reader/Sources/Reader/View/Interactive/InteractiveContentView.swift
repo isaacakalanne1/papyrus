@@ -6,11 +6,25 @@
 import SwiftUI
 import PapyrusStyleKit
 import TextGeneration
+import UIKit
 
 struct InteractiveContentView: View {
     let story: Story
     @EnvironmentObject var store: ReaderStore
     @Environment(\.papyrusColorScheme) private var colorScheme
+    @Environment(\.papyrusBackgroundImage) private var backgroundImage
+
+    private var isShowingBackgroundImage: Bool {
+        backgroundImage.usage.contains(.interactiveStory) && backgroundImage.image != nil
+    }
+
+    private var backgroundOverlayColor: Color {
+        let uiColor = UIColor(PapyrusColor.background.color(in: colorScheme))
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
+        uiColor.getRed(&r, green: &g, blue: &b, alpha: nil)
+        let luminance = 0.299 * r + 0.587 * g + 0.114 * b
+        return luminance < 0.5 ? .black : .white
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -55,6 +69,27 @@ struct InteractiveContentView: View {
             }
 
             InteractiveInputBar(story: story)
+        }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background {
+            if backgroundImage.usage.contains(.interactiveStory), let img = backgroundImage.image {
+                ZStack {
+                    img
+                        .resizable()
+                        .scaledToFill()
+                        .clipped()
+                    backgroundOverlayColor.opacity(0.55)
+                }
+            } else {
+                LinearGradient(
+                    gradient: Gradient(colors: [
+                        PapyrusColor.background.color(in: colorScheme),
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                    ]),
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            }
         }
     }
 
