@@ -89,6 +89,7 @@ struct InteractiveContentView: View {
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
                 )
+                .ignoresSafeArea()
             }
         }
     }
