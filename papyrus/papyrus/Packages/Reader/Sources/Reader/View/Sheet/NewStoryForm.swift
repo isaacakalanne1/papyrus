@@ -197,14 +197,10 @@ struct NewStoryForm: View {
                 .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
         )
         .toolbar {
-            ToolbarItem(placement: .keyboard) {
-                HStack {
-                    Spacer()
-                    Button("Done") {
-                        store.dispatch(.setFocusedField(nil))
-                    }
-                    .font(.custom(store.state.settingsState.selectedFontName, size: 16))
-                    .foregroundColor(PapyrusColor.accent.color(in: colorScheme))
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    store.dispatch(.setFocusedField(nil))
                 }
             }
         }

@@ -12,6 +12,9 @@ struct InteractiveInputBar: View {
     @EnvironmentObject var store: ReaderStore
     @Environment(\.papyrusColorScheme) private var colorScheme
     @State private var isSettingsPresented = false
+    
+    // 1. Add a FocusState to track when the text field is active
+    @FocusState private var isInputFocused: Bool
 
     private var isDisabled: Bool {
         store.state.isLoading
@@ -81,6 +84,8 @@ struct InteractiveInputBar: View {
                 .font(.custom(store.state.settingsState.selectedFontName, size: 15))
                 .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
                 .disabled(isDisabled)
+                // 2. Bind the FocusState to the TextField
+                .focused($isInputFocused)
                 .onSubmit {
                     submitAction()
                 }
@@ -123,11 +128,23 @@ struct InteractiveInputBar: View {
                 .ignoresSafeArea(edges: .bottom)
         )
         .opacity(isDisabled ? 0.6 : 1.0)
+        // 3. Add the toolbar for the keyboard
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Spacer()
+                Button("Done") {
+                    isInputFocused = false
+                }
+            }
+        }
     }
 
     private func submitAction() {
         let text = store.state.interactiveInputText.trimmingCharacters(in: .whitespacesAndNewlines)
         let action: ChapterAction? = text.isEmpty ? nil : .next(text)
         store.dispatch(.submitInteractiveAction(story, action))
+        
+        // Optional: dismiss the keyboard when submitting
+        isInputFocused = false
     }
 }
