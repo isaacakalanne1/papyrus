@@ -40,7 +40,7 @@ struct BackgroundImagePickerRow: View {
                 selectedItem = nil
             }
         }
-        .sheet(isPresented: $isCropViewPresented) {
+        .fullScreenCover(isPresented: $isCropViewPresented) {
             if let image = pickedImage {
                 ImageCropView(image: image, isPresented: $isCropViewPresented) { croppedData in
                     let entry = BackgroundImageEntry(imageData: croppedData)

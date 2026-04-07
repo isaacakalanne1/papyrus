@@ -269,7 +269,6 @@ struct ImageCropView: View {
             }
             .toolbarBackground(Color.black, for: .navigationBar)
             .toolbarBackground(.visible, for: .navigationBar)
-            .interactiveDismissDisabled(true)
         }
     }
 
