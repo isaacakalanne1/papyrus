@@ -226,7 +226,7 @@ struct StoryContentView: View {
                         .resizable()
                         .scaledToFill()
                         .clipped()
-                    backgroundOverlayColor.opacity(0.4)
+                    backgroundOverlayColor.opacity(0.55)
                 }
             } else {
                 LinearGradient(
