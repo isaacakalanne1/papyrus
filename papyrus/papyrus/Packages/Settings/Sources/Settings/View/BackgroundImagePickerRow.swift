@@ -12,6 +12,7 @@ struct BackgroundImagePickerRow: View {
     @State private var pickedImage: UIImage? = nil
     @State private var isCropViewPresented = false
     @State private var isContextPickerPresented = false
+    @State private var contextPickerInitialUsage: Set<BackgroundImageContext> = []
     @State private var deletingId: UUID? = nil
 
     var selectedFontName: String { store.state.selectedFontName }
@@ -44,6 +45,7 @@ struct BackgroundImagePickerRow: View {
                 ImageCropView(image: image, isPresented: $isCropViewPresented) { croppedData in
                     let entry = BackgroundImageEntry(imageData: croppedData)
                     store.dispatch(.addBackgroundImage(entry))
+                    contextPickerInitialUsage = Set(BackgroundImageContext.allCases)
                     isContextPickerPresented = true
                 }
             }
@@ -51,7 +53,7 @@ struct BackgroundImagePickerRow: View {
         .sheet(isPresented: $isContextPickerPresented) {
             BackgroundImageContextPickerSheet(
                 isPresented: $isContextPickerPresented,
-                initialUsage: store.state.backgroundImageUsage
+                initialUsage: contextPickerInitialUsage
             )
             .environmentObject(store)
             .environment(\.papyrusColorScheme, colorScheme)

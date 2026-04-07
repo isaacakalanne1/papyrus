@@ -14,16 +14,24 @@ struct WelcomeView: View {
     @Environment(\.papyrusColorScheme) private var colorScheme
     @Environment(\.papyrusBackgroundImage) private var backgroundImage
 
+    private var isShowingBackgroundImage: Bool {
+        backgroundImage.usage.contains(.home) && backgroundImage.image != nil
+    }
+
     var body: some View {
         ZStack {
             // Bottom content (New Story button)
             VStack {
                 Spacer()
-                SDIcons.scroll.image
-                    .frame(width: 64, height: 64)
-                    .saturation(colorScheme == .parchment ? 1 : 0)
-                    .colorMultiply(colorScheme == .parchment ? .white : PapyrusColor.iconPrimary.color(in: colorScheme))
-                    .opacity(0.5)
+
+                if !isShowingBackgroundImage {
+                    SDIcons.scroll.image
+                        .frame(width: 64, height: 64)
+                        .saturation(colorScheme == .parchment ? 1 : 0)
+                        .colorMultiply(colorScheme == .parchment ? .white : PapyrusColor.iconPrimary.color(in: colorScheme))
+                        .opacity(0.5)
+                }
+
                 Spacer()
 
                 // Initial "New Story" button
@@ -32,17 +40,26 @@ struct WelcomeView: View {
                         store.dispatch(.setShowStoryForm(true))
                     }
                 }
-                    .padding(.bottom, 30)
+                .padding(.bottom, 30)
             }
             .padding(.horizontal, 20)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background {
-            if backgroundImage.usage.contains(.home), let img = backgroundImage.image {
-                img
-                    .resizable()
-                    .scaledToFill()
-                    .clipped()
+            if let img = backgroundImage.image, backgroundImage.usage.contains(.home) {
+                ZStack(alignment: .bottom) {
+                    img
+                        .resizable()
+                        .scaledToFill()
+                        .clipped()
+
+                    // Bottom gradient so the New Story button reads clearly over the image.
+                    LinearGradient(
+                        colors: [.clear, .black.opacity(0.55)],
+                        startPoint: .center,
+                        endPoint: .bottom
+                    )
+                }
             } else {
                 LinearGradient(
                     gradient: Gradient(colors: [
