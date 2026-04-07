@@ -55,7 +55,7 @@ struct WelcomeView: View {
 
                     LinearGradient(
                         colors: [.clear, .black.opacity(0.55)],
-                        startPoint: .top,
+                        startPoint: .center,
                         endPoint: .bottom
                     )
                 }
