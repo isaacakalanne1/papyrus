@@ -13,7 +13,6 @@ struct BackgroundImagePickerRow: View {
     @State private var isCropViewPresented = false
     @State private var isContextPickerPresented = false
     @State private var contextPickerInitialUsage: Set<BackgroundImageContext> = []
-    @State private var deletingId: UUID? = nil
 
     var selectedFontName: String { store.state.selectedFontName }
     var backgroundImages: [BackgroundImageEntry] { store.state.backgroundImages }
@@ -58,22 +57,6 @@ struct BackgroundImagePickerRow: View {
             .environmentObject(store)
             .environment(\.papyrusColorScheme, colorScheme)
         }
-        .confirmationDialog(
-            "Are you sure you want to delete this background image?",
-            isPresented: Binding(
-                get: { deletingId != nil },
-                set: { if !$0 { deletingId = nil } }
-            ),
-            titleVisibility: .visible
-        ) {
-            Button("Delete", role: .destructive) {
-                if let id = deletingId {
-                    store.dispatch(.deleteBackgroundImage(id))
-                }
-                deletingId = nil
-            }
-            Button("Cancel", role: .cancel) { deletingId = nil }
-        }
     }
 
     private func thumbnailButton(for entry: BackgroundImageEntry) -> some View {
@@ -109,7 +92,7 @@ struct BackgroundImagePickerRow: View {
 
             // Delete button (top-right)
             Button {
-                deletingId = entry.id
+                store.dispatch(.deleteBackgroundImage(entry.id))
             } label: {
                 ZStack {
                     Circle()
