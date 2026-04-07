@@ -9,6 +9,7 @@ import PapyrusStyleKit
 import Settings
 import SwiftUI
 import TextGeneration
+import UIKit
 
 /// Observes the enclosing UIScrollView's contentOffset via KVO and restores
 /// a saved offset when the story changes. Uses UIKit directly because:
@@ -87,6 +88,19 @@ struct StoryContentView: View {
 
     let startScrollOffsetTimer: () -> Void
 
+    private var isShowingBackgroundImage: Bool {
+        backgroundImage.usage.contains(.story) && backgroundImage.image != nil
+    }
+
+    /// Black shadow for light text (dark themes), white shadow for dark text (light themes).
+    private var textShadowColor: Color {
+        let uiColor = UIColor(PapyrusColor.background.color(in: colorScheme))
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
+        uiColor.getRed(&r, green: &g, blue: &b, alpha: nil)
+        let luminance = 0.299 * r + 0.587 * g + 0.114 * b
+        return luminance < 0.5 ? .black : .white
+    }
+
     private func setupStoryView(scrollGeometry: GeometryProxy) {
         store.dispatch(.setScrollViewHeight(scrollGeometry.size.height))
         startScrollOffsetTimer()
@@ -117,6 +131,10 @@ struct StoryContentView: View {
                                     .font(.custom(store.state.settingsState.selectedFontName, size: store.state.settingsState.selectedTextSize.fontSize))
                                     .lineSpacing(8)
                                     .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+                                    .shadow(
+                                        color: isShowingBackgroundImage ? textShadowColor.opacity(0.85) : .clear,
+                                        radius: 3, x: 0, y: 1
+                                    )
                                     .padding(.horizontal, 32)
                                     .padding(.top, 40)
                                     .padding(.bottom, store.state.isLoading ? 0 : 40)

@@ -6,12 +6,25 @@
 import SwiftUI
 import PapyrusStyleKit
 import TextGeneration
+import UIKit
 
 struct InteractiveContentView: View {
     let story: Story
     @EnvironmentObject var store: ReaderStore
     @Environment(\.papyrusColorScheme) private var colorScheme
     @Environment(\.papyrusBackgroundImage) private var backgroundImage
+
+    private var isShowingBackgroundImage: Bool {
+        backgroundImage.usage.contains(.interactiveStory) && backgroundImage.image != nil
+    }
+
+    private var textShadowColor: Color {
+        let uiColor = UIColor(PapyrusColor.background.color(in: colorScheme))
+        var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
+        uiColor.getRed(&r, green: &g, blue: &b, alpha: nil)
+        let luminance = 0.299 * r + 0.587 * g + 0.114 * b
+        return luminance < 0.5 ? .black : .white
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -83,7 +96,8 @@ struct InteractiveContentView: View {
             if let action = chapter.action {
                 InteractiveActionView(
                     action: action,
-                    fontName: store.state.settingsState.selectedFontName
+                    fontName: store.state.settingsState.selectedFontName,
+                    shadowColor: isShowingBackgroundImage ? textShadowColor.opacity(0.85) : .clear
                 )
             }
 
@@ -92,6 +106,10 @@ struct InteractiveContentView: View {
                     .font(.custom(store.state.settingsState.selectedFontName, size: store.state.settingsState.selectedTextSize.fontSize))
                     .lineSpacing(8)
                     .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+                    .shadow(
+                        color: isShowingBackgroundImage ? textShadowColor.opacity(0.85) : .clear,
+                        radius: 3, x: 0, y: 1
+                    )
                     .opacity(1.0)
             }
         }
@@ -106,6 +124,7 @@ struct InteractiveContentView: View {
 private struct InteractiveActionView: View {
     let action: ChapterAction
     let fontName: String
+    let shadowColor: Color
     @Environment(\.papyrusColorScheme) private var colorScheme
 
     var body: some View {
@@ -115,6 +134,7 @@ private struct InteractiveActionView: View {
                 .font(.custom(fontName, size: 14))
                 .italic()
                 .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+                .shadow(color: shadowColor, radius: 3, x: 0, y: 1)
         }
     }
 }

@@ -53,9 +53,16 @@ struct WelcomeView: View {
                         .scaledToFill()
                         .clipped()
 
-                    // Bottom gradient so the New Story button reads clearly over the image.
+                    // Gradient darkens the middle of the image for readability,
+                    // but fades back to clear at the very bottom so it doesn't
+                    // bleed behind the New Story button.
                     LinearGradient(
-                        colors: [.clear, .black.opacity(0.55)],
+                        stops: [
+                            .init(color: .clear,               location: 0.0),
+                            .init(color: .black.opacity(0.50), location: 0.60),
+                            .init(color: .black.opacity(0.20), location: 0.82),
+                            .init(color: .clear,               location: 1.0)
+                        ],
                         startPoint: .center,
                         endPoint: .bottom
                     )
