@@ -18,7 +18,7 @@ struct InteractiveContentView: View {
         backgroundImage.usage.contains(.interactiveStory) && backgroundImage.image != nil
     }
 
-    private var textShadowColor: Color {
+    private var backgroundOverlayColor: Color {
         let uiColor = UIColor(PapyrusColor.background.color(in: colorScheme))
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
         uiColor.getRed(&r, green: &g, blue: &b, alpha: nil)
@@ -73,10 +73,13 @@ struct InteractiveContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background {
             if backgroundImage.usage.contains(.interactiveStory), let img = backgroundImage.image {
-                img
-                    .resizable()
-                    .scaledToFill()
-                    .clipped()
+                ZStack {
+                    img
+                        .resizable()
+                        .scaledToFill()
+                        .clipped()
+                    backgroundOverlayColor.opacity(0.4)
+                }
             } else {
                 LinearGradient(
                     gradient: Gradient(colors: [
@@ -96,8 +99,7 @@ struct InteractiveContentView: View {
             if let action = chapter.action {
                 InteractiveActionView(
                     action: action,
-                    fontName: store.state.settingsState.selectedFontName,
-                    shadowColor: isShowingBackgroundImage ? textShadowColor.opacity(0.85) : .clear
+                    fontName: store.state.settingsState.selectedFontName
                 )
             }
 
@@ -106,10 +108,6 @@ struct InteractiveContentView: View {
                     .font(.custom(store.state.settingsState.selectedFontName, size: store.state.settingsState.selectedTextSize.fontSize))
                     .lineSpacing(8)
                     .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
-                    .shadow(
-                        color: isShowingBackgroundImage ? textShadowColor.opacity(0.85) : .clear,
-                        radius: 3, x: 0, y: 1
-                    )
                     .opacity(1.0)
             }
         }
@@ -124,7 +122,6 @@ struct InteractiveContentView: View {
 private struct InteractiveActionView: View {
     let action: ChapterAction
     let fontName: String
-    let shadowColor: Color
     @Environment(\.papyrusColorScheme) private var colorScheme
 
     var body: some View {
@@ -134,7 +131,6 @@ private struct InteractiveActionView: View {
                 .font(.custom(fontName, size: 14))
                 .italic()
                 .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
-                .shadow(color: shadowColor, radius: 3, x: 0, y: 1)
         }
     }
 }

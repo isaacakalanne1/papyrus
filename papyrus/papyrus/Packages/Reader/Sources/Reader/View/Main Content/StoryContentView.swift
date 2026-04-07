@@ -92,8 +92,8 @@ struct StoryContentView: View {
         backgroundImage.usage.contains(.story) && backgroundImage.image != nil
     }
 
-    /// Black shadow for light text (dark themes), white shadow for dark text (light themes).
-    private var textShadowColor: Color {
+    /// Black overlay for dark themes (light text), white overlay for light themes (dark text).
+    private var backgroundOverlayColor: Color {
         let uiColor = UIColor(PapyrusColor.background.color(in: colorScheme))
         var r: CGFloat = 0, g: CGFloat = 0, b: CGFloat = 0
         uiColor.getRed(&r, green: &g, blue: &b, alpha: nil)
@@ -131,10 +131,6 @@ struct StoryContentView: View {
                                     .font(.custom(store.state.settingsState.selectedFontName, size: store.state.settingsState.selectedTextSize.fontSize))
                                     .lineSpacing(8)
                                     .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
-                                    .shadow(
-                                        color: isShowingBackgroundImage ? textShadowColor.opacity(0.85) : .clear,
-                                        radius: 3, x: 0, y: 1
-                                    )
                                     .padding(.horizontal, 32)
                                     .padding(.top, 40)
                                     .padding(.bottom, store.state.isLoading ? 0 : 40)
@@ -225,10 +221,13 @@ struct StoryContentView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background {
             if backgroundImage.usage.contains(.story), let img = backgroundImage.image {
-                img
-                    .resizable()
-                    .scaledToFill()
-                    .clipped()
+                ZStack {
+                    img
+                        .resizable()
+                        .scaledToFill()
+                        .clipped()
+                    backgroundOverlayColor.opacity(0.4)
+                }
             } else {
                 LinearGradient(
                     gradient: Gradient(colors: [
