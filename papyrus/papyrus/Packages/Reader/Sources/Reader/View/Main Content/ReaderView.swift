@@ -81,24 +81,7 @@ struct ReaderView: View {
                     isEnabled: !store.state.contentState.hasStory
                 )
 
-                UnifiedNavigationBar(
-                    isMenuOpen: Binding(
-                        get: { store.state.menuStatus == .storyOpen },
-                        set: { newValue in
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                store.dispatch(.setMenuStatus(newValue ? .storyOpen : .closed))
-                            }
-                        }
-                    ),
-                    isSettingsOpen: Binding(
-                        get: { store.state.menuStatus == .settingsOpen },
-                        set: { newValue in
-                            withAnimation(.easeInOut(duration: 0.3)) {
-                                store.dispatch(.setMenuStatus(newValue ? .settingsOpen : .closed))
-                            }
-                        }
-                    )
-                )
+                UnifiedNavigationBar()
                 .ignoresSafeArea(.keyboard)
             }
             .environment(\.readerFocusedField, $focusedField)

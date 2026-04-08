@@ -12,8 +12,6 @@ import PapyrusStyleKit
 struct UnifiedNavigationBar: View {
     @EnvironmentObject var store: ReaderStore
     @Environment(\.papyrusColorScheme) private var colorScheme
-    @Binding var isMenuOpen: Bool
-    @Binding var isSettingsOpen: Bool
 
     var body: some View {
         VStack(spacing: 0) {
@@ -21,7 +19,8 @@ struct UnifiedNavigationBar: View {
                 // Menu button (left)
                 MenuButton(type: .menu) {
                     withAnimation(.easeInOut(duration: 0.3)) {
-                        isMenuOpen.toggle()
+                        let newStatus: MenuStatus = store.state.menuStatus == .storyOpen ? .closed : .storyOpen
+                        store.dispatch(.setMenuStatus(newStatus))
                     }
                 }
 
@@ -42,7 +41,8 @@ struct UnifiedNavigationBar: View {
                 // Settings button (right)
                 MenuButton(type: .settings) {
                     withAnimation(.easeInOut(duration: 0.3)) {
-                        isSettingsOpen.toggle()
+                        let newStatus: MenuStatus = store.state.menuStatus == .settingsOpen ? .closed : .settingsOpen
+                        store.dispatch(.setMenuStatus(newStatus))
                     }
                 }
             }
