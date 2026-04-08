@@ -6,8 +6,8 @@
 //
 
 import Foundation
-import TextGeneration
 import Settings
+import TextGeneration
 
 public enum ReaderField: Equatable, Sendable {
     case mainCharacter
@@ -115,7 +115,8 @@ public struct ReaderState: Equatable {
             if story.mode == .interactive {
                 return .interactiveStory(story)
             } else if !story.chapters.isEmpty,
-                      story.chapterIndex < story.chapters.count {
+                      story.chapterIndex < story.chapters.count
+            {
                 return .story(story)
             }
         }

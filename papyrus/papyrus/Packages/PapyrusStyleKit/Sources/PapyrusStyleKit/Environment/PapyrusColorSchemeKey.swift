@@ -9,8 +9,8 @@ struct PapyrusColorSchemeKey: EnvironmentKey {
     static let defaultValue: PapyrusColorScheme = .parchment
 }
 
-extension EnvironmentValues {
-    public var papyrusColorScheme: PapyrusColorScheme {
+public extension EnvironmentValues {
+    var papyrusColorScheme: PapyrusColorScheme {
         get { self[PapyrusColorSchemeKey.self] }
         set { self[PapyrusColorSchemeKey.self] = newValue }
     }

@@ -5,18 +5,18 @@
 //  Created by Isaac Akalanne on 26/09/2025.
 //
 
-import SwiftUI
+import FirebaseCore
 import Reader
-import TextGeneration
 import Settings
 import Subscription
+import SwiftUI
+import TextGeneration
 import UIKit
-import FirebaseCore
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(
-        _ application: UIApplication,
-        didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil
+        _: UIApplication,
+        didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
     ) -> Bool {
         FirebaseApp.configure()
         return true
@@ -30,17 +30,17 @@ struct papyrusApp: App {
     let environment: ReaderEnvironmentProtocol
     let settingsEnvironment: SettingsEnvironmentProtocol
     let subscriptionEnvironment: SubscriptionEnvironmentProtocol
-    
+
     init() {
         // Create settings environment
-        self.settingsEnvironment = SettingsEnvironment()
-        
+        settingsEnvironment = SettingsEnvironment()
+
         // Create subscription environment
-        self.subscriptionEnvironment = SubscriptionEnvironment(settingsEnvironment: settingsEnvironment)
-        
+        subscriptionEnvironment = SubscriptionEnvironment(settingsEnvironment: settingsEnvironment)
+
         // Create text generation and reader environments
         let textGenerationEnvironment = TextGenerationEnvironment()
-        self.environment = ReaderEnvironment(
+        environment = ReaderEnvironment(
             textGenerationEnvironment: textGenerationEnvironment,
             settingsEnvironment: settingsEnvironment,
             subscriptionEnvironment: subscriptionEnvironment

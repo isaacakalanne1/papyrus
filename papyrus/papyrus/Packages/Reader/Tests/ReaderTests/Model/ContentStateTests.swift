@@ -6,32 +6,31 @@
 //
 
 import Foundation
+@testable import Reader
 import Testing
 import TextGeneration
-@testable import Reader
 
 @Suite("ContentState Tests")
 struct ContentStateTests {
-    
     @Test("Welcome state should not have story")
     func welcomeState() {
         // Given
         let welcomeState = ContentState.welcome
-        
+
         // When & Then
         #expect(!welcomeState.hasStory)
     }
-    
+
     @Test("Story state should have story")
     func storyState() {
         // Given
         let story = Story.arrange
         let storyState = ContentState.story(story)
-        
+
         // When & Then
         #expect(storyState.hasStory)
     }
-    
+
     @Test("Story state with specific story should extract correctly")
     func storyStateWithSpecificStory() {
         // Given
@@ -45,19 +44,19 @@ struct ContentStateTests {
             scrollOffset: 0,
             title: "Test Story",
             chapters: [
-                Chapter.arrange(content: "Test content")
+                Chapter.arrange(content: "Test content"),
             ]
         )
         let storyState = ContentState.story(story)
-        
+
         // When & Then
         #expect(storyState.hasStory)
-        
+
         // Test pattern matching
         switch storyState {
         case .welcome:
             Issue.record("Expected story state, got welcome")
-        case .story(let extractedStory):
+        case let .story(extractedStory):
             #expect(extractedStory.id == id)
             #expect(extractedStory.title == "Test Story")
             #expect(extractedStory.mainCharacter == "Test Character")
@@ -65,13 +64,13 @@ struct ContentStateTests {
             Issue.record("Expected story state, got interactiveStory")
         }
     }
-    
+
     @Test("Content state equality comparison")
     func contentStateEquality() {
         // Given
         let story1 = Story.arrange
         let story2 = Story.arrange
-        
+
         // When & Then
         #expect(ContentState.welcome.hasStory == ContentState.welcome.hasStory)
         #expect(ContentState.story(story1).hasStory == ContentState.story(story2).hasStory)

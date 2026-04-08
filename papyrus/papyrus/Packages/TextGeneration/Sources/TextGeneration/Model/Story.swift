@@ -20,7 +20,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
     public var scrollOffset: CGFloat
     public var prequelIds: [UUID]
     public var sequelIds: [UUID]
-    
+
     public var title: String
     public var chapters: [Chapter]
     public var perspective: StoryPerspective
@@ -59,25 +59,25 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         self.perspective = perspective
         self.mode = mode
     }
-    
+
     public init(
         from decoder: any Decoder
     ) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(UUID.self, forKey: .id)
-        self.mainCharacter = try container.decode(String.self, forKey: .mainCharacter)
-        self.setting = try container.decode(String.self, forKey: .setting)
-        self.themeDescription = try container.decodeIfPresent(String.self, forKey: .themeDescription) ?? ""
-        self.plotOutline = try container.decode(String.self, forKey: .plotOutline)
-        self.chaptersBreakdown = try container.decode(String.self, forKey: .chaptersBreakdown)
-        self.chapterIndex = try container.decode(Int.self, forKey: .chapterIndex)
-        self.maxNumberOfChapters = try container.decodeIfPresent(Int.self, forKey: .maxNumberOfChapters) ?? 0
-        self.scrollOffset = try container.decodeIfPresent(CGFloat.self, forKey: .scrollOffset) ?? 0
-        self.prequelIds = try container.decodeIfPresent([UUID].self, forKey: .prequelIds) ?? []
-        self.sequelIds = try container.decodeIfPresent([UUID].self, forKey: .sequelIds) ?? []
-        self.title = try container.decode(String.self, forKey: .title)
-        self.chapters = try container.decode([Chapter].self, forKey: .chapters)
-        self.perspective = try container.decodeIfPresent(StoryPerspective.self, forKey: .perspective) ?? .thirdPerson
-        self.mode = try container.decodeIfPresent(StoryMode.self, forKey: .mode) ?? .story
+        id = try container.decode(UUID.self, forKey: .id)
+        mainCharacter = try container.decode(String.self, forKey: .mainCharacter)
+        setting = try container.decode(String.self, forKey: .setting)
+        themeDescription = try container.decodeIfPresent(String.self, forKey: .themeDescription) ?? ""
+        plotOutline = try container.decode(String.self, forKey: .plotOutline)
+        chaptersBreakdown = try container.decode(String.self, forKey: .chaptersBreakdown)
+        chapterIndex = try container.decode(Int.self, forKey: .chapterIndex)
+        maxNumberOfChapters = try container.decodeIfPresent(Int.self, forKey: .maxNumberOfChapters) ?? 0
+        scrollOffset = try container.decodeIfPresent(CGFloat.self, forKey: .scrollOffset) ?? 0
+        prequelIds = try container.decodeIfPresent([UUID].self, forKey: .prequelIds) ?? []
+        sequelIds = try container.decodeIfPresent([UUID].self, forKey: .sequelIds) ?? []
+        title = try container.decode(String.self, forKey: .title)
+        chapters = try container.decode([Chapter].self, forKey: .chapters)
+        perspective = try container.decodeIfPresent(StoryPerspective.self, forKey: .perspective) ?? .thirdPerson
+        mode = try container.decodeIfPresent(StoryMode.self, forKey: .mode) ?? .story
     }
 }

@@ -3,8 +3,8 @@
 //  Reader
 //
 
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 
 struct InteractiveSettingsSheet: View {
     @EnvironmentObject var store: ReaderStore
@@ -62,7 +62,7 @@ struct InteractiveSettingsSheet: View {
                     get: { Double(draftSentenceCount) },
                     set: { draftSentenceCount = Int($0.rounded()) }
                 ),
-                in: 1...10,
+                in: 1 ... 10,
                 step: 1
             )
             .accentColor(PapyrusColor.accent.color(in: colorScheme))
@@ -86,7 +86,7 @@ struct InteractiveSettingsSheet: View {
                     LinearGradient(
                         colors: [
                             PapyrusColor.buttonGradientTop.color(in: colorScheme),
-                            PapyrusColor.buttonGradientBottom.color(in: colorScheme)
+                            PapyrusColor.buttonGradientBottom.color(in: colorScheme),
                         ],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing

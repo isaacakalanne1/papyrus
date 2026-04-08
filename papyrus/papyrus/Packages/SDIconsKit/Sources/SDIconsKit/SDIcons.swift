@@ -9,18 +9,18 @@ import SwiftUI
 
 public enum SDIcons: Sendable {
     case scroll
-    
+
     var name: String {
         switch self {
         case .scroll:
             return "scroll"
         }
     }
-    
+
     var bundle: Bundle {
         Bundle.packageBundle("SDIconsKit_SDIconsKit")
     }
-    
+
     public var uiImage: UIImage {
         guard let image = UIImage(
             named: name,
@@ -31,7 +31,7 @@ public enum SDIcons: Sendable {
         }
         return image
     }
-    
+
     public var image: Image {
         Image(name, bundle: bundle).resizable()
     }

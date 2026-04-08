@@ -3,8 +3,8 @@
 //  Reader
 //
 
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 import TextGeneration
 
 struct InteractiveInputBar: View {
@@ -12,7 +12,7 @@ struct InteractiveInputBar: View {
     @EnvironmentObject var store: ReaderStore
     @Environment(\.papyrusColorScheme) private var colorScheme
     @State private var isSettingsPresented = false
-    
+
     // 1. Add a FocusState to track when the text field is active
     @FocusState private var isInputFocused: Bool
 
@@ -81,14 +81,14 @@ struct InteractiveInputBar: View {
                     prompt: Text("Write what happens next")
                         .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                 ) { EmptyView() }
-                .font(.custom(store.state.settingsState.selectedFontName, size: 15))
-                .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
-                .disabled(isDisabled)
-                // 2. Bind the FocusState to the TextField
-                .focused($isInputFocused)
-                .onSubmit {
-                    submitAction()
-                }
+                    .font(.custom(store.state.settingsState.selectedFontName, size: 15))
+                    .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+                    .disabled(isDisabled)
+                    // 2. Bind the FocusState to the TextField
+                    .focused($isInputFocused)
+                    .onSubmit {
+                        submitAction()
+                    }
 
                 Button(action: submitAction) {
                     Image(systemName: "arrow.up.circle.fill")
@@ -100,7 +100,7 @@ struct InteractiveInputBar: View {
                                     LinearGradient(
                                         colors: [
                                             PapyrusColor.buttonGradientTop.color(in: colorScheme),
-                                            PapyrusColor.buttonGradientBottom.color(in: colorScheme)
+                                            PapyrusColor.buttonGradientBottom.color(in: colorScheme),
                                         ],
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
@@ -143,7 +143,7 @@ struct InteractiveInputBar: View {
         let text = store.state.interactiveInputText.trimmingCharacters(in: .whitespacesAndNewlines)
         let action: ChapterAction? = text.isEmpty ? nil : .next(text)
         store.dispatch(.submitInteractiveAction(story, action))
-        
+
         // Optional: dismiss the keyboard when submitting
         isInputFocused = false
     }

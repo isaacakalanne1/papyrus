@@ -39,7 +39,7 @@ private struct CropGestureLayer: UIViewRepresentable {
         return view
     }
 
-    func updateUIView(_ uiView: UIView, context: Context) {
+    func updateUIView(_: UIView, context: Context) {
         // Keep closures current without recreating the view.
         context.coordinator.onChanged = onChanged
         context.coordinator.onEnded = onEnded
@@ -50,22 +50,23 @@ private struct CropGestureLayer: UIViewRepresentable {
         var onEnded: (CGFloat, CGSize) -> Void
 
         private var pinchActive = false
-        private var panActive   = false
+        private var panActive = false
 
         // Both accumulate from the moment each gesture began and are reported together.
-        private var currentScale:  CGFloat = 1.0
-        private var currentOffset: CGSize  = .zero
+        private var currentScale: CGFloat = 1.0
+        private var currentOffset: CGSize = .zero
 
         init(onChanged: @escaping (CGFloat, CGSize) -> Void,
-             onEnded:   @escaping (CGFloat, CGSize) -> Void) {
+             onEnded: @escaping (CGFloat, CGSize) -> Void)
+        {
             self.onChanged = onChanged
-            self.onEnded   = onEnded
+            self.onEnded = onEnded
         }
 
         // Allow pinch and pan to fire at the same time.
         func gestureRecognizer(
-            _ gestureRecognizer: UIGestureRecognizer,
-            shouldRecognizeSimultaneouslyWith other: UIGestureRecognizer
+            _: UIGestureRecognizer,
+            shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer
         ) -> Bool { true }
 
         @objc func handlePinch(_ r: UIPinchGestureRecognizer) {
@@ -100,7 +101,7 @@ private struct CropGestureLayer: UIViewRepresentable {
 
         private func commitAndReset() {
             onEnded(currentScale, currentOffset)
-            currentScale  = 1.0
+            currentScale = 1.0
             currentOffset = .zero
         }
     }
@@ -114,12 +115,12 @@ struct ImageCropView: View {
     let onConfirm: (Data) -> Void
 
     // Committed state (updated only on gesture end).
-    @State private var scale:  CGFloat = 1.0
-    @State private var offset: CGSize  = .zero
+    @State private var scale: CGFloat = 1.0
+    @State private var offset: CGSize = .zero
 
     // Live gesture deltas (reset to identity after each gesture group ends).
-    @State private var gestureScale:  CGFloat = 1.0
-    @State private var gestureOffset: CGSize  = .zero
+    @State private var gestureScale: CGFloat = 1.0
+    @State private var gestureOffset: CGSize = .zero
 
     @State private var viewSize: CGSize = .zero
 
@@ -138,25 +139,25 @@ struct ImageCropView: View {
 
     private func minimumScale(in viewSize: CGSize) -> CGFloat {
         guard viewSize != .zero else { return 1.0 }
-        let crop     = cropSize(in: viewSize)
-        let fitScale = min(viewSize.width  / image.size.width,
-                          viewSize.height / image.size.height)
-        let sW = crop.width  / (image.size.width  * fitScale)
+        let crop = cropSize(in: viewSize)
+        let fitScale = min(viewSize.width / image.size.width,
+                           viewSize.height / image.size.height)
+        let sW = crop.width / (image.size.width * fitScale)
         let sH = crop.height / (image.size.height * fitScale)
         return max(sW, sH, 1.0)
     }
 
     private func clampedOffset(_ proposed: CGSize, scale: CGFloat, in viewSize: CGSize) -> CGSize {
         guard viewSize != .zero else { return proposed }
-        let crop       = cropSize(in: viewSize)
-        let fitScale   = min(viewSize.width  / image.size.width,
-                            viewSize.height / image.size.height)
-        let displayedW = image.size.width  * fitScale * scale
+        let crop = cropSize(in: viewSize)
+        let fitScale = min(viewSize.width / image.size.width,
+                           viewSize.height / image.size.height)
+        let displayedW = image.size.width * fitScale * scale
         let displayedH = image.size.height * fitScale * scale
-        let maxX = max(0, (displayedW - crop.width)  / 2)
+        let maxX = max(0, (displayedW - crop.width) / 2)
         let maxY = max(0, (displayedH - crop.height) / 2)
         return CGSize(
-            width:  min(maxX,  max(-maxX,  proposed.width)),
+            width: min(maxX, max(-maxX, proposed.width)),
             height: min(maxY, max(-maxY, proposed.height))
         )
     }
@@ -168,14 +169,14 @@ struct ImageCropView: View {
             GeometryReader { geometry in
                 let size = geometry.size
                 let crop = cropSize(in: size)
-                let dimX = (size.width  - crop.width)  / 2
+                let dimX = (size.width - crop.width) / 2
                 let dimY = (size.height - crop.height) / 2
 
                 // Resolved live display values.
                 let displayScale = scale * gestureScale
                 let displayOffset = clampedOffset(
                     CGSize(
-                        width:  offset.width  + gestureOffset.width,
+                        width: offset.width + gestureOffset.width,
                         height: offset.height + gestureOffset.height
                     ),
                     scale: displayScale,
@@ -220,22 +221,22 @@ struct ImageCropView: View {
                     // UIKit gesture layer — on top so it receives all touches.
                     CropGestureLayer(
                         onChanged: { scaleDelta, offsetDelta in
-                            gestureScale  = scaleDelta
+                            gestureScale = scaleDelta
                             gestureOffset = offsetDelta
                         },
                         onEnded: { finalScale, finalOffset in
                             let newScale = max(minimumScale(in: size), scale * finalScale)
                             let newOffset = clampedOffset(
                                 CGSize(
-                                    width:  offset.width  + finalOffset.width,
+                                    width: offset.width + finalOffset.width,
                                     height: offset.height + finalOffset.height
                                 ),
                                 scale: newScale,
                                 in: size
                             )
-                            scale  = newScale
+                            scale = newScale
                             offset = newOffset
-                            gestureScale  = 1.0
+                            gestureScale = 1.0
                             gestureOffset = .zero
                         }
                     )
@@ -243,12 +244,12 @@ struct ImageCropView: View {
                 }
                 .onAppear {
                     viewSize = size
-                    scale    = minimumScale(in: size)
-                    offset   = .zero
+                    scale = minimumScale(in: size)
+                    offset = .zero
                 }
                 .onChange(of: geometry.size) { _, newSize in
                     viewSize = newSize
-                    scale  = max(minimumScale(in: newSize), scale)
+                    scale = max(minimumScale(in: newSize), scale)
                     offset = clampedOffset(offset, scale: scale, in: newSize)
                 }
             }
@@ -277,25 +278,25 @@ struct ImageCropView: View {
     private func cropToDeviceAspectRatio() -> Data? {
         guard viewSize != .zero else { return image.jpegData(compressionQuality: 0.8) }
 
-        let crop      = cropSize(in: viewSize)
-        let fitScale  = min(viewSize.width  / image.size.width,
+        let crop = cropSize(in: viewSize)
+        let fitScale = min(viewSize.width / image.size.width,
                            viewSize.height / image.size.height)
         let dispScale = fitScale * scale
-        let dispW     = image.size.width  * dispScale
-        let dispH     = image.size.height * dispScale
+        let dispW = image.size.width * dispScale
+        let dispH = image.size.height * dispScale
 
-        let imgOriginX  = (viewSize.width  - dispW) / 2 + offset.width
-        let imgOriginY  = (viewSize.height - dispH) / 2 + offset.height
-        let cropOriginX = (viewSize.width  - crop.width)  / 2
+        let imgOriginX = (viewSize.width - dispW) / 2 + offset.width
+        let imgOriginY = (viewSize.height - dispH) / 2 + offset.height
+        let cropOriginX = (viewSize.width - crop.width) / 2
         let cropOriginY = (viewSize.height - crop.height) / 2
 
         let cropInImgX = (cropOriginX - imgOriginX) / dispScale
         let cropInImgY = (cropOriginY - imgOriginY) / dispScale
-        let cropInImgW = crop.width  / dispScale
+        let cropInImgW = crop.width / dispScale
         let cropInImgH = crop.height / dispScale
 
         let outputSize = CGSize(
-            width:  crop.width  * UIScreen.main.scale,
+            width: crop.width * UIScreen.main.scale,
             height: crop.height * UIScreen.main.scale
         )
         let drawScale = outputSize.width / cropInImgW
@@ -305,7 +306,7 @@ struct ImageCropView: View {
             image.draw(in: CGRect(
                 x: -cropInImgX * drawScale,
                 y: -cropInImgY * drawScale,
-                width:  image.size.width  * drawScale,
+                width: image.size.width * drawScale,
                 height: image.size.height * drawScale
             ))
         }

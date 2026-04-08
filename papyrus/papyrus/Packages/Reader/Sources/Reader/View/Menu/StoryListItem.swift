@@ -5,9 +5,9 @@
 //  Created by Isaac Akalanne on 05/10/2025.
 //
 
+import PapyrusStyleKit
 import SwiftUI
 import TextGeneration
-import PapyrusStyleKit
 
 struct StoryListItem: View {
     let story: Story

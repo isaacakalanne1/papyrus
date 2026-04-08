@@ -5,9 +5,9 @@
 //  Created by Isaac Akalanne on 28/09/2025.
 //
 
+import PapyrusStyleKit
 import SwiftUI
 import TextGeneration
-import PapyrusStyleKit
 
 struct StoryMenu: View {
     @EnvironmentObject var store: ReaderStore
@@ -61,7 +61,7 @@ struct StoryMenu: View {
                 LinearGradient(
                     gradient: Gradient(colors: [
                         PapyrusColor.background.color(in: colorScheme),
-                        PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme),
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -107,7 +107,7 @@ struct StoryMenu: View {
         }
         .sheet(isPresented: showStoryForm) {
             NewStoryForm()
-            .environmentObject(store)
+                .environmentObject(store)
         }
     }
 

@@ -5,8 +5,8 @@
 //  Created by Isaac Akalanne on 28/09/2025.
 //
 
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 
 enum PrimaryButtonSize {
     case large
@@ -112,7 +112,7 @@ struct PrimaryButton: View {
                         LinearGradient(
                             gradient: Gradient(colors: [
                                 PapyrusColor.buttonGradientTop.color(in: colorScheme),
-                                PapyrusColor.buttonGradientBottom.color(in: colorScheme)
+                                PapyrusColor.buttonGradientBottom.color(in: colorScheme),
                             ]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing

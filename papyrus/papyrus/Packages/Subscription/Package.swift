@@ -6,12 +6,13 @@ import PackageDescription
 let package = Package(
     name: "Subscription",
     platforms: [
-        .iOS("17.4")
+        .iOS("17.4"),
     ],
     products: [
         .library(
             name: "Subscription",
-            targets: ["Subscription"]),
+            targets: ["Subscription"]
+        ),
         .library(
             name: "SubscriptionMocks",
             targets: ["SubscriptionMocks"]
@@ -20,7 +21,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/isaacakalanne1/reduxkit.git", from: "1.0.1"),
         .package(name: "Settings", path: "../Settings"),
-        .package(name: "PapyrusStyleKit", path: "../PapyrusStyleKit")
+        .package(name: "PapyrusStyleKit", path: "../PapyrusStyleKit"),
     ],
     targets: [
         .target(
@@ -28,26 +29,27 @@ let package = Package(
             dependencies: [
                 .product(name: "ReduxKit", package: "reduxkit"),
                 "Settings",
-                "PapyrusStyleKit"
-            ]),
+                "PapyrusStyleKit",
+            ]
+        ),
         .target(
             name: "SubscriptionMocks",
             dependencies: [
                 "Subscription",
                 "Settings",
-                .product(name: "SettingsMocks", package: "Settings")
+                .product(name: "SettingsMocks", package: "Settings"),
             ],
             path: "Mocks"
         ),
         .testTarget(
             name: "SubscriptionTests",
             dependencies: [
-                "Subscription", 
+                "Subscription",
                 "SubscriptionMocks",
-                .product(name: "SettingsMocks", package: "Settings")
+                .product(name: "SettingsMocks", package: "Settings"),
             ],
             resources: [
-                .copy("Products.storekit")
+                .copy("Products.storekit"),
             ]
         ),
     ]

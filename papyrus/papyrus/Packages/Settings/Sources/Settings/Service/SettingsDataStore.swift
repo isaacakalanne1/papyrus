@@ -15,24 +15,25 @@ public protocol SettingsDataStoreProtocol {
 enum SettingsDataStoreError: Error {
     case failedToFindFile
 }
+
 public class SettingsDataStore: SettingsDataStoreProtocol {
     private let fileManager = FileManager.default
     private let documentsDirectory: URL
     private let settingsFileName = "settings.json"
-    
+
     public init() {
-        self.documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
+        documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
     }
-    
+
     private var settingsFileURL: URL {
         documentsDirectory.appendingPathComponent(settingsFileName)
     }
-    
+
     public func saveSettings(_ settings: SettingsState) async throws {
         let data = try JSONEncoder().encode(settings)
         try data.write(to: settingsFileURL)
     }
-    
+
     public func loadSettings() async throws -> SettingsState {
         guard fileManager.fileExists(atPath: settingsFileURL.path) else {
             return SettingsState()

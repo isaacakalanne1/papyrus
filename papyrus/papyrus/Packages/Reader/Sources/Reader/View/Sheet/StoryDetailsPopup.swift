@@ -5,9 +5,9 @@
 //  Created by Isaac Akalanne on 02/10/2025.
 //
 
+import PapyrusStyleKit
 import SwiftUI
 import TextGeneration
-import PapyrusStyleKit
 
 struct StoryDetailsPopup: View {
     @EnvironmentObject var store: ReaderStore
@@ -20,9 +20,9 @@ struct StoryDetailsPopup: View {
 
     init(story: Story, isPresented: Binding<Bool>, fontName: String = "Georgia") {
         self.story = story
-        self._isPresented = isPresented
+        _isPresented = isPresented
         self.fontName = fontName
-        self._editableTitle = State(initialValue: story.title)
+        _editableTitle = State(initialValue: story.title)
     }
 
     var body: some View {
@@ -52,12 +52,12 @@ struct StoryDetailsPopup: View {
                         prompt: Text("Untitled Story")
                             .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                     ) { EmptyView() }
-                    .font(.custom(fontName, size: 16))
-                    .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
-                    .focused($isTitleFocused)
-                    .onChange(of: editableTitle) { _, newTitle in
-                        store.dispatch(.updateStoryTitle(story, newTitle))
-                    }
+                        .font(.custom(fontName, size: 16))
+                        .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+                        .focused($isTitleFocused)
+                        .onChange(of: editableTitle) { _, newTitle in
+                            store.dispatch(.updateStoryTitle(story, newTitle))
+                        }
 
                     Image(systemName: "pencil")
                         .font(.system(size: 14))

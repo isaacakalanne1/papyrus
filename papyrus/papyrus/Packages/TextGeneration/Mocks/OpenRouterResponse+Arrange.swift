@@ -12,7 +12,7 @@ public extension OpenRouterResponse {
     static var arrange: OpenRouterResponse {
         arrange()
     }
-    
+
     static func arrange(
         choices: [Choice] = [.arrange]
     ) -> OpenRouterResponse {
@@ -24,7 +24,7 @@ public extension OpenRouterResponse.Choice {
     static var arrange: OpenRouterResponse.Choice {
         arrange()
     }
-    
+
     static func arrange(
         message: Message = .arrange
     ) -> OpenRouterResponse.Choice {
@@ -36,7 +36,7 @@ public extension OpenRouterResponse.Choice.Message {
     static var arrange: OpenRouterResponse.Choice.Message {
         arrange()
     }
-    
+
     static func arrange(
         content: String = "Generated content"
     ) -> OpenRouterResponse.Choice.Message {

@@ -3,13 +3,12 @@
 //  TextGeneration
 //
 
-import Testing
 import Foundation
 import SDNetworkCore
+import Testing
 @testable import TextGeneration
 
 class GenerateParagraphEndpointTests {
-
     // MARK: - Initialization Tests
 
     @Test

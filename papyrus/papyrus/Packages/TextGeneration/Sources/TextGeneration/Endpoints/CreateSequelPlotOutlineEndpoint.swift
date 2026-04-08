@@ -3,14 +3,14 @@ import SDNetworkCore
 
 struct CreateSequelPlotOutlineEndpoint: Endpoint {
     typealias Response = OpenRouterResponse
-    
+
     let story: Story
     let previousStory: Story
-    
+
     var path: String {
         "/api/v1/chat/completions"
     }
-    
+
     var body: Data? {
         let previousChaptersText = previousStory.chapters
             .enumerated()
@@ -18,7 +18,7 @@ struct CreateSequelPlotOutlineEndpoint: Endpoint {
                 "Chapter \(index + 1):\n\(chapter.content)"
             }
             .joined(separator: "\n\n")
-        
+
         let messages = [
             OpenRouterMessage(
                 role: "system",
@@ -27,33 +27,33 @@ struct CreateSequelPlotOutlineEndpoint: Endpoint {
             OpenRouterMessage(
                 role: "user",
                 content: """
-You are an expert storyteller and narrative designer with deep knowledge of classic and modern storytelling techniques, including the hero's journey, three-act structure, and principles from Joseph Campbell, Robert McKee, and Syd Field. Your goal is to create a compelling, original plot outline for a story sequel based on the provided context, setting and main character.
+                You are an expert storyteller and narrative designer with deep knowledge of classic and modern storytelling techniques, including the hero's journey, three-act structure, and principles from Joseph Campbell, Robert McKee, and Syd Field. Your goal is to create a compelling, original plot outline for a story sequel based on the provided context, setting and main character.
 
-**Previous Story Context:**
-- **Setting:** \(previousStory.setting)
-- **Main Character:** \(previousStory.mainCharacter)
-- **Previous Plot Outline:** \(previousStory.plotOutline)
-- **Previous Story Chapters:** \(previousChaptersText)
+                **Previous Story Context:**
+                - **Setting:** \(previousStory.setting)
+                - **Main Character:** \(previousStory.mainCharacter)
+                - **Previous Plot Outline:** \(previousStory.plotOutline)
+                - **Previous Story Chapters:** \(previousChaptersText)
 
-**New Sequel Context:**
-- **Setting:** \(story.setting)
-- **Main Character:** \(story.mainCharacter)
-- **Theme:** \(story.themeDescription)
-- **Perspective:** \(story.perspective.promptDescription)
+                **New Sequel Context:**
+                - **Setting:** \(story.setting)
+                - **Main Character:** \(story.mainCharacter)
+                - **Theme:** \(story.themeDescription)
+                - **Perspective:** \(story.perspective.promptDescription)
 
-**Task:**
-Develop a high-quality sequel plot outline that integrates the setting and main character seamlessly. The outline should be original, engaging, and emotionally resonant, with clear stakes, escalating conflict, and satisfying resolution. Aim for a story length equivalent to a novel (around 200,000-250,000 words if written out).
+                **Task:**
+                Develop a high-quality sequel plot outline that integrates the setting and main character seamlessly. The outline should be original, engaging, and emotionally resonant, with clear stakes, escalating conflict, and satisfying resolution. Aim for a story length equivalent to a novel (around 200,000-250,000 words if written out).
 
-Generate the sequel plot outline now, ensuring it creates a worthy continuation of the story.
-"""
-            )
+                Generate the sequel plot outline now, ensuring it creates a worthy continuation of the story.
+                """
+            ),
         ]
-        
+
         let request = OpenRouterRequest(
             messages: messages,
             reasoning: OpenRouterReasoning()
         )
-        
+
         return request.toData()
     }
 }

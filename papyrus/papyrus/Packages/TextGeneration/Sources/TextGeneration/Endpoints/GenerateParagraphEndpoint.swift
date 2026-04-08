@@ -20,12 +20,12 @@ struct GenerateParagraphEndpoint: Endpoint {
         let pendingChapter = story.chapters.last
 
         var userContent = """
-You are writing an interactive fiction story.
+        You are writing an interactive fiction story.
 
-**Character:** \(story.mainCharacter)
-**Setting:** \(story.setting)
-**Narrative Perspective:** \(story.perspective.promptDescription)
-"""
+        **Character:** \(story.mainCharacter)
+        **Setting:** \(story.setting)
+        **Narrative Perspective:** \(story.perspective.promptDescription)
+        """
 
         if !priorChapters.isEmpty {
             let priorText = priorChapters.map { $0.content }.joined(separator: "\n\n")
@@ -46,7 +46,7 @@ You are writing an interactive fiction story.
             OpenRouterMessage(
                 role: "user",
                 content: userContent
-            )
+            ),
         ]
 
         let request = OpenRouterRequest(model: "deepseek/deepseek-v3.2", messages: messages)

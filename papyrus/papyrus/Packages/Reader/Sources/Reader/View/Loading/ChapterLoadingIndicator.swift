@@ -5,8 +5,8 @@
 //  Created by Isaac Akalanne on 07/01/2026.
 //
 
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 
 struct ChapterLoadingIndicator: View {
     let fontName: String
@@ -27,7 +27,7 @@ struct ChapterLoadingIndicator: View {
                         LinearGradient(
                             gradient: Gradient(colors: [
                                 PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0),
-                                PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.3)
+                                PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.3),
                             ]),
                             startPoint: .leading,
                             endPoint: .trailing
@@ -46,7 +46,7 @@ struct ChapterLoadingIndicator: View {
                         LinearGradient(
                             gradient: Gradient(colors: [
                                 PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.3),
-                                PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0)
+                                PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0),
                             ]),
                             startPoint: .leading,
                             endPoint: .trailing

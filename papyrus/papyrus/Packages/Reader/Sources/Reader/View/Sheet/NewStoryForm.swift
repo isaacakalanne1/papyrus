@@ -5,10 +5,10 @@
 //  Created by Isaac Akalanne on 27/09/2025.
 //
 
-import SwiftUI
 import PapyrusStyleKit
-import TextGeneration
 import Settings
+import SwiftUI
+import TextGeneration
 
 struct NewStoryForm: View {
     @EnvironmentObject var store: ReaderStore
@@ -188,7 +188,7 @@ struct NewStoryForm: View {
                     LinearGradient(
                         gradient: Gradient(colors: [
                             PapyrusColor.background.color(in: colorScheme),
-                            PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                            PapyrusColor.backgroundSecondary.color(in: colorScheme),
                         ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing

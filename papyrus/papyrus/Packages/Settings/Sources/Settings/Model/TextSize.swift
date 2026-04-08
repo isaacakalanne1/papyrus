@@ -5,7 +5,7 @@ public enum TextSize: String, CaseIterable, Codable, Sendable {
     case medium
     case large
     case extraLarge
-    
+
     public var fontSize: CGFloat {
         switch self {
         case .small:
@@ -18,7 +18,7 @@ public enum TextSize: String, CaseIterable, Codable, Sendable {
             return 24
         }
     }
-    
+
     public var iconScale: CGFloat {
         switch self {
         case .small:

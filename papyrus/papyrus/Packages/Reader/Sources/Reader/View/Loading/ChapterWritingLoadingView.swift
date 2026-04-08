@@ -5,8 +5,8 @@
 //  Created by Isaac Akalanne on 03/10/2025.
 //
 
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 
 struct ChapterWritingLoadingView: View {
     let fontName: String
@@ -20,7 +20,7 @@ struct ChapterWritingLoadingView: View {
         "The story unfolds, one word at a time",
         "Creating worlds with every sentence",
         "Your characters await their next adventure",
-        "Weaving narrative threads together"
+        "Weaving narrative threads together",
     ]
 
     @State private var currentQuote: String = ""
@@ -39,7 +39,7 @@ struct ChapterWritingLoadingView: View {
                             LinearGradient(
                                 gradient: Gradient(colors: [
                                     PapyrusColor.accent.color(in: colorScheme),
-                                    Color(red: 0.7, green: 0.55, blue: 0.3)
+                                    Color(red: 0.7, green: 0.55, blue: 0.3),
                                 ]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
@@ -64,7 +64,7 @@ struct ChapterWritingLoadingView: View {
                             .fontWeight(.semibold)
                             .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
 
-                        ForEach(0..<3, id: \.self) { index in
+                        ForEach(0 ..< 3, id: \.self) { index in
                             Text(".")
                                 .font(.custom(fontName, size: 18))
                                 .fontWeight(.semibold)
@@ -93,7 +93,7 @@ struct ChapterWritingLoadingView: View {
                     LinearGradient(
                         gradient: Gradient(colors: [
                             PapyrusColor.background.color(in: colorScheme).opacity(0.95),
-                            PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.95)
+                            PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.95),
                         ]),
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing

@@ -13,7 +13,7 @@ public extension SubscriptionState {
     static var arrange: SubscriptionState {
         arrange()
     }
-    
+
     static func arrange(
         isSubscribed: Bool = false,
         isLoading: Bool = false,

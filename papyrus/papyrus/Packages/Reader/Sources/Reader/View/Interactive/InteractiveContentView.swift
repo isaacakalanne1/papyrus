@@ -3,8 +3,8 @@
 //  Reader
 //
 
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 import TextGeneration
 import UIKit
 
@@ -84,7 +84,7 @@ struct InteractiveContentView: View {
                 LinearGradient(
                     gradient: Gradient(colors: [
                         PapyrusColor.background.color(in: colorScheme),
-                        PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme),
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing
@@ -114,8 +114,6 @@ struct InteractiveContentView: View {
         }
         .padding(.bottom, 24)
     }
-
-
 }
 
 // MARK: - InteractiveActionView
@@ -127,7 +125,7 @@ private struct InteractiveActionView: View {
 
     var body: some View {
         switch action {
-        case .next(let text):
+        case let .next(text):
             Text(text)
                 .font(.custom(fontName, size: 14))
                 .italic()

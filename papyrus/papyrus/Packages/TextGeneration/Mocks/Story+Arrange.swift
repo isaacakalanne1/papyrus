@@ -12,7 +12,7 @@ public extension Story {
     static var arrange: Story {
         arrange()
     }
-    
+
     static func arrange(
         id: UUID = UUID(),
         mainCharacter: String = "Test Character",

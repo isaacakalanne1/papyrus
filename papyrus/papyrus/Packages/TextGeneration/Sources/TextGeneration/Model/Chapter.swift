@@ -14,7 +14,7 @@ public enum ChapterAction: Equatable, Sendable {
 
     public var promptDescription: String {
         switch self {
-        case .next(let text):
+        case let .next(text):
             return "This is what the user specifies happens next: \(text)"
         }
     }
@@ -35,7 +35,7 @@ extension ChapterAction: Codable {
     public func encode(to encoder: any Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         switch self {
-        case .next(let value):
+        case let .next(value):
             try container.encode("next", forKey: .type)
             try container.encode(value, forKey: .value)
         }
@@ -63,8 +63,8 @@ public struct Chapter: Codable, Equatable, Sendable {
         from decoder: any Decoder
     ) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(UUID.self, forKey: .id)
-        self.content = try container.decode(String.self, forKey: .content)
-        self.action = try container.decodeIfPresent(ChapterAction.self, forKey: .action)
+        id = try container.decode(UUID.self, forKey: .id)
+        content = try container.decode(String.self, forKey: .content)
+        action = try container.decodeIfPresent(ChapterAction.self, forKey: .action)
     }
 }

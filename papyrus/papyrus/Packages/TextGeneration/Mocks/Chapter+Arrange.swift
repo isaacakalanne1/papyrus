@@ -12,7 +12,7 @@ public extension Chapter {
     static var arrange: Chapter {
         arrange()
     }
-    
+
     static func arrange(
         id: UUID = UUID(),
         content: String = "Test chapter content"

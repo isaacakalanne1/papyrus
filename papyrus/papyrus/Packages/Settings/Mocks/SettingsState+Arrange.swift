@@ -5,8 +5,8 @@
 //  Created by Isaac Akalanne on 04/10/2025.
 //
 
-import Settings
 import PapyrusStyleKit
+import Settings
 
 public extension SettingsState {
     static var arrange: SettingsState {

@@ -5,8 +5,8 @@
 //  Created by Isaac Akalanne on 27/09/2025.
 //
 
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 
 struct LoadingView: View {
     let loadingDisplayStep: LoadingStep
@@ -119,7 +119,7 @@ struct LoadingView: View {
                             LinearGradient(
                                 gradient: Gradient(colors: [
                                     Color(red: 0.94, green: 0.90, blue: 0.82),
-                                    Color(red: 0.92, green: 0.88, blue: 0.79)
+                                    Color(red: 0.92, green: 0.88, blue: 0.79),
                                 ]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
@@ -174,7 +174,7 @@ struct LoadingView: View {
                                     LinearGradient(
                                         gradient: Gradient(colors: [
                                             Color(red: 0.5, green: 0.35, blue: 0.2),
-                                            Color(red: 0.6, green: 0.45, blue: 0.3)
+                                            Color(red: 0.6, green: 0.45, blue: 0.3),
                                         ]),
                                         startPoint: .leading,
                                         endPoint: .trailing
@@ -212,7 +212,7 @@ struct LoadingView: View {
                             LinearGradient(
                                 gradient: Gradient(colors: [
                                     Color(red: 0.2, green: 0.6, blue: 0.3),
-                                    Color(red: 0.1, green: 0.5, blue: 0.2)
+                                    Color(red: 0.1, green: 0.5, blue: 0.2),
                                 ]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
@@ -269,7 +269,7 @@ struct LoadingView: View {
                 LinearGradient(
                     gradient: Gradient(colors: [
                         PapyrusColor.background.color(in: colorScheme).opacity(0.95),
-                        PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.95)
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.95),
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing

@@ -6,27 +6,27 @@ public let settingsReducer: Reducer<SettingsState, SettingsAction> = { state, ac
     var newState = state
 
     switch action {
-    case .selectTextSize(let size):
+    case let .selectTextSize(size):
         newState.selectedTextSize = size
-    case .selectFont(let fontName):
+    case let .selectFont(fontName):
         newState.selectedFontName = fontName
-    case .selectColorScheme(let schemeName):
+    case let .selectColorScheme(schemeName):
         newState.selectedColorSchemeName = schemeName
-    case .addBackgroundImage(let entry):
+    case let .addBackgroundImage(entry):
         newState.backgroundImages.append(entry)
         newState.selectedBackgroundImageId = entry.id
-    case .selectBackgroundImage(let id):
+    case let .selectBackgroundImage(id):
         newState.selectedBackgroundImageId = id
-    case .deleteBackgroundImage(let id):
+    case let .deleteBackgroundImage(id):
         newState.backgroundImages.removeAll { $0.id == id }
         if newState.selectedBackgroundImageId == id {
             newState.selectedBackgroundImageId = nil
         }
-    case .setBackgroundImageUsage(let contexts):
+    case let .setBackgroundImageUsage(contexts):
         newState.backgroundImageUsage = contexts
-    case .setSentenceCount(let count):
+    case let .setSentenceCount(count):
         newState.sentenceCount = count
-    case .onLoadedSettings(let settings):
+    case let .onLoadedSettings(settings):
         newState = settings
     case .loadSettings,
          .saveSettings,

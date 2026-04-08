@@ -11,7 +11,6 @@ import ReduxKit
 @MainActor
 let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentProtocol> = { state, action, environment in
     switch action {
-
     // MARK: - Entry Points (subscription gate lives here)
 
     case .createStory:
@@ -27,7 +26,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         }
         return .beginCreateSequel
 
-    case .createChapter(let story):
+    case let .createChapter(story):
         if !state.canCreateChapter {
             let isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
             if !isSubscribed { return .setShowSubscriptionSheet(true) }
@@ -44,7 +43,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         guard let story = state.story else { return .failedToCreateChapter(.beginCreateInteractiveStory) }
         return .generateFirstParagraph(story)
 
-    case .generateFirstParagraph(let story):
+    case let .generateFirstParagraph(story):
         do {
             let storyWithParagraph = try await environment.generateParagraph(story: story, sentenceCount: state.settingsState.sentenceCount)
             return .onGeneratedFirstParagraph(storyWithParagraph)
@@ -52,10 +51,10 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return .failedToCreateChapter(.generateFirstParagraph(story))
         }
 
-    case .onGeneratedFirstParagraph(let story):
+    case let .onGeneratedFirstParagraph(story):
         return .getChapterTitle(story)
 
-    case .submitInteractiveAction(let story, let action):
+    case let .submitInteractiveAction(story, action):
         if !state.canGenerateParagraph {
             let isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
             if !isSubscribed { return .setShowSubscriptionSheet(true) }
@@ -65,7 +64,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         pendingStory.chapters.append(.init(content: "", action: action ?? nil))
         return .beginGenerateParagraph(pendingStory)
 
-    case .beginGenerateParagraph(let story):
+    case let .beginGenerateParagraph(story):
         do {
             let storyWithParagraph = try await environment.generateParagraph(story: story, sentenceCount: state.settingsState.sentenceCount)
             return .onGeneratedParagraph(storyWithParagraph)
@@ -73,7 +72,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return .failedToCreateChapter(.beginGenerateParagraph(story))
         }
 
-    case .onGeneratedParagraph(let story):
+    case let .onGeneratedParagraph(story):
         return .saveStory(story)
 
     case .beginCreateSequel:
@@ -90,7 +89,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return .failedToCreateChapter(.beginCreateSequel)
         }
 
-    case .createStoryTheme(let story):
+    case let .createStoryTheme(story):
         do {
             let themedStory = try await environment.createStoryTheme(story: story)
             return .onCreatedThemeDescription(themedStory)
@@ -98,10 +97,10 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return .failedToCreateChapter(.createStoryTheme(story))
         }
 
-    case .onCreatedThemeDescription(let story):
+    case let .onCreatedThemeDescription(story):
         return .createPlotOutline(story)
 
-    case .createPlotOutline(let story):
+    case let .createPlotOutline(story):
         do {
             let storyWithPlot = try await environment.createPlotOutline(story: story)
             return .onCreatedPlotOutline(storyWithPlot)
@@ -109,10 +108,10 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return .failedToCreateChapter(.createPlotOutline(story))
         }
 
-    case .onCreatedPlotOutline(let story):
+    case let .onCreatedPlotOutline(story):
         return .createChapterBreakdown(story)
 
-    case .createChapterBreakdown(let story):
+    case let .createChapterBreakdown(story):
         do {
             let storyWithBreakdown = try await environment.createChapterBreakdown(story: story)
             return .onCreatedChapterBreakdown(storyWithBreakdown)
@@ -120,14 +119,14 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return .failedToCreateChapter(.createChapterBreakdown(story))
         }
 
-    case .onCreatedChapterBreakdown(let story):
+    case let .onCreatedChapterBreakdown(story):
         if story.maxNumberOfChapters > 0 {
             return .beginCreateChapter(story)
         } else {
             return .getStoryDetails(story)
         }
 
-    case .getStoryDetails(let story):
+    case let .getStoryDetails(story):
         do {
             let storyWithDetails = try await environment.getStoryDetails(story: story)
             return .onGetStoryDetails(storyWithDetails)
@@ -135,10 +134,10 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return .failedToCreateChapter(.getStoryDetails(story))
         }
 
-    case .onGetStoryDetails(let story):
+    case let .onGetStoryDetails(story):
         return .getChapterTitle(story)
 
-    case .getChapterTitle(let story):
+    case let .getChapterTitle(story):
         do {
             let storyWithTitle = try await environment.getChapterTitle(story: story)
             return .onGetChapterTitle(storyWithTitle)
@@ -146,10 +145,10 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return .failedToCreateChapter(.getChapterTitle(story))
         }
 
-    case .onGetChapterTitle(let story):
+    case let .onGetChapterTitle(story):
         return story.mode == .interactive ? .saveStory(story) : .beginCreateChapter(story)
 
-    case .beginCreateChapter(let story):
+    case let .beginCreateChapter(story):
         do {
             let storyWithChapter = try await environment.createChapter(story: story)
             return .onCreatedChapter(storyWithChapter)
@@ -157,7 +156,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return .failedToCreateChapter(.beginCreateChapter(story))
         }
 
-    case .onCreatedChapter(let story):
+    case let .onCreatedChapter(story):
         guard state.story?.id == story.id, let storyToSave = state.story else { return nil }
         return .saveStory(storyToSave)
 
@@ -171,7 +170,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return .failedToLoadStories
         }
 
-    case .deleteStory(let id):
+    case let .deleteStory(id):
         do {
             try await environment.deleteStory(withId: id)
             return .onDeletedStory(id)
@@ -179,13 +178,13 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return .failedToLoadStories
         }
 
-    case .updateChapterIndex(let story, let index):
+    case let .updateChapterIndex(story, index):
         var updatedStory = story
         updatedStory.chapterIndex = max(0, min(index, story.chapters.count - 1))
         updatedStory.scrollOffset = 0
         return .saveStory(updatedStory)
 
-    case .saveStory(let story):
+    case let .saveStory(story):
         do {
             try await environment.saveStory(story)
             for prequelId in story.prequelIds {
@@ -201,7 +200,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
             return nil
         }
 
-    case .updateScrollOffset(let offset):
+    case let .updateScrollOffset(offset):
         if var story = state.story {
             story.scrollOffset = offset
             do {
@@ -213,7 +212,7 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         }
         return nil
 
-    case .retryGeneration(let retryAction):
+    case let .retryGeneration(retryAction):
         return retryAction
 
     case .confirmDeleteStory:
@@ -226,19 +225,19 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         await environment.loadSubscriptions()
         return nil
 
-    case .updatePerspective(let p):
+    case let .updatePerspective(p):
         var updatedSettings = state.settingsState
         updatedSettings.perspective = p
         try? await environment.settingsEnvironment.saveSettings(updatedSettings)
         return nil
 
-    case .setSentenceCount(let count):
+    case let .setSentenceCount(count):
         var updatedSettings = state.settingsState
         updatedSettings.sentenceCount = count
         try? await environment.settingsEnvironment.saveSettings(updatedSettings)
         return nil
 
-    case .updateStoryTitle(let story, let title):
+    case let .updateStoryTitle(story, title):
         var updatedStory = story
         updatedStory.title = title
         return .saveStory(updatedStory)

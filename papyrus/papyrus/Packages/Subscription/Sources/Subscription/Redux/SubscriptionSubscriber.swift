@@ -9,6 +9,6 @@ import Foundation
 import ReduxKit
 
 @MainActor
-let subscriptionSubscriber: OnSubscribe<SubscriptionStore, SubscriptionEnvironmentProtocol> = { store, environment in
+let subscriptionSubscriber: OnSubscribe<SubscriptionStore, SubscriptionEnvironmentProtocol> = { _, _ in
     // Handle any state changes that need side effects
 }

@@ -5,9 +5,9 @@
 //  Created by Isaac Akalanne on 04/10/2025.
 //
 
-import SwiftUI
-import SDIconsKit
 import PapyrusStyleKit
+import SDIconsKit
+import SwiftUI
 
 struct WelcomeView: View {
     @EnvironmentObject var store: ReaderStore
@@ -63,7 +63,7 @@ struct WelcomeView: View {
                 LinearGradient(
                     gradient: Gradient(colors: [
                         PapyrusColor.background.color(in: colorScheme),
-                        PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme),
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing

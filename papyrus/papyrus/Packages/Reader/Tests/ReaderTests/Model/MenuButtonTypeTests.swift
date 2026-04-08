@@ -5,14 +5,13 @@
 //  Created by Isaac Akalanne on 04/10/2025.
 //
 
-import Testing
-import SwiftUI
 import PapyrusStyleKit
 @testable import Reader
+import SwiftUI
+import Testing
 
 @Suite("MenuButtonType Tests")
 struct MenuButtonTypeTests {
-
     @Test("Menu button icons should be correct")
     func menuButtonIcon() {
         #expect(MenuButtonType.menu.icon == "text.alignleft")

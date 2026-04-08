@@ -1,5 +1,5 @@
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 
 struct BackgroundImageContextPickerSheet: View {
     @EnvironmentObject var store: SettingsStore
@@ -9,8 +9,8 @@ struct BackgroundImageContextPickerSheet: View {
     @State private var selectedContexts: Set<BackgroundImageContext>
 
     init(isPresented: Binding<Bool>, initialUsage: Set<BackgroundImageContext>) {
-        self._isPresented = isPresented
-        self._selectedContexts = State(initialValue: initialUsage)
+        _isPresented = isPresented
+        _selectedContexts = State(initialValue: initialUsage)
     }
 
     var selectedFontName: String { store.state.selectedFontName }

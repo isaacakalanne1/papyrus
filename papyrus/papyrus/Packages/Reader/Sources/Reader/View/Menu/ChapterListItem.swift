@@ -5,9 +5,9 @@
 //  Created by Isaac Akalanne on 20/03/2026.
 //
 
+import PapyrusStyleKit
 import SwiftUI
 import TextGeneration
-import PapyrusStyleKit
 
 struct ChapterListItem: View {
     let chapter: Chapter

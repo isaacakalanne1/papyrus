@@ -23,7 +23,7 @@ private struct ScrollOffsetObserverView: UIViewRepresentable {
 
     func makeCoordinator() -> Coordinator { Coordinator(onOffsetChange: onOffsetChange) }
 
-    func makeUIView(context: Context) -> UIView {
+    func makeUIView(context _: Context) -> UIView {
         let view = UIView()
         view.isHidden = true
         view.isUserInteractionEnabled = false
@@ -70,7 +70,7 @@ private struct ScrollOffsetObserverView: UIViewRepresentable {
             scrollView.addObserver(self, forKeyPath: "contentOffset", options: [.new], context: nil)
         }
 
-        override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
+        override func observeValue(forKeyPath keyPath: String?, of _: Any?, change: [NSKeyValueChangeKey: Any]?, context _: UnsafeMutableRawPointer?) {
             guard keyPath == "contentOffset",
                   let point = change?[.newKey] as? CGPoint else { return }
             onOffsetChange(point.y)
@@ -137,7 +137,8 @@ struct StoryContentView: View {
                                     .id("content")
 
                                 if let failedAction = store.state.failedGenerationAction,
-                                   story.chapterIndex == story.chapters.count - 1 {
+                                   story.chapterIndex == story.chapters.count - 1
+                                {
                                     GenerationErrorView(
                                         fontName: store.state.settingsState.selectedFontName,
                                         onRetry: {
@@ -154,7 +155,8 @@ struct StoryContentView: View {
                                     // Next Chapter or Create Sequel Button
                                     Group {
                                         if story.chapterIndex == story.maxNumberOfChapters - 1,
-                                           story.mode != .interactive {
+                                           story.mode != .interactive
+                                        {
                                             PrimaryButton(
                                                 type: .createSequel,
                                                 isLoading: store.state.isLoading,
@@ -197,9 +199,9 @@ struct StoryContentView: View {
                                 }
                             }
                         }
-                        .onChange(of: story.id, { _, _ in
+                        .onChange(of: story.id) { _, _ in
                             setupStoryView(scrollGeometry: scrollGeometry)
-                        })
+                        }
                         .onAppear {
                             setupStoryView(scrollGeometry: scrollGeometry)
 
@@ -232,7 +234,7 @@ struct StoryContentView: View {
                 LinearGradient(
                     gradient: Gradient(colors: [
                         PapyrusColor.background.color(in: colorScheme),
-                        PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme),
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing

@@ -3,29 +3,29 @@ import SDNetworkCore
 
 struct GetChapterTitleEndpoint: Endpoint {
     typealias Response = OpenRouterResponse
-    
+
     let story: Story
-    
+
     var path: String {
         "/api/v1/chat/completions"
     }
-    
+
     private var storyContext: String {
         if !story.plotOutline.isEmpty {
             return """
-Based on the following story details, respond with the story title:
+            Based on the following story details, respond with the story title:
 
-**Plot Outline:** \(story.plotOutline)
-"""
+            **Plot Outline:** \(story.plotOutline)
+            """
         } else {
             return """
-Based on the following story details, respond with the story title:
+            Based on the following story details, respond with the story title:
 
-**Main Character:** \(story.mainCharacter)
-**Setting:** \(story.setting)
-**Perspective:** \(story.perspective.promptDescription)
-**First paragraph:** \(story.chapters.first?.content ?? "")
-"""
+            **Main Character:** \(story.mainCharacter)
+            **Setting:** \(story.setting)
+            **Perspective:** \(story.perspective.promptDescription)
+            **First paragraph:** \(story.chapters.first?.content ?? "")
+            """
         }
     }
 
@@ -38,13 +38,13 @@ Based on the following story details, respond with the story title:
             OpenRouterMessage(
                 role: "user",
                 content: storyContext
-            )
+            ),
         ]
-        
+
         let request = OpenRouterRequest(
             messages: messages
         )
-        
+
         return request.toData()
     }
 }

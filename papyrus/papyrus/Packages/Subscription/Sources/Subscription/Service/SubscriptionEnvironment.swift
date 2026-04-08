@@ -5,10 +5,10 @@
 //  Created by Isaac Akalanne on 04/10/2025.
 //
 
-import Foundation
-import StoreKit
 import Combine
+import Foundation
 import Settings
+import StoreKit
 
 public protocol SubscriptionEnvironmentProtocol {
     func fetchSubscriptionProduct() async throws -> Product
@@ -22,7 +22,7 @@ public protocol SubscriptionEnvironmentProtocol {
 public class SubscriptionEnvironment: SubscriptionEnvironmentProtocol {
     private let repository: SubscriptionRepositoryProtocol
     private let settingsEnvironment: SettingsEnvironmentProtocol
-    
+
     public init(
         repository: SubscriptionRepositoryProtocol = SubscriptionRepository(),
         settingsEnvironment: SettingsEnvironmentProtocol
@@ -30,36 +30,36 @@ public class SubscriptionEnvironment: SubscriptionEnvironmentProtocol {
         self.repository = repository
         self.settingsEnvironment = settingsEnvironment
     }
-    
+
     public func fetchSubscriptionProduct() async throws -> Product {
         return try await repository.fetchSubscriptionProduct()
     }
-    
+
     public func purchaseSubscription() async throws {
         _ = try await repository.purchaseSubscription()
         await updateSubscriptionStatusInSettings()
     }
-    
+
     public func restorePurchases() async throws {
         try await repository.restorePurchases()
         await updateSubscriptionStatusInSettings()
     }
-    
+
     public func checkSubscriptionStatus() async throws -> Bool {
         let isSubscribed = await repository.isSubscribed()
         await updateSubscriptionStatusInSettings()
         return isSubscribed
     }
-    
+
     public func loadSubscriptionOnInit() async {
         await updateSubscriptionStatusInSettings()
         await startTransactionListener()
     }
-    
+
     public func startTransactionListener() async {
         await repository.startTransactionListener()
     }
-    
+
     private func updateSubscriptionStatusInSettings() async {
         do {
             let isSubscribed = await repository.isSubscribed()

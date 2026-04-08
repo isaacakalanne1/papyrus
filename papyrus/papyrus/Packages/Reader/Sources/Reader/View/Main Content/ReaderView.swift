@@ -5,10 +5,10 @@
 //  Created by Isaac Akalanne on 26/09/2025.
 //
 
+import PapyrusStyleKit
+import Subscription
 import SwiftUI
 import UIKit
-import Subscription
-import PapyrusStyleKit
 
 struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
@@ -27,11 +27,9 @@ struct ReaderView: View {
         return Image(uiImage: uiImage)
     }
 
-    init() {
+    init() {}
 
-    }
-
-    public var body: some View {
+    var body: some View {
         let showStoryForm: Binding<Bool> = .init {
             store.state.showStoryForm
         } set: { newValue in
@@ -46,7 +44,6 @@ struct ReaderView: View {
         ZStack(alignment: .leading) {
             // Main content
             VStack(spacing: 0) {
-
                 // Generation error banner (shown when a pipeline step fails)
                 if let failedAction = store.state.failedGenerationAction {
                     GenerationErrorView(
@@ -72,7 +69,7 @@ struct ReaderView: View {
                 )
 
                 UnifiedNavigationBar()
-                .ignoresSafeArea(.keyboard)
+                    .ignoresSafeArea(.keyboard)
             }
             .environment(\.readerFocusedField, $focusedField)
 
@@ -126,10 +123,10 @@ struct ReaderView: View {
             store.dispatch(.loadAllStories)
             store.dispatch(.loadSubscriptions)
         }
-        .onChange(of: store.state.focusedField) { oldValue, newValue in
+        .onChange(of: store.state.focusedField) { _, newValue in
             focusedField = newValue
         }
-        .onChange(of: focusedField) { oldValue, newValue in
+        .onChange(of: focusedField) { _, newValue in
             if store.state.focusedField != newValue {
                 store.dispatch(.setFocusedField(newValue))
             }
@@ -141,7 +138,8 @@ struct ReaderView: View {
         scrollOffsetTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
             DispatchQueue.main.async {
                 if let story = store.state.story,
-                   abs(store.state.currentScrollOffset - story.scrollOffset) > 1 {
+                   abs(store.state.currentScrollOffset - story.scrollOffset) > 1
+                {
                     store.dispatch(.updateScrollOffset(store.state.currentScrollOffset))
                 }
             }

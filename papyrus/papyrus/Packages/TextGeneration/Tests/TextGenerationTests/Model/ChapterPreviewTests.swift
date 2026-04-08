@@ -5,12 +5,11 @@
 //  Created by Isaac Akalanne on 20/03/2026.
 //
 
-import Testing
 import Foundation
+import Testing
 @testable import TextGeneration
 
 class ChapterPreviewTests {
-
     // MARK: - firstLine Tests
 
     @Test

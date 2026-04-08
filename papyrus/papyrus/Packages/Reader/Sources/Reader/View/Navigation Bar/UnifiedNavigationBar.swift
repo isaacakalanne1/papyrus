@@ -5,9 +5,9 @@
 //  Created by Isaac Akalanne on 03/10/2025.
 //
 
+import PapyrusStyleKit
 import SwiftUI
 import TextGeneration
-import PapyrusStyleKit
 
 struct UnifiedNavigationBar: View {
     @EnvironmentObject var store: ReaderStore
@@ -28,7 +28,8 @@ struct UnifiedNavigationBar: View {
                 if let story = store.state.story,
                    story.mode != .interactive,
                    !story.chapters.isEmpty,
-                   story.chapterIndex < story.chapters.count {
+                   story.chapterIndex < story.chapters.count
+                {
                     Spacer()
 
                     ChapterNavigationView(story: story)

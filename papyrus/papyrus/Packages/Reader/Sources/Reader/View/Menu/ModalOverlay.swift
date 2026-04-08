@@ -11,7 +11,7 @@ struct ModalOverlay: View {
     let isPresented: Bool
     let opacity: Double
     let onDismiss: () -> Void
-    
+
     var body: some View {
         if isPresented || opacity > 0 {
             Color.black.opacity(opacity)

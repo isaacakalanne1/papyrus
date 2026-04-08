@@ -41,15 +41,15 @@ public struct SettingsState: Equatable, Codable, Sendable {
         from decoder: any Decoder
     ) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.selectedTextSize = try container.decode(TextSize.self, forKey: .selectedTextSize)
-        self.isSubscribed = try container.decode(Bool.self, forKey: .isSubscribed)
-        self.perspective = try container.decodeIfPresent(StoryPerspective.self, forKey: .perspective) ?? .thirdPerson
-        self.selectedFontName = try container.decodeIfPresent(String.self, forKey: .selectedFontName) ?? "Georgia"
-        self.selectedColorSchemeName = try container.decodeIfPresent(PapyrusColorSchemeName.self, forKey: .selectedColorSchemeName) ?? .parchment
-        self.storyMode = try container.decodeIfPresent(StoryMode.self, forKey: .storyMode) ?? .story
-        self.backgroundImages = try container.decodeIfPresent([BackgroundImageEntry].self, forKey: .backgroundImages) ?? []
-        self.selectedBackgroundImageId = try container.decodeIfPresent(UUID.self, forKey: .selectedBackgroundImageId)
-        self.backgroundImageUsage = try container.decodeIfPresent(Set<BackgroundImageContext>.self, forKey: .backgroundImageUsage) ?? []
-        self.sentenceCount = try container.decodeIfPresent(Int.self, forKey: .sentenceCount) ?? 3
+        selectedTextSize = try container.decode(TextSize.self, forKey: .selectedTextSize)
+        isSubscribed = try container.decode(Bool.self, forKey: .isSubscribed)
+        perspective = try container.decodeIfPresent(StoryPerspective.self, forKey: .perspective) ?? .thirdPerson
+        selectedFontName = try container.decodeIfPresent(String.self, forKey: .selectedFontName) ?? "Georgia"
+        selectedColorSchemeName = try container.decodeIfPresent(PapyrusColorSchemeName.self, forKey: .selectedColorSchemeName) ?? .parchment
+        storyMode = try container.decodeIfPresent(StoryMode.self, forKey: .storyMode) ?? .story
+        backgroundImages = try container.decodeIfPresent([BackgroundImageEntry].self, forKey: .backgroundImages) ?? []
+        selectedBackgroundImageId = try container.decodeIfPresent(UUID.self, forKey: .selectedBackgroundImageId)
+        backgroundImageUsage = try container.decodeIfPresent(Set<BackgroundImageContext>.self, forKey: .backgroundImageUsage) ?? []
+        sentenceCount = try container.decodeIfPresent(Int.self, forKey: .sentenceCount) ?? 3
     }
 }

@@ -9,8 +9,7 @@ import Foundation
 import ReduxKit
 
 @MainActor
-public let subscriptionMiddleware: Middleware<SubscriptionState, SubscriptionAction, SubscriptionEnvironmentProtocol> = { state, action, environment in
-        
+public let subscriptionMiddleware: Middleware<SubscriptionState, SubscriptionAction, SubscriptionEnvironmentProtocol> = { _, action, environment in
     switch action {
     case .loadProduct:
         do {
@@ -19,7 +18,7 @@ public let subscriptionMiddleware: Middleware<SubscriptionState, SubscriptionAct
         } catch {
             return .productLoadFailed(error.localizedDescription)
         }
-        
+
     case .purchaseSubscription:
         do {
             try await environment.purchaseSubscription()
@@ -27,7 +26,7 @@ public let subscriptionMiddleware: Middleware<SubscriptionState, SubscriptionAct
         } catch {
             return .purchaseFailed(error.localizedDescription)
         }
-        
+
     case .restorePurchases:
         do {
             try await environment.restorePurchases()
@@ -35,7 +34,7 @@ public let subscriptionMiddleware: Middleware<SubscriptionState, SubscriptionAct
         } catch {
             return .restoreFailed(error.localizedDescription)
         }
-        
+
     case .checkSubscriptionStatus:
         do {
             let isSubscribed = try await environment.checkSubscriptionStatus()
@@ -52,7 +51,7 @@ public let subscriptionMiddleware: Middleware<SubscriptionState, SubscriptionAct
         } catch {
             return .subscriptionStatusUpdated(isSubscribed: false, status: nil)
         }
-        
+
     case .productLoaded,
          .productLoadFailed,
          .purchaseSucceeded,

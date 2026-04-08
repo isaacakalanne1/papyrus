@@ -1,5 +1,5 @@
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 
 struct FormFieldView: View {
     @Environment(\.readerFocusedField) var focusedField
@@ -26,7 +26,7 @@ struct FormFieldView: View {
     ) {
         self.label = label
         self.placeholder = placeholder
-        self._text = text
+        _text = text
         self.equals = equals
         self.showHint = showHint
         self.hintText = hintText
@@ -46,46 +46,46 @@ struct FormFieldView: View {
                     .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme)),
                 axis: .vertical
             ) { EmptyView() }
-            .ifLet(focusedField) { view, focusedField in
-                view.focused(focusedField, equals: equals)
-            }
-            .font(.custom(fontName, size: 16))
-            .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
-            .lineLimit(3, reservesSpace: true)
-            .padding(12)
-            .background {
-                ZStack {
-                    // Normal background
-                    RoundedRectangle(cornerRadius: 8)
-                        .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.1))
-
-                    // Hint glow effect
-                    if showHint {
+                .ifLet(focusedField) { view, focusedField in
+                    view.focused(focusedField, equals: equals)
+                }
+                .font(.custom(fontName, size: 16))
+                .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
+                .lineLimit(3, reservesSpace: true)
+                .padding(12)
+                .background {
+                    ZStack {
+                        // Normal background
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(
-                                LinearGradient(
-                                    colors: [
-                                        PapyrusColor.textSecondary.color(in: colorScheme).opacity(0.4),
-                                        PapyrusColor.textSecondary.color(in: colorScheme).opacity(0.6)
-                                    ],
-                                    startPoint: .leading,
-                                    endPoint: .trailing
-                                ),
-                                lineWidth: 2
-                            )
-                            .scaleEffect(pulseAnimation ? 1.02 : 1.0)
-                            .opacity(pulseAnimation ? 0.8 : 1.0)
-                            .animation(
-                                .easeInOut(duration: 0.8).repeatWhile(showHint, autoreverses: true),
-                                value: pulseAnimation
-                            )
+                            .fill(PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.1))
+
+                        // Hint glow effect
+                        if showHint {
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(
+                                    LinearGradient(
+                                        colors: [
+                                            PapyrusColor.textSecondary.color(in: colorScheme).opacity(0.4),
+                                            PapyrusColor.textSecondary.color(in: colorScheme).opacity(0.6),
+                                        ],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    ),
+                                    lineWidth: 2
+                                )
+                                .scaleEffect(pulseAnimation ? 1.02 : 1.0)
+                                .opacity(pulseAnimation ? 0.8 : 1.0)
+                                .animation(
+                                    .easeInOut(duration: 0.8).repeatWhile(showHint, autoreverses: true),
+                                    value: pulseAnimation
+                                )
+                        }
                     }
                 }
-            }
-            .submitLabel(.return)
-            .onSubmit {
-                onSubmit?()
-            }
+                .submitLabel(.return)
+                .onSubmit {
+                    onSubmit?()
+                }
 
             // Hint text
             if showHint, let hintText = hintText {
@@ -99,7 +99,7 @@ struct FormFieldView: View {
                     .animation(.easeInOut(duration: 0.3), value: showHint)
             }
         }
-        .onChange(of: showHint) { oldValue, newValue in
+        .onChange(of: showHint) { _, newValue in
             if newValue {
                 pulseAnimation = true
             } else {
@@ -112,6 +112,6 @@ struct FormFieldView: View {
 // Helper extension for repeating animations
 extension Animation {
     func repeatWhile(_ condition: Bool, autoreverses: Bool = true) -> Animation {
-        condition ? self.repeatForever(autoreverses: autoreverses) : self
+        condition ? repeatForever(autoreverses: autoreverses) : self
     }
 }

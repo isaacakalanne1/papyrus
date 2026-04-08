@@ -5,19 +5,18 @@
 //  Created by Isaac Akalanne on 04/10/2025.
 //
 
+@testable import Reader
+import Settings
 import Testing
 import TextGeneration
-import Settings
-@testable import Reader
 
 @Suite("ReaderState Tests")
 struct ReaderStateTests {
-    
     @Test("Initial state should have default values")
     func initialState() {
         // Given & When
         let state = ReaderState()
-        
+
         // Then
         #expect(state.mainCharacter == "")
         #expect(state.setting == "")
@@ -31,14 +30,14 @@ struct ReaderStateTests {
         #expect(state.selectedStoryForDetails == nil)
         #expect(state.focusedField == nil)
     }
-    
+
     @Test("Custom initialization should set all properties")
     func customInitialization() {
         // Given
         let stories = [Story.arrange]
         let story = Story.arrange
         let settingsState = SettingsState()
-        
+
         // When
         let state = ReaderState(
             mainCharacter: "Test Character",
@@ -54,7 +53,7 @@ struct ReaderStateTests {
             selectedStoryForDetails: story,
             focusedField: .mainCharacter
         )
-        
+
         // Then
         #expect(state.mainCharacter == "Test Character")
         #expect(state.setting == "Test Setting")
@@ -68,16 +67,16 @@ struct ReaderStateTests {
         #expect(state.selectedStoryForDetails != nil)
         #expect(state.focusedField == .mainCharacter)
     }
-    
+
     @Test("Can create chapter without story")
     func canCreateChapterWithoutStory() {
         // Given
         let state = ReaderState()
-        
+
         // When & Then
         #expect(state.canCreateChapter)
     }
-    
+
     @Test("Can create chapter with subscription")
     func canCreateChapterWithSubscription() {
         // Given
@@ -86,17 +85,17 @@ struct ReaderStateTests {
         let story = Story.arrange(chapters: [
             Chapter.arrange,
             Chapter.arrange,
-            Chapter.arrange // 3 chapters
+            Chapter.arrange, // 3 chapters
         ])
         let state = ReaderState(
             story: story,
             settingsState: settingsState
         )
-        
+
         // When & Then
         #expect(state.canCreateChapter)
     }
-    
+
     @Test("Can create chapter without subscription under limit")
     func canCreateChapterWithoutSubscriptionUnderLimit() {
         // Given
@@ -107,11 +106,11 @@ struct ReaderStateTests {
             story: story,
             settingsState: settingsState
         )
-        
+
         // When & Then
         #expect(state.canCreateChapter)
     }
-    
+
     @Test("Cannot create chapter without subscription over limit")
     func cannotCreateChapterWithoutSubscriptionOverLimit() {
         // Given
@@ -119,17 +118,17 @@ struct ReaderStateTests {
         settingsState.isSubscribed = false
         let story = Story.arrange(chapters: [
             Chapter.arrange,
-            Chapter.arrange // 2 chapters (at limit)
+            Chapter.arrange, // 2 chapters (at limit)
         ])
         let state = ReaderState(
             story: story,
             settingsState: settingsState
         )
-        
+
         // When & Then
         #expect(!state.canCreateChapter)
     }
-    
+
     @Test("Content state should be welcome for empty state")
     func contentStateWelcome() {
         // Given
@@ -193,7 +192,7 @@ struct ReaderStateTests {
         switch state.contentState {
         case .welcome:
             Issue.record("Expected story state")
-        case .story(let extractedStory):
+        case let .story(extractedStory):
             #expect(extractedStory.id == story.id)
             #expect(extractedStory.chapters.count == 2)
             #expect(extractedStory.chapterIndex == 0)
@@ -201,39 +200,39 @@ struct ReaderStateTests {
             Issue.record("Expected story state, got interactiveStory")
         }
     }
-    
-    @Test("Loading step enum should be equatable", 
-          arguments: [LoadingStep.idle, .identifyingTheme, .creatingPlotOutline, .creatingChapterBreakdown, 
-                     .analyzingStructure, .preparingNarrative, .writingChapter])
+
+    @Test("Loading step enum should be equatable",
+          arguments: [LoadingStep.idle, .identifyingTheme, .creatingPlotOutline, .creatingChapterBreakdown,
+                      .analyzingStructure, .preparingNarrative, .writingChapter])
     func loadingStepEnum(step: LoadingStep) {
         // Test that all loading steps are equatable
         #expect(step == step)
     }
-    
+
     @Test("Different loading steps should not be equal")
     func loadingStepInequality() {
         #expect(LoadingStep.idle != LoadingStep.creatingPlotOutline)
         #expect(LoadingStep.writingChapter != LoadingStep.idle)
     }
-    
+
     @Test("State equality should work correctly")
     func stateEquality() {
         // Given
         let state1 = ReaderState(mainCharacter: "Test", setting: "Setting")
         let state2 = ReaderState(mainCharacter: "Test", setting: "Setting")
         let state3 = ReaderState(mainCharacter: "Different", setting: "Setting")
-        
+
         // When & Then
         #expect(state1 == state2)
         #expect(state1 != state3)
     }
-    
+
     @Test("ReaderField enum should be equatable",
           arguments: [ReaderField.mainCharacter, .settingDetails])
     func readerFieldEnum(field: ReaderField) {
         #expect(field == field)
     }
-    
+
     @Test("Different reader fields should not be equal")
     func readerFieldInequality() {
         #expect(ReaderField.mainCharacter != ReaderField.settingDetails)

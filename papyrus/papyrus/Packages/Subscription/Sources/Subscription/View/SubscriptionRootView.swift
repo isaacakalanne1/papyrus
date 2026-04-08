@@ -5,23 +5,21 @@
 //  Created by Isaac Akalanne on 04/10/2025.
 //
 
-import SwiftUI
 import ReduxKit
+import SwiftUI
 
 public struct SubscriptionRootView: View {
     @StateObject private var store: SubscriptionStore
     let fontName: String
 
     public init(environment: SubscriptionEnvironmentProtocol, fontName: String = "Georgia") {
-        self._store = StateObject(wrappedValue: {
-            Store(
-                initial: SubscriptionState(),
-                reducer: subscriptionReducer,
-                environment: environment,
-                middleware: subscriptionMiddleware,
-                subscriber: subscriptionSubscriber
-            )
-        }())
+        _store = StateObject(wrappedValue: Store(
+            initial: SubscriptionState(),
+            reducer: subscriptionReducer,
+            environment: environment,
+            middleware: subscriptionMiddleware,
+            subscriber: subscriptionSubscriber
+        ))
         self.fontName = fontName
     }
 

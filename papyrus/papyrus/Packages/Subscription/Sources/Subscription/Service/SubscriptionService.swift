@@ -5,8 +5,8 @@
 //  Created by Isaac Akalanne on 04/10/2025.
 //
 
-import StoreKit
 import Foundation
+import StoreKit
 
 public enum SubscriptionError: Error {
     case productNotFound
@@ -27,24 +27,24 @@ public protocol SubscriptionServiceProtocol {
 public class SubscriptionService: SubscriptionServiceProtocol {
     private let productId = "com.papyrus.monthly.subscription"
     private var updateListenerTask: Task<Void, Error>?
-    
-    public init() { }
-    
+
+    public init() {}
+
     deinit {
         updateListenerTask?.cancel()
     }
-    
+
     public func startTransactionListener() async {
         for await result in Transaction.updates {
             do {
-                let transaction = try self.checkVerified(result)
+                let transaction = try checkVerified(result)
                 await transaction.finish()
             } catch {
                 print("Transaction verification failed: \(error)")
             }
         }
     }
-    
+
     public func fetchProducts() async throws -> [Product] {
         do {
             let products = try await Product.products(for: [productId])
@@ -56,13 +56,13 @@ public class SubscriptionService: SubscriptionServiceProtocol {
             throw SubscriptionError.productNotFound
         }
     }
-    
+
     public func purchase(product: Product) async throws -> Transaction {
         do {
             let result = try await product.purchase()
-            
+
             switch result {
-            case .success(let verification):
+            case let .success(verification):
                 let transaction = try checkVerified(verification)
                 await transaction.finish()
                 return transaction
@@ -77,10 +77,10 @@ public class SubscriptionService: SubscriptionServiceProtocol {
             throw SubscriptionError.purchaseFailed
         }
     }
-    
+
     public func restorePurchases() async throws -> [Transaction] {
         var restoredTransactions: [Transaction] = []
-        
+
         for await result in Transaction.currentEntitlements {
             do {
                 let transaction = try checkVerified(result)
@@ -90,10 +90,10 @@ public class SubscriptionService: SubscriptionServiceProtocol {
                 print("Transaction verification failed: \(error)")
             }
         }
-        
+
         return restoredTransactions
     }
-    
+
     public func checkSubscriptionStatus() async -> Bool {
         for await result in Transaction.currentEntitlements {
             do {
@@ -107,14 +107,14 @@ public class SubscriptionService: SubscriptionServiceProtocol {
         }
         return false
     }
-    
+
     public func currentSubscription() async -> Product.SubscriptionInfo.Status? {
         do {
             let products = try await fetchProducts()
             guard let product = products.first else { return nil }
-            
+
             let statuses = try await product.subscription?.status ?? []
-            
+
             for status in statuses {
                 switch status.state {
                 case .subscribed, .inBillingRetryPeriod:
@@ -126,15 +126,15 @@ public class SubscriptionService: SubscriptionServiceProtocol {
         } catch {
             return nil
         }
-        
+
         return nil
     }
-    
+
     private func checkVerified<T>(_ result: VerificationResult<T>) throws -> T {
         switch result {
         case .unverified:
             throw SubscriptionError.verificationFailed
-        case .verified(let safe):
+        case let .verified(safe):
             return safe
         }
     }

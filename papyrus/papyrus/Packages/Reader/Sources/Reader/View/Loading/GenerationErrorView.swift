@@ -3,8 +3,8 @@
 //  Reader
 //
 
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 
 /// Displayed in place of the loading indicator when chapter generation fails.
 /// Mirrors the visual language of `ChapterWritingLoadingView` and `LoadingView`:
@@ -33,7 +33,7 @@ struct GenerationErrorView: View {
                             LinearGradient(
                                 gradient: Gradient(colors: [
                                     PapyrusColor.background.color(in: colorScheme),
-                                    PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                                    PapyrusColor.backgroundSecondary.color(in: colorScheme),
                                 ]),
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
@@ -116,7 +116,7 @@ struct GenerationErrorView: View {
                 LinearGradient(
                     gradient: Gradient(colors: [
                         PapyrusColor.background.color(in: colorScheme).opacity(0.97),
-                        PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.97)
+                        PapyrusColor.backgroundSecondary.color(in: colorScheme).opacity(0.97),
                     ]),
                     startPoint: .topLeading,
                     endPoint: .bottomTrailing

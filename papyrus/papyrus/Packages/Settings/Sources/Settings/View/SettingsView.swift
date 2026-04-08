@@ -1,6 +1,6 @@
-import SwiftUI
-import ReduxKit
 import PapyrusStyleKit
+import ReduxKit
+import SwiftUI
 
 public struct SettingsView: View {
     @EnvironmentObject var store: SettingsStore

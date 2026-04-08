@@ -1,6 +1,6 @@
+import PapyrusStyleKit
 import SwiftUI
 import UIKit
-import PapyrusStyleKit
 
 struct FontPickerSheet: View {
     @EnvironmentObject var store: SettingsStore

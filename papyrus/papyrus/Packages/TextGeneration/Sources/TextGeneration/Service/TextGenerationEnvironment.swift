@@ -20,37 +20,37 @@ public protocol TextGenerationEnvironmentProtocol {
 
 public struct TextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     private let repository: TextGenerationRepositoryProtocol
-    
+
     public init(
         repository: TextGenerationRepositoryProtocol = TextGenerationRepository()
     ) {
         self.repository = repository
     }
-    
+
     public func createStoryTheme(story: Story) async throws -> Story {
         try await repository.createStoryTheme(story: story)
     }
-    
+
     public func createPlotOutline(story: Story) async throws -> Story {
         try await repository.createPlotOutline(story: story)
     }
-    
+
     public func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story {
         try await repository.createSequelPlotOutline(story: story, previousStory: previousStory)
     }
-    
+
     public func createChapterBreakdown(story: Story) async throws -> Story {
         try await repository.createChapterBreakdown(story: story)
     }
-    
+
     public func getStoryDetails(story: Story) async throws -> Story {
         try await repository.getStoryDetails(story: story)
     }
-    
+
     public func getChapterTitle(story: Story) async throws -> Story {
         try await repository.getChapterTitle(story: story)
     }
-    
+
     public func createChapter(story: Story) async throws -> Story {
         try await repository.createChapter(story: story)
     }

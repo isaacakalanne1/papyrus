@@ -5,8 +5,8 @@
 //  Created by Isaac Akalanne on 05/10/2025.
 //
 
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 
 public struct SubscriptionMenuButton: View {
     let action: () -> Void

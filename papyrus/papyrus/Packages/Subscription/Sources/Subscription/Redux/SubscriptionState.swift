@@ -14,7 +14,7 @@ public struct SubscriptionState: Equatable {
     public var product: Product?
     public var error: String?
     public var subscriptionStatus: Product.SubscriptionInfo.Status?
-    
+
     public init(
         isSubscribed: Bool = false,
         isLoading: Bool = false,

@@ -3,9 +3,9 @@
 //  Reader
 //
 
+import PapyrusStyleKit
 import SwiftUI
 import TextGeneration
-import PapyrusStyleKit
 
 /// A fully custom deletion confirmation dialog.
 /// Presented as a floating parchment card, matching the visual language of
@@ -108,7 +108,7 @@ struct DeleteConfirmationSheet: View {
                                     LinearGradient(
                                         gradient: Gradient(colors: [
                                             PapyrusColor.error.color(in: colorScheme),
-                                            PapyrusColor.error.color(in: colorScheme).opacity(0.8)
+                                            PapyrusColor.error.color(in: colorScheme).opacity(0.8),
                                         ]),
                                         startPoint: .topLeading,
                                         endPoint: .bottomTrailing
@@ -141,7 +141,7 @@ struct DeleteConfirmationSheet: View {
                         LinearGradient(
                             gradient: Gradient(colors: [
                                 PapyrusColor.background.color(in: colorScheme),
-                                PapyrusColor.backgroundSecondary.color(in: colorScheme)
+                                PapyrusColor.backgroundSecondary.color(in: colorScheme),
                             ]),
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
@@ -149,7 +149,7 @@ struct DeleteConfirmationSheet: View {
                     )
                     .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 10)
             )
-            .onTapGesture { } // Prevent tap from propagating to the scrim behind
+            .onTapGesture {} // Prevent tap from propagating to the scrim behind
         }
     }
 }

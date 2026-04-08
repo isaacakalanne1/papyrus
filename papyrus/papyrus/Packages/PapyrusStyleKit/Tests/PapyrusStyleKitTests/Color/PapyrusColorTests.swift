@@ -5,12 +5,11 @@
 //  Created by Isaac Akalanne on 05/10/2025.
 //
 
-import Testing
-import SwiftUI
 @testable import PapyrusStyleKit
+import SwiftUI
+import Testing
 
 class PapyrusColorTests {
-
     private let parchment = PapyrusColorScheme.parchment
 
     // MARK: - Color Property Tests
@@ -27,7 +26,7 @@ class PapyrusColorTests {
         (PapyrusColor.textSecondary, 0.5, 0.45, 0.4),
         (PapyrusColor.iconPrimary, 0.6, 0.5, 0.4),
         (PapyrusColor.iconSecondary, 0.4, 0.35, 0.3),
-        (PapyrusColor.error, 0.6, 0.3, 0.2)
+        (PapyrusColor.error, 0.6, 0.3, 0.2),
     ])
     func papyrusColor_colorComponents(colorCase: PapyrusColor, expectedRed: Double, expectedGreen: Double, expectedBlue: Double) {
         let scheme = PapyrusColorScheme.parchment
@@ -166,7 +165,7 @@ class PapyrusColorTests {
             (.textSecondary, 0.5, 0.45, 0.4),
             (.iconPrimary, 0.6, 0.5, 0.4),
             (.iconSecondary, 0.4, 0.35, 0.3),
-            (.error, 0.6, 0.3, 0.2)
+            (.error, 0.6, 0.3, 0.2),
         ]
 
         for (_, red, green, blue) in componentRanges {

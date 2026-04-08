@@ -6,7 +6,7 @@ import PackageDescription
 let package = Package(
     name: "Reader",
     platforms: [
-        .iOS("17.4")
+        .iOS("17.4"),
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.
@@ -25,7 +25,7 @@ let package = Package(
         .package(name: "Subscription", path: "../Subscription"),
         .package(name: "SDIconsKit", path: "../SDIconsKit"),
         .package(name: "PapyrusStyleKit", path: "../PapyrusStyleKit"),
-        .package(url: "https://github.com/isaacakalanne1/reduxkit.git", from: "1.0.1")
+        .package(url: "https://github.com/isaacakalanne1/reduxkit.git", from: "1.0.1"),
     ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
@@ -38,7 +38,7 @@ let package = Package(
                 "Subscription",
                 "SDIconsKit",
                 "PapyrusStyleKit",
-                .product(name: "ReduxKit", package: "reduxkit")
+                .product(name: "ReduxKit", package: "reduxkit"),
             ]
         ),
         .target(
@@ -50,7 +50,7 @@ let package = Package(
                 "Settings",
                 .product(name: "SettingsMocks", package: "Settings"),
                 "Subscription",
-                .product(name: "SubscriptionMocks", package: "Subscription")
+                .product(name: "SubscriptionMocks", package: "Subscription"),
             ],
             path: "Mocks"
         ),
@@ -59,7 +59,7 @@ let package = Package(
             dependencies: [
                 "Reader",
                 "ReaderMocks",
-                "PapyrusStyleKit"
+                "PapyrusStyleKit",
             ]
         ),
     ]

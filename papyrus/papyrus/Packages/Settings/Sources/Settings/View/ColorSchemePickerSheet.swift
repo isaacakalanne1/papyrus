@@ -1,5 +1,5 @@
-import SwiftUI
 import PapyrusStyleKit
+import SwiftUI
 
 struct ColorSchemePickerSheet: View {
     @EnvironmentObject var store: SettingsStore
@@ -38,7 +38,6 @@ struct ColorSchemePickerSheet: View {
                     }
                     .padding(.top, 12)
                 }
-
             }
             closeButton
         }

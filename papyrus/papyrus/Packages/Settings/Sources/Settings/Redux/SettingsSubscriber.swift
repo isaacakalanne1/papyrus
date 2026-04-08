@@ -5,9 +5,9 @@
 //  Created by Isaac Akalanne on 01/10/2025.
 //
 
-import ReduxKit
 import Combine
+import ReduxKit
 
 @MainActor
-public let settingsSubscriber: OnSubscribe<SettingsStore, SettingsEnvironmentProtocol> = { store, environment in
+public let settingsSubscriber: OnSubscribe<SettingsStore, SettingsEnvironmentProtocol> = { _, _ in
 }

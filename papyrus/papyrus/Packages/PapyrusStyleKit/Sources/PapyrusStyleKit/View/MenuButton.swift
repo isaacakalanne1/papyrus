@@ -28,8 +28,8 @@ public struct MenuButton: View {
                 .font(.system(size: type.size, weight: type.weight))
                 .foregroundColor(
                     isEnabled
-                    ? type.color(in: colorScheme)
-                    : PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.3)
+                        ? type.color(in: colorScheme)
+                        : PapyrusColor.iconPrimary.color(in: colorScheme).opacity(0.3)
                 )
                 .frame(width: type.frameSize, height: type.frameSize)
         }

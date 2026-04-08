@@ -9,19 +9,19 @@ import SwiftUI
 
 struct ContentStateView: View {
     @EnvironmentObject var store: ReaderStore
-    
+
     let startScrollOffsetTimer: () -> Void
-    
+
     var body: some View {
         switch store.state.contentState {
         case .welcome:
             WelcomeView()
-        case .story(let story):
+        case let .story(story):
             StoryContentView(
                 story: story,
                 startScrollOffsetTimer: startScrollOffsetTimer
             )
-        case .interactiveStory(let story):
+        case let .interactiveStory(story):
             InteractiveContentView(story: story)
         }
     }

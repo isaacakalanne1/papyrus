@@ -3,12 +3,11 @@
 //  Settings
 //
 
-import Testing
 import Foundation
 import PapyrusStyleKit
+import Testing
 
 class BackgroundImageContextTests {
-
     // MARK: - displayName Tests
 
     @Test

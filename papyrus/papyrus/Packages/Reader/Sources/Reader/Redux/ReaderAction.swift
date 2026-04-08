@@ -6,17 +6,19 @@
 //
 
 import Foundation
-import TextGeneration
 import Settings
+import TextGeneration
 
 public indirect enum ReaderAction: Equatable, Sendable {
     // MARK: - Story Creation Entry Points (subscription gate lives here)
+
     case createStory
     case createInteractiveStory
     case createSequel
     case createChapter(Story)
 
     // MARK: - Story Creation Pipeline Steps
+
     case beginCreateStory
     case beginCreateInteractiveStory
     case generateFirstParagraph(Story)
@@ -47,6 +49,7 @@ public indirect enum ReaderAction: Equatable, Sendable {
     case retryGeneration(ReaderAction)
 
     // MARK: - Story Management
+
     case loadAllStories
     case onLoadedStories([Story])
     case failedToLoadStories
@@ -58,6 +61,7 @@ public indirect enum ReaderAction: Equatable, Sendable {
     case failedToDeleteStory(UUID)
 
     // MARK: - Story Properties
+
     case updateMainCharacter(String)
     case updateSetting(String)
     case updatePerspective(StoryPerspective)
@@ -75,6 +79,7 @@ public indirect enum ReaderAction: Equatable, Sendable {
     case reuseStoryDetails(Story)
 
     // MARK: - UI State Actions
+
     case setMenuStatus(MenuStatus)
     case setDragOffset(CGFloat)
     case setIsSequelMode(Bool)
