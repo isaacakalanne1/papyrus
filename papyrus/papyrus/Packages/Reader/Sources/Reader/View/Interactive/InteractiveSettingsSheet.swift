@@ -19,16 +19,17 @@ struct InteractiveSettingsSheet: View {
     }
 
     var body: some View {
-        ZStack(alignment: .bottomTrailing) {
-            VStack(spacing: 0) {
-                header
-                Divider()
-                    .background(PapyrusColor.borderSecondary.color(in: colorScheme))
-                sentenceCountSection
+        VStack(spacing: 0) {
+            header
+            Divider()
+                .background(PapyrusColor.borderSecondary.color(in: colorScheme))
+            sentenceCountSection
+            Spacer()
+            HStack {
                 Spacer()
-                confirmButton
+                closeButton
             }
-            closeButton
+            confirmButton
         }
         .background(PapyrusColor.background.color(in: colorScheme))
     }

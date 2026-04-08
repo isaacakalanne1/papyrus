@@ -17,16 +17,18 @@ struct SettingsMenu: View {
     var body: some View {
         HStack {
             Spacer()
-            VStack {
-                SettingsRootView(
-                    environment: store.environment.settingsEnvironment
-                )
+            ScrollView {
+                VStack {
+                    SettingsRootView(
+                        environment: store.environment.settingsEnvironment
+                    )
 
-                SubscriptionMenuButton(fontName: store.state.settingsState.selectedFontName, action: {
-                    store.dispatch(.setShowSubscriptionSheet(true))
-                })
-                Spacer()
+                    SubscriptionMenuButton(fontName: store.state.settingsState.selectedFontName, action: {
+                        store.dispatch(.setShowSubscriptionSheet(true))
+                    })
+                }
             }
+            .scrollBounceBehavior(.basedOnSize)
             .frame(width: 280)
             .background(PapyrusColor.background.color(in: colorScheme))
             .offset(x: calculateOffset())

@@ -99,6 +99,7 @@ struct ReaderView: View {
                         }
                     )
                 )
+                .ignoresSafeArea(.keyboard)
             }
             .environment(\.readerFocusedField, $focusedField)
 
