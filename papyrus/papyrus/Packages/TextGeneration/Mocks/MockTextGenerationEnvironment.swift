@@ -41,6 +41,7 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
 
     public var generateParagraphCalled = false
     public var generateParagraphCalledWith: Story?
+    public var generateParagraphCalledWithSentenceCount: Int?
     public var generateParagraphCallCount = 0
 
     // MARK: - Return Values and Error Configuration
@@ -159,9 +160,10 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         return createChapterReturnValue ?? story
     }
 
-    public func generateParagraph(story: Story) async throws -> Story {
+    public func generateParagraph(story: Story, sentenceCount: Int) async throws -> Story {
         generateParagraphCalled = true
         generateParagraphCalledWith = story
+        generateParagraphCalledWithSentenceCount = sentenceCount
         generateParagraphCallCount += 1
 
         if let error = generateParagraphError {
@@ -225,6 +227,7 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
 
         generateParagraphCalled = false
         generateParagraphCalledWith = nil
+        generateParagraphCalledWithSentenceCount = nil
         generateParagraphCallCount = 0
         generateParagraphReturnValue = nil
         generateParagraphError = nil
