@@ -45,7 +45,6 @@ struct WelcomeView: View {
             .padding(.horizontal, 20)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .clipped()
         .background {
             if let img = backgroundImage.image, backgroundImage.usage.contains(.home) {
                 ZStack(alignment: .bottom) {
@@ -60,7 +59,6 @@ struct WelcomeView: View {
                         endPoint: .bottom
                     )
                 }
-                .clipped()
             } else {
                 LinearGradient(
                     gradient: Gradient(colors: [
