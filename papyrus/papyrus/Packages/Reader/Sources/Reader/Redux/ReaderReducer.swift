@@ -269,6 +269,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.mainCharacter = story.mainCharacter
         newState.setting = story.setting
         newState.settingsState.perspective = story.perspective
+        newState.settingsState.storyMode = story.mode
         newState.selectedStoryForDetails = nil
         newState.showStoryForm = true
 
