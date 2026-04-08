@@ -15,17 +15,9 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
     // MARK: - Entry Points (subscription gate lives here)
 
     case .createStory:
-        if !state.canCreateChapter {
-            let isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
-            if !isSubscribed { return .setShowSubscriptionSheet(true) }
-        }
         return .beginCreateStory
 
     case .createInteractiveStory:
-        if !state.canCreateChapter {
-            let isSubscribed = await (try? environment.subscriptionEnvironment.checkSubscriptionStatus()) ?? false
-            if !isSubscribed { return .setShowSubscriptionSheet(true) }
-        }
         return .beginCreateInteractiveStory
 
     case .createSequel:
