@@ -126,15 +126,14 @@ public struct SubscriptionView: View {
     private var subscriptionOfferView: some View {
         VStack(spacing: 24) {
             VStack(spacing: 16) {
-                Text("Try Free\nfor 1 Week")
-                    .font(.custom(fontName, size: 28))
-                    .fontWeight(.medium)
+                Text("Unlock Your\nCreative Potential")
+                    .font(.custom(fontName, size: 24))
                     .foregroundColor(PapyrusColor.textPrimary.color(in: colorScheme))
                     .multilineTextAlignment(.center)
                     .lineSpacing(4)
 
-                Text("No charge for 7 days. Cancel anytime.")
-                    .font(.custom(fontName, size: 15))
+                Text("Create unlimited chapters and bring your stories to life")
+                    .font(.custom(fontName, size: 16))
                     .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
                     .multilineTextAlignment(.center)
             }
@@ -151,11 +150,21 @@ public struct SubscriptionView: View {
             )
 
             if let product = state.product {
-                VStack(spacing: 12) {
+                VStack(spacing: 16) {
+                    VStack(spacing: 4) {
+                        Text(product.displayPrice)
+                            .font(.custom(fontName, size: 28))
+                            .foregroundColor(PapyrusColor.accent.color(in: colorScheme))
+
+                        Text("per month")
+                            .font(.custom(fontName, size: 14))
+                            .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+                    }
+
                     Button(action: {
                         store.dispatch(.purchaseSubscription)
                     }) {
-                        Text("Start Free Trial")
+                        Text("Subscribe Now")
                             .font(.custom(fontName, size: 18))
                             .fontWeight(.medium)
                             .foregroundColor(.white)
@@ -169,22 +178,18 @@ public struct SubscriptionView: View {
                     .buttonStyle(PlainButtonStyle())
                     .disabled(state.isLoading)
 
-                    Text("Then \(product.displayPrice)/month — cancel anytime")
-                        .font(.custom(fontName, size: 13))
-                        .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
-                        .multilineTextAlignment(.center)
-
-                    Button(action: {
-                        store.dispatch(.restorePurchases)
-                    }) {
-                        Text("Restore Purchases")
-                            .font(.custom(fontName, size: 14))
-                            .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
-                            .underline()
+                    HStack(spacing: 12) {
+                        Button(action: {
+                            store.dispatch(.restorePurchases)
+                        }) {
+                            Text("Restore Purchases")
+                                .font(.custom(fontName, size: 14))
+                                .foregroundColor(PapyrusColor.textSecondary.color(in: colorScheme))
+                                .underline()
+                        }
+                        .buttonStyle(PlainButtonStyle())
+                        .disabled(state.isLoading)
                     }
-                    .buttonStyle(PlainButtonStyle())
-                    .disabled(state.isLoading)
-                    .padding(.top, 4)
 
                     HStack(spacing: 16) {
                         Link(destination: URL(string: "https://www.smileydude.co.uk/post/papyrus-privacy-policy")!) {
