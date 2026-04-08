@@ -61,16 +61,6 @@ struct ReaderView: View {
                     .transition(.move(edge: .top).combined(with: .opacity))
                 }
 
-                // Loading bar (appears below top bar when loading)
-                if store.state.isLoading && !store.state.contentState.hasStory {
-                    LoadingView(
-                        loadingDisplayStep: store.state.loadingStep,
-                        hasExistingStory: store.state.story != nil,
-                        fontName: store.state.settingsState.selectedFontName
-                    )
-                    .transition(.move(edge: .top).combined(with: .opacity))
-                }
-
                 ContentStateView(
                     startScrollOffsetTimer: startScrollOffsetTimer
                 )
@@ -102,6 +92,19 @@ struct ReaderView: View {
                 .ignoresSafeArea(.keyboard)
             }
             .environment(\.readerFocusedField, $focusedField)
+
+            // Loading bar (overlaid above content so it appears over background images)
+            if store.state.isLoading && !store.state.contentState.hasStory {
+                VStack {
+                    LoadingView(
+                        loadingDisplayStep: store.state.loadingStep,
+                        hasExistingStory: store.state.story != nil,
+                        fontName: store.state.settingsState.selectedFontName
+                    )
+                    .transition(.move(edge: .top).combined(with: .opacity))
+                    Spacer()
+                }
+            }
 
             // Modal overlay for both menu and settings
             ModalOverlay(
