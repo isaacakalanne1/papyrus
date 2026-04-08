@@ -59,6 +59,7 @@ struct WelcomeView: View {
                         endPoint: .bottom
                     )
                 }
+                .clipped()
             } else {
                 LinearGradient(
                     gradient: Gradient(colors: [
