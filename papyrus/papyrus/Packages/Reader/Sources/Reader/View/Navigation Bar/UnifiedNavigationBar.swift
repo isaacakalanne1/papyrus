@@ -11,36 +11,36 @@ import PapyrusStyleKit
 
 struct UnifiedNavigationBar: View {
     @EnvironmentObject var store: ReaderStore
-    @Binding var isMenuOpen: Bool
-    @Binding var isSettingsOpen: Bool
-    
+
     var body: some View {
         VStack(spacing: 0) {
             HStack(spacing: 0) {
                 // Menu button (left)
                 MenuButton(type: .menu) {
                     withAnimation(.easeInOut(duration: 0.3)) {
-                        isMenuOpen.toggle()
+                        let newStatus: MenuStatus = store.state.menuStatus == .storyOpen ? .closed : .storyOpen
+                        store.dispatch(.setMenuStatus(newStatus))
                     }
                 }
-                
+
                 // Chapter navigation (center) - only show when story exists
                 if let story = store.state.story,
                    !story.chapters.isEmpty,
                    story.chapterIndex < story.chapters.count {
                     Spacer()
-                    
+
                     ChapterNavigationView(story: story)
-                    
+
                     Spacer()
                 } else {
                     Spacer()
                 }
-                
+
                 // Settings button (right)
                 MenuButton(type: .settings) {
                     withAnimation(.easeInOut(duration: 0.3)) {
-                        isSettingsOpen.toggle()
+                        let newStatus: MenuStatus = store.state.menuStatus == .settingsOpen ? .closed : .settingsOpen
+                        store.dispatch(.setMenuStatus(newStatus))
                     }
                 }
             }

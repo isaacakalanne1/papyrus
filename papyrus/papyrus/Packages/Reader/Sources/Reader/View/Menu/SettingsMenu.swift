@@ -14,7 +14,7 @@ struct SettingsMenu: View {
     @EnvironmentObject var store: ReaderStore
     let isOpen: Bool
     let dragOffset: CGFloat
-    let menuStatus: ReaderView.MenuStatus
+    let menuStatus: MenuStatus
     
     var body: some View {
         HStack {

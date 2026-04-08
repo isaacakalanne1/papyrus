@@ -13,7 +13,7 @@ struct StoryMenu: View {
     @EnvironmentObject var store: ReaderStore
     @Binding var isMenuOpen: Bool
     let dragOffset: CGFloat
-    let menuStatus: ReaderView.MenuStatus
+    let menuStatus: MenuStatus
     @State private var isSequelMode = false
     @FocusState private var focusedField: ReaderView.Field?
     

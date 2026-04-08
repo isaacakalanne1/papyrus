@@ -12,36 +12,29 @@ import PapyrusStyleKit
 
 struct ReaderView: View {
     @EnvironmentObject var store: ReaderStore
-    @State private var menuStatus: MenuStatus = .closed
     @State private var dragOffset: CGFloat = 0
     @FocusState private var focusedField: Field?
     @State private var isSequelMode: Bool = false
     @State private var currentScrollOffset: CGFloat = 0
     @State private var scrollOffsetTimer: Timer?
     @State private var scrollViewHeight: CGFloat = 0
-    
-    enum MenuStatus {
-        case closed
-        case storyOpen
-        case settingsOpen
-    }
-    
+
     enum Field {
         case mainCharacter
         case settingDetails
     }
-    
+
     init() {
-        
+
     }
-    
+
     public var body: some View {
         let showStoryForm: Binding<Bool> = .init {
             store.state.showStoryForm
         } set: { newValue in
             store.dispatch(.setShowStoryForm(newValue))
         }
-        
+
         let showSubscriptionSheet: Binding<Bool> = .init {
             store.state.showSubscriptionSheet
         } set: { newValue in
@@ -50,13 +43,13 @@ struct ReaderView: View {
         ZStack(alignment: .leading) {
             // Main content
             VStack(spacing: 0) {
-                
+
                 // Loading bar (appears below top bar when loading)
                 if store.state.isLoading {
                     LoadingView(loadingStep: store.state.loadingStep, hasExistingStory: store.state.story != nil)
                         .transition(.move(edge: .top).combined(with: .opacity))
                 }
-                
+
                 ContentStateView(
                     focusedField: $focusedField,
                     isSequelMode: $isSequelMode,
@@ -78,69 +71,50 @@ struct ReaderView: View {
                 .scrollBounceBehavior(.basedOnSize)
                 .animation(.easeInOut(duration: 0.4), value: store.state.isLoading)
                 .menuGestures(
-                    menuStatus: $menuStatus,
+                    menuStatus: Binding(
+                        get: { store.state.menuStatus },
+                        set: { store.dispatch(.setMenuStatus($0)) }
+                    ),
                     dragOffset: $dragOffset
                 )
-                
-                UnifiedNavigationBar(
-                    isMenuOpen: Binding(
-                        get: { menuStatus == .storyOpen },
-                        set: { newValue in
-                            if newValue {
-                                menuStatus = .storyOpen
-                            } else {
-                                menuStatus = .closed
-                            }
-                        }
-                    ),
-                    isSettingsOpen: Binding(
-                        get: { menuStatus == .settingsOpen },
-                        set: { newValue in
-                            if newValue {
-                                menuStatus = .settingsOpen
-                            } else {
-                                menuStatus = .closed
-                            }
-                        }
-                    )
-                )
+
+                UnifiedNavigationBar()
             }
-            
+
             // Modal overlay for both menu and settings
             ModalOverlay(
-                isPresented: menuStatus != .closed,
+                isPresented: store.state.menuStatus != .closed,
                 opacity: calculateOverlayOpacity(),
                 onDismiss: {
-                    menuStatus = .closed
+                    store.dispatch(.setMenuStatus(.closed))
                 }
             )
             .menuGestures(
-                menuStatus: $menuStatus,
+                menuStatus: Binding(
+                    get: { store.state.menuStatus },
+                    set: { store.dispatch(.setMenuStatus($0)) }
+                ),
                 dragOffset: $dragOffset,
                 isForClosing: true
             )
-            
+
             // Side menu
             StoryMenu(
                 isMenuOpen: Binding(
-                    get: { menuStatus == .storyOpen },
+                    get: { store.state.menuStatus == .storyOpen },
                     set: { newValue in
-                        if newValue {
-                            menuStatus = .storyOpen
-                        } else {
-                            menuStatus = .closed
-                        }
+                        store.dispatch(.setMenuStatus(newValue ? .storyOpen : .closed))
                     }
                 ),
                 dragOffset: dragOffset,
-                menuStatus: menuStatus
+                menuStatus: store.state.menuStatus
             )
-            
+
             // Settings menu (slides from right)
             SettingsMenu(
-                isOpen: menuStatus == .settingsOpen,
+                isOpen: store.state.menuStatus == .settingsOpen,
                 dragOffset: dragOffset,
-                menuStatus: menuStatus
+                menuStatus: store.state.menuStatus
             )
         }
         .sheet(isPresented: showStoryForm) {
@@ -160,7 +134,7 @@ struct ReaderView: View {
             store.dispatch(.loadSubscriptions)
         }
     }
-    
+
     private func startScrollOffsetTimer() {
         scrollOffsetTimer?.invalidate()
         scrollOffsetTimer = Timer.scheduledTimer(withTimeInterval: 5.0, repeats: true) { _ in
@@ -172,11 +146,11 @@ struct ReaderView: View {
             }
         }
     }
-    
+
     private func calculateOverlayOpacity() -> Double {
         var opacity: Double = 0
-        
-        switch menuStatus {
+
+        switch store.state.menuStatus {
         case .storyOpen:
             // When menu is open
             if dragOffset < 0 {
@@ -185,7 +159,7 @@ struct ReaderView: View {
             } else {
                 opacity = 0.3
             }
-            
+
         case .settingsOpen:
             // When settings is open
             if dragOffset > 0 {
@@ -194,7 +168,7 @@ struct ReaderView: View {
             } else {
                 opacity = 0.3
             }
-            
+
         case .closed:
             // When both are closed, calculate based on drag direction
             if dragOffset > 0 {
@@ -205,7 +179,7 @@ struct ReaderView: View {
                 opacity = Double(abs(dragOffset) / 280.0) * 0.3
             }
         }
-        
+
         return max(0, min(opacity, 0.3))
     }
 }

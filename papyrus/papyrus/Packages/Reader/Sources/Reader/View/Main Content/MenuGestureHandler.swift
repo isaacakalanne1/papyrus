@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct MenuGestureHandler: ViewModifier {
-    @Binding var menuStatus: ReaderView.MenuStatus
+    @Binding var menuStatus: MenuStatus
     @Binding var dragOffset: CGFloat
     
     // Configuration
@@ -17,7 +17,7 @@ struct MenuGestureHandler: ViewModifier {
     let isForClosing: Bool
     
     init(
-        menuStatus: Binding<ReaderView.MenuStatus>,
+        menuStatus: Binding<MenuStatus>,
         dragOffset: Binding<CGFloat>,
         openThreshold: CGFloat,
         closeThreshold: CGFloat,
@@ -85,7 +85,7 @@ struct MenuGestureHandler: ViewModifier {
 
 extension View {
     func menuGestures(
-        menuStatus: Binding<ReaderView.MenuStatus>,
+        menuStatus: Binding<MenuStatus>,
         dragOffset: Binding<CGFloat>,
         openThreshold: CGFloat = 50,
         closeThreshold: CGFloat = 50,
