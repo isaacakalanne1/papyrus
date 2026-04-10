@@ -253,6 +253,12 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         updatedStory.title = title
         return .saveStory(updatedStory)
 
+    case let .setInteractiveMode(mode):
+        var updatedSettings = state.settingsState
+        updatedSettings.storyMode = mode
+        try? await environment.settingsEnvironment.saveSettings(updatedSettings)
+        return nil
+
     case .failedToCreateChapter(_),
          .dismissGenerationError,
          .failedToLoadStories,
@@ -273,7 +279,6 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
          .setCurrentScrollOffset,
          .reuseStoryDetails,
          .setScrollViewHeight,
-         .setInteractiveMode,
          .setInteractiveInputText,
          .undoInteractiveChapter,
          .redoInteractiveChapter,

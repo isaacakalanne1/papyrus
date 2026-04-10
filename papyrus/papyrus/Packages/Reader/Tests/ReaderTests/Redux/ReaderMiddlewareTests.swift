@@ -675,6 +675,36 @@ class ReaderMiddlewareTests {
         #expect(result == nil)
     }
 
+    // MARK: - Interactive Mode Tests
+
+    @Test
+    func setInteractiveMode_savesStoryModeToSettings() async {
+        let mockSettingsEnvironment = MockSettingsEnvironment()
+        let environment = MockReaderEnvironment(settingsEnvironment: mockSettingsEnvironment)
+        let state = ReaderState(settingsState: SettingsState(storyMode: .story))
+
+        let result = await readerMiddleware(state, .setInteractiveMode(.interactive), environment)
+
+        #expect(mockSettingsEnvironment.saveSettingsCalled)
+        #expect(mockSettingsEnvironment.saveSettingsCalledWith?.storyMode == .interactive)
+        #expect(result == nil)
+    }
+
+    @Test
+    func setInteractiveMode_preservesOtherSettingsFields() async {
+        let mockSettingsEnvironment = MockSettingsEnvironment()
+        let environment = MockReaderEnvironment(settingsEnvironment: mockSettingsEnvironment)
+        let initialSettings = SettingsState(storyMode: .interactive, sentenceCount: 5)
+        let state = ReaderState(settingsState: initialSettings)
+
+        let result = await readerMiddleware(state, .setInteractiveMode(.story), environment)
+
+        #expect(mockSettingsEnvironment.saveSettingsCalled)
+        #expect(mockSettingsEnvironment.saveSettingsCalledWith?.storyMode == .story)
+        #expect(mockSettingsEnvironment.saveSettingsCalledWith?.sentenceCount == 5)
+        #expect(result == nil)
+    }
+
     // MARK: - No-op Actions Test
 
     @Test
