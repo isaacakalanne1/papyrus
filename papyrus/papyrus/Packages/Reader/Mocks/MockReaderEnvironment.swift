@@ -225,7 +225,7 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return createChapterReturnValue ?? story
     }
 
-    public func generateParagraph(story: Story, sentenceCount _: Int) async throws -> Story {
+    public func generateParagraph(story: Story, sentenceCount: Int) async throws -> Story {
         generateParagraphCalled = true
         generateParagraphCalledWith = story
         generateParagraphCalledWithSentenceCount = sentenceCount
