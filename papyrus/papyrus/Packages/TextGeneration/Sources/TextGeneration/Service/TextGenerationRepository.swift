@@ -9,6 +9,7 @@ public protocol TextGenerationRepositoryProtocol {
     func getStoryDetails(story originalStory: Story) async throws -> Story
     func getChapterTitle(story originalStory: Story) async throws -> Story
     func createChapter(story originalStory: Story) async throws -> Story
+    func parseChapterSummaries(story originalStory: Story) async throws -> Story
     func generateParagraph(story originalStory: Story, sentenceCount: Int) async throws -> Story
 }
 
@@ -90,6 +91,16 @@ public class TextGenerationRepository: TextGenerationRepositoryProtocol {
         let content = try await networkCore.requestContent(endpoint)
 
         story.chapters.append(.init(content: content))
+        return story
+    }
+
+    public func parseChapterSummaries(story originalStory: Story) async throws -> Story {
+        var story = originalStory
+        let endpoint = ParseChapterSummariesEndpoint(story: story)
+        let content = try await networkCore.requestContent(endpoint)
+
+        let jsonData = Data(content.utf8)
+        story.chapterSummaries = try JSONDecoder().decode([ChapterSummary].self, from: jsonData)
         return story
     }
 

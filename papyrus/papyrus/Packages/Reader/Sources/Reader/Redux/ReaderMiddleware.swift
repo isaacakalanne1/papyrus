@@ -120,6 +120,17 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         }
 
     case let .onCreatedChapterBreakdown(story):
+        return .parseChapterSummaries(story)
+
+    case let .parseChapterSummaries(story):
+        do {
+            let storyWithSummaries = try await environment.parseChapterSummaries(story: story)
+            return .onParsedChapterSummaries(storyWithSummaries)
+        } catch {
+            return .failedToCreateChapter(.parseChapterSummaries(story))
+        }
+
+    case let .onParsedChapterSummaries(story):
         if story.maxNumberOfChapters > 0 {
             return .beginCreateChapter(story)
         } else {
@@ -265,7 +276,8 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
          .setInteractiveMode,
          .setInteractiveInputText,
          .undoInteractiveChapter,
-         .redoInteractiveChapter:
+         .redoInteractiveChapter,
+         .onParsedChapterSummaries:
         return nil
     }
 }

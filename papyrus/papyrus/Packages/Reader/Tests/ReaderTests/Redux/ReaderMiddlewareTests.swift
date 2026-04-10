@@ -147,23 +147,34 @@ class ReaderMiddlewareTests {
     }
 
     @Test
-    func onCreatedChapterBreakdown_withChapters_returnsBeginCreateChapter() async {
+    func onCreatedChapterBreakdown_returnsParseChapterSummaries() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let story = Story(maxNumberOfChapters: 5, title: "Test Story")
 
         let result = await readerMiddleware(state, .onCreatedChapterBreakdown(story), environment)
 
+        #expect(result == .parseChapterSummaries(story))
+    }
+
+    @Test
+    func onParsedChapterSummaries_withChapters_returnsBeginCreateChapter() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        let story = Story(maxNumberOfChapters: 5, title: "Test Story")
+
+        let result = await readerMiddleware(state, .onParsedChapterSummaries(story), environment)
+
         #expect(result == .beginCreateChapter(story))
     }
 
     @Test
-    func onCreatedChapterBreakdown_noChapters_returnsGetStoryDetails() async {
+    func onParsedChapterSummaries_noChapters_returnsGetStoryDetails() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let story = Story(maxNumberOfChapters: 0, title: "Test Story")
 
-        let result = await readerMiddleware(state, .onCreatedChapterBreakdown(story), environment)
+        let result = await readerMiddleware(state, .onParsedChapterSummaries(story), environment)
 
         #expect(result == .getStoryDetails(story))
     }

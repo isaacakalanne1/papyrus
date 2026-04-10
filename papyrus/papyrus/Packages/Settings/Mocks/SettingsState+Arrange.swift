@@ -11,7 +11,7 @@ import Settings
 
 public extension SettingsState {
     static var arrange: SettingsState {
-        arrange()
+        SettingsState.arrange()
     }
 
     static func arrange(

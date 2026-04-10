@@ -28,6 +28,9 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     var createChapterBreakdownCalled = false
     var createChapterBreakdownCalledWith: Story?
 
+    var parseChapterSummariesCalled = false
+    var parseChapterSummariesCalledWith: Story?
+
     var getStoryDetailsCalled = false
     var getStoryDetailsCalledWith: Story?
 
@@ -71,6 +74,9 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
 
     var createChapterBreakdownReturnValue: Story?
     var createChapterBreakdownError: Error?
+
+    var parseChapterSummariesReturnValue: Story?
+    var parseChapterSummariesError: Error?
 
     var getStoryDetailsReturnValue: Story?
     var getStoryDetailsError: Error?
@@ -158,6 +164,17 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return createChapterBreakdownReturnValue ?? story
     }
 
+    public func parseChapterSummaries(story: Story) async throws -> Story {
+        parseChapterSummariesCalled = true
+        parseChapterSummariesCalledWith = story
+
+        if let error = parseChapterSummariesError {
+            throw error
+        }
+
+        return parseChapterSummariesReturnValue ?? story
+    }
+
     public func getStoryDetails(story: Story) async throws -> Story {
         getStoryDetailsCalled = true
         getStoryDetailsCalledWith = story
@@ -191,7 +208,7 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
         return createChapterReturnValue ?? story
     }
 
-    public func generateParagraph(story: Story, sentenceCount: Int) async throws -> Story {
+    public func generateParagraph(story: Story, sentenceCount _: Int) async throws -> Story {
         generateParagraphCalled = true
         generateParagraphCalledWith = story
         generateParagraphCalledWithSentenceCount = sentenceCount
