@@ -124,8 +124,12 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.isLoading = true
         newState = updateStoryInState(newState, story: story)
 
-    case let .condensePlotOutline(story),
-         let .onCondensedPlotOutline(story):
+    case let .condensePlotOutline(story):
+        newState.isLoading = true
+        newState.loadingStep = .condensingPlotOutline
+        newState = updateStoryInState(newState, story: story)
+
+    case let .onCondensedPlotOutline(story):
         newState.isLoading = true
         newState = updateStoryInState(newState, story: story)
 
@@ -140,6 +144,7 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
 
     case let .parseChapterSummaries(story):
         newState.isLoading = true
+        newState.loadingStep = .parsingChapterSummaries
         newState = updateStoryInState(newState, story: story)
 
     case let .onParsedChapterSummaries(story):

@@ -106,15 +106,17 @@ class ReaderReducerTests {
 
     @Test
     func createStoryTheme() {
+        let story = Story()
         let initialState = ReaderState.arrange
 
         var expectedState = initialState
         expectedState.isLoading = true
         expectedState.loadingStep = .identifyingTheme
+        expectedState.loadedStories = [story]
 
         let newState = readerReducer(
             initialState,
-            .createStoryTheme(Story())
+            .createStoryTheme(story)
         )
         #expect(newState == expectedState)
     }
@@ -129,6 +131,7 @@ class ReaderReducerTests {
         var expectedState = initialState
         expectedState.story = updatedStory
         expectedState.isLoading = true
+        expectedState.loadedStories = [updatedStory]
 
         let newState = readerReducer(
             initialState,
@@ -147,6 +150,7 @@ class ReaderReducerTests {
         var expectedState = initialState
         expectedState.sequelStory = updatedStory
         expectedState.isLoading = true
+        expectedState.loadedStories = [updatedStory]
 
         let newState = readerReducer(
             initialState,
@@ -157,75 +161,145 @@ class ReaderReducerTests {
 
     @Test
     func createPlotOutline() {
+        let story = Story()
         let initialState = ReaderState.arrange
 
         var expectedState = initialState
         expectedState.isLoading = true
         expectedState.loadingStep = .creatingPlotOutline
+        expectedState.loadedStories = [story]
 
-        let newState = readerReducer(initialState, .createPlotOutline(Story()))
+        let newState = readerReducer(initialState, .createPlotOutline(story))
 
         #expect(newState == expectedState)
     }
 
     @Test
     func onCreatedPlotOutline() {
+        let story = Story()
         let initialState = ReaderState.arrange(isLoading: false)
 
         var expectedState = initialState
         expectedState.isLoading = true
+        expectedState.loadedStories = [story]
 
-        let newState = readerReducer(initialState, .onCreatedPlotOutline(Story()))
+        let newState = readerReducer(initialState, .onCreatedPlotOutline(story))
+
+        #expect(newState == expectedState)
+    }
+
+    @Test
+    func condensePlotOutline() {
+        let story = Story()
+        let initialState = ReaderState.arrange
+
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.loadingStep = .condensingPlotOutline
+        expectedState.loadedStories = [story]
+
+        let newState = readerReducer(initialState, .condensePlotOutline(story))
+
+        #expect(newState == expectedState)
+    }
+
+    @Test
+    func onCondensedPlotOutline() {
+        let story = Story()
+        let initialState = ReaderState.arrange(isLoading: false)
+
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.loadedStories = [story]
+
+        let newState = readerReducer(initialState, .onCondensedPlotOutline(story))
 
         #expect(newState == expectedState)
     }
 
     @Test
     func createChapterBreakdown() {
+        let story = Story()
         let initialState = ReaderState.arrange
 
         var expectedState = initialState
         expectedState.isLoading = true
         expectedState.loadingStep = .creatingChapterBreakdown
+        expectedState.loadedStories = [story]
 
-        let newState = readerReducer(initialState, .createChapterBreakdown(Story()))
+        let newState = readerReducer(initialState, .createChapterBreakdown(story))
 
         #expect(newState == expectedState)
     }
 
     @Test
     func onCreatedChapterBreakdown() {
+        let story = Story()
         let initialState = ReaderState.arrange(isLoading: false)
 
         var expectedState = initialState
         expectedState.isLoading = true
+        expectedState.loadedStories = [story]
 
-        let newState = readerReducer(initialState, .onCreatedChapterBreakdown(Story()))
+        let newState = readerReducer(initialState, .onCreatedChapterBreakdown(story))
+
+        #expect(newState == expectedState)
+    }
+
+    @Test
+    func parseChapterSummaries() {
+        let story = Story()
+        let initialState = ReaderState.arrange
+
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.loadingStep = .parsingChapterSummaries
+        expectedState.loadedStories = [story]
+
+        let newState = readerReducer(initialState, .parseChapterSummaries(story))
+
+        #expect(newState == expectedState)
+    }
+
+    @Test
+    func onParsedChapterSummaries() {
+        let story = Story()
+        let initialState = ReaderState.arrange(isLoading: false)
+
+        var expectedState = initialState
+        expectedState.isLoading = true
+        expectedState.loadedStories = [story]
+
+        let newState = readerReducer(initialState, .onParsedChapterSummaries(story))
 
         #expect(newState == expectedState)
     }
 
     @Test
     func getStoryDetails() {
+        let story = Story()
         let initialState = ReaderState.arrange
 
         var expectedState = initialState
         expectedState.isLoading = true
         expectedState.loadingStep = .analyzingStructure
+        expectedState.loadedStories = [story]
 
-        let newState = readerReducer(initialState, .getStoryDetails(Story()))
+        let newState = readerReducer(initialState, .getStoryDetails(story))
 
         #expect(newState == expectedState)
     }
 
     @Test
     func onGetStoryDetails() {
+        let story = Story()
         let initialState = ReaderState.arrange(isLoading: false)
 
         var expectedState = initialState
         expectedState.isLoading = true
+        expectedState.loadedStories = [story]
 
-        let newState = readerReducer(initialState, .onGetStoryDetails(Story()))
+        let newState = readerReducer(initialState, .onGetStoryDetails(story))
 
         #expect(newState == expectedState)
     }
@@ -245,12 +319,14 @@ class ReaderReducerTests {
 
     @Test
     func onGetChapterTitle() {
+        let story = Story()
         let initialState = ReaderState.arrange(isLoading: false)
 
         var expectedState = initialState
         expectedState.isLoading = true
+        expectedState.loadedStories = [story]
 
-        let newState = readerReducer(initialState, .onGetChapterTitle(Story()))
+        let newState = readerReducer(initialState, .onGetChapterTitle(story))
 
         #expect(newState == expectedState)
     }
@@ -269,13 +345,15 @@ class ReaderReducerTests {
 
     @Test
     func beginCreateChapter() {
+        let story = Story()
         let initialState = ReaderState.arrange
 
         var expectedState = initialState
         expectedState.isLoading = true
         expectedState.loadingStep = .writingChapter
+        expectedState.loadedStories = [story]
 
-        let newState = readerReducer(initialState, .beginCreateChapter(Story()))
+        let newState = readerReducer(initialState, .beginCreateChapter(story))
 
         #expect(newState == expectedState)
     }
