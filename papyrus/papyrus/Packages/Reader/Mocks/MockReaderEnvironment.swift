@@ -42,6 +42,7 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
 
     var generateParagraphCalled = false
     var generateParagraphCalledWith: Story?
+    var generateParagraphCalledWithSentenceCount: Int?
 
     var saveStoryCalled = false
     var saveStoryCalledWith: Story?
@@ -210,6 +211,7 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     public func generateParagraph(story: Story, sentenceCount _: Int) async throws -> Story {
         generateParagraphCalled = true
         generateParagraphCalledWith = story
+        generateParagraphCalledWithSentenceCount = sentenceCount
 
         if let error = generateParagraphError {
             throw error

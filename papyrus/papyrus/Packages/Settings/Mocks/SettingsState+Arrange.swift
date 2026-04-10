@@ -17,8 +17,10 @@ public extension SettingsState {
     static func arrange(
         selectedTextSize: TextSize = .medium,
         isSubscribed: Bool = false,
+        perspective: StoryPerspective = .thirdPerson,
         selectedFontName: String = "Georgia",
         selectedColorSchemeName: PapyrusColorSchemeName = .parchment,
+        storyMode: StoryMode = .story,
         backgroundImages: [BackgroundImageEntry] = [],
         selectedBackgroundImageId: UUID? = nil,
         backgroundImageUsage: Set<BackgroundImageContext> = [],
@@ -27,8 +29,10 @@ public extension SettingsState {
         .init(
             selectedTextSize: selectedTextSize,
             isSubscribed: isSubscribed,
+            perspective: perspective,
             selectedFontName: selectedFontName,
             selectedColorSchemeName: selectedColorSchemeName,
+            storyMode: storyMode,
             backgroundImages: backgroundImages,
             selectedBackgroundImageId: selectedBackgroundImageId,
             backgroundImageUsage: backgroundImageUsage,
