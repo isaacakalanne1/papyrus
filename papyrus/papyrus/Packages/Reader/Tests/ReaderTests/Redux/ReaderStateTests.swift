@@ -202,8 +202,9 @@ struct ReaderStateTests {
     }
 
     @Test("Loading step enum should be equatable",
-          arguments: [LoadingStep.idle, .identifyingTheme, .creatingPlotOutline, .creatingChapterBreakdown,
-                      .analyzingStructure, .preparingNarrative, .writingChapter])
+          arguments: [LoadingStep.idle, .identifyingTheme, .creatingPlotOutline, .condensingPlotOutline,
+                      .creatingChapterBreakdown, .parsingChapterSummaries, .analyzingStructure,
+                      .preparingNarrative, .writingChapter])
     func loadingStepEnum(step: LoadingStep) {
         // Test that all loading steps are equatable
         #expect(step == step)

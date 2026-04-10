@@ -25,7 +25,9 @@ public enum LoadingStep: Equatable, Sendable {
     case preparing
     case identifyingTheme
     case creatingPlotOutline
+    case condensingPlotOutline
     case creatingChapterBreakdown
+    case parsingChapterSummaries
     case analyzingStructure
     case preparingNarrative
     case writingChapter

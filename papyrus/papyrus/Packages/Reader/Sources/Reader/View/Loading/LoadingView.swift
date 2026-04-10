@@ -24,7 +24,7 @@ struct LoadingView: View {
     }
 
     private var storyCreationStages: [LoadingStep] {
-        [.identifyingTheme, .creatingPlotOutline, .creatingChapterBreakdown, .analyzingStructure, .preparingNarrative]
+        [.identifyingTheme, .creatingPlotOutline, .condensingPlotOutline, .creatingChapterBreakdown, .parsingChapterSummaries, .analyzingStructure, .preparingNarrative]
     }
 
     private var currentStageIndex: Int {
@@ -51,8 +51,12 @@ struct LoadingView: View {
             return "Identifying Theme"
         case .creatingPlotOutline:
             return "Creating Plot Outline"
+        case .condensingPlotOutline:
+            return "Distilling Story Premise"
         case .creatingChapterBreakdown:
             return "Planning Chapters"
+        case .parsingChapterSummaries:
+            return "Mapping Chapter Structure"
         case .analyzingStructure:
             return "Analyzing Structure"
         case .preparingNarrative:
