@@ -73,7 +73,7 @@ class CreateChapterEndpointTests {
         #expect(systemContent?.contains("acclaimed novelist") == true)
         #expect(systemContent?.contains("creative writing expert") == true)
 
-        // Verify user message
+        // Verify user message (legacy path — no chapterSummaries)
         let userMessage = messages?[1]
         #expect(userMessage?["role"] as? String == "user")
         let userContent = userMessage?["content"] as? String
@@ -104,119 +104,6 @@ class CreateChapterEndpointTests {
     }
 
     @Test
-    func body_calculatesCurrentChapterNumber() throws {
-        let chapter1 = Chapter(content: "Chapter one content")
-        let chapter2 = Chapter(content: "Chapter two content")
-        let story = Story(chapters: [chapter1, chapter2])
-        let endpoint = CreateChapterEndpoint(story: story)
-
-        let bodyData = endpoint.body
-        #expect(bodyData != nil)
-
-        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
-        let messages = json?["messages"] as? [[String: Any]]
-        let userMessage = messages?[1]
-        let userContent = userMessage?["content"] as? String
-
-        // Should be chapter 3 (existing chapters: 2 + 1)
-        #expect(userContent?.contains("**Chapter Number to Write:** Chapter 3") == true)
-    }
-
-    @Test
-    func body_calculatesFirstChapterNumber() throws {
-        let story = Story(chapters: []) // No existing chapters
-        let endpoint = CreateChapterEndpoint(story: story)
-
-        let bodyData = endpoint.body
-        #expect(bodyData != nil)
-
-        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
-        let messages = json?["messages"] as? [[String: Any]]
-        let userMessage = messages?[1]
-        let userContent = userMessage?["content"] as? String
-
-        // Should be chapter 1 (no existing chapters + 1)
-        #expect(userContent?.contains("**Chapter Number to Write:** Chapter 1") == true)
-    }
-
-    @Test
-    func body_includesPlotOutlineAndBreakdown() throws {
-        let plotOutline = "Sci-fi exploration of distant planets"
-        let chaptersBreakdown = "Chapter 1: Launch\nChapter 2: First planet\nChapter 3: Alien contact"
-        let story = Story(plotOutline: plotOutline, chaptersBreakdown: chaptersBreakdown)
-        let endpoint = CreateChapterEndpoint(story: story)
-
-        let bodyData = endpoint.body
-        #expect(bodyData != nil)
-
-        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
-        let messages = json?["messages"] as? [[String: Any]]
-        let userMessage = messages?[1]
-        let userContent = userMessage?["content"] as? String
-
-        #expect(userContent?.contains("**Full Plot Outline:** \(plotOutline)") == true)
-        #expect(userContent?.contains("**Full Chapter Breakdown:** \(chaptersBreakdown)") == true)
-    }
-
-    @Test
-    func body_includesPreviousChapters() throws {
-        let chapter1 = Chapter(content: "Once upon a time in a land far away...")
-        let chapter2 = Chapter(content: "The hero set off on their quest...")
-        let story = Story(chapters: [chapter1, chapter2])
-        let endpoint = CreateChapterEndpoint(story: story)
-
-        let bodyData = endpoint.body
-        #expect(bodyData != nil)
-
-        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
-        let messages = json?["messages"] as? [[String: Any]]
-        let userMessage = messages?[1]
-        let userContent = userMessage?["content"] as? String
-
-        // Verify previous chapters are included with proper formatting
-        #expect(userContent?.contains("**Previous Written Chapters:**") == true)
-        #expect(userContent?.contains("Once upon a time in a land far away...") == true)
-        #expect(userContent?.contains("The hero set off on their quest...") == true)
-    }
-
-    @Test
-    func body_handlesNoPreviousChapters() throws {
-        let story = Story(chapters: [])
-        let endpoint = CreateChapterEndpoint(story: story)
-
-        let bodyData = endpoint.body
-        #expect(bodyData != nil)
-
-        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
-        let messages = json?["messages"] as? [[String: Any]]
-        let userMessage = messages?[1]
-        let userContent = userMessage?["content"] as? String
-
-        // Should still include the section even if empty
-        #expect(userContent?.contains("**Previous Written Chapters:**") == true)
-    }
-
-    @Test
-    func body_includesSpecificInstructions() throws {
-        let story = Story()
-        let endpoint = CreateChapterEndpoint(story: story)
-
-        let bodyData = endpoint.body
-        #expect(bodyData != nil)
-
-        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
-        let messages = json?["messages"] as? [[String: Any]]
-        let userMessage = messages?[1]
-        let userContent = userMessage?["content"] as? String
-
-        // Verify specific writing instructions
-        #expect(userContent?.contains("Focus exclusively on this one chapter") == true)
-        #expect(userContent?.contains("do not write or summarize others") == true)
-        #expect(userContent?.contains("standalone masterpiece") == true)
-        #expect(userContent?.contains("leaves readers eager for more") == true)
-    }
-
-    @Test
     func body_includesQualityRequirements() throws {
         let story = Story()
         let endpoint = CreateChapterEndpoint(story: story)
@@ -237,8 +124,10 @@ class CreateChapterEndpointTests {
     }
 
     @Test
-    func body_handlesEmptyValues() throws {
-        let story = Story(plotOutline: "", chaptersBreakdown: "", chapters: [])
+    func body_includesPreviousChapters() throws {
+        let chapter1 = Chapter(content: "Once upon a time in a land far away...")
+        let chapter2 = Chapter(content: "The hero set off on their quest...")
+        let story = Story(chapters: [chapter1, chapter2])
         let endpoint = CreateChapterEndpoint(story: story)
 
         let bodyData = endpoint.body
@@ -246,15 +135,11 @@ class CreateChapterEndpointTests {
 
         let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
         let messages = json?["messages"] as? [[String: Any]]
-
-        #expect(messages?.count == 2)
-
         let userMessage = messages?[1]
         let userContent = userMessage?["content"] as? String
-        #expect(userContent?.contains("**Full Plot Outline:**") == true)
-        #expect(userContent?.contains("**Full Chapter Breakdown:**") == true)
-        #expect(userContent?.contains("**Previous Written Chapters:**") == true)
-        #expect(userContent?.contains("**Chapter Number to Write:** Chapter 1") == true)
+
+        #expect(userContent?.contains("Once upon a time in a land far away...") == true)
+        #expect(userContent?.contains("The hero set off on their quest...") == true)
     }
 
     @Test
@@ -285,5 +170,291 @@ class CreateChapterEndpointTests {
 
         // Test passes if compilation succeeds
         #expect(true)
+    }
+
+    // MARK: - Legacy Fallback Tests
+
+    @Test
+    func body_legacyFallback_whenChapterSummariesEmpty() throws {
+        let plotOutline = "Sci-fi exploration of distant planets"
+        let chaptersBreakdown = "Chapter 1: Launch\nChapter 2: First planet"
+        let story = Story(
+            plotOutline: plotOutline,
+            chaptersBreakdown: chaptersBreakdown,
+            chapterSummaries: []
+        )
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        // Legacy prompt uses old field names
+        #expect(userContent?.contains("**Full Plot Outline:** \(plotOutline)") == true)
+        #expect(userContent?.contains("**Full Chapter Breakdown:** \(chaptersBreakdown)") == true)
+        #expect(userContent?.contains("Focus exclusively on this one chapter") == true)
+        #expect(userContent?.contains("do not write or summarize others") == true)
+
+        // Progressive disclosure fields must NOT appear
+        #expect(userContent?.contains("Story Premise:") == false)
+        #expect(userContent?.contains("Upcoming Horizon") == false)
+    }
+
+    @Test
+    func body_legacyFallback_calculatesChapterNumber() throws {
+        let chapter1 = Chapter(content: "Chapter one content")
+        let chapter2 = Chapter(content: "Chapter two content")
+        let story = Story(chapterSummaries: [], chapters: [chapter1, chapter2])
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        // Should be chapter 3 (existing chapters: 2 + 1)
+        #expect(userContent?.contains("**Chapter Number to Write:** Chapter 3") == true)
+    }
+
+    // MARK: - Progressive Disclosure Tests
+
+    @Test
+    func body_progressiveDisclosure_usesPlotSummaryWhenAvailable() throws {
+        let plotOutline = "The long plot outline"
+        let plotSummary = "The condensed 3-5 sentence logline"
+        let chapterSummaries = [
+            ChapterSummary(chapterNumber: 1, summary: "The opening"),
+        ]
+        let story = Story(
+            plotOutline: plotOutline,
+            plotSummary: plotSummary,
+            chapterSummaries: chapterSummaries
+        )
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        #expect(userContent?.contains("Story Premise: \(plotSummary)") == true)
+        #expect(userContent?.contains(plotOutline) == false)
+    }
+
+    @Test
+    func body_progressiveDisclosure_fallsBackToPlotOutlineWhenPlotSummaryEmpty() throws {
+        let plotOutline = "The long plot outline"
+        let chapterSummaries = [
+            ChapterSummary(chapterNumber: 1, summary: "The opening"),
+        ]
+        let story = Story(
+            plotOutline: plotOutline,
+            plotSummary: "",
+            chapterSummaries: chapterSummaries
+        )
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        #expect(userContent?.contains("Story Premise: \(plotOutline)") == true)
+    }
+
+    @Test
+    func body_progressiveDisclosure_usesCurrentChapterSummary() throws {
+        let chapter1 = Chapter(content: "Written chapter 1")
+        let chapterSummaries = [
+            ChapterSummary(chapterNumber: 1, summary: "Chapter 1 summary"),
+            ChapterSummary(chapterNumber: 2, summary: "Chapter 2 summary"),
+        ]
+        let story = Story(
+            chapterSummaries: chapterSummaries,
+            chapters: [chapter1]
+        )
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        // currentChapterIndex = 1 (one written chapter), so we write Chapter 2
+        #expect(userContent?.contains("Current Chapter: Chapter 2 — Chapter 2 summary") == true)
+    }
+
+    @Test
+    func body_progressiveDisclosure_includesUpTo3UpcomingChapters() throws {
+        let chapterSummaries = [
+            ChapterSummary(chapterNumber: 1, summary: "Ch1 summary"),
+            ChapterSummary(chapterNumber: 2, summary: "Ch2 summary"),
+            ChapterSummary(chapterNumber: 3, summary: "Ch3 summary"),
+            ChapterSummary(chapterNumber: 4, summary: "Ch4 summary"),
+            ChapterSummary(chapterNumber: 5, summary: "Ch5 summary"),
+        ]
+        // No written chapters → writing Chapter 1, horizon = Ch2, Ch3, Ch4
+        let story = Story(chapterSummaries: chapterSummaries)
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        #expect(userContent?.contains("Upcoming Horizon") == true)
+        #expect(userContent?.contains("Chapter 2: Ch2 summary") == true)
+        #expect(userContent?.contains("Chapter 3: Ch3 summary") == true)
+        #expect(userContent?.contains("Chapter 4: Ch4 summary") == true)
+        // Chapter 5 is beyond the 3-chapter window
+        #expect(userContent?.contains("Chapter 5: Ch5 summary") == false)
+    }
+
+    @Test
+    func body_progressiveDisclosure_horizonShowsFewerThan3WhenNearEnd() throws {
+        let chapterSummaries = [
+            ChapterSummary(chapterNumber: 1, summary: "Ch1 summary"),
+            ChapterSummary(chapterNumber: 2, summary: "Ch2 summary"),
+            ChapterSummary(chapterNumber: 3, summary: "Ch3 summary"),
+        ]
+        // No written chapters → writing Chapter 1, horizon = Ch2, Ch3 only (2 upcoming)
+        let story = Story(chapterSummaries: chapterSummaries)
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        #expect(userContent?.contains("Upcoming Horizon") == true)
+        #expect(userContent?.contains("Chapter 2: Ch2 summary") == true)
+        #expect(userContent?.contains("Chapter 3: Ch3 summary") == true)
+    }
+
+    @Test
+    func body_progressiveDisclosure_horizonOmittedWhenNoUpcomingChapters() throws {
+        let chapterSummaries = [
+            ChapterSummary(chapterNumber: 1, summary: "The finale"),
+        ]
+        // No written chapters → writing Chapter 1 (the only chapter), no upcoming chapters
+        let story = Story(chapterSummaries: chapterSummaries)
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        #expect(userContent?.contains("Upcoming Horizon") == false)
+        #expect(userContent?.contains("DO NOT write the events of the Upcoming Horizon") == false)
+    }
+
+    @Test
+    func body_progressiveDisclosure_instructionsMentionUpcomingHorizonWhenPresent() throws {
+        let chapterSummaries = [
+            ChapterSummary(chapterNumber: 1, summary: "Ch1 summary"),
+            ChapterSummary(chapterNumber: 2, summary: "Ch2 summary"),
+        ]
+        let story = Story(chapterSummaries: chapterSummaries)
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        #expect(userContent?.contains("DO NOT write the events of the Upcoming Horizon") == true)
+        #expect(userContent?.contains("foreshadow future events") == true)
+        #expect(userContent?.contains("build appropriate tension") == true)
+        #expect(userContent?.contains("align character motivations") == true)
+    }
+
+    @Test
+    func body_progressiveDisclosure_promptStructure() throws {
+        let chapterSummaries = [
+            ChapterSummary(chapterNumber: 1, summary: "The start"),
+            ChapterSummary(chapterNumber: 2, summary: "The middle"),
+        ]
+        let story = Story(
+            plotSummary: "A tale of two cities",
+            chapterSummaries: chapterSummaries
+        )
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        // Structural markers
+        #expect(userContent?.contains("[Context Provided]") == true)
+        #expect(userContent?.contains("[Instructions]") == true)
+        #expect(userContent?.contains("standalone masterpiece") == true)
+        #expect(userContent?.contains("leaves readers eager for more") == true)
+        #expect(userContent?.contains("You are writing Chapter 1.") == true)
+    }
+
+    @Test
+    func body_progressiveDisclosure_slidingWindowAdvancesWithWrittenChapters() throws {
+        let chapter1 = Chapter(content: "Chapter one written")
+        let chapter2 = Chapter(content: "Chapter two written")
+        let chapterSummaries = [
+            ChapterSummary(chapterNumber: 1, summary: "Ch1 summary"),
+            ChapterSummary(chapterNumber: 2, summary: "Ch2 summary"),
+            ChapterSummary(chapterNumber: 3, summary: "Ch3 summary"),
+            ChapterSummary(chapterNumber: 4, summary: "Ch4 summary"),
+            ChapterSummary(chapterNumber: 5, summary: "Ch5 summary"),
+            ChapterSummary(chapterNumber: 6, summary: "Ch6 summary"),
+        ]
+        // 2 written chapters → writing Chapter 3, horizon = Ch4, Ch5, Ch6
+        let story = Story(chapterSummaries: chapterSummaries, chapters: [chapter1, chapter2])
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        #expect(userContent?.contains("Current Chapter: Chapter 3 — Ch3 summary") == true)
+        #expect(userContent?.contains("Chapter 4: Ch4 summary") == true)
+        #expect(userContent?.contains("Chapter 5: Ch5 summary") == true)
+        #expect(userContent?.contains("Chapter 6: Ch6 summary") == true)
+        // Earlier chapters must not appear in the horizon
+        #expect(userContent?.contains("Chapter 1: Ch1 summary") == false)
+        #expect(userContent?.contains("Chapter 2: Ch2 summary") == false)
     }
 }

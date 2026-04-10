@@ -11,8 +11,6 @@ struct CreateChapterEndpoint: Endpoint {
     }
 
     var body: Data? {
-        let currentChapterNumber = story.chapters.count + 1
-
         let messages = [
             OpenRouterMessage(
                 role: "system",
@@ -20,16 +18,7 @@ struct CreateChapterEndpoint: Endpoint {
             ),
             OpenRouterMessage(
                 role: "user",
-                content: """
-                **Context Provided:**
-                - **Full Plot Outline:** \(story.plotOutline)
-                - **Full Chapter Breakdown:** \(story.chaptersBreakdown)
-                - **Narrative Perspective:** \(story.perspective.promptDescription)
-                - **Chapter Number to Write:** Chapter \(currentChapterNumber). Focus exclusively on this one chapter—do not write or summarize others.
-                - **Previous Written Chapters:** \(story.chapters.reduce("") { $0 + "\n\n" + $1.content })
-
-                Write the full chapter text now, ensuring it's a standalone masterpiece that honors the story's vision and leaves readers eager for more.
-                """
+                content: userMessageContent
             ),
         ]
 
@@ -39,5 +28,98 @@ struct CreateChapterEndpoint: Endpoint {
         )
 
         return request.toData()
+    }
+
+    // MARK: - Private
+
+    private var currentChapterIndex: Int {
+        story.chapters.count
+    }
+
+    private var currentChapterNumber: Int {
+        currentChapterIndex + 1
+    }
+
+    private var useLegacyPrompt: Bool {
+        story.chapterSummaries.isEmpty
+    }
+
+    private var plotPremise: String {
+        story.plotSummary.isEmpty ? story.plotOutline : story.plotSummary
+    }
+
+    private var previousChaptersContent: String {
+        story.chapters.reduce("") { $0 + "\n\n" + $1.content }
+    }
+
+    private var userMessageContent: String {
+        if useLegacyPrompt {
+            return legacyUserMessageContent
+        }
+        return progressiveDisclosureUserMessageContent
+    }
+
+    private var legacyUserMessageContent: String {
+        """
+        **Context Provided:**
+        - **Full Plot Outline:** \(story.plotOutline)
+        - **Full Chapter Breakdown:** \(story.chaptersBreakdown)
+        - **Narrative Perspective:** \(story.perspective.promptDescription)
+        - **Chapter Number to Write:** Chapter \(currentChapterNumber). Focus exclusively on this one chapter—do not write or summarize others.
+        - **Previous Written Chapters:** \(previousChaptersContent)
+
+        Write the full chapter text now, ensuring it's a standalone masterpiece that honors the story's vision and leaves readers eager for more.
+        """
+    }
+
+    private var progressiveDisclosureUserMessageContent: String {
+        let currentSummary = story.chapterSummaries[currentChapterIndex]
+        let upcomingHorizonSection = buildUpcomingHorizonSection()
+
+        var contextLines = """
+        [Context Provided]
+        - Story Premise: \(plotPremise)
+        - Narrative Perspective: \(story.perspective.promptDescription)
+        - Current Chapter: Chapter \(currentChapterNumber) — \(currentSummary.summary)
+        """
+
+        if let horizonSection = upcomingHorizonSection {
+            contextLines += "\n" + horizonSection
+        }
+
+        contextLines += "\n- Previous Written Chapters: \(previousChaptersContent)"
+
+        let upcomingHorizonInstruction: String
+        if upcomingHorizonSection != nil {
+            upcomingHorizonInstruction = " DO NOT write the events of the Upcoming Horizon. The upcoming horizon is provided only so you can subtly foreshadow future events, build appropriate tension, and align character motivations. Keep the narrative strictly confined to resolving the beats of Chapter \(currentChapterNumber)."
+        } else {
+            upcomingHorizonInstruction = ""
+        }
+
+        return """
+        \(contextLines)
+
+        [Instructions]
+        You are writing Chapter \(currentChapterNumber).\(upcomingHorizonInstruction)
+
+        Write the full chapter text now, ensuring it's a standalone masterpiece that honors the story's vision and leaves readers eager for more.
+        """
+    }
+
+    private func buildUpcomingHorizonSection() -> String? {
+        let startIndex = currentChapterIndex + 1
+        let endIndex = min(startIndex + 3, story.chapterSummaries.count)
+
+        guard startIndex < story.chapterSummaries.count else {
+            return nil
+        }
+
+        let upcomingChapters = story.chapterSummaries[startIndex ..< endIndex]
+
+        let lines = upcomingChapters.map { chapterSummary in
+            "    Chapter \(chapterSummary.chapterNumber): \(chapterSummary.summary)"
+        }.joined(separator: "\n")
+
+        return "- Upcoming Horizon (DO NOT write these events — for foreshadowing context only):\n\(lines)"
     }
 }
