@@ -31,6 +31,8 @@ struct CreatePlotOutlineEndpoint: Endpoint {
                 Develop a high-quality plot outline that integrates the setting and main character seamlessly. The outline should be original, engaging, and emotionally resonant, with clear stakes, escalating conflict, and satisfying resolution. Aim for a story length equivalent to a novel (around 200,000-250,000 words if written out).
 
                 Generate the plot outline now, ensuring it's polished, professional, and ready to inspire a full story.
+
+                Do not include quoted character dialogue unless quoted speech is present in the provided setting. Describe characters' actions, intentions, and emotional beats in narrative summary form.
                 """
             ),
         ]

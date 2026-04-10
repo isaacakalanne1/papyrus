@@ -172,6 +172,23 @@ class CreatePlotOutlineEndpointTests {
         #expect(reasoning?["max_tokens"] as? Int == 5000)
     }
 
+    @Test
+    func body_includesNoDialogueInstruction() throws {
+        let story = Story(mainCharacter: "Wanderer Jin", setting: "Ancient forest")
+        let endpoint = CreatePlotOutlineEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userMessage = messages?[1]
+        let userContent = userMessage?["content"] as? String
+
+        #expect(userContent?.contains("Do not include quoted character dialogue") == true)
+        #expect(userContent?.contains("Describe characters' actions, intentions, and emotional beats in narrative summary form") == true)
+    }
+
     // MARK: - Response Type Tests
 
     @Test
