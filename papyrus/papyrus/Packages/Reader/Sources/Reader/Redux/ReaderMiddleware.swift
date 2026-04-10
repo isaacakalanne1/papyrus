@@ -109,6 +109,17 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         }
 
     case let .onCreatedPlotOutline(story):
+        return .condensePlotOutline(story)
+
+    case let .condensePlotOutline(story):
+        do {
+            let storyWithSummary = try await environment.condensePlotOutline(story: story)
+            return .onCondensedPlotOutline(storyWithSummary)
+        } catch {
+            return .failedToCreateChapter(.condensePlotOutline(story))
+        }
+
+    case let .onCondensedPlotOutline(story):
         return .createChapterBreakdown(story)
 
     case let .createChapterBreakdown(story):

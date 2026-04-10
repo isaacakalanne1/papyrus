@@ -4,6 +4,7 @@ import SDNetworkCore
 public protocol TextGenerationRepositoryProtocol {
     func createStoryTheme(story originalStory: Story) async throws -> Story
     func createPlotOutline(story originalStory: Story) async throws -> Story
+    func condensePlotOutline(story originalStory: Story) async throws -> Story
     func createSequelPlotOutline(story originalStory: Story, previousStory: Story) async throws -> Story
     func createChapterBreakdown(story originalStory: Story) async throws -> Story
     func getStoryDetails(story originalStory: Story) async throws -> Story
@@ -37,6 +38,15 @@ public class TextGenerationRepository: TextGenerationRepositoryProtocol {
         let content = try await networkCore.requestContent(endpoint)
 
         story.plotOutline = content
+        return story
+    }
+
+    public func condensePlotOutline(story originalStory: Story) async throws -> Story {
+        var story = originalStory
+        let endpoint = CondensePlotOutlineEndpoint(story: story)
+        let content = try await networkCore.requestContent(endpoint)
+
+        story.plotSummary = content.trimmingCharacters(in: .whitespacesAndNewlines)
         return story
     }
 

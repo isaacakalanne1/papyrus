@@ -22,6 +22,9 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
     var createPlotOutlineCalled = false
     var createPlotOutlineCalledWith: Story?
 
+    var condensePlotOutlineCalled = false
+    var condensePlotOutlineCalledWith: Story?
+
     var createSequelPlotOutlineCalled = false
     var createSequelPlotOutlineCalledWith: (story: Story, previousStory: Story)?
 
@@ -67,6 +70,9 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
 
     var createPlotOutlineReturnValue: Story?
     var createPlotOutlineError: Error?
+
+    var condensePlotOutlineReturnValue: Story?
+    var condensePlotOutlineError: Error?
 
     var createSequelPlotOutlineReturnValue: Story?
     var createSequelPlotOutlineError: Error?
@@ -139,6 +145,17 @@ public class MockReaderEnvironment: ReaderEnvironmentProtocol {
         }
 
         return createPlotOutlineReturnValue ?? story
+    }
+
+    public func condensePlotOutline(story: Story) async throws -> Story {
+        condensePlotOutlineCalled = true
+        condensePlotOutlineCalledWith = story
+
+        if let error = condensePlotOutlineError {
+            throw error
+        }
+
+        return condensePlotOutlineReturnValue ?? story
     }
 
     public func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story {

@@ -19,6 +19,10 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
     public var createPlotOutlineCalledWith: Story?
     public var createPlotOutlineCallCount = 0
 
+    public var condensePlotOutlineCalled = false
+    public var condensePlotOutlineCalledWith: Story?
+    public var condensePlotOutlineCallCount = 0
+
     public var createSequelPlotOutlineCalled = false
     public var createSequelPlotOutlineCalledWith: (story: Story, previousStory: Story)?
     public var createSequelPlotOutlineCallCount = 0
@@ -54,6 +58,9 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
 
     public var createPlotOutlineReturnValue: Story?
     public var createPlotOutlineError: Error?
+
+    public var condensePlotOutlineReturnValue: Story?
+    public var condensePlotOutlineError: Error?
 
     public var createSequelPlotOutlineReturnValue: Story?
     public var createSequelPlotOutlineError: Error?
@@ -104,6 +111,18 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
         }
 
         return createPlotOutlineReturnValue ?? originalStory
+    }
+
+    public func condensePlotOutline(story originalStory: Story) async throws -> Story {
+        condensePlotOutlineCalled = true
+        condensePlotOutlineCalledWith = originalStory
+        condensePlotOutlineCallCount += 1
+
+        if let error = condensePlotOutlineError {
+            throw error
+        }
+
+        return condensePlotOutlineReturnValue ?? originalStory
     }
 
     public func createSequelPlotOutline(story originalStory: Story, previousStory: Story) async throws -> Story {
@@ -201,6 +220,10 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
         createPlotOutlineCalledWith = nil
         createPlotOutlineCallCount = 0
 
+        condensePlotOutlineCalled = false
+        condensePlotOutlineCalledWith = nil
+        condensePlotOutlineCallCount = 0
+
         createSequelPlotOutlineCalled = false
         createSequelPlotOutlineCalledWith = nil
         createSequelPlotOutlineCallCount = 0
@@ -226,6 +249,9 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
 
         createPlotOutlineReturnValue = nil
         createPlotOutlineError = nil
+
+        condensePlotOutlineReturnValue = nil
+        condensePlotOutlineError = nil
 
         createSequelPlotOutlineReturnValue = nil
         createSequelPlotOutlineError = nil

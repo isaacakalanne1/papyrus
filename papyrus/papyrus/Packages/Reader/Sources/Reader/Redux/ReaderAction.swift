@@ -36,6 +36,8 @@ public indirect enum ReaderAction: Equatable, Sendable {
     case onCreatedThemeDescription(Story)
     case createPlotOutline(Story)
     case onCreatedPlotOutline(Story)
+    case condensePlotOutline(Story)
+    case onCondensedPlotOutline(Story)
     case createChapterBreakdown(Story)
     case onCreatedChapterBreakdown(Story)
     case parseChapterSummaries(Story)

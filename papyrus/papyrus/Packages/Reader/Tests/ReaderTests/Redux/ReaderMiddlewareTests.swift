@@ -106,12 +106,53 @@ class ReaderMiddlewareTests {
     }
 
     @Test
-    func onCreatedPlotOutline_returnsCreateChapterBreakdown() async {
+    func onCreatedPlotOutline_returnsCondensePlotOutline() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
         let story = Story(title: "Test Story")
 
         let result = await readerMiddleware(state, .onCreatedPlotOutline(story), environment)
+
+        #expect(result == .condensePlotOutline(story))
+    }
+
+    // MARK: - Condense Plot Outline Tests
+
+    @Test
+    func condensePlotOutline_success_returnsOnCondensedPlotOutline() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        let inputStory = Story(title: "Input Story")
+        let outputStory = Story(plotOutline: "Full outline", title: "Output Story")
+        environment.condensePlotOutlineReturnValue = outputStory
+
+        let result = await readerMiddleware(state, .condensePlotOutline(inputStory), environment)
+
+        #expect(environment.condensePlotOutlineCalled)
+        #expect(environment.condensePlotOutlineCalledWith?.id == inputStory.id)
+        #expect(result == .onCondensedPlotOutline(outputStory))
+    }
+
+    @Test
+    func condensePlotOutline_failure_returnsFailedToCreateChapter() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        let inputStory = Story(title: "Input Story")
+        environment.condensePlotOutlineError = ReaderTestError("Condense failed")
+
+        let result = await readerMiddleware(state, .condensePlotOutline(inputStory), environment)
+
+        #expect(environment.condensePlotOutlineCalled)
+        #expect(result == .failedToCreateChapter(.condensePlotOutline(inputStory)))
+    }
+
+    @Test
+    func onCondensedPlotOutline_returnsCreateChapterBreakdown() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        let story = Story(title: "Test Story")
+
+        let result = await readerMiddleware(state, .onCondensedPlotOutline(story), environment)
 
         #expect(result == .createChapterBreakdown(story))
     }
