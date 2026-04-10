@@ -10,6 +10,7 @@ import Foundation
 public protocol TextGenerationEnvironmentProtocol {
     func createStoryTheme(story: Story) async throws -> Story
     func createPlotOutline(story: Story) async throws -> Story
+    func condensePlotOutline(story: Story) async throws -> Story
     func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story
     func createChapterBreakdown(story: Story) async throws -> Story
     func parseChapterSummaries(story: Story) async throws -> Story
@@ -34,6 +35,10 @@ public struct TextGenerationEnvironment: TextGenerationEnvironmentProtocol {
 
     public func createPlotOutline(story: Story) async throws -> Story {
         try await repository.createPlotOutline(story: story)
+    }
+
+    public func condensePlotOutline(story: Story) async throws -> Story {
+        try await repository.condensePlotOutline(story: story)
     }
 
     public func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story {

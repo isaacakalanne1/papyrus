@@ -19,6 +19,10 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     public var createPlotOutlineCalledWith: Story?
     public var createPlotOutlineCallCount = 0
 
+    public var condensePlotOutlineCalled = false
+    public var condensePlotOutlineCalledWith: Story?
+    public var condensePlotOutlineCallCount = 0
+
     public var createSequelPlotOutlineCalled = false
     public var createSequelPlotOutlineCalledWith: (story: Story, previousStory: Story)?
     public var createSequelPlotOutlineCallCount = 0
@@ -55,6 +59,9 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
 
     public var createPlotOutlineReturnValue: Story?
     public var createPlotOutlineError: Error?
+
+    public var condensePlotOutlineReturnValue: Story?
+    public var condensePlotOutlineError: Error?
 
     public var createSequelPlotOutlineReturnValue: Story?
     public var createSequelPlotOutlineError: Error?
@@ -105,6 +112,18 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         }
 
         return createPlotOutlineReturnValue ?? story
+    }
+
+    public func condensePlotOutline(story: Story) async throws -> Story {
+        condensePlotOutlineCalled = true
+        condensePlotOutlineCalledWith = story
+        condensePlotOutlineCallCount += 1
+
+        if let error = condensePlotOutlineError {
+            throw error
+        }
+
+        return condensePlotOutlineReturnValue ?? story
     }
 
     public func createSequelPlotOutline(story: Story, previousStory: Story) async throws -> Story {
@@ -203,6 +222,10 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         createPlotOutlineCalledWith = nil
         createPlotOutlineCallCount = 0
 
+        condensePlotOutlineCalled = false
+        condensePlotOutlineCalledWith = nil
+        condensePlotOutlineCallCount = 0
+
         createSequelPlotOutlineCalled = false
         createSequelPlotOutlineCalledWith = nil
         createSequelPlotOutlineCallCount = 0
@@ -232,6 +255,9 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
 
         createPlotOutlineReturnValue = nil
         createPlotOutlineError = nil
+
+        condensePlotOutlineReturnValue = nil
+        condensePlotOutlineError = nil
 
         createSequelPlotOutlineReturnValue = nil
         createSequelPlotOutlineError = nil
