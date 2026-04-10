@@ -15,6 +15,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
     var themeDescription: String
     var plotOutline: String
     var chaptersBreakdown: String
+    public var chapterSummaries: [ChapterSummary]
     public var chapterIndex: Int
     public var maxNumberOfChapters: Int
     public var scrollOffset: CGFloat
@@ -33,6 +34,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         themeDescription: String = "",
         plotOutline: String = "",
         chaptersBreakdown: String = "",
+        chapterSummaries: [ChapterSummary] = [],
         chapterIndex: Int = 0,
         maxNumberOfChapters: Int = 0,
         scrollOffset: CGFloat = 0,
@@ -49,6 +51,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         self.themeDescription = themeDescription
         self.plotOutline = plotOutline
         self.chaptersBreakdown = chaptersBreakdown
+        self.chapterSummaries = chapterSummaries
         self.chapterIndex = chapterIndex
         self.maxNumberOfChapters = maxNumberOfChapters
         self.scrollOffset = scrollOffset
@@ -70,6 +73,7 @@ public struct Story: Codable, Equatable, Sendable, Identifiable {
         themeDescription = try container.decodeIfPresent(String.self, forKey: .themeDescription) ?? ""
         plotOutline = try container.decode(String.self, forKey: .plotOutline)
         chaptersBreakdown = try container.decode(String.self, forKey: .chaptersBreakdown)
+        chapterSummaries = try container.decodeIfPresent([ChapterSummary].self, forKey: .chapterSummaries) ?? []
         chapterIndex = try container.decode(Int.self, forKey: .chapterIndex)
         maxNumberOfChapters = try container.decodeIfPresent(Int.self, forKey: .maxNumberOfChapters) ?? 0
         scrollOffset = try container.decodeIfPresent(CGFloat.self, forKey: .scrollOffset) ?? 0

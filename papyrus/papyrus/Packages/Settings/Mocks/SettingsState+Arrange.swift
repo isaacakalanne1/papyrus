@@ -5,12 +5,13 @@
 //  Created by Isaac Akalanne on 04/10/2025.
 //
 
+import Foundation
 import PapyrusStyleKit
 import Settings
 
 public extension SettingsState {
     static var arrange: SettingsState {
-        arrange()
+        SettingsState.arrange()
     }
 
     static func arrange(

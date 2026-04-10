@@ -5,7 +5,7 @@
 
 import SwiftUI
 
-public enum MenuButtonType {
+public enum MenuButtonType: Sendable {
     case menu
     case settings
     case previous
