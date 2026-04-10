@@ -133,6 +133,14 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.isLoading = true
         newState = updateStoryInState(newState, story: story)
 
+    case let .parseChapterSummaries(story):
+        newState.isLoading = true
+        newState = updateStoryInState(newState, story: story)
+
+    case let .onParsedChapterSummaries(story):
+        newState.isLoading = true
+        newState = updateStoryInState(newState, story: story)
+
     case let .getStoryDetails(story):
         newState.isLoading = true
         newState.loadingStep = .analyzingStructure

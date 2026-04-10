@@ -27,6 +27,10 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
     public var createChapterBreakdownCalledWith: Story?
     public var createChapterBreakdownCallCount = 0
 
+    public var parseChapterSummariesCalled = false
+    public var parseChapterSummariesCalledWith: Story?
+    public var parseChapterSummariesCallCount = 0
+
     public var getStoryDetailsCalled = false
     public var getStoryDetailsCalledWith: Story?
     public var getStoryDetailsCallCount = 0
@@ -56,6 +60,9 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
 
     public var createChapterBreakdownReturnValue: Story?
     public var createChapterBreakdownError: Error?
+
+    public var parseChapterSummariesReturnValue: Story?
+    public var parseChapterSummariesError: Error?
 
     public var getStoryDetailsReturnValue: Story?
     public var getStoryDetailsError: Error?
@@ -123,6 +130,18 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         return createChapterBreakdownReturnValue ?? story
     }
 
+    public func parseChapterSummaries(story: Story) async throws -> Story {
+        parseChapterSummariesCalled = true
+        parseChapterSummariesCalledWith = story
+        parseChapterSummariesCallCount += 1
+
+        if let error = parseChapterSummariesError {
+            throw error
+        }
+
+        return parseChapterSummariesReturnValue ?? story
+    }
+
     public func getStoryDetails(story: Story) async throws -> Story {
         getStoryDetailsCalled = true
         getStoryDetailsCalledWith = story
@@ -159,7 +178,7 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         return createChapterReturnValue ?? story
     }
 
-    public func generateParagraph(story: Story) async throws -> Story {
+    public func generateParagraph(story: Story, sentenceCount _: Int) async throws -> Story {
         generateParagraphCalled = true
         generateParagraphCalledWith = story
         generateParagraphCallCount += 1
@@ -190,6 +209,10 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
         createChapterBreakdownCalledWith = nil
         createChapterBreakdownCallCount = 0
 
+        parseChapterSummariesCalled = false
+        parseChapterSummariesCalledWith = nil
+        parseChapterSummariesCallCount = 0
+
         getStoryDetailsCalled = false
         getStoryDetailsCalledWith = nil
         getStoryDetailsCallCount = 0
@@ -213,6 +236,9 @@ public class MockTextGenerationEnvironment: TextGenerationEnvironmentProtocol {
 
         createChapterBreakdownReturnValue = nil
         createChapterBreakdownError = nil
+
+        parseChapterSummariesReturnValue = nil
+        parseChapterSummariesError = nil
 
         getStoryDetailsReturnValue = nil
         getStoryDetailsError = nil

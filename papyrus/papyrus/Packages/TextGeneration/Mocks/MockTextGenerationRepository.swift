@@ -27,6 +27,10 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
     public var createChapterBreakdownCalledWith: Story?
     public var createChapterBreakdownCallCount = 0
 
+    public var parseChapterSummariesCalled = false
+    public var parseChapterSummariesCalledWith: Story?
+    public var parseChapterSummariesCallCount = 0
+
     public var getStoryDetailsCalled = false
     public var getStoryDetailsCalledWith: Story?
     public var getStoryDetailsCallCount = 0
@@ -56,6 +60,9 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
 
     public var createChapterBreakdownReturnValue: Story?
     public var createChapterBreakdownError: Error?
+
+    public var parseChapterSummariesReturnValue: Story?
+    public var parseChapterSummariesError: Error?
 
     public var getStoryDetailsReturnValue: Story?
     public var getStoryDetailsError: Error?
@@ -121,6 +128,18 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
         }
 
         return createChapterBreakdownReturnValue ?? originalStory
+    }
+
+    public func parseChapterSummaries(story originalStory: Story) async throws -> Story {
+        parseChapterSummariesCalled = true
+        parseChapterSummariesCalledWith = originalStory
+        parseChapterSummariesCallCount += 1
+
+        if let error = parseChapterSummariesError {
+            throw error
+        }
+
+        return parseChapterSummariesReturnValue ?? originalStory
     }
 
     public func getStoryDetails(story originalStory: Story) async throws -> Story {
@@ -213,6 +232,12 @@ public class MockTextGenerationRepository: TextGenerationRepositoryProtocol {
 
         createChapterBreakdownReturnValue = nil
         createChapterBreakdownError = nil
+
+        parseChapterSummariesCalled = false
+        parseChapterSummariesCalledWith = nil
+        parseChapterSummariesCallCount = 0
+        parseChapterSummariesReturnValue = nil
+        parseChapterSummariesError = nil
 
         getStoryDetailsReturnValue = nil
         getStoryDetailsError = nil
