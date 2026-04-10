@@ -124,11 +124,8 @@ let readerReducer: Reducer<ReaderState, ReaderAction> = { state, action in
         newState.isLoading = true
         newState = updateStoryInState(newState, story: story)
 
-    case let .condensePlotOutline(story):
-        newState.isLoading = true
-        newState = updateStoryInState(newState, story: story)
-
-    case let .onCondensedPlotOutline(story):
+    case let .condensePlotOutline(story),
+         let .onCondensedPlotOutline(story):
         newState.isLoading = true
         newState = updateStoryInState(newState, story: story)
 
