@@ -8,14 +8,14 @@
 import Foundation
 import TextGeneration
 
-public protocol ReaderDataStoreProtocol {
+public protocol ReaderDataStoreProtocol: Sendable {
     func saveStory(_ story: Story) async throws
     func loadStory(withId id: UUID) async throws -> Story?
     func getAllSavedStoryIds() async throws -> [UUID]
     func deleteStory(withId id: UUID) async throws
 }
 
-public class ReaderDataStore: ReaderDataStoreProtocol {
+public class ReaderDataStore: ReaderDataStoreProtocol, @unchecked Sendable {
     private let fileManager = FileManager.default
     private let encoder = JSONEncoder()
     private let decoder = JSONDecoder()

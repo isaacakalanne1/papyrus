@@ -10,7 +10,7 @@ import Foundation
 import Settings
 import StoreKit
 
-public protocol SubscriptionEnvironmentProtocol {
+public protocol SubscriptionEnvironmentProtocol: Sendable {
     func fetchSubscriptionProduct() async throws -> Product
     func purchaseSubscription() async throws
     func restorePurchases() async throws
@@ -19,7 +19,7 @@ public protocol SubscriptionEnvironmentProtocol {
     func startTransactionListener() async
 }
 
-public class SubscriptionEnvironment: SubscriptionEnvironmentProtocol {
+public class SubscriptionEnvironment: SubscriptionEnvironmentProtocol, @unchecked Sendable {
     private let repository: SubscriptionRepositoryProtocol
     private let settingsEnvironment: SettingsEnvironmentProtocol
 

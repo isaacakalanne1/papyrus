@@ -7,6 +7,7 @@ let package = Package(
     name: "Subscription",
     platforms: [
         .iOS("17.4"),
+        .macOS("14.0"),
     ],
     products: [
         .library(
@@ -19,7 +20,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/isaacakalanne1/reduxkit.git", from: "1.0.1"),
+        .package(url: "https://github.com/isaacakalanne1/reduxkit.git", branch: "fix/sendable-conformance"),
         .package(name: "Settings", path: "../Settings"),
         .package(name: "PapyrusStyleKit", path: "../PapyrusStyleKit"),
     ],

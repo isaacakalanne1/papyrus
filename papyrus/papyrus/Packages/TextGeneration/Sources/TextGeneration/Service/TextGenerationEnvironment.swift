@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol TextGenerationEnvironmentProtocol {
+public protocol TextGenerationEnvironmentProtocol: Sendable {
     func createStoryTheme(story: Story) async throws -> Story
     func createPlotOutline(story: Story) async throws -> Story
     func condensePlotOutline(story: Story) async throws -> Story

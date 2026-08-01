@@ -10,7 +10,7 @@ import Settings
 import Subscription
 import TextGeneration
 
-public protocol ReaderEnvironmentProtocol {
+public protocol ReaderEnvironmentProtocol: Sendable {
     func createStoryTheme(story: Story) async throws -> Story
     func createPlotOutline(story: Story) async throws -> Story
     func condensePlotOutline(story: Story) async throws -> Story

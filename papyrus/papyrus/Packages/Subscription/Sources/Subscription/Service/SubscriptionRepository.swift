@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-public protocol SubscriptionRepositoryProtocol {
+public protocol SubscriptionRepositoryProtocol: Sendable {
     func fetchSubscriptionProduct() async throws -> Product
     func purchaseSubscription() async throws -> Transaction
     func restorePurchases() async throws
@@ -17,7 +17,7 @@ public protocol SubscriptionRepositoryProtocol {
     func startTransactionListener() async
 }
 
-public class SubscriptionRepository: SubscriptionRepositoryProtocol {
+public class SubscriptionRepository: SubscriptionRepositoryProtocol, @unchecked Sendable {
     private let service: SubscriptionServiceProtocol
 
     public init(

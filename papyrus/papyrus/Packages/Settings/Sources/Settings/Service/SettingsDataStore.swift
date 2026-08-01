@@ -7,7 +7,7 @@
 
 import Foundation
 
-public protocol SettingsDataStoreProtocol {
+public protocol SettingsDataStoreProtocol: Sendable {
     func saveSettings(_ settings: SettingsState) async throws
     func loadSettings() async throws -> SettingsState
 }
@@ -16,7 +16,7 @@ enum SettingsDataStoreError: Error {
     case failedToFindFile
 }
 
-public class SettingsDataStore: SettingsDataStoreProtocol {
+public class SettingsDataStore: SettingsDataStoreProtocol, @unchecked Sendable {
     private let fileManager = FileManager.default
     private let documentsDirectory: URL
     private let settingsFileName = "settings.json"

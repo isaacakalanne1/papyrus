@@ -1,5 +1,5 @@
 {
-  "originHash" : "31ae465bd9bd8ad1a5142cb5fb7e609e3cc51d81714789f25c9b2e20bec1e32f",
+  "originHash" : "6f90b86e1db4c07565f1d4182f606e168042dfab69618c308c43978433f9b6f9",
   "pins" : [
     {
       "identity" : "combine-schedulers",
@@ -15,8 +15,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/isaacakalanne1/reduxkit.git",
       "state" : {
-        "revision" : "a8eace7b3ffaba4653aa009c34a5948ea0c260fd",
-        "version" : "1.0.1"
+        "branch" : "fix/sendable-conformance",
+        "revision" : "dba701a9b99135c5cce3831d3306f503779c11f9"
       }
     },
     {

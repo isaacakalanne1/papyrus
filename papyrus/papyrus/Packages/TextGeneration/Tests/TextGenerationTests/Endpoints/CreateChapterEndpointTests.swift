@@ -158,6 +158,33 @@ class CreateChapterEndpointTests {
         #expect(reasoning?["max_tokens"] as? Int == 5000)
     }
 
+    @Test
+    func body_includesMaxTokensForFullLengthChapter() throws {
+        let story = Story()
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        #expect(json?["max_tokens"] as? Int == 8000)
+    }
+
+    @Test
+    func body_progressiveDisclosure_includesWordCountInstruction() throws {
+        let chapterSummaries = [ChapterSummary(chapterNumber: 1, summary: "The start")]
+        let story = Story(chapterSummaries: chapterSummaries)
+        let endpoint = CreateChapterEndpoint(story: story)
+
+        let bodyData = endpoint.body
+        #expect(bodyData != nil)
+
+        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
+        let messages = json?["messages"] as? [[String: Any]]
+        let userContent = messages?[1]?["content"] as? String
+        #expect(userContent?.contains("targeting approximately 4000 words") == true)
+    }
+
     // MARK: - Response Type Tests
 
     @Test

@@ -8,13 +8,13 @@
 import Combine
 import Foundation
 
-public protocol SettingsEnvironmentProtocol {
+public protocol SettingsEnvironmentProtocol: Sendable {
     func loadSettings() async throws -> SettingsState
     func saveSettings(_ settings: SettingsState) async throws
     var settingsSubject: CurrentValueSubject<SettingsState?, Never> { get }
 }
 
-public class SettingsEnvironment: SettingsEnvironmentProtocol {
+public class SettingsEnvironment: SettingsEnvironmentProtocol, @unchecked Sendable {
     private let dataStore: SettingsDataStoreProtocol
     public var settingsSubject: CurrentValueSubject<SettingsState?, Never> = .init(nil)
 

@@ -7,6 +7,7 @@ let package = Package(
     name: "TextGeneration",
     platforms: [
         .iOS("17.4"),
+        .macOS("14.0"),
     ],
     products: [
         // Products define the executables and libraries a package produces, making them visible to other packages.

@@ -8,7 +8,7 @@
 import Foundation
 import StoreKit
 
-public struct SubscriptionState: Equatable {
+public struct SubscriptionState: Equatable, Sendable {
     public var isSubscribed: Bool
     public var isLoading: Bool
     public var product: Product?

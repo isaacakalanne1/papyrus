@@ -33,7 +33,7 @@ public enum LoadingStep: Equatable, Sendable {
     case writingChapter
 }
 
-public struct ReaderState: Equatable {
+public struct ReaderState: Equatable, Sendable {
     var mainCharacter: String
     var setting: String
     var loadedStories: [Story]

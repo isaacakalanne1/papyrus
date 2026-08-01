@@ -24,7 +24,8 @@ struct CreateChapterEndpoint: Endpoint {
 
         let request = OpenRouterRequest(
             messages: messages,
-            reasoning: OpenRouterReasoning()
+            reasoning: OpenRouterReasoning(),
+            max_tokens: 8000
         )
 
         return request.toData()
@@ -102,7 +103,7 @@ struct CreateChapterEndpoint: Endpoint {
         [Instructions]
         You are writing Chapter \(currentChapterNumber).\(upcomingHorizonInstruction)
 
-        Write the full chapter text now, ensuring it's a standalone masterpiece that honors the story's vision and leaves readers eager for more.
+        Write the full chapter text now, targeting approximately 4000 words. Ensure it's a standalone masterpiece that honors the story's vision and leaves readers eager for more.
         """
     }
 

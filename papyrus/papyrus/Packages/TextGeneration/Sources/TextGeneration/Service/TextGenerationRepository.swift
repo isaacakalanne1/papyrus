@@ -1,7 +1,7 @@
 import Foundation
 import SDNetworkCore
 
-public protocol TextGenerationRepositoryProtocol {
+public protocol TextGenerationRepositoryProtocol: Sendable {
     func createStoryTheme(story originalStory: Story) async throws -> Story
     func createPlotOutline(story originalStory: Story) async throws -> Story
     func condensePlotOutline(story originalStory: Story) async throws -> Story
@@ -14,7 +14,7 @@ public protocol TextGenerationRepositoryProtocol {
     func generateParagraph(story originalStory: Story, sentenceCount: Int) async throws -> Story
 }
 
-public class TextGenerationRepository: TextGenerationRepositoryProtocol {
+public class TextGenerationRepository: TextGenerationRepositoryProtocol, @unchecked Sendable {
     private let networkCore: SDNetworkCore
 
     public init(

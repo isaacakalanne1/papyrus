@@ -15,7 +15,7 @@ public enum SubscriptionError: Error {
     case unknown
 }
 
-public protocol SubscriptionServiceProtocol {
+public protocol SubscriptionServiceProtocol: Sendable {
     func fetchProducts() async throws -> [Product]
     func purchase(product: Product) async throws -> Transaction
     func restorePurchases() async throws -> [Transaction]
@@ -24,7 +24,7 @@ public protocol SubscriptionServiceProtocol {
     func startTransactionListener() async
 }
 
-public class SubscriptionService: SubscriptionServiceProtocol {
+public class SubscriptionService: SubscriptionServiceProtocol, @unchecked Sendable {
     private let productId = "com.papyrus.monthly.subscription"
     private var updateListenerTask: Task<Void, Error>?
 
