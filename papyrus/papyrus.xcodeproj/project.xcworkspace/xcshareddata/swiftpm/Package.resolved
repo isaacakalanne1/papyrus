@@ -1,5 +1,5 @@
 {
-  "originHash" : "4fc102190b3dc605d9409121a79fcd080495e4db948c2e8629e7b1eb09d9e896",
+  "originHash" : "4f6744d3eafca2c3183f1af5642105d9af8c5b747f43d790acd2566c0de58dc9",
   "pins" : [
     {
       "identity" : "abseil-cpp-binary",
@@ -132,8 +132,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/isaacakalanne1/reduxkit.git",
       "state" : {
-        "revision" : "8d75a7a16142cd6a944348d37388660de47d9e8c",
-        "version" : "1.0.3"
+        "revision" : "a4643fef7f74871276ebf81bb89f04f015572f05",
+        "version" : "1.0.4"
       }
     },
     {

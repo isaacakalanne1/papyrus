@@ -20,7 +20,7 @@ let package = Package(
         ),
     ],
     dependencies: [
-        .package(url: "https://github.com/isaacakalanne1/reduxkit.git", exact: "1.0.3"),
+        .package(url: "https://github.com/isaacakalanne1/reduxkit.git", exact: "1.0.4"),
         .package(name: "Settings", path: "../Settings"),
         .package(name: "PapyrusStyleKit", path: "../PapyrusStyleKit"),
     ],
