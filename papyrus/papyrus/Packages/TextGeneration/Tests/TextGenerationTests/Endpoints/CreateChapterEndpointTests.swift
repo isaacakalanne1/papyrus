@@ -61,7 +61,7 @@ class CreateChapterEndpointTests {
         #expect(json != nil)
 
         // Verify basic structure
-        #expect(json?["model"] as? String == "x-ai/grok-4-fast")
+        #expect(json?["model"] as? String == "x-ai/grok-4.20")
 
         let messages = json?["messages"] as? [[String: Any]]
         #expect(messages?.count == 2)
@@ -159,19 +159,7 @@ class CreateChapterEndpointTests {
     }
 
     @Test
-    func body_includesMaxTokensForFullLengthChapter() throws {
-        let story = Story()
-        let endpoint = CreateChapterEndpoint(story: story)
-
-        let bodyData = endpoint.body
-        #expect(bodyData != nil)
-
-        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
-        #expect(json?["max_tokens"] as? Int == 8000)
-    }
-
-    @Test
-    func body_progressiveDisclosure_includesWordCountInstruction() throws {
+    func body_progressiveDisclosure_includesWordCountAndNoFooterInstruction() throws {
         let chapterSummaries = [ChapterSummary(chapterNumber: 1, summary: "The start")]
         let story = Story(chapterSummaries: chapterSummaries)
         let endpoint = CreateChapterEndpoint(story: story)
@@ -182,7 +170,8 @@ class CreateChapterEndpointTests {
         let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
         let messages = json?["messages"] as? [[String: Any]]
         let userContent = messages?[1]?["content"] as? String
-        #expect(userContent?.contains("targeting approximately 4000 words") == true)
+        #expect(userContent?.contains("targeting approximately 2000 words") == true)
+        #expect(userContent?.contains("Do not include any footer, author's note, or closing commentary") == true)
     }
 
     // MARK: - Response Type Tests
@@ -253,7 +242,7 @@ class CreateChapterEndpointTests {
     // MARK: - Progressive Disclosure Tests
 
     @Test
-    func body_progressiveDisclosure_usesPlotSummaryWhenAvailable() throws {
+    func body_progressiveDisclosure_doesNotIncludeStoryPremise() throws {
         let plotOutline = "The long plot outline"
         let plotSummary = "The condensed 3-5 sentence logline"
         let chapterSummaries = [
@@ -274,32 +263,9 @@ class CreateChapterEndpointTests {
         let userMessage = messages?[1]
         let userContent = userMessage?["content"] as? String
 
-        #expect(userContent?.contains("Story Premise: \(plotSummary)") == true)
+        #expect(userContent?.contains("Story Premise:") == false)
         #expect(userContent?.contains(plotOutline) == false)
-    }
-
-    @Test
-    func body_progressiveDisclosure_fallsBackToPlotOutlineWhenPlotSummaryEmpty() throws {
-        let plotOutline = "The long plot outline"
-        let chapterSummaries = [
-            ChapterSummary(chapterNumber: 1, summary: "The opening"),
-        ]
-        let story = Story(
-            plotOutline: plotOutline,
-            plotSummary: "",
-            chapterSummaries: chapterSummaries
-        )
-        let endpoint = CreateChapterEndpoint(story: story)
-
-        let bodyData = endpoint.body
-        #expect(bodyData != nil)
-
-        let json = try JSONSerialization.jsonObject(with: bodyData!) as? [String: Any]
-        let messages = json?["messages"] as? [[String: Any]]
-        let userMessage = messages?[1]
-        let userContent = userMessage?["content"] as? String
-
-        #expect(userContent?.contains("Story Premise: \(plotOutline)") == true)
+        #expect(userContent?.contains(plotSummary) == false)
     }
 
     @Test

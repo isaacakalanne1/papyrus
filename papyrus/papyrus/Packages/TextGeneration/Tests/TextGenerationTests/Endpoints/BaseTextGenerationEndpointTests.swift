@@ -56,7 +56,7 @@ class BaseTextGenerationEndpointTests {
         let messages = [OpenRouterMessage(role: "user", content: "Test")]
         let request = OpenRouterRequest(messages: messages)
 
-        #expect(request.model == "x-ai/grok-4-fast")
+        #expect(request.model == "x-ai/grok-4.20")
         #expect(request.messages.count == 1)
         #expect(request.messages[0].role == "user")
         #expect(request.messages[0].content == "Test")
@@ -115,7 +115,7 @@ class BaseTextGenerationEndpointTests {
         let data = try JSONEncoder().encode(request)
         let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
 
-        #expect(json?["model"] as? String == "x-ai/grok-4-fast")
+        #expect(json?["model"] as? String == "x-ai/grok-4.20")
         #expect(json?["reasoning"] == nil)
     }
 

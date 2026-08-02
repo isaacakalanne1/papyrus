@@ -663,10 +663,13 @@ class ReaderMiddlewareTests {
     // MARK: - Begin Create Chapter Tests
 
     @Test
-    func beginCreateChapter_success_returnsOnCreatedChapter() async {
+    func beginCreateChapter_withChapterSummaries_success_returnsOnCreatedChapter() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
-        let inputStory = Story(title: "Input Story")
+        let inputStory = Story(
+            chapterSummaries: [ChapterSummary(chapterNumber: 1, summary: "Summary")],
+            title: "Input Story"
+        )
         let outputStory = Story(
             title: "Output Story",
             chapters: [Chapter(content: "Content")]
@@ -681,16 +684,31 @@ class ReaderMiddlewareTests {
     }
 
     @Test
-    func beginCreateChapter_failure_returnsFailedToCreateChapter() async {
+    func beginCreateChapter_withChapterSummaries_failure_returnsFailedToCreateChapter() async {
         let state = ReaderState()
         let environment = MockReaderEnvironment()
-        let inputStory = Story(title: "Input Story")
+        let inputStory = Story(
+            chapterSummaries: [ChapterSummary(chapterNumber: 1, summary: "Summary")],
+            title: "Input Story"
+        )
         environment.createChapterError = ReaderTestError("Chapter creation failed")
 
         let result = await readerMiddleware(state, .beginCreateChapter(inputStory), environment)
 
         #expect(environment.createChapterCalled)
         #expect(result == .failedToCreateChapter(.beginCreateChapter(inputStory)))
+    }
+
+    @Test
+    func beginCreateChapter_withEmptyChapterSummaries_returnsParseChapterSummaries() async {
+        let state = ReaderState()
+        let environment = MockReaderEnvironment()
+        let inputStory = Story(chapterSummaries: [], title: "Legacy Story")
+
+        let result = await readerMiddleware(state, .beginCreateChapter(inputStory), environment)
+
+        #expect(!environment.createChapterCalled)
+        #expect(result == .parseChapterSummaries(inputStory))
     }
 
     // MARK: - Selected Story for Details Tests

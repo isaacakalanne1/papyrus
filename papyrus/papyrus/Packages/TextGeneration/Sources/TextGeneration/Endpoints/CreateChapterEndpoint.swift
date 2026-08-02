@@ -24,8 +24,7 @@ struct CreateChapterEndpoint: Endpoint {
 
         let request = OpenRouterRequest(
             messages: messages,
-            reasoning: OpenRouterReasoning(),
-            max_tokens: 8000
+            reasoning: OpenRouterReasoning()
         )
 
         return request.toData()
@@ -75,52 +74,17 @@ struct CreateChapterEndpoint: Endpoint {
 
     private var progressiveDisclosureUserMessageContent: String {
         let currentSummary = story.chapterSummaries[currentChapterIndex]
-        let upcomingHorizonSection = buildUpcomingHorizonSection()
-
-        var contextLines = """
-        [Context Provided]
-        - Story Premise: \(plotPremise)
-        - Narrative Perspective: \(story.perspective.promptDescription)
-        - Current Chapter: Chapter \(currentChapterNumber) — \(currentSummary.summary)
-        """
-
-        if let horizonSection = upcomingHorizonSection {
-            contextLines += "\n" + horizonSection
-        }
-
-        contextLines += "\n- Previous Written Chapters: \(previousChaptersContent)"
-
-        let upcomingHorizonInstruction: String
-        if upcomingHorizonSection != nil {
-            upcomingHorizonInstruction = " DO NOT write the events of the Upcoming Horizon. The upcoming horizon is provided only so you can subtly foreshadow future events, build appropriate tension, and align character motivations. Keep the narrative strictly confined to resolving the beats of Chapter \(currentChapterNumber)."
-        } else {
-            upcomingHorizonInstruction = ""
-        }
 
         return """
-        \(contextLines)
+        [Context Provided]
+        - Previous Written Chapters: \(previousChaptersContent)
 
         [Instructions]
-        You are writing Chapter \(currentChapterNumber).\(upcomingHorizonInstruction)
+        You are writing Chapter \(currentChapterNumber).
+        - Narrative Perspective: \(story.perspective.promptDescription)
+        - Chapter \(currentChapterNumber) Summary: \(currentSummary.summary)
 
-        Write the full chapter text now, targeting approximately 4000 words. Ensure it's a standalone masterpiece that honors the story's vision and leaves readers eager for more.
+        Write the full chapter text now, targeting approximately 2000 words. Ensure it's a standalone masterpiece that honors the story's vision and leaves readers eager for more. Do not include any footer, author's note, or closing commentary after the chapter text.
         """
-    }
-
-    private func buildUpcomingHorizonSection() -> String? {
-        let startIndex = currentChapterIndex + 1
-        let endIndex = min(startIndex + 3, story.chapterSummaries.count)
-
-        guard startIndex < story.chapterSummaries.count else {
-            return nil
-        }
-
-        let upcomingChapters = story.chapterSummaries[startIndex ..< endIndex]
-
-        let lines = upcomingChapters.map { chapterSummary in
-            "    Chapter \(chapterSummary.chapterNumber): \(chapterSummary.summary)"
-        }.joined(separator: "\n")
-
-        return "- Upcoming Horizon (DO NOT write these events — for foreshadowing context only):\n\(lines)"
     }
 }

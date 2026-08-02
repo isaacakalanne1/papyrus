@@ -20,7 +20,7 @@ struct OpenRouterRequest: Encodable {
     let max_tokens: Int?
 
     init(
-        model: String = "x-ai/grok-4-fast",
+        model: String = "x-ai/grok-4.20",
         messages: [OpenRouterMessage],
         reasoning: OpenRouterReasoning? = nil,
         max_tokens: Int? = nil

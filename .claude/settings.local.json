@@ -4,7 +4,11 @@
       "Bash(gh repo:*)",
       "Bash(git remote:*)",
       "Bash(gh issue:*)",
-      "Bash(xcodebuild test:*)"
+      "Bash(xcodebuild test:*)",
+      "WebSearch",
+      "Bash(swift build:*)",
+      "Bash(swiftformat .)",
+      "Bash(wait)"
     ]
   }
 }

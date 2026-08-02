@@ -171,6 +171,9 @@ let readerMiddleware: Middleware<ReaderState, ReaderAction, ReaderEnvironmentPro
         return story.mode == .interactive ? .saveStory(story) : .beginCreateChapter(story)
 
     case let .beginCreateChapter(story):
+        if story.chapterSummaries.isEmpty {
+            return .parseChapterSummaries(story)
+        }
         do {
             let storyWithChapter = try await environment.createChapter(story: story)
             return .onCreatedChapter(storyWithChapter)
